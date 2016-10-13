@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Filter;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class BaseUrlFilter implements UrlFilterInterface
+class BaseUrlContentFilter implements ContentFilterInterface
 {
     /**
      * @var string

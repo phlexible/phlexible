@@ -8,16 +8,16 @@
 
 namespace Phlexible\Bundle\GuiBundle\Tests\Asset\Filter;
 
-use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
+use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlContentFilter;
 
 /**
- * @covers \Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter
+ * @covers \Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlContentFilter
  */
-class BaseUrlFilterTest extends \PHPUnit_Framework_TestCase
+class BaseUrlContentFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testFilterBasePath()
     {
-        $filter = new BaseUrlFilter('bbb', 'aaa');
+        $filter = new BaseUrlContentFilter('bbb', 'aaa');
 
         $result = $filter->filter('/foo/BASE_PATH/bar');
 
@@ -28,7 +28,7 @@ class BaseUrlFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterBaseUrl()
     {
-        $filter = new BaseUrlFilter('bbb', 'aaa');
+        $filter = new BaseUrlContentFilter('bbb', 'aaa');
 
         $result = $filter->filter('/bar/BASE_URL/baz');
 
@@ -39,7 +39,7 @@ class BaseUrlFilterTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterBundlesPath()
     {
-        $filter = new BaseUrlFilter('bbb', 'aaa');
+        $filter = new BaseUrlContentFilter('bbb', 'aaa');
 
         $result = $filter->filter('/baz/BUNDLES_PATH/bar');
 

@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
-use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
+use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlContentFilter;
 use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinderInterface;
 use Phlexible\Bundle\GuiBundle\Asset\MappedAsset;
 use Phlexible\Bundle\GuiBundle\Asset\MappedContent\MappedContentBuilder;
@@ -79,7 +79,7 @@ class CssBuilder
 
         if (!$cache->isFresh($resources)) {
             $builder = new MappedContentBuilder();
-            $filter = new BaseUrlFilter($baseUrl, $basePath);
+            $filter = new BaseUrlContentFilter($baseUrl, $basePath);
             $mappedContent = $builder->build(
                 'gui.css',
                 $resources,
