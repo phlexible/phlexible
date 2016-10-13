@@ -31,10 +31,8 @@ class BaseUrlFilter implements UrlFilterInterface
      */
     public function __construct($baseUrl, $basePath)
     {
-        $baseUrl = rtrim($baseUrl, '/') . '/';
-        $this->baseUrl = '/' . ltrim($baseUrl, '/');
-        $basePath = rtrim($basePath, '/') . '/';
-        $this->basePath = '/' . ltrim($basePath, '/');
+        $this->baseUrl = '/' . trim($baseUrl, '/') . '/';
+        $this->basePath = '/' . trim($basePath, '/') . '/';
     }
 
     /**
