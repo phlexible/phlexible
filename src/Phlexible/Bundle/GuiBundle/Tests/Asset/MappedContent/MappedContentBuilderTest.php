@@ -88,7 +88,7 @@ class MappedContentBuilderTest extends \PHPUnit_Framework_TestCase
         $expected = new MappedContent(
             'PREFIX' . PHP_EOL . 'console.log(123);' . PHP_EOL,
             (new SourceMap(
-                'test', '', array($jsFile->path()), array($jsFile->getContent() . PHP_EOL), array(), 'AAAA;'
+                'test', '', array($jsFile->path()), array($jsFile->getContent() . PHP_EOL), array(), ';AAAA;'
             ))->toJson()
         );
 
