@@ -63,7 +63,7 @@ class SourceMapIndex
     {
         $mappings = array();
 
-        $lines = substr_count(rtrim(trim($this->content), PHP_EOL) . PHP_EOL, PHP_EOL);
+        $lines = substr_count($this->content, PHP_EOL);
         for ($i = 0; $i<$lines; $i++) {
             $mappings[] = new Mapping($destLine + $i, 0, $index, $i, 0);
         }
