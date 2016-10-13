@@ -73,6 +73,8 @@ class SourceMapBuilder
      */
     private function createMapping()
     {
+        $encoder = new MappingEncoder();
+
         $mappings = array();
         $line = $this->line;
         foreach ($this->indexes as $i => $index) {
@@ -80,7 +82,7 @@ class SourceMapBuilder
             $mappings = array_merge($mappings, $indexMappings);
             $line += count($indexMappings);
         }
-        $encoder = new MappingEncoder();
+
         return $encoder->encode($mappings);
     }
 

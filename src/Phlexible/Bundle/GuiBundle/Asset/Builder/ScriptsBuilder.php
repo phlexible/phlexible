@@ -74,7 +74,7 @@ class ScriptsBuilder
 
         $resources = $this->resourceFinder->findByType('phlexible/scripts');
 
-        if (!$cache->isFresh($resources)) {
+        if (1 ||!$cache->isFresh($resources)) {
             $resolver = new ScriptsResourceResolver();
             $resolvedResources = $resolver->resolve($resources);
             $debug = $this->debug;
@@ -97,7 +97,7 @@ class ScriptsBuilder
                     $prefix .= '/* ' . PHP_EOL;
                     $prefix .= ' * Unused resources:' . PHP_EOL;
                     foreach ($unusedResources as $unusedResource) {
-                        $prefix .= ' * ' . $unusedResource->getPath() . PHP_EOL;
+                        //$prefix .= ' * ' . $unusedResource->getPath() . PHP_EOL;
                     }
 
                     $prefix .= ' */' . PHP_EOL;

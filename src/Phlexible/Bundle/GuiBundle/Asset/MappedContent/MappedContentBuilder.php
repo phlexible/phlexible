@@ -8,6 +8,9 @@
 
 namespace Phlexible\Bundle\GuiBundle\Asset\MappedContent;
 
+use Phlexible\Bundle\GuiBundle\Asset\Filter\ChainContentFilter;
+use Phlexible\Bundle\GuiBundle\Asset\Filter\EnsureTrailingSeparatorContentFilter;
+use Phlexible\Bundle\GuiBundle\Asset\Filter\LineSeparatorContentFilter;
 use Phlexible\Bundle\GuiBundle\Asset\SourceMap\SourceMapBuilder;
 use Puli\Repository\Resource\FileResource;
 
@@ -29,14 +32,21 @@ class MappedContentBuilder
      */
     public function build($name, array $resources, callable $sanitizePath = null, callable $prefixContent = null, callable $filterContent = null)
     {
+        $filter = new ChainContentFilter(array(
+            new LineSeparatorContentFilter(PHP_EOL),
+            new EnsureTrailingSeparatorContentFilter(PHP_EOL),
+        ));
+
+        $line = 0;
         $content = '';
         if ($prefixContent) {
-            $content .= $prefixContent();
+            $content .= $filter->filter($prefixContent());
+            $line = substr_count($content, PHP_EOL) + 1;
         }
-        $line = substr_count($content, PHP_EOL);
         $sourceMapBuilder = new SourceMapBuilder($name, $line);
+
         foreach ($resources as $resource) {
-            $fileContent = $resource->getBody() . PHP_EOL;
+            $fileContent = $filter->filter($resource->getBody());
             $content .= $fileContent;
 
             $path = $resource->getPath();

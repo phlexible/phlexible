@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\GuiBundle\Asset\Filter;
 
 /**
- * Url filter interface
+ * Content filter interface
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface UrlFilterInterface
+interface ContentFilterInterface
 {
     /**
      * @param string $content
