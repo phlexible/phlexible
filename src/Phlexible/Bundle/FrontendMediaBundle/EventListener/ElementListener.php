@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\FrontendMediaBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\Event\DeleteElementEvent;
-use Phlexible\Bundle\ElementBundle\Event\ElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
 use Phlexible\Bundle\FrontendMediaBundle\Usage\UsageUpdater;
 use Phlexible\Bundle\QueueBundle\Entity\Job;

@@ -193,7 +193,7 @@ class DefaultRequestMatcher implements RequestMatcherInterface
         $defaults['_route'] = $path;
         $defaults['_route_object'] = $treeNode;
         $defaults['_content'] = $treeNode;
-        $defaults['_controller'] = 'PhlexibleFrontendBundle:Online:index';
+        $defaults['_controller'] = 'PhlexibleCmsBundle:Online:index';
 
         return $defaults;
     }

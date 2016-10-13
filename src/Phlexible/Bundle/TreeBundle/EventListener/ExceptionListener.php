@@ -219,7 +219,7 @@ class ExceptionListener
             'siterootUrl' => $request->attributes->get('siterootUrl'),
             'routeDocument' => $treeNode,
             'contentDocument' => $treeNode,
-            '_controller' => 'PhlexibleFrontendBundle:Online:index',
+            '_controller' => 'PhlexibleCmsBundle:Online:index',
             'exception' => FlattenException::create($exception),
             'logger' => $this->logger instanceof DebugLoggerInterface ? $this->logger : null,
             // keep for BC -- as $format can be an argument of the controller callable

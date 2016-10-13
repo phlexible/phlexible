@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\FrontendBundle\ProblemChecker;
+namespace Phlexible\Bundle\CmsBundle\ProblemChecker;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
