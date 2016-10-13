@@ -45,9 +45,6 @@ class PhlexibleElementExtension extends Extension
             $config['publish']['cross_language_publish_offline']
         );
         $container->setParameter('phlexible_element.tree.sync_page', $config['tree']['sync_page']);
-        $container->setParameter('phlexible_element.context.enabled', $config['context']['enabled']);
-        $container->setParameter('phlexible_element.context.default_country', $config['context']['default_country']);
-        $container->setParameter('phlexible_element.context.countries', $config['context']['countries']);
 
         $loader->load('doctrine.yml');
         $container->setAlias('phlexible_element.element_manager', 'phlexible_element.doctrine.element_manager');
