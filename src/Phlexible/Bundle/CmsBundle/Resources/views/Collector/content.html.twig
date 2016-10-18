@@ -55,19 +55,19 @@
             <table>
                 <thead>
                 <tr>
-                    <th style="white-space: nowrap;">ID</th>
-                    <th style="white-space: nowrap;">Type</th>
-                    <th style="white-space: nowrap;">Type ID</th>
-                    <th style="white-space: nowrap;">Title</th>
+                    <th class="nowrap">ID</th>
+                    <th class="nowrap">Type</th>
+                    <th class="nowrap">Type ID</th>
+                    <th class="nowrap">Title</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for node in collector.nodes %}
                     <tr>
-                        <td style="white-space: nowrap;">{{ node.id }}</td>
-                        <td style="white-space: nowrap;">{{ node.type }}</td>
-                        <td style="white-space: nowrap;">{{ node.typeId }}</td>
-                        <td style="white-space: nowrap;">{{ node.title }}<br/>
+                        <td class="nowrap">{{ node.id }}</td>
+                        <td class="nowrap">{{ node.type }}</td>
+                        <td class="nowrap">{{ node.typeId }}</td>
+                        <td class="nowrap">{{ node.title }}<br/>
                             <span class="text-muted newline text-small">{% for pathId, pathNode in node.path %}{{ pathNode }} [{{ pathId }}]{% if not loop.last %} > {% endif %}{% endfor %}</span></td>
                     </tr>
                 {% endfor %}
@@ -82,21 +82,21 @@
             <table>
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Type</th>
-                    <th>Type ID</th>
-                    <th>Node ID</th>
-                    <th>Title</th>
+                    <th class="nowrap">ID</th>
+                    <th class="nowrap">Type</th>
+                    <th class="nowrap">Type ID</th>
+                    <th class="nowrap">Node ID</th>
+                    <th class="nowrap">Title</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for teaser in collector.teasers %}
                     <tr>
-                        <td style="white-space: nowrap;">{{ teaser.id }}</td>
-                        <td style="white-space: nowrap;">{{ teaser.type }}</td>
-                        <td style="white-space: nowrap;">{{ teaser.typeId }}</td>
-                        <td style="white-space: nowrap;">{{ teaser.nodeId }}</td>
-                        <td style="white-space: nowrap;">{{ teaser.title }}</td>
+                        <td class="nowrap">{{ teaser.id }}</td>
+                        <td class="nowrap">{{ teaser.type }}</td>
+                        <td class="nowrap">{{ teaser.typeId }}</td>
+                        <td class="nowrap">{{ teaser.nodeId }}</td>
+                        <td class="nowrap">{{ teaser.title }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -110,23 +110,23 @@
             <table>
                 <thead>
                 <tr>
-                    <th>EID</th>
-                    <th>Version</th>
-                    <th>Language</th>
-                    <th>Elementtype ID</th>
-                    <th>Elementtype Type</th>
-                    <th>Elementtype Unique ID</th>
+                    <th class="nowrap">EID</th>
+                    <th class="nowrap">Version</th>
+                    <th class="nowrap">Language</th>
+                    <th class="nowrap">Elementtype ID</th>
+                    <th class="nowrap">Elementtype Type</th>
+                    <th class="nowrap">Elementtype Unique ID</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for element in collector.elements %}
                     <tr>
-                        <td style="white-space: nowrap;">{{ element.eid }}</td>
-                        <td style="white-space: nowrap;">{{ element.version }}</td>
-                        <td style="white-space: nowrap;">{{ element.language }}</td>
-                        <td style="white-space: nowrap;">{{ element.elementtypeId }}</td>
-                        <td style="white-space: nowrap;">{{ element.elementtypeType }}</td>
-                        <td style="white-space: nowrap;">{{ element.elementtypeUniqueId }}</td>
+                        <td class="nowrap">{{ element.eid }}</td>
+                        <td class="nowrap">{{ element.version }}</td>
+                        <td class="nowrap">{{ element.language }}</td>
+                        <td class="nowrap">{{ element.elementtypeId }}</td>
+                        <td class="nowrap">{{ element.elementtypeType }}</td>
+                        <td class="nowrap">{{ element.elementtypeUniqueId }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
