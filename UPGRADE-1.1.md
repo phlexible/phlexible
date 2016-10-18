@@ -26,3 +26,24 @@ phlexible_cms_preview:
     resource: "@PhlexibleCmsBundle/Controller/PreviewController.php"
     type:     annotation
 ```
+
+Dependencies
+------------
+
+The dependency to igorw/file-server-bundle has been completely removed.
+
+Remove the following line from your AppKernel:
+
+```php
+    new Igorw\FileServeBundle\IgorwFileServeBundle(),
+```
+
+Remove the follow section from your config.yml:
+
+```
+# Igorw File Serve Bundle
+igorw_file_serve:
+    factory: php # php
+    #factory: sendfile # nginx
+    #factory: xsendfile # apache
+```
