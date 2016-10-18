@@ -28,6 +28,16 @@ class ScriptsBuilder
     private $resourceFinder;
 
     /**
+     * @var ScriptsResourceResolver
+     */
+    private $resourceResolver;
+
+    /**
+     * @var MappedContentBuilder
+     */
+    private $contentBuilder;
+
+    /**
      * @var CompressorInterface
      */
     private $compressor;
@@ -44,17 +54,23 @@ class ScriptsBuilder
 
     /**
      * @param ResourceFinderInterface $resourceFinder
+     * @param ScriptsResourceResolver $resourceResolver
+     * @param MappedContentBuilder    $contentBuilder
      * @param CompressorInterface     $compressor
      * @param string                  $cacheDir
      * @param bool                    $debug
      */
     public function __construct(
         ResourceFinderInterface $resourceFinder,
+        ScriptsResourceResolver $resourceResolver,
+        MappedContentBuilder $contentBuilder,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
     {
         $this->resourceFinder = $resourceFinder;
+        $this->resourceResolver = $resourceResolver;
+        $this->contentBuilder = $contentBuilder;
         $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -74,13 +90,11 @@ class ScriptsBuilder
 
         $resources = $this->resourceFinder->findByType('phlexible/scripts');
 
-        if (1 ||!$cache->isFresh($resources)) {
-            $resolver = new ScriptsResourceResolver();
-            $resolvedResources = $resolver->resolve($resources);
+        if (!$cache->isFresh($resources)) {
+            $resolvedResources = $this->resourceResolver->resolve($resources);
             $debug = $this->debug;
             $unusedResources = $resolvedResources->getUnusedResources();
-            $builder = new MappedContentBuilder();
-            $mappedContent = $builder->build(
+            $mappedContent = $this->contentBuilder->build(
                 'gui.js',
                 $resolvedResources->getResources(),
                 function ($path) {

@@ -28,6 +28,11 @@ class CssBuilder
     private $resourceFinder;
 
     /**
+     * @var MappedContentBuilder
+     */
+    private $contentBuilder;
+
+    /**
      * @var CompressorInterface
      */
     private $compressor;
@@ -44,17 +49,20 @@ class CssBuilder
 
     /**
      * @param ResourceFinderInterface $resourceFinder
+     * @param MappedContentBuilder    $contentBuilder
      * @param CompressorInterface     $compressor
      * @param string                  $cacheDir
      * @param bool                    $debug
      */
     public function __construct(
         ResourceFinderInterface $resourceFinder,
+        MappedContentBuilder $contentBuilder,
         CompressorInterface $compressor,
         $cacheDir,
         $debug
     ) {
         $this->resourceFinder = $resourceFinder;
+        $this->contentBuilder = $contentBuilder;
         $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -78,9 +86,8 @@ class CssBuilder
         $resources = $this->resourceFinder->findByType('phlexible/styles');
 
         if (!$cache->isFresh($resources)) {
-            $builder = new MappedContentBuilder();
             $filter = new BaseUrlContentFilter($baseUrl, $basePath);
-            $mappedContent = $builder->build(
+            $mappedContent = $this->contentBuilder->build(
                 'gui.css',
                 $resources,
                 function ($path) {

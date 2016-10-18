@@ -4,13 +4,24 @@ parameters:
 services:
     phlexible_gui.asset.resource_finder:
         class: Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinder
+        public: false
         arguments:
             - "@puli.discovery"
+
+    phlexible_gui.asset.builder.mapped_content_builder:
+        class: Phlexible\Bundle\GuiBundle\Asset\MappedContent\MappedContentBuilder
+        public: false
+
+    phlexible_gui.asset.builder.scripts_resource_resolver:
+        class: Phlexible\Bundle\GuiBundle\Asset\ResourceResolver\ScriptsResourceResolver
+        public: false
 
     phlexible_gui.asset.builder.scripts:
         class: Phlexible\Bundle\GuiBundle\Asset\Builder\ScriptsBuilder
         arguments:
             - "@phlexible_gui.asset.resource_finder"
+            - "@phlexible_gui.asset.builder.scripts_resource_resolver"
+            - "@phlexible_gui.asset.builder.mapped_content_builder"
             - "@phlexible_gui.compressor.javascript"
             - "%asset.cache_dir%"
             - "%kernel.debug%"
@@ -19,6 +30,7 @@ services:
         class: Phlexible\Bundle\GuiBundle\Asset\Builder\CssBuilder
         arguments:
             - "@phlexible_gui.asset.resource_finder"
+            - "@phlexible_gui.asset.builder.mapped_content_builder"
             - "@phlexible_gui.compressor.css"
             - "%asset.cache_dir%"
             - "%kernel.debug%"
