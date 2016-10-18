@@ -12,6 +12,10 @@
             <span class="sf-toolbar-status sf-toolbar-status-">{{ collector.countNodes }}</span>
         </div>
         <div class="sf-toolbar-info-piece">
+            <b>Loaded teasers</b>
+            <span class="sf-toolbar-status sf-toolbar-status-">{{ collector.countTeasers }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
             <b>Loaded elements</b>
             <span class="sf-toolbar-status sf-toolbar-status-">{{ collector.countElements }}</span>
         </div>
@@ -35,6 +39,10 @@
             <span class="label">Loaded nodes</span>
         </div>
         <div class="metric">
+            <span class="value">{{ collector.countTeasers }}</span>
+            <span class="label">Loaded Teasers</span>
+        </div>
+        <div class="metric">
             <span class="value">{{ collector.countElements }}</span>
             <span class="label">Loaded Elements</span>
         </div>
@@ -47,17 +55,48 @@
             <table>
                 <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>path</th>
+                    <th style="white-space: nowrap;">ID</th>
+                    <th style="white-space: nowrap;">Type</th>
+                    <th style="white-space: nowrap;">Type ID</th>
+                    <th style="white-space: nowrap;">Title</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for node in collector.nodes %}
                     <tr>
                         <td style="white-space: nowrap;">{{ node.id }}</td>
-                        <td style="white-space: nowrap;">{{ node.title }}</td>
-                        <td>{{ node.path|join(" / ") }}</td>
+                        <td style="white-space: nowrap;">{{ node.type }}</td>
+                        <td style="white-space: nowrap;">{{ node.typeId }}</td>
+                        <td style="white-space: nowrap;">{{ node.title }}<br/>
+                            <span class="text-muted newline text-small">{% for pathId, pathNode in node.path %}{{ pathNode }} [{{ pathId }}]{% if not loop.last %} > {% endif %}{% endfor %}</span></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="tab-content">
+            </div>
+        </div>
+
+        <div class="tab">
+            <h3 class="tab-title">Loaded teasers <span class="badge">{{ collector.countTeasers}}</span></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Type ID</th>
+                    <th>Node ID</th>
+                    <th>Title</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for teaser in collector.teasers %}
+                    <tr>
+                        <td style="white-space: nowrap;">{{ teaser.id }}</td>
+                        <td style="white-space: nowrap;">{{ teaser.type }}</td>
+                        <td style="white-space: nowrap;">{{ teaser.typeId }}</td>
+                        <td style="white-space: nowrap;">{{ teaser.nodeId }}</td>
+                        <td style="white-space: nowrap;">{{ teaser.title }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -74,6 +113,9 @@
                     <th>EID</th>
                     <th>Version</th>
                     <th>Language</th>
+                    <th>Elementtype ID</th>
+                    <th>Elementtype Type</th>
+                    <th>Elementtype Unique ID</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -82,6 +124,9 @@
                         <td style="white-space: nowrap;">{{ element.eid }}</td>
                         <td style="white-space: nowrap;">{{ element.version }}</td>
                         <td style="white-space: nowrap;">{{ element.language }}</td>
+                        <td style="white-space: nowrap;">{{ element.elementtypeId }}</td>
+                        <td style="white-space: nowrap;">{{ element.elementtypeType }}</td>
+                        <td style="white-space: nowrap;">{{ element.elementtypeUniqueId }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

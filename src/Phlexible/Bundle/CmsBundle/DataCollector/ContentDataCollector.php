@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\CmsBundle\DataCollector;
 
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader;
+use Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
@@ -30,18 +31,28 @@ class ContentDataCollector extends DataCollector implements LateDataCollectorInt
     private $treeManager;
 
     /**
+     * @var DelegatingContentTeaserManager
+     */
+    private $teaserManager;
+
+    /**
      * @var ContentElementLoader
      */
     private $elementLoader;
 
     /**
      * @param null $treeManager
+     * @param null $teaserManager
      * @param null $elementLoader
      */
-    public function __construct($treeManager = null, $elementLoader = null)
+    public function __construct($treeManager = null, $teaserManager = null, $elementLoader = null)
     {
         if (null !== $treeManager && $treeManager instanceof ContentTreeManagerInterface) {
             $this->treeManager = $treeManager;
+        }
+
+        if (null !== $teaserManager && $teaserManager instanceof DelegatingContentTeaserManager) {
+            $this->teaserManager = $teaserManager;
         }
 
         if (null !== $elementLoader && $elementLoader instanceof ContentElementLoader) {
@@ -74,10 +85,24 @@ class ContentDataCollector extends DataCollector implements LateDataCollectorInt
                     }
                     $this->data['nodes'][] = array(
                         'id' => $node->getId(),
+                        'type' => $node->getType(),
+                        'typeId' => $node->getTypeId(),
                         'title' => $node->getTitle(),
                         'path' => $path,
                     );
                 }
+            }
+        }
+        if (null !== $this->teaserManager) {
+            $this->data['teasers'] = array();
+            foreach ($this->teaserManager->getTeasers() as $teaser) {
+                $this->data['teasers'][] = array(
+                    'id' => $teaser->getId(),
+                    'type' => $teaser->getType(),
+                    'typeId' => $teaser->getTypeId(),
+                    'title' => $teaser->getTitle(),
+                    'nodeId' => $teaser->getTreeId(),
+                );
             }
         }
         if (null !== $this->elementLoader) {
@@ -87,6 +112,9 @@ class ContentDataCollector extends DataCollector implements LateDataCollectorInt
                     'eid' => $element->getEid(),
                     'version' => $element->getVersion(),
                     'language' => $element->getLanguage(),
+                    'elementtypeId' => $element->getElementtypeId(),
+                    'elementtypeType' => $element->getElementtypeType(),
+                    'elementtypeUniqueId' => $element->getElementtypeUniqueId(),
                 );
             }
         }
@@ -100,6 +128,16 @@ class ContentDataCollector extends DataCollector implements LateDataCollectorInt
     public function countNodes()
     {
         return isset($this->data['nodes']) ? count($this->data['nodes']) : 0;
+    }
+
+    /**
+     * Gets the number of loaded teasers.
+     *
+     * @return int
+     */
+    public function countTeasers()
+    {
+        return isset($this->data['teasers']) ? count($this->data['teasers']) : 0;
     }
 
     /**
@@ -120,6 +158,16 @@ class ContentDataCollector extends DataCollector implements LateDataCollectorInt
     public function getNodes()
     {
         return isset($this->data['nodes']) ? $this->data['nodes'] : array();
+    }
+
+    /**
+     * Gets the loaded teasers.
+     *
+     * @return array
+     */
+    public function getTeasers()
+    {
+        return isset($this->data['teasers']) ? $this->data['teasers'] : array();
     }
 
     /**

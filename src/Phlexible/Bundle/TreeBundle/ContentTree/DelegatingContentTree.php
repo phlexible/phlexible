@@ -166,6 +166,9 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate
         return $this->tree->getRoot();
     }
 
+    /**
+     * @var ContentTreeNode[]
+     */
     private $contentNodes = array();
 
     /**

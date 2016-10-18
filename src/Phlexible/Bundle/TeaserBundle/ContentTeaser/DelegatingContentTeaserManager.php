@@ -43,6 +43,19 @@ class DelegatingContentTeaserManager
     }
 
     /**
+     * @var ContentTeaser[]
+     */
+    private $contentTeasers = array();
+
+    /**
+     * @return ContentTeaser[]
+     */
+    public function getTeasers()
+    {
+        return $this->contentTeasers;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function find($id)
@@ -55,7 +68,12 @@ class DelegatingContentTeaserManager
      */
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->teaserManager->findBy($criteria, $orderBy, $limit, $offset);
+        $teasers = array();
+        foreach ($this->teaserManager->findBy($criteria, $orderBy, $limit, $offset) as $teaser) {
+            $teasers = $this->createContentTeaserFromTeaser($teaser);
+        }
+
+        return $teasers;
     }
 
     /**
@@ -184,25 +202,29 @@ class DelegatingContentTeaserManager
      */
     public function createContentTeaserFromTeaser(Teaser $teaser)
     {
-        $contentTeaser = new ContentTeaser();
-        $contentTeaser
-            ->setId($teaser->getId())
-            ->setLayoutareaId($teaser->getLayoutareaId())
-            ->setTreeId($teaser->getTreeId())
-            ->setEid($teaser->getEid())
-            ->setTypeId($teaser->getTypeId())
-            ->setType($teaser->getType())
-            ->setSort($teaser->getSort())
-            ->setCache($teaser->getCache())
-            ->setAttributes($teaser->getAttributes())
-            ->setCreatedAt($teaser->getCreatedAt())
-            ->setCreateUserId($teaser->getCreateUserId());
+        if (!isset($this->contentTeasers[$teaser->getId()])) {
+            $contentTeaser = new ContentTeaser();
+            $contentTeaser
+                ->setId($teaser->getId())
+                ->setLayoutareaId($teaser->getLayoutareaId())
+                ->setTreeId($teaser->getTreeId())
+                ->setEid($teaser->getEid())
+                ->setTypeId($teaser->getTypeId())
+                ->setType($teaser->getType())
+                ->setSort($teaser->getSort())
+                ->setCache($teaser->getCache())
+                ->setAttributes($teaser->getAttributes())
+                ->setCreatedAt($teaser->getCreatedAt())
+                ->setCreateUserId($teaser->getCreateUserId());
 
-        $language = 'de';
-        $contentTeaser->setTitle($this->mediator->getTitle($teaser, 'navigation', $language));
-        $contentTeaser->setUniqueId($this->mediator->getUniqueId($teaser));
+            $language = 'de';
+            $contentTeaser->setTitle($this->mediator->getTitle($teaser, 'navigation', $language));
+            $contentTeaser->setUniqueId($this->mediator->getUniqueId($teaser));
 
-        return $contentTeaser;
+            $this->contentTeasers[$teaser->getId()] = $contentTeaser;
+        }
+
+        return $this->contentTeasers[$teaser->getId()];
     }
 
 }
