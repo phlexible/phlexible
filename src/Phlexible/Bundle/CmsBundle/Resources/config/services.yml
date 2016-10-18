@@ -7,6 +7,7 @@ services:
     phlexible_element.data_collector:
         class: Phlexible\Bundle\CmsBundle\DataCollector\ContentDataCollector
         arguments:
+            - "@phlexible_tree.content_tree_manager"
             - "@phlexible_element.content_loader"
         tags:
             - {name: data_collector, template: "@PhlexibleCms/Collector/content.html.twig", id: cms}

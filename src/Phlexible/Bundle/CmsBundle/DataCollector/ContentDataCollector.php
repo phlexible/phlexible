@@ -9,6 +9,9 @@
 namespace Phlexible\Bundle\CmsBundle\DataCollector;
 
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader;
+use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
+use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
+use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeNode;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -22,15 +25,25 @@ use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 class ContentDataCollector extends DataCollector implements LateDataCollectorInterface
 {
     /**
+     * @var ContentTreeManagerInterface
+     */
+    private $treeManager;
+
+    /**
      * @var ContentElementLoader
      */
     private $elementLoader;
 
     /**
+     * @param null $treeManager
      * @param null $elementLoader
      */
-    public function __construct($elementLoader = null)
+    public function __construct($treeManager = null, $elementLoader = null)
     {
+        if (null !== $treeManager && $treeManager instanceof ContentTreeManagerInterface) {
+            $this->treeManager = $treeManager;
+        }
+
         if (null !== $elementLoader && $elementLoader instanceof ContentElementLoader) {
             $this->elementLoader = $elementLoader;
         }
@@ -49,6 +62,24 @@ class ContentDataCollector extends DataCollector implements LateDataCollectorInt
      */
     public function lateCollect()
     {
+        if (null !== $this->treeManager) {
+            $this->data['nodes'] = array();
+            foreach ($this->treeManager->findAll() as $tree) {
+                /* @var $tree ContentTreeInterface */
+                foreach ($tree->getNodes() as $node) {
+                    /* @var $node ContentTreeNode */
+                    $path = array();
+                    foreach ($node->getTree()->getPath($node) as $pathNode) {
+                        $path[$pathNode->getId()] = $pathNode->getTitle();
+                    }
+                    $this->data['nodes'][] = array(
+                        'id' => $node->getId(),
+                        'title' => $node->getTitle(),
+                        'path' => $path,
+                    );
+                }
+            }
+        }
         if (null !== $this->elementLoader) {
             $this->data['elements'] = array();
             foreach ($this->elementLoader->getElements() as $element) {
@@ -62,7 +93,17 @@ class ContentDataCollector extends DataCollector implements LateDataCollectorInt
     }
 
     /**
-     * Gets the called events.
+     * Gets the number of loaded nodes.
+     *
+     * @return int
+     */
+    public function countNodes()
+    {
+        return isset($this->data['nodes']) ? count($this->data['nodes']) : 0;
+    }
+
+    /**
+     * Gets the number of loaded elements.
      *
      * @return int
      */
@@ -72,7 +113,17 @@ class ContentDataCollector extends DataCollector implements LateDataCollectorInt
     }
 
     /**
-     * Gets the called events.
+     * Gets the loaded nodes.
+     *
+     * @return array
+     */
+    public function getNodes()
+    {
+        return isset($this->data['nodes']) ? $this->data['nodes'] : array();
+    }
+
+    /**
+     * Gets the loaded elements.
      *
      * @return array
      */

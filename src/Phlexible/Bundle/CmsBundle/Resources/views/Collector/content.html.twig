@@ -8,6 +8,10 @@
 
     {% set text %}
         <div class="sf-toolbar-info-piece">
+            <b>Loaded nodes</b>
+            <span class="sf-toolbar-status sf-toolbar-status-">{{ collector.countNodes }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
             <b>Loaded elements</b>
             <span class="sf-toolbar-status sf-toolbar-status-">{{ collector.countElements }}</span>
         </div>
@@ -27,30 +31,66 @@
 
     <div class="metrics">
         <div class="metric">
+            <span class="value">{{ collector.countNodes }}</span>
+            <span class="label">Loaded nodes</span>
+        </div>
+        <div class="metric">
             <span class="value">{{ collector.countElements }}</span>
             <span class="label">Loaded Elements</span>
         </div>
     </div>
 
-    <h3>Elements</h3>
+    <div class="sf-tabs">
 
-    <table>
-        <thead>
-            <tr>
-                <th>EID</th>
-                <th>Version</th>
-                <th>Language</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for element in collector.elements %}
-            <tr>
-                <td>{{ element.eid }}</td>
-                <td>{{ element.version }}</td>
-                <td>{{ element.language }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <div class="tab">
+            <h3 class="tab-title">Loaded nodes <span class="badge">{{ collector.countNodes}}</span></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>path</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for node in collector.nodes %}
+                    <tr>
+                        <td style="white-space: nowrap;">{{ node.id }}</td>
+                        <td style="white-space: nowrap;">{{ node.title }}</td>
+                        <td>{{ node.path|join(" / ") }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="tab-content">
+            </div>
+        </div>
+
+        <div class="tab">
+            <h3 class="tab-title">Loaded elements <span class="badge">{{ collector.countElements}}</span></h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>EID</th>
+                    <th>Version</th>
+                    <th>Language</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for element in collector.elements %}
+                    <tr>
+                        <td style="white-space: nowrap;">{{ element.eid }}</td>
+                        <td style="white-space: nowrap;">{{ element.version }}</td>
+                        <td style="white-space: nowrap;">{{ element.language }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="tab-content">
+            </div>
+        </div>
+
+    </div>
+
 
 {% endblock %}
