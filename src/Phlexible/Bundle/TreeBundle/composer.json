@@ -14,15 +14,9 @@
         "phlexible/access-control-bundle": "^1.0",
         "symfony-cmf/routing": "^1.4"
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packages.brainbits.net/repo/private/"
-        }
-    ],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "1.1-dev"
         }
     },
     "minimum-stability": "dev",
