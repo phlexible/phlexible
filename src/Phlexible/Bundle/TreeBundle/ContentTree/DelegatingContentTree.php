@@ -167,18 +167,34 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate
     }
 
     /**
+     * @var ContentTreeNode[]
+     */
+    private $contentNodes = array();
+
+    /**
+     * @return array
+     */
+    public function getNodes()
+    {
+        return $this->contentNodes;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function get($id)
     {
-        $treeNode = $this->tree->get($id);
-        if (!$treeNode) {
-            return null;
+        if (!isset($this->contentNodes[$id])) {
+            $treeNode = $this->tree->get($id);
+            $contentNode = null;
+            if ($treeNode) {
+                $contentNode = $this->createContentTreeNodeFromTreeNode($treeNode);
+            }
+
+            $this->contentNodes[$id] = $contentNode;
         }
 
-        $contentNode = $this->createContentTreeNodeFromTreeNode($treeNode);
-
-        return $contentNode;
+        return $this->contentNodes[$id];
     }
 
     /**

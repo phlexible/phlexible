@@ -184,6 +184,7 @@ class Tree implements TreeInterface, WritableTreeInterface
         $nodes = $this->getTreeNodeRepository()->findBy(['siterootId' => $this->siterootId, 'parentNode' => $node->getId()], ['sort' => 'ASC']);
         foreach ($nodes as $node) {
             $node->setTree($this);
+            $this->nodes[$node->getId()] = $node;
         }
 
         return $nodes;
