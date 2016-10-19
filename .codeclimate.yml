@@ -1,3 +1,2 @@
-languages:
-    JavaScript: false
-    PHP: true
+exclude_paths:
+  - "**/Resources/public/**"
