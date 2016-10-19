@@ -14,7 +14,7 @@ matrix:
 
 before_install: composer self-update
 
-install: composer install -n
+install: composer --memory=2G install -n
 
 script:
   - vendor/bin/phpunit -v --exclude-group functional --coverage-clover=coverage.xml
