@@ -67,7 +67,7 @@ class IconsBuilder
      *
      * @param string $basePath
      *
-     * @return \Phlexible\Component\GuiAsset\Asset\Asset
+     * @return Asset
      */
     public function build($basePath)
     {

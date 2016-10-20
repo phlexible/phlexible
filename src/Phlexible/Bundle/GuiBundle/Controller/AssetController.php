@@ -123,9 +123,9 @@ class AssetController extends Controller
     public function translationsAction(Request $request, $language)
     {
         $translationBuilder = $this->get('phlexible_gui.asset.translations_builder');
-        $file = $translationBuilder->build($language);
+        $asset = $translationBuilder->build($language);
 
-        return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/javascript;charset=UTF-8'));
+        return new BinaryFileResponse($asset->getFile(), 200, array('Content-Type' => 'text/javascript;charset=UTF-8'));
     }
 }
 

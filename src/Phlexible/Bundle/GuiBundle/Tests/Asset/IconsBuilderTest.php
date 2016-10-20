@@ -13,9 +13,9 @@ namespace Phlexible\Bundle\GuiBundle\Tests\Asset;
 
 use org\bovigo\vfs\vfsStream;
 use Phlexible\Bundle\GuiBundle\Asset\IconsBuilder;
-use Phlexible\Component\GuiAsset\Asset\Asset;
-use Phlexible\Component\GuiAsset\Compressor\CompressorInterface;
-use Phlexible\Component\GuiAsset\Finder\ResourceFinderInterface;
+use Phlexible\Component\Bundler\Asset\Asset;
+use Phlexible\Component\Bundler\Compressor\CompressorInterface;
+use Phlexible\Component\Bundler\Finder\ResourceFinderInterface;
 use Puli\Repository\Resource\FileResource;
 
 /**

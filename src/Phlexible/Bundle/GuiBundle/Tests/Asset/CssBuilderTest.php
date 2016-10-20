@@ -13,13 +13,13 @@ namespace Phlexible\Bundle\GuiBundle\Tests\Asset;
 
 use org\bovigo\vfs\vfsStream;
 use Phlexible\Bundle\GuiBundle\Asset\CssBuilder;
-use Phlexible\Component\GuiAsset\Asset\MappedAsset;
-use Phlexible\Component\GuiAsset\Compressor\CompressorInterface;
-use Phlexible\Component\GuiAsset\Content\MappedContent;
-use Phlexible\Component\GuiAsset\ContentBuilder\MappedContentBuilder;
-use Phlexible\Component\GuiAsset\Finder\ResourceFinderInterface;
-use Phlexible\Component\GuiAsset\ResourceResolver\ResolvedResources;
-use Phlexible\Component\GuiAsset\ResourceResolver\ResourceResolverInterface;
+use Phlexible\Component\Bundler\Asset\MappedAsset;
+use Phlexible\Component\Bundler\Compressor\CompressorInterface;
+use Phlexible\Component\Bundler\Content\MappedContent;
+use Phlexible\Component\Bundler\ContentBuilder\MappedContentBuilder;
+use Phlexible\Component\Bundler\Finder\ResourceFinderInterface;
+use Phlexible\Component\Bundler\ResourceResolver\ResolvedResources;
+use Phlexible\Component\Bundler\ResourceResolver\ResourceResolverInterface;
 use Prophecy\Argument;
 
 /**
