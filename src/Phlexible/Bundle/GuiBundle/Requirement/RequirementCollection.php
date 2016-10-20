@@ -1,6 +1,18 @@
 <?php
 
+/*
+ * This file is part of the phlexible package.
+ *
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Phlexible\Bundle\GuiBundle\Requirement;
+
+use ArrayIterator;
+use Traversable;
 
 /**
  * A RequirementCollection represents a set of Requirement instances.
@@ -18,7 +30,7 @@ class RequirementCollection implements \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->requirements);
+        return new ArrayIterator($this->requirements);
     }
 
     /**

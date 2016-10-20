@@ -1,7 +1,7 @@
 {
     "name": "phlexible/queue-bundle",
     "description": "phlexible queue bundle",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {

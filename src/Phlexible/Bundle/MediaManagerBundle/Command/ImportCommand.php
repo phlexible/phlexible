@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
@@ -73,8 +76,6 @@ class ImportCommand extends ContainerAwareCommand
         } else {
             $targetFolder = $volume->getFolderPeer()->getRoot();
         }
-
-        MWF_Env::setUser(MWF_Core_Users_User_Peer::getSystemUser());
 
         if (is_dir($source)) {
             $output = $this->importDir($source, $targetFolder);

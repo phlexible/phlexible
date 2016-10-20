@@ -1,7 +1,7 @@
 {
     "name": "phlexible/user-bundle",
     "description": "phlexible user bundle",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {

@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\ElementBundle\EventListener;
@@ -43,23 +46,6 @@ class UnlockListener
 
         $locks = $this->entityManager->getRepository('PhlexibleElementBundle:ElementLock')
             ->findBy(['userId' => $user->getId()]);
-
-        foreach ($locks as $lock) {
-            $this->entityManager->remove($lock);
-        }
-    }
-
-    /**
-     * Logout callback
-     *
-     * @param LogoutEvent $event
-     */
-    public function onLogout(LogoutEvent $event)
-    {
-        $user = $event->getUser();
-
-        $locks = $this->entityManager->getRepository('PhlexibleElementBundle:ElementLock')
-            ->findBy(['userId' => $user->getId(), 'type' => 'temporary']);
 
         foreach ($locks as $lock) {
             $this->entityManager->remove($lock);

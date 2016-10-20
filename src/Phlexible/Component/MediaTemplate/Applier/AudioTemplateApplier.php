@@ -1,15 +1,17 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\MediaTemplate\Applier;
 
 use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
 use FFMpeg\Media\Audio;
 use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
 use Psr\Log\LoggerInterface;

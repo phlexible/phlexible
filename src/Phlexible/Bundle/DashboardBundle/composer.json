@@ -1,7 +1,7 @@
 {
     "name": "phlexible/dashboard-bundle",
     "description": "phlexible dashboard bundle",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {

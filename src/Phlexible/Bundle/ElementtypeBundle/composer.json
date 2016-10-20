@@ -1,7 +1,7 @@
 {
     "name": "phlexible/elementtype-bundle",
     "description": "phlexible elementtype bundle",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {

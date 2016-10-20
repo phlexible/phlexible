@@ -1,7 +1,7 @@
 {
     "name": "phlexible/access-control",
     "description": "phlexible access control component",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "library",
     "keywords": ["phlexible"],
     "autoload": {

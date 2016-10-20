@@ -4,13 +4,10 @@ services:
         arguments:
             - "@phlexible_element.element_hasher"
 
-    phlexible_teaser.layoutarea.manager:
-        class: Phlexible\Bundle\TeaserBundle\Layoutarea\LayoutareaManager
-
-    phlexible_teaser.rights.provider:
-        class: Phlexible\Bundle\TeaserBundle\AccessControl\TeaserRightsProvider
+    phlexible_teaser.access_control_provider:
+        class: Phlexible\Bundle\TeaserBundle\AccessControl\TeaserPermissionProvider
         tags:
-            - {name: phlexible_access_control.rights}
+            - {name: phlexible_access_control.permission}
 
     # event listeners
     phlexible_teaser.listener.apply_successor:

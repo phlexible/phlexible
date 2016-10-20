@@ -1,7 +1,7 @@
 {
     "name": "phlexible/gui-bundle",
     "description": "phlexible gui bundle",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {

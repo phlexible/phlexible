@@ -1,7 +1,7 @@
 {
     "name": "phlexible/phlexible",
     "description": "phlexible",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {
@@ -58,8 +58,8 @@
         "phlexible/user-bundle": "self.version"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.5",
-        "mikey179/vfsStream": "~1.4"
+        "phpunit/phpunit": "^5.0",
+        "mikey179/vfsStream": "^1.4"
     },
     "suggest": {
         "puli/composer-plugin": "This package contains Puli resources. Require the plugin to use them."

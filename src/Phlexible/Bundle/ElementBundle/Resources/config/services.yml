@@ -28,14 +28,6 @@ services:
             - "@phlexible_element.element_source_manager"
             - "@phlexible_elementtype.file.dumper.xml"
 
-    phlexible_element.publish.publisher:
-        class: Phlexible\Bundle\ElementBundle\Element\Publish\Publisher
-        arguments:
-            - "@phlexible_element.element_service"
-            - "@phlexible_tree.tree_manager"
-            - "@phlexible_teaser.teaser_manager"
-            - "@security.authorization_checker"
-
     phlexible_element.publish.selector:
         class: Phlexible\Bundle\ElementBundle\Element\Publish\Selector
         arguments:
@@ -146,7 +138,6 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - {name: kernel.event_listener, event: phlexible_user.before_delete_user, method: onBeforeDeleteUser}
-            - {name: kernel.event_listener, event: security.logout, method: onLogout}
 
     phlexible_element.listener.teaser:
         class: Phlexible\Bundle\ElementBundle\EventListener\TeaserListener

@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\TreeBundle\Doctrine;
@@ -729,6 +732,7 @@ class Tree implements TreeInterface, WritableTreeInterface
         $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_SET_NODE_OFFLINE, $node->getTypeId(), $userId, $node->getId(), null, null, $language);
     }
 
+    /*
     protected function deleteCheck(Makeweb_Elements_Tree_Node $node, array $rightsIdentifiers)
     {
         $eid = $node->getEid();
@@ -764,6 +768,7 @@ class Tree implements TreeInterface, WritableTreeInterface
             $this->deleteCheck($childNode, $rightsIdentifiers);
         }
     }
+    */
 
     /**
      * @param TreeNodeInterface $node

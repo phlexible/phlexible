@@ -1,7 +1,7 @@
 {
     "name": "phlexible/search-bundle",
     "description": "phlexible search bundle",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {

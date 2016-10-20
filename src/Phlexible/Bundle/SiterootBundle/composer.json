@@ -1,7 +1,7 @@
 {
     "name": "phlexible/siteroot-bundle",
     "description": "phlexible siteroot bundle",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {
