@@ -1,51 +1,65 @@
-parameters:
-    asset.cache_dir: %kernel.cache_dir%/assets/
-
 services:
     phlexible_gui.asset.resource_finder:
-        class: Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinder
+        class: Phlexible\Component\Bundler\Finder\ResourceFinder
         public: false
         arguments:
             - "@puli.discovery"
 
-    phlexible_gui.asset.builder.mapped_content_builder:
-        class: Phlexible\Bundle\GuiBundle\Asset\MappedContent\MappedContentBuilder
+    phlexible_gui.asset.mapped_content_builder:
+        class: Phlexible\Component\Bundler\ContentBuilder\MappedContentBuilder
         public: false
 
-    phlexible_gui.asset.builder.scripts_resource_resolver:
-        class: Phlexible\Bundle\GuiBundle\Asset\ResourceResolver\ScriptsResourceResolver
+    phlexible_gui.asset.require_script_resource_resolver:
+        class: Phlexible\Component\Bundler\ResourceResolver\RequireScriptResourceResolver
         public: false
 
-    phlexible_gui.asset.builder.scripts:
-        class: Phlexible\Bundle\GuiBundle\Asset\Builder\ScriptsBuilder
+    phlexible_gui.asset.add_all_resource_resolver:
+        class: Phlexible\Component\Bundler\ResourceResolver\AddAllResourceResolver
+        public: false
+
+    phlexible_gui.asset.namespace_translation_extractor:
+        class: Phlexible\Component\Bundler\Translation\NamespaceTranslationExtractor
+        public: false
+
+    phlexible_gui.asset.namespace_translation_builder:
+        class: Phlexible\Component\Bundler\Translation\NamespaceTranslationBuilder
+        public: false
+
+    phlexible_gui.asset.scripts_builder:
+        class: Phlexible\Bundle\GuiBundle\Asset\ScriptsBuilder
         arguments:
             - "@phlexible_gui.asset.resource_finder"
-            - "@phlexible_gui.asset.builder.scripts_resource_resolver"
-            - "@phlexible_gui.asset.builder.mapped_content_builder"
+            - "@phlexible_gui.asset.scripts_resource_resolver"
+            - "@phlexible_gui.asset.mapped_content_builder"
             - "@phlexible_gui.compressor.javascript"
-            - "%asset.cache_dir%"
+            - "%phlexible_gui.asset_cache_dir%"
             - "%kernel.debug%"
 
-    phlexible_gui.asset.builder.css:
-        class: Phlexible\Bundle\GuiBundle\Asset\Builder\CssBuilder
+    phlexible_gui.asset.css_builder:
+        class: Phlexible\Bundle\GuiBundle\Asset\CssBuilder
         arguments:
             - "@phlexible_gui.asset.resource_finder"
-            - "@phlexible_gui.asset.builder.mapped_content_builder"
+            - "@phlexible_gui.asset.add_all_resource_resolver"
+            - "@phlexible_gui.asset.mapped_content_builder"
             - "@phlexible_gui.compressor.css"
-            - "%asset.cache_dir%"
+            - "%phlexible_gui.asset_cache_dir%"
             - "%kernel.debug%"
 
-    phlexible_gui.asset.builder.icons:
-        class: Phlexible\Bundle\GuiBundle\Asset\Builder\IconsBuilder
+    phlexible_gui.asset.icons_builder:
+        class: Phlexible\Bundle\GuiBundle\Asset\IconsBuilder
         arguments:
             - "@phlexible_gui.asset.resource_finder"
             - "@phlexible_gui.compressor.css"
-            - "%asset.cache_dir%"
+            - "%phlexible_gui.asset_cache_dir%"
             - "%kernel.debug%"
 
-    phlexible_gui.asset.builder.translations:
-        class: Phlexible\Bundle\GuiBundle\Asset\Builder\TranslationsBuilder
+    phlexible_gui.asset.translations_builder:
+        class: Phlexible\Bundle\GuiBundle\Asset\TranslationsBuilder
         arguments:
             - "@translator"
+            - "@phlexible_gui.asset.namespace_translation_extractor"
+            - "@phlexible_gui.asset.namespace_translation_builder"
             - "@phlexible_gui.compressor.javascript"
-            - "%asset.cache_dir%"
+            - "%phlexible_gui.asset_cache_dir%"
+            - "%locale%"
+            - "%kernel.debug%"

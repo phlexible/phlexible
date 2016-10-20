@@ -9,23 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Tests\Asset\Builder;
+namespace Phlexible\Bundle\GuiBundle\Tests\Asset;
 
 use org\bovigo\vfs\vfsStream;
-use Phlexible\Bundle\GuiBundle\Asset\Asset;
-use Phlexible\Bundle\GuiBundle\Asset\Builder\IconsBuilder;
-use Phlexible\Bundle\GuiBundle\Asset\Compressor\CompressorInterface;
-use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinderInterface;
+use Phlexible\Bundle\GuiBundle\Asset\IconsBuilder;
+use Phlexible\Component\GuiAsset\Asset\Asset;
+use Phlexible\Component\GuiAsset\Compressor\CompressorInterface;
+use Phlexible\Component\GuiAsset\Finder\ResourceFinderInterface;
 use Puli\Repository\Resource\FileResource;
 
 /**
- * @covers \Phlexible\Bundle\GuiBundle\Asset\Builder\IconsBuilder
+ * @covers \Phlexible\Bundle\GuiBundle\Asset\IconsBuilder
  */
 class IconsBuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function testBuild()
     {
-        $imgFile = dirname(dirname(dirname(__DIR__))) . '/Resources/public/icons/component.png';
+        $imgFile = dirname(dirname(__DIR__)) . '/Resources/public/icons/component.png';
 
         $root = vfsStream::setup('phlexible');
         $icon = vfsStream::newFile('phlexiblegui/icons/icon.png')->at($root)->setContent(file_get_contents($imgFile));

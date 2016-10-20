@@ -9,17 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Tests\Asset\Builder;
+namespace Phlexible\Bundle\GuiBundle\Tests\Asset;
 
 use org\bovigo\vfs\vfsStream;
-use Phlexible\Bundle\GuiBundle\Asset\Builder\TranslationsBuilder;
-use Phlexible\Bundle\GuiBundle\Asset\Compressor\CompressorInterface;
-use Prophecy\Argument;
+use Phlexible\Bundle\GuiBundle\Asset\TranslationsBuilder;
+use Phlexible\Component\GuiAsset\Asset\Asset;
+use Phlexible\Component\GuiAsset\Compressor\CompressorInterface;
+use Phlexible\Component\GuiAsset\Translation\TranslationBuilderInterface;
+use Phlexible\Component\GuiAsset\Translation\TranslationExtractorInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\TranslatorBagInterface;
 
 /**
- * @covers \Phlexible\Bundle\GuiBundle\Asset\Builder\TranslationsBuilder
+ * @covers \Phlexible\Bundle\GuiBundle\Asset\TranslationsBuilder
  */
 class TranslationsBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,28 +29,23 @@ class TranslationsBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $root = vfsStream::setup();
 
+        $messageCatalog = new MessageCatalogue('de', array());
+
         $translator = $this->prophesize(TranslatorBagInterface::class);
-        $translator->getCatalogue('de')->willReturn(new MessageCatalogue('de', array('testDomain' => array('Foo.bar.Baz' => 'foobar', 'Me.here.There' => 'hello world'))));
+        $translator->getCatalogue('de')->willReturn($messageCatalog);
+
+        $extractor = $this->prophesize(TranslationExtractorInterface::class);
+        $extractor->extract($messageCatalog, 'testDomain')->willReturn(array());
+
+        $builder = $this->prophesize(TranslationBuilderInterface::class);
 
         $compressor = $this->prophesize(CompressorInterface::class);
-        $compressor->compressString(Argument::type('string'))->willReturnArgument(0);
+        $compressor->compressFile(vfsStream::path('/root/translations-de.js'));
 
-        $builder = new TranslationsBuilder($translator->reveal(), $compressor->reveal(), $root->url());
+        $builder = new TranslationsBuilder($translator->reveal(), $extractor->reveal(), $builder->reveal(), $compressor->reveal(), $root->url(), 'de', false);
 
         $result = $builder->build('de', 'testDomain');
 
-        $expected = <<<EOF
-Ext.namespace("Phlexible.foo");
-Phlexible.foo.Strings = {"bar":{"Baz":"foobar"}};
-Phlexible.foo.Strings.get = function(s){return this[s]};
-Ext.namespace("Phlexible.me");
-Phlexible.me.Strings = {"here":{"There":"hello world"}};
-Phlexible.me.Strings.get = function(s){return this[s]};
-
-EOF;
-
-        $this->assertFileExists($root->getChild('translations-de.js')->url());
-        $this->assertSame($root->getChild('translations-de.js')->url(), $result);
-        $this->assertSame($expected, file_get_contents($root->getChild('translations-de.js')->url()));
+        $this->assertEquals(new Asset('vfs://root/translations-de.js'), $result);
     }
 }

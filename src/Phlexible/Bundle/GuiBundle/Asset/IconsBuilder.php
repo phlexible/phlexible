@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\GuiAsset\Builder;
+namespace Phlexible\Bundle\GuiBundle\Asset;
 
-use Phlexible\Component\GuiAsset\Asset\Asset;
-use Phlexible\Component\GuiAsset\Cache\ResourceCollectionCache;
-use Phlexible\Component\GuiAsset\Compressor\CompressorInterface;
-use Phlexible\Component\GuiAsset\Finder\ResourceFinderInterface;
+use Phlexible\Component\Bundler\Asset\Asset;
+use Phlexible\Component\Bundler\Cache\PuliResourceCollectionCache;
+use Phlexible\Component\Bundler\Compressor\CompressorInterface;
+use Phlexible\Component\Bundler\Finder\ResourceFinderInterface;
 use Puli\Repository\Resource\FileResource;
 
 /**
@@ -71,7 +71,7 @@ class IconsBuilder
      */
     public function build($basePath)
     {
-        $cache = new ResourceCollectionCache($this->cacheDir . 'icons.css', $this->debug);
+        $cache = new PuliResourceCollectionCache($this->cacheDir . 'icons.css', $this->debug);
 
         $resources = $this->resourceFinder->findByType('phlexible/icons');
 
@@ -83,7 +83,6 @@ class IconsBuilder
             if (!$this->debug) {
                 $this->compressor->compressFile((string) $cache);
             }
-
         }
 
         return new Asset((string) $cache);

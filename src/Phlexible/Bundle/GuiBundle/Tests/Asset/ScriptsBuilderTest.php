@@ -9,21 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Tests\Asset\Builder;
+namespace Phlexible\Bundle\GuiBundle\Tests\Asset;
 
 use org\bovigo\vfs\vfsStream;
-use Phlexible\Bundle\GuiBundle\Asset\Builder\ScriptsBuilder;
-use Phlexible\Bundle\GuiBundle\Asset\Compressor\CompressorInterface;
-use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinderInterface;
-use Phlexible\Bundle\GuiBundle\Asset\MappedAsset;
-use Phlexible\Bundle\GuiBundle\Asset\MappedContent\MappedContent;
-use Phlexible\Bundle\GuiBundle\Asset\MappedContent\MappedContentBuilder;
-use Phlexible\Bundle\GuiBundle\Asset\ResourceResolver\ResolvedResources;
-use Phlexible\Bundle\GuiBundle\Asset\ResourceResolver\ScriptsResourceResolver;
+use Phlexible\Bundle\GuiBundle\Asset\ScriptsBuilder;
+use Phlexible\Component\GuiAsset\Asset\MappedAsset;
+use Phlexible\Component\GuiAsset\Compressor\CompressorInterface;
+use Phlexible\Component\GuiAsset\Content\MappedContent;
+use Phlexible\Component\GuiAsset\ContentBuilder\MappedContentBuilder;
+use Phlexible\Component\GuiAsset\Finder\ResourceFinderInterface;
+use Phlexible\Component\GuiAsset\ResourceResolver\ResolvedResources;
+use Phlexible\Component\GuiAsset\ResourceResolver\ResourceResolverInterface;
 use Prophecy\Argument;
 
 /**
- * @covers \Phlexible\Bundle\GuiBundle\Asset\Builder\ScriptsBuilder
+ * @covers \Phlexible\Bundle\GuiBundle\Asset\ScriptsBuilder
  */
 class ScriptsBuilderTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,7 +34,7 @@ class ScriptsBuilderTest extends \PHPUnit_Framework_TestCase
         $finder = $this->prophesize(ResourceFinderInterface::class);
         $finder->findByType('phlexible/scripts')->willReturn(array());
 
-        $resolver = $this->prophesize(ScriptsResourceResolver::class);
+        $resolver = $this->prophesize(ResourceResolverInterface::class);
         $resolver->resolve(array())->willReturn(new ResolvedResources(array(), array()));
 
         $builder = $this->prophesize(MappedContentBuilder::class);

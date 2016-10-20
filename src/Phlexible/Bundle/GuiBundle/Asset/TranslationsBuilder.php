@@ -9,10 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\GuiAsset\Builder;
+namespace Phlexible\Bundle\GuiBundle\Asset;
 
-use Phlexible\Component\GuiAsset\Compressor\CompressorInterface;
-use Symfony\Component\Filesystem\Filesystem;
+use Phlexible\Component\Bundler\Asset\Asset;
+use Phlexible\Component\Bundler\Compressor\CompressorInterface;
+use Phlexible\Component\Bundler\Content\ResourceContent;
+use Phlexible\Component\Bundler\Translation\TranslationBuilderInterface;
+use Phlexible\Component\Bundler\Translation\TranslationExtractorInterface;
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Translation\TranslatorBagInterface;
 
 /**
@@ -28,9 +32,19 @@ class TranslationsBuilder
     private $translator;
 
     /**
+     * @var TranslationExtractorInterface
+     */
+    private $extractor;
+
+    /**
+     * @var TranslationBuilderInterface
+     */
+    private $builder;
+
+    /**
      * @var CompressorInterface
      */
-    private $javascriptCompressor;
+    private $compressor;
 
     /**
      * @var string
@@ -38,100 +52,91 @@ class TranslationsBuilder
     private $cacheDir;
 
     /**
-     * @param TranslatorBagInterface $translator
-     * @param CompressorInterface    $javascriptCompressor
-     * @param string                 $cacheDir
+     * @var string
+     */
+    private $fallbackLocale;
+
+    /**
+     * @var bool
+     */
+    private $debug;
+
+    /**
+     * @param TranslatorBagInterface        $translator
+     * @param TranslationExtractorInterface $extractor
+     * @param TranslationBuilderInterface   $builder
+     * @param CompressorInterface           $compressor
+     * @param string                        $cacheDir
+     * @param string                        $fallbackLocale
+     * @param bool                          $debug
      */
     public function __construct(
         TranslatorBagInterface $translator,
-        CompressorInterface $javascriptCompressor,
-        $cacheDir)
+        TranslationExtractorInterface $extractor,
+        TranslationBuilderInterface $builder,
+        CompressorInterface $compressor,
+        $cacheDir,
+        $fallbackLocale,
+        $debug
+    )
     {
         $this->translator = $translator;
-        $this->javascriptCompressor = $javascriptCompressor;
+        $this->extractor = $extractor;
+        $this->builder = $builder;
+        $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;
+        $this->fallbackLocale = $fallbackLocale;
+        $this->debug = $debug;
     }
 
     /**
      * Get all Translations for the given section
      *
-     * @param string $language
+     * @param string $locale
      * @param string $domain
      *
-     * @return string
+     * @return Asset
      */
-    public function build($language, $domain = 'gui')
+    public function build($locale, $domain = 'gui')
+    {
+        $cache = new ConfigCache($this->cacheDir . '/translations-' . $locale . '.js', $this->debug);
+
+        if (!$cache->isFresh()) {
+            $content = $this->buildContent($locale, $domain);
+
+            $cache->write($content->getContent(), $content->getResources());
+
+            if (!$this->debug) {
+                $this->compressor->compressFile((string) $cache);
+            }
+        }
+
+        return new Asset((string) $cache);
+    }
+
+    /**
+     * @param string $locale
+     * @param string $domain
+     *
+     * @return ResourceContent
+     */
+    private function buildContent($locale, $domain)
     {
         $translations = [];
-        $catalogue = $this->translator->getCatalogue($language);
-        $namespaces = [];
-        foreach ($catalogue->all($domain) as $key => $value) {
-            $parts = explode('.', $key);
-            $component = array_shift($parts);
-            $namespace = 'Phlexible.' . strtolower($component) . '.Strings';
-            if (count($parts) > 1) {
-                $key1 = array_shift($parts);
-                $key2 = array_shift($parts);
-                $namespaces[$namespace][$key1][$key2] = $value;
-            } else {
-                $key = array_shift($parts);
-                $namespaces[$namespace][$key] = $value;
-            }
-        }
-        foreach ($namespaces as $namespace => $keys) {
-            $translations[$namespace] = $keys;
+        $resources = [];
+
+        if ($locale !== $this->fallbackLocale) {
+            $fallbackCatalogue = $this->translator->getCatalogue($this->fallbackLocale);
+            $resources = array_merge($resources, $fallbackCatalogue->getResources());
+            $translations = array_merge($translations, $this->extractor->extract($fallbackCatalogue, $domain));
         }
 
-        $cacheFilename = $this->cacheDir . '/translations-' . $language . '.js';
+        $catalogue = $this->translator->getCatalogue($locale);
+        $resources = array_merge($resources, $catalogue->getResources());
+        $translations = array_merge($translations, $this->extractor->extract($catalogue, $domain));
 
-        $content = $this->buildTranslations($translations);
+        $content = $this->builder->build($translations, $locale);
 
-        $filesystem = new Filesystem();
-        $filesystem->dumpFile($cacheFilename, $content);
-
-        return $cacheFilename;
-    }
-
-    /**
-     * Glue together all scripts and return file/memory stream
-     *
-     * @param array $languages
-     *
-     * @return string
-     */
-    private function buildTranslations(array $languages)
-    {
-        $namespaces = [];
-
-        $content = '';
-        foreach ($languages as $namespace => $page) {
-            $parentNamespace = explode('.', $namespace);
-            array_pop($parentNamespace);
-            $parentNamespace = implode('.', $parentNamespace);
-
-            if (!in_array($parentNamespace, $namespaces)) {
-                $content .= 'Ext.namespace("' . $parentNamespace . '");' . PHP_EOL;
-                $namespaces[] = $parentNamespace;
-            }
-
-            $content .= $namespace . ' = ' . json_encode($page) . ';' . PHP_EOL;
-            $content .= $namespace . '.get = function(s){return this[s]};' . PHP_EOL;
-        }
-
-        $content = $this->compress($content);
-
-        return $content;
-    }
-
-    /**
-     * Javascript-aware compress the input string
-     *
-     * @param string $script
-     *
-     * @return string
-     */
-    private function compress($script)
-    {
-        return $this->javascriptCompressor->compressString($script);
+        return new ResourceContent($content, $resources);
     }
 }

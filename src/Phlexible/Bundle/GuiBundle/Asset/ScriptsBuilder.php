@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\GuiAsset\Builder;
+namespace Phlexible\Bundle\GuiBundle\Asset;
 
-use Phlexible\Component\GuiAsset\ResourceResolver\ResolvedResources;
+use Phlexible\Component\Bundler\Builder\ResolvingBuilder;
+use Phlexible\Component\Bundler\ResourceResolver\ResolvedResources;
 
 /**
  * Scripts builder
