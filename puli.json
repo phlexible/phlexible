@@ -541,6 +541,11 @@
             "install-path": "vendor/monolog/monolog",
             "installer": "composer"
         },
+        "myclabs/deep-copy": {
+            "install-path": "vendor/myclabs/deep-copy",
+            "installer": "composer",
+            "env": "dev"
+        },
         "nelmio/api-doc-bundle": {
             "install-path": "vendor/nelmio/api-doc-bundle/Nelmio/ApiDocBundle",
             "installer": "composer"
@@ -559,6 +564,10 @@
         },
         "paragonie/random_compat": {
             "install-path": "vendor/paragonie/random_compat",
+            "installer": "composer"
+        },
+        "phlexible/bundler": {
+            "install-path": "vendor/phlexible/bundler",
             "installer": "composer"
         },
         "php-ffmpeg/extras": {
@@ -676,6 +685,11 @@
             "install-path": "vendor/ramsey/uuid",
             "installer": "composer"
         },
+        "sebastian/code-unit-reverse-lookup": {
+            "install-path": "vendor/sebastian/code-unit-reverse-lookup",
+            "installer": "composer",
+            "env": "dev"
+        },
         "sebastian/comparator": {
             "install-path": "vendor/sebastian/comparator",
             "installer": "composer",
@@ -701,8 +715,18 @@
             "installer": "composer",
             "env": "dev"
         },
+        "sebastian/object-enumerator": {
+            "install-path": "vendor/sebastian/object-enumerator",
+            "installer": "composer",
+            "env": "dev"
+        },
         "sebastian/recursion-context": {
             "install-path": "vendor/sebastian/recursion-context",
+            "installer": "composer",
+            "env": "dev"
+        },
+        "sebastian/resource-operations": {
+            "install-path": "vendor/sebastian/resource-operations",
             "installer": "composer",
             "env": "dev"
         },

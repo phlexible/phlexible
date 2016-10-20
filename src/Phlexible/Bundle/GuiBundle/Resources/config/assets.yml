@@ -29,7 +29,7 @@ services:
         class: Phlexible\Bundle\GuiBundle\Asset\ScriptsBuilder
         arguments:
             - "@phlexible_gui.asset.resource_finder"
-            - "@phlexible_gui.asset.scripts_resource_resolver"
+            - "@phlexible_gui.asset.require_script_resource_resolver"
             - "@phlexible_gui.asset.mapped_content_builder"
             - "@phlexible_gui.compressor.javascript"
             - "%phlexible_gui.asset_cache_dir%"
