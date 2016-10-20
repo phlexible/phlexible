@@ -30,9 +30,6 @@
     <filter>
         <whitelist>
             <directory suffix=".php">src/</directory>
-            <exclude>
-                <directory suffix=".php">src/Phlexible/Bundle/ElementBundle/Tests/Util/</directory>
-            </exclude>
         </whitelist>
     </filter>
 </phpunit>
