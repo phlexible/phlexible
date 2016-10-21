@@ -1,13 +1,10 @@
-tools:
-    external_code_coverage: false
-
 coding_style:
     php:
         spaces:
             around_operators:
                 concatenation: false
             before_left_brace:
-                function: false
+                function: true
 
 checks:
     php:
@@ -37,7 +34,7 @@ checks:
         classes_in_camel_caps: true
         avoid_perl_style_comments: true
         avoid_multiple_statements_on_same_line: true
-        align_assignments: true
+        align_assignments: false
         no_short_method_names:
             minimum: '3'
         encourage_postdec_operator: true
