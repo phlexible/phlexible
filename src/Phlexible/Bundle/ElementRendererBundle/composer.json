@@ -1,0 +1,22 @@
+{
+    "name": "phlexible/element-renderer-bundle",
+    "description": "phlexible element renderer bundle",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "keywords": ["phlexible"],
+    "autoload": {
+        "psr-4": {
+            "Phlexible\\Bundle\\ElementRendererBundle\\": ""
+        }
+    },
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.2-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
