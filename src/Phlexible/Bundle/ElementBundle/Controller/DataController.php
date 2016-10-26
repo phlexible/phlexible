@@ -20,7 +20,6 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
-use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -62,7 +61,6 @@ class DataController extends Controller
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
-        $stateManager = $this->get('phlexible_tree.state_manager');
         $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
         $lockManager = $this->get('phlexible_element.element_lock_manager');
         $userManager = $this->get('phlexible_user.user_manager');
@@ -465,8 +463,16 @@ class DataController extends Controller
         // state
 
         $status = '';
-        if ($stateManager->isPublished($node, $language)) {
-            $status = $stateManager->isAsync($node, $language) ? 'async' : 'online';
+        if ($teaser) {
+            $stateManager = $this->get('phlexible_teaser.state_manager');
+            if ($stateManager->isPublished($teaser, $language)) {
+                $status = $stateManager->isAsync($teaser, $language) ? 'async' : 'online';
+            }
+        } else {
+            $stateManager = $this->get('phlexible_tree.state_manager');
+            if ($stateManager->isPublished($node, $language)) {
+                $status = $stateManager->isAsync($node, $language) ? 'async' : 'online';
+            }
         }
 
         $icon = $iconResolver->resolveTreeNode($node, $language);
