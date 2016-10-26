@@ -83,17 +83,8 @@ class MetaSearch implements SearchProviderInterface
     public function search($query)
     {
         $files = [];
-        foreach ($this->volumeManager->all() as $volume) {
-            $foundFiles = $volume->search($query);
-            if ($foundFiles) {
-                $files += $foundFiles;
-            }
-        }
-
-        foreach ($this->metaDataManager->findByValue($query) as $metaData) {
-            $identifiers = $metaData->getIdentifiers();
-            $file = $volume->findFile($identifiers['file_id']);
-            $files[$file->getId()] = $file;
+        foreach ($this->metaDataManager->findRawByValue($query) as $metaData) {
+            $files[$metaData->getFile()->getId()] = $metaData->getFile();
         }
 
         $folders = [];
@@ -102,7 +93,8 @@ class MetaSearch implements SearchProviderInterface
             /* @var $file ExtendedFileInterface */
 
             if (empty($folders[$file->getFolderId()])) {
-                $folders[$file->getFolderId()] = $file->getVolume()->findFolder($file->getFolderId());
+                $volume = $this->volumeManager->findByFolderId($file->getFolderId());
+                $folders[$file->getFolderId()] = $volume->findFolder($file->getFolderId());
             }
 
             if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted('FILE_READ', $folders[$file->getFolderId()])) {
