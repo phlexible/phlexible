@@ -5,7 +5,7 @@
         "/phlexible/phlexibleelementtype/icons": "src/Phlexible/Bundle/ElementtypeBundle/Resources/public/icons",
         "/phlexible/phlexibleelementtype/menu": "src/Phlexible/Bundle/ElementtypeBundle/Resources/menu",
         "/phlexible/phlexibleelementtype/scripts": "src/Phlexible/Bundle/ElementtypeBundle/Resources/scripts",
-        "/phlexible/phlexibleelementtype/styles": "src/Phlexible/Bundle/ElementtypeBundle/Resources/styles",
+        "/phlexible/phlexibleelementtype/styles": "src/Phlexible/Bundle/ElementtypeBundle/Resources/styles"
     },
     "bindings": {
         "287e862e-6a6a-541f-aab4-bc4d5498b4c0": {
