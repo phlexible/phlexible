@@ -28,8 +28,8 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                 if (element.properties.teaser_id) {
                     if (element.teaserNode && 'function' == typeof element.teaserNode.setText) {
                         var iconEl = element.teaserNode.getUI().getIconEl();
-                        if (iconEl.src.match(/\/status\/[a-z]+/)) {
-                            iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '');
+                        if (iconEl.src.match(/[?&]status=[a-z]+/)) {
+                            iconEl.src = iconEl.src.replace(/status=[a-z]+/, '');
                         }
                     }
                 }
@@ -46,16 +46,8 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                         var data = result.data;
                         element.teaserNode.setText(data.title);
                         var iconEl = element.teaserNode.getUI().getIconEl();
-                        if (data.status) {
-                            if (iconEl.src.match(/\/status\/[a-z]+/)) {
-                                iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '/status/' + data.status);
-                            } else {
-                                iconEl.src += '?status=' + data.status;
-                            }
-                        } else {
-                            if (iconEl.src.match(/\/status\/[a-z]+/)) {
-                                iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '');
-                            }
+                        if (data.icon) {
+                            iconEl.src = data.icon;
                         }
                     } else {
                         Phlexible.console.warn('element.teaserNode is undefined');
@@ -566,7 +558,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
         if (!element.tid) {
             return;
         }
-        
+
         this.disable();
 
         this.loader.baseParams = {

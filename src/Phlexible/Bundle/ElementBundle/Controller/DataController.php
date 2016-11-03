@@ -19,6 +19,7 @@ use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySeri
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -580,7 +581,8 @@ class DataController extends Controller
         $iconResolver = $this->get('phlexible_element.icon_resolver');
         $dataSaver = $this->get('phlexible_element.request.data_saver');
 
-        list($elementVersion, $treeNode, $teaser, $publishSlaves) = $dataSaver->save($request, $this->getUser());
+        /* @var $treeNode TreeNodeInterface */
+        list($elementVersion, $treeNode, $teaser, $publishSlaves, $status) = $dataSaver->save($request, $this->getUser());
 
         if ($teaser) {
             $icon = $iconResolver->resolveTeaser($teaser, $language);
@@ -597,6 +599,7 @@ class DataController extends Controller
             'restricted'    => $teaser ? '' : $treeNode->getAttribute('needAuthentication'),
             'publish_other' => $publishSlaves,
             'publish'       => $request->get('publish'),
+            'status'        => $status,
         ];
 
         return new ResultResponse(true, $msg, $data);
