@@ -213,7 +213,18 @@ class DataSaver
             }
         }
 
-        return [$elementVersion, $node, $teaser, $publishSlaves];
+        $status = '';
+        if ($teaser) {
+            if ($this->teaserManager->isPublished($teaser, $language)) {
+                $status = $this->teaserManager->isAsync($teaser, $language) ? 'async' : 'online';
+            }
+        } else {
+            if ($tree->isPublished($node, $language)) {
+                $status = $tree->isAsync($node, $language) ? 'async' : 'online';
+            }
+        }
+
+        return [$elementVersion, $node, $teaser, $publishSlaves, $status];
     }
 
     /**

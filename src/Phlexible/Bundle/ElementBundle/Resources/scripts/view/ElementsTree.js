@@ -105,14 +105,14 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
                         element.treeNode.setText(data.title);
                         var iconEl = element.treeNode.getUI().getIconEl();
                         if (data.status) {
-                            if (iconEl.src.match(/\/status\/[a-z]+/)) {
-                                iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '/status/' + data.status);
+                            if (iconEl.src.match(/[?&]status[a-z]+/)) {
+                                iconEl.src = iconEl.src.replace(/status=[a-z]+/, '/status/' + data.status);
                             } else {
-                                iconEl.src += '/status/' + data.status;
+                                iconEl.src += (iconEl.src.match(/\?/) ? '&' : '?') + 'status=' + data.status;
                             }
                         } else {
-                            if (iconEl.src.match(/\/status\/[a-z]+/)) {
-                                iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '');
+                            if (iconEl.src.match(/[?&]status=[a-z]+/)) {
+                                iconEl.src = iconEl.src.replace(/status=[a-z]+/, '');
                             }
                         }
                     }
@@ -121,8 +121,8 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
             setOffline: function (element) {
                 if (this.element.treeNode) {
                     var iconEl = this.element.treeNode.getUI().getIconEl();
-                    if (iconEl.src.match(/\/status\/[a-z]+/)) {
-                        iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '');
+                    if (iconEl.src.match(/[?&]status=[a-z]+/)) {
+                        iconEl.src = iconEl.src.replace(/status=[a-z]+/, '');
                     }
                 }
             },
