@@ -140,14 +140,14 @@ class TreeExtension extends \Twig_Extension
     }
 
     /**
-     * @param string            $name
-     * @param string            $language
-     * @param TreeNodeInterface $treeNode
-     * @param Siteroot          $siteroot
+     * @param string                                    $name
+     * @param string|null                               $language
+     * @param TreeNodeInterface|ContentTreeContext|null $treeNode
+     * @param Siteroot|null                             $siteroot
      *
      * @return string
      */
-    public function pageTitle($name = 'default', $language = null, TreeNodeInterface $treeNode = null, Siteroot $siteroot = null)
+    public function pageTitle($name = 'default', $language = null, $treeNode = null, Siteroot $siteroot = null)
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -155,7 +155,11 @@ class TreeExtension extends \Twig_Extension
             $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
         }
 
-        if ($treeNode === null) {
+        if ($treeNode instanceof ContentTreeContext) {
+            $treeNode = $treeNode->getNode();
+        }
+
+        if (!($treeNode instanceof TreeNodeInterface)) {
             $treeNode = $request->get('contentDocument');
         }
 
@@ -163,7 +167,12 @@ class TreeExtension extends \Twig_Extension
             $language = $request->getLocale();
         }
 
-        $title = $this->patternResolver->replace($name, $siteroot, $treeNode->getTree()->getContent($treeNode), $language);
+        $title = $this->patternResolver->replace(
+            $name,
+            $siteroot,
+            $treeNode->getTree()->getContent($treeNode),
+            $language
+        );
 
         return $title;
     }
@@ -176,7 +185,12 @@ class TreeExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function pageTitlePattern($pattern, $language = null, TreeNodeInterface $treeNode = null, Siteroot $siteroot = null)
+    public function pageTitlePattern(
+        $pattern,
+        $language = null,
+        TreeNodeInterface $treeNode = null,
+        Siteroot $siteroot = null
+    )
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -192,7 +206,12 @@ class TreeExtension extends \Twig_Extension
             $language = $request->getLocale();
         }
 
-        $title = $this->patternResolver->replacePattern($pattern, $siteroot, $treeNode->getTree()->getContent($treeNode), $language);
+        $title = $this->patternResolver->replacePattern(
+            $pattern,
+            $siteroot,
+            $treeNode->getTree()->getContent($treeNode),
+            $language
+        );
 
         return $title;
     }
