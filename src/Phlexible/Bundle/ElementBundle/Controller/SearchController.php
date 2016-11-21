@@ -25,12 +25,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class SearchController extends Controller
 {
-    const MEDIA_PATH_DOWNLOAD = 'download';
-
-    const MEDIA_PATH_INLINE = 'inline';
-
-    const MEDIA_PATH_ICON = 'icon';
-
     /**
      * @param Request $request
      *
@@ -113,9 +107,9 @@ class SearchController extends Controller
         $router = $this->get('router');
 
         $urls = [
-            self::MEDIA_PATH_DOWNLOAD => $router->generate('frontendmedia_download', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL),
-            self::MEDIA_PATH_INLINE => $router->generate('frontendmedia_inline', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL),
-            self::MEDIA_PATH_ICON => $router->generate('frontendmedia_icon', ['fileId' => $fileId, 'size' => 16], UrlGeneratorInterface::ABSOLUTE_URL),
+            'download' => $router->generate('frontendmedia_download', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL),
+            'inline' => $router->generate('frontendmedia_inline', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL),
+            'icon' => $router->generate('frontendmedia_icon', ['fileId' => $fileId, 'size' => 16], UrlGeneratorInterface::ABSOLUTE_URL),
         ];
 
         return new JsonResponse($urls);
