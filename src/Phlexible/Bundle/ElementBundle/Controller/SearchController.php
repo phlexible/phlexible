@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Search controller
@@ -24,6 +25,12 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SearchController extends Controller
 {
+    const MEDIA_PATH_DOWNLOAD = 'download';
+
+    const MEDIA_PATH_INLINE = 'inline';
+
+    const MEDIA_PATH_ICON = 'icon';
+
     /**
      * @param Request $request
      *
@@ -103,10 +110,13 @@ class SearchController extends Controller
     public function medialinkAction(Request $request)
     {
         $fileId = $request->get('file_id');
+        $router = $this->get('router');
 
-        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId);
-        $file = $volume->findFile($fileId);
-        $urls = $volume->getStorageDriver()->getUrls($file);
+        $urls = [
+            self::MEDIA_PATH_DOWNLOAD => $router->generate('frontendmedia_download', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL),
+            self::MEDIA_PATH_INLINE => $router->generate('frontendmedia_inline', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL),
+            self::MEDIA_PATH_ICON => $router->generate('frontendmedia_icon', ['fileId' => $fileId, 'size' => 16], UrlGeneratorInterface::ABSOLUTE_URL),
+        ];
 
         return new JsonResponse($urls);
     }

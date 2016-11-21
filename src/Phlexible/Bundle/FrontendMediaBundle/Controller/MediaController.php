@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -168,6 +169,7 @@ class MediaController extends Controller
     {
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $kernel = $this->get('kernel');
 
         try {
             $volume = $volumeManager->getByFileId($fileId);
@@ -177,10 +179,14 @@ class MediaController extends Controller
 
         $file = $volume->findFile($fileId);
         $mimeType = $file->getMimeType();
-
         $mediaType = $mediaTypeManager->findByMimetype($mimeType);
-        $icon = $mediaType->getIcon($size);
+        $icons = $mediaType->getIcons();
 
-        $response = new BinaryFileResponse($icon, 200, array('Content-Type' => 'image/gif'));
+        $fileLocator = new FileLocator($kernel);
+        $iconPath = $fileLocator->locate($icons[$size]);
+
+        $response = new BinaryFileResponse($iconPath, 200, array('Content-Type' => 'image/gif'));
+
+        return $response;
     }
 }
