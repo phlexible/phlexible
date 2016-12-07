@@ -162,7 +162,7 @@ class DefaultRequestMatcher implements RequestMatcherInterface
         } else {
             $siterootUrl = $this->matchSiterootUrl($request);
 
-            if (!($defaults = $this->matchSiterootPath($siterootUrl, $path))) {
+            if (!$siterootUrl || !($defaults = $this->matchSiterootPath($siterootUrl, $path))) {
                 return null;
             }
 
@@ -178,7 +178,7 @@ class DefaultRequestMatcher implements RequestMatcherInterface
         if (!empty($defaults['language'])) {
             $request->setLocale($defaults['language']);
             $defaults['_locale'] = $defaults['language'];
-            $tree->setLanguage($defaults['language']);
+            //$tree->setLanguage($defaults['language']);
         }
 
         if (empty($defaults['tid'])) {
