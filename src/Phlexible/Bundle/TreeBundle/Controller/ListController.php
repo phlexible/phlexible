@@ -11,8 +11,6 @@ namespace Phlexible\Bundle\TreeBundle\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
-use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -86,7 +84,7 @@ class ListController extends Controller
             'author'          => 'author',
             'version'         => $elementVersion->getVersion(),
             'create_time'     => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
-            'publish_time'    => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'), // $node->getPublishDate($language),
+            'publish_time'    => $node->getTree()->getPublishedAt($node, $language) ? $node->getTree()->getPublishedAt($node, $language)->format('Y-m-d H:i:s') : null,
             'custom_date'     => $elementVersion->getCustomDate($language) ? $elementVersion->getCustomDate($language)->format('Y-m-d H:i:s') : null,
             'language'        => $language,
             'sort'            => 0,
@@ -146,7 +144,7 @@ class ListController extends Controller
                 'version'         => $childElementVersion->getVersion(),
                 'create_time'     => $childNode->getCreatedAt()->format('Y-m-d H:i:s'),
                 // 'change_time'     => $child['modify_time'],
-                'publish_time'    => $childNode->getCreatedAt()->format('Y-m-d H:i:s'),//$childNode->getPublishDate($language),
+                'publish_time'    => $childNode->getTree()->getPublishedAt($childNode, $language) ? $node->getTree()->getPublishedAt($childNode, $language)->format('Y-m-d H:i:s') : null,
                 'custom_date'     => $childElementVersion->getCustomDate($language) ? $childElementVersion->getCustomDate($language)->format('Y-m-d H:i:s') : null,
                 'language'        => $language,
                 'sort'            => (int) $childNode->getSort(),
