@@ -179,6 +179,7 @@ class ImageTemplateApplier
                 $color = $palette->color('#fff', 0);
             }
             $image = $this->imagine->create($templateSize, $color);
+            $image->usePalette($layer->palette());
             $image->paste($layer, new Point(
                 floor(($templateSize->getWidth() - $layerSize->getWidth()) / 2),
                 floor(($templateSize->getHeight() - $layerSize->getHeight()) / 2)
