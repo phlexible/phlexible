@@ -276,8 +276,14 @@ class TreeFilter implements TreeFilterInterface
         switch ($this->sortMode) {
             case 'title':
                 $qb
-                    ->leftJoin('e', 'element_version', 'ev', 'e.eid = ev.eid AND e.latest_version = ev.version')
-                    ->leftJoin('ev', 'element_version_mapped_field', 'evmf_sort', 'evmf_sort.element_version_id = ev.id AND evmf_sort.language = ' . $qb->expr()->literal($this->language))
+                    ->leftJoin('e', 'element_version', 'ev', $qb->expr()->andX(
+                        $qb->expr()->eq('e.eid', 'ev.eid'),
+                        $qb->expr()->eq('e.latest_version', 'ev.version')
+                    ))
+                    ->leftJoin('ev', 'element_version_mapped_field', 'evmf_sort', $qb->expr()->andX(
+                        $qb->expr()->eq('evmf_sort.element_version_id', 'ev.id'),
+                        $qb->expr()->eq('evmf_sort.language', $qb->expr()->literal($this->language))
+                    ))
                     ->orderBy('evmf_sort.backend', $this->sortDir);
                 break;
 
@@ -287,14 +293,23 @@ class TreeFilter implements TreeFilterInterface
 
             case 'publish_time':
                 $qb
-                    ->leftJoin('t', 'tree_online', 'to_sort', 'to_sort.tree_id = t.id AND to_sort.language = ' . $qb->expr()->literal($this->language))
+                    ->leftJoin('t', 'tree_online', 'to_sort', $qb->expr()->andX(
+                        $qb->expr()->eq('to_sort.tree_id', 't.id'),
+                        $qb->expr()->eq('to_sort.language', $qb->expr()->literal($this->language))
+                    ))
                     ->orderBy('to_sort.published_at', $this->sortDir);
                 break;
 
             case 'custom_date':
                 $qb
-                    ->leftJoin('e', 'element_version', 'ev', 'e.eid = ev.eid AND e.latest_version = ev.version')
-                    ->leftJoin('ev', 'element_version_mapped_field', 'evmf_sort', 'evmf_sort.element_version_id = ev.id AND evmf_sort.language = ' . $qb->expr()->literal($this->language))
+                    ->leftJoin('e', 'element_version', 'ev', $qb->expr()->andX(
+                        $qb->expr()->eq('e.eid', 'ev.eid'),
+                        $qb->expr()->eq('e.latest_version', 'ev.version')
+                    ))
+                    ->leftJoin('ev', 'element_version_mapped_field', 'evmf_sort', $qb->expr()->andX(
+                        $qb->expr()->eq('evmf_sort.element_version_id', 'ev.id'),
+                        $qb->expr()->eq('evmf_sort.language', $qb->expr()->literal($this->language))
+                    ))
                     ->orderBy('evmf_sort.date', $this->sortDir);
                 break;
 
@@ -315,87 +330,99 @@ class TreeFilter implements TreeFilterInterface
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->from('tree', 't')
-            ->leftJoin('t', 'element', 'e', 't.type_id = e.eid')
+            ->leftJoin('t', 'element', 'e', $qb->expr()->eq('t.type_id', 'e.eid'))
             ->where($qb->expr()->eq('t.parent_id', $this->tid));
 
         if (!empty($this->filterValues['status'])) {
-            $qb->leftJoin('t', 'tree_online', 'to1', 'to_1.tree_id = t.id AND to_1.language = ' . $qb->expr()->literal($this->language));
+            $qb->leftJoin('t', 'tree_online', 'to_1', $qb->expr()->andX(
+                $qb->expr()->eq('to_1.tree_id', 't.id'),
+                $qb->expr()->eq('to_1.language', $qb->expr()->literal($this->language))
+            ));
 
-            $where = '0';
+            $or = $qb->expr()->orX();
 
             $filterStatus = explode(',', $this->filterValues['status']);
 
             if (in_array('online', $filterStatus)) {
-                $where .= ' OR to_1.version = e.latest_version';
+                $or->add($qb->expr()->eq('to_1.version', 'e.latest_version'));
             }
             if (in_array('async', $filterStatus)) {
-                $qb->leftJoin('to_1', 'tree_hash', 'th_1', 'th_1.tid = to_1.tree_id AND th_1.language = to_1.language AND th_1.version = to_1.version');
-                $qb->leftJoin('to_1', 'tree_hash', 'th_2', 'th_2.tid = to_1.tree_id AND th_2.language = to_1.language AND th_2.version = e.latest_version');
-
-                $where .= ' OR (to_1.version != e.latest_version AND th_1.hash != th_2.hash)';
+                $or->add($qb->expr()->neq('to_1.version', 'e.latest_version'));
             }
             if (in_array('offline', $filterStatus)) {
-                $where .= ' OR to_1.version IS NULL';
+                $or->add($qb->expr()->isNull('to_1.version'));
             }
 
-            $qb->andWhere($where);
+            $qb->andWhere($or);
         }
 
-        if (!empty($this->filterValues['navigation']) || !empty($this->filterValues['restricted'])) {
-            $qb->leftJoin('t', 'tree_page', 'tp_1', 'tp_1.tree_id = t.id AND tp_1.version = e.latest_version');
-
-            if (!empty($this->filterValues['navigation'])) {
-                if ($this->filterValues['navigation'] == 'in_navigation') {
-                    $qb->andWhere('tp_1.navigation = 1');
-                } else {
-                    $qb->andWhere('tp_1.navigation = 0');
-                }
-            }
-
-            if (!empty($this->filterValues['restricted'])) {
-                if ($this->filterValues['restricted'] == 'is_restricted') {
-                    $qb->andWhere('tp_1.restricted = 1');
-                } else {
-                    $qb->andWhere('tp_1.restricted =0');
-                }
+        if (!empty($this->filterValues['navigation'])) {
+            if ($this->filterValues['navigation'] == 'in_navigation') {
+                $qb->andWhere($qb->expr()->eq('t.in_navigation', 1));
+            } else {
+                $qb->andWhere($qb->expr()->eq('t.in_navigation', 0));
             }
         }
 
-        if (!empty($this->filterValues['date']) && (!empty($this->filterValues['date_from']) || !empty($this->filterValues['date_to']))) {
+        if (0 && !empty($this->filterValues['restricted'])) {
+            if ($this->filterValues['restricted'] == 'is_restricted') {
+                $qb->andWhere($qb->expr()->eq('tp_1.restricted', 1));
+            } else {
+                $qb->andWhere($qb->expr()->eq('tp_1.restricted', 0));
+            }
+        }
+
+        if (!empty($this->filterValues['date'])) {
             switch ($this->filterValues['date']) {
                 case 'create':
                     if (!empty($this->filterValues['date_from'])) {
-                        $qb->andWhere($qb->expr()->gte('e.create_time', $this->filterValues['date_from']));
+                        $qb->andWhere($qb->expr()->gte('e.created_at', $qb->expr()->literal($this->filterValues['date_from'])));
                     }
                     if (!empty($this->filterValues['date_to'])) {
-                        $qb->andWhere($qb->expr()->lte('e.create_time', $this->filterValues['date_to']));
+                        $qb->andWhere($qb->expr()->lte('e.created_at', $qb->expr()->literal($this->filterValues['date_to'])));
                     }
                     break;
 
                 case 'publish':
                     $qb->leftJoin('t', 'tree_online', 'to_2', 'to_2.tree_id = t.id AND to_2.language = ' . $qb->expr()->literal($this->language));
                     if (!empty($this->filterValues['date_from'])) {
-                        $qb->andWhere($qb->expr()->gte('to_2.publish_time', $this->filterValues['date_from']));
+                        $qb->andWhere($qb->expr()->gte('to_2.published_at', $qb->expr()->literal($this->filterValues['date_from'])));
                     }
                     if (!empty($this->filterValues['date_to'])) {
-                        $qb->andWhere($qb->expr()->lte('to_2.publish_time', $this->filterValues['date_to']));
+                        $qb->andWhere($qb->expr()->lte('to_2.published_at', $qb->expr()->literal($this->filterValues['date_to'])));
+                    }
+                    if (empty($this->filterValues['date_from']) && empty($this->filterValues['date_to'])) {
+                        $qb->andWhere($qb->expr()->isNull('to_2.published_at'));
                     }
                     break;
 
                 case 'custom':
-                    $qb->leftJoin('e', 'element_version_titles', 'evmf_1', 'evmf_1.eid = e.eid AND evmf_1.version = e.latest_version AND evmf_1.language = ' . $qb->expr()->literal($this->language));
+                    $qb
+                        ->leftJoin('e', 'element_version', 'ev_1', $qb->expr()->andX(
+                            $qb->expr()->eq('ev_1.eid', 'e.eid'),
+                            $qb->expr()->eq('ev_1.version', 'e.latest_version')
+                        ))
+                        ->leftJoin('ev_1', 'element_version_mapped_field', 'evmf_1', $qb->expr()->eq('evmf_1.element_version_id', 'ev_1.id'));
                     if (!empty($this->filterValues['date_from'])) {
-                        $qb->andWhere($qb->expr()->gte('evmf_1.date', $this->filterValues['date_from']));
+                        $qb->andWhere($qb->expr()->gte('evmf_1.date', $qb->expr()->literal($this->filterValues['date_from'])));
                     }
                     if (!empty($this->filterValues['date_to'])) {
-                        $qb->andWhere($qb->expr()->lte('evmf_1.date', $this->filterValues['date_to']));
+                        $qb->andWhere($qb->expr()->lte('evmf_1.date', $qb->expr()->literal($this->filterValues['date_to'])));
+                    }
+                    if (empty($this->filterValues['date_from']) && empty($this->filterValues['date_to'])) {
+                        $qb->andWhere($qb->expr()->isNull('evmf_1.date'));
                     }
                     break;
             }
         }
 
         if (!empty($this->filterValues['search'])) {
-            $qb->join('e', 'element_data_language', 'edl_1', 'edl_1.eid = e.eid AND edl_1.version = e.latest_version AND edl_1.language = ' . $qb->expr()->literal($this->language) . ' AND edl_1.content LIKE ' . $qb->expr()->literal('%' . $this->filterValues['search'] . '%'));
+            $qb->join('e', 'element_structure_value', 'esv_1', $qb->expr()->andX(
+                $qb->expr()->eq('esv_1.eid', 'e.eid'),
+                $qb->expr()->eq('esv_1.version', 'e.latest_version'),
+                $qb->expr()->eq('esv_1.language', $qb->expr()->literal($this->language)),
+                $qb->expr()->like('esv_1.content', $qb->expr()->literal('%' . $this->filterValues['search'] . '%'))
+            ));
             $qb->groupBy(['t.id', 'e.latest_version']);
         }
 
