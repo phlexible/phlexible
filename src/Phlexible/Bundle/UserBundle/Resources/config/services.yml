@@ -41,7 +41,6 @@ services:
                 theme: "%phlexible_user.defaults.theme%"
                 force_password_change: "%phlexible_user.defaults.force_password_change%"
                 cant_change_password: "%phlexible_user.defaults.cant_change_password%"
-                password_doesnt_expire: "%phlexible_user.defaults.password_doesnt_expire%"
             - "%phlexible_user.password.min_length%"
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}

@@ -215,13 +215,12 @@ class UserManager extends BaseUserManager implements UserManagerInterface
             ));
         }
 
-        if (isset($criteria['isExpired'])) {
-            $qb->andWhere($qb->expr()->isNotNull('u.expiresAt'));
-            $qb->andWhere($qb->expr()->lte('u.expiresAt', $qb->expr()->literal(date('Y-m-d H:i:s'))));
+        if (!empty($criteria['enabled'])) {
+            $qb->andWhere($qb->expr()->eq('u.enabled', 1));
         }
 
-        if (isset($criteria['hasExpireDate'])) {
-            $qb->andWhere($qb->expr()->isNotNull('u.expiresAt'));
+        if (!empty($criteria['disabled'])) {
+            $qb->andWhere($qb->expr()->eq('u.enabled', 0));
         }
 
         if (isset($criteria['roles']) and is_array($criteria['roles'])) {

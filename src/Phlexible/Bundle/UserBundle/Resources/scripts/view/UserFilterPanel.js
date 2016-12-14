@@ -50,38 +50,43 @@ Phlexible.users.UserFilterPanel = Ext.extend(Ext.form.FormPanel, {
             },
             {
                 xtype: 'panel',
-                title: this.strings.account,
+                title: this.strings.status,
                 iconCls: 'p-user-user_account-icon',
                 layout: 'form',
                 frame: true,
                 collapsible: true,
-                items: [
-                    /*{
-                     xtype: 'checkbox',
-                     hideLabel: true,
-                     boxLabel: this.strings.active,
-                     name: 'status_active'
-                     },*/{
-                        xtype: 'checkbox',
-                        hideLabel: true,
-                        boxLabel: this.strings.has_expire_date,
-                        name: 'account_has_expire_date',
-                        listeners: {
-                            check: this.updateFilter,
-                            scope: this
-                        }
-                    },
-                    {
-                        xtype: 'checkbox',
-                        hideLabel: true,
-                        boxLabel: this.strings.expired,
-                        name: 'account_expired',
-                        listeners: {
-                            check: this.updateFilter,
-                            scope: this
-                        }
+                items: [{
+                    xtype: 'radio',
+                    name: 'status',
+                    inputValue: 'all',
+                    hideLabel: true,
+                    boxLabel: this.strings.all,
+                    checked: true,
+                    listeners: {
+                        check: this.updateFilter,
+                        scope: this
                     }
-                ]
+                },{
+                    xtype: 'radio',
+                    name: 'status',
+                    inputValue: 'enabled',
+                    hideLabel: true,
+                    boxLabel: this.strings.enabled,
+                    listeners: {
+                        check: this.updateFilter,
+                        scope: this
+                    }
+                },{
+                    xtype: 'radio',
+                    inputValue: 'disabled',
+                    name: 'status',
+                    hideLabel: true,
+                    boxLabel: this.strings.disabled,
+                    listeners: {
+                        check: this.updateFilter,
+                        scope: this
+                    }
+                }]
             }
         ];
 
