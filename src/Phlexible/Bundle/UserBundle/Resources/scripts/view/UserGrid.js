@@ -117,13 +117,6 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
                 width: 200
             },
             {
-                header: this.strings.expireDate,
-                sortable: true,
-                dataIndex: 'expireDate',
-                hidden: true,
-                width: 100
-            },
-            {
                 header: this.strings.createDate,
                 sortable: true,
                 dataIndex: 'createDate',
@@ -223,8 +216,7 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
                 },
                 account: {
                     forcePasswordChange: defaults.force_password_change,
-                    noPasswordChange: defaults.cant_change_password,
-                    noPasswordExpire: defaults.password_doesnt_expire
+                    noPasswordChange: defaults.cant_change_password
                 },
                 roles: [
                     'user'

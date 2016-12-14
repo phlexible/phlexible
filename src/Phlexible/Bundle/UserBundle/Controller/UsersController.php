@@ -12,7 +12,6 @@ use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Password\PasswordGenerator;
 use Phlexible\Bundle\UserBundle\UsersMessage;
@@ -71,19 +70,23 @@ class UsersController extends Controller
             foreach ($search as $key => $value) {
                 if (!$value) {
                     continue;
-                } elseif ($key == 'key') {
+                } elseif ($key === 'key') {
                     $criteria['term'] = $value;
                     continue;
-                } elseif ($key == 'account_expired') {
-                    $criteria['isExpired'] = true;
+                } elseif ($key === 'status') {
+                    if ($value === 'enabled') {
+                        $criteria['enabled'] = true;
+                    } elseif ($value === 'disabled') {
+                        $criteria['disabled'] = true;
+                    }
                     continue;
-                } elseif ($key == 'account_has_expire_date') {
-                    $criteria['hasExpireDate'] = true;
+                } elseif ($key === 'status_disabled') {
+
                     continue;
-                } elseif (substr($key, 0, 5) == 'role_') {
+                } elseif (substr($key, 0, 5) === 'role_') {
                     $criteria['roles'][] = strtoupper(substr($key, 5));
                     continue;
-                } elseif (substr($key, 0, 6) == 'group_') {
+                } elseif (substr($key, 0, 6) === 'group_') {
                     $criteria['groups'][] = substr($key, 6);
                     continue;
                 }
@@ -116,10 +119,6 @@ class UsersController extends Controller
                 'lastname'            => $user->getLastname(),
                 'comment'             => $user->getComment(),
                 'enabled'             => $user->isEnabled(),
-                'expiresAt'           => $user->getExpiresAt() ? $user->getExpiresAt()->format('Y-m-d H:i:s') : null,
-                'credentialsExpireAt' => $user->getCredentialsExpireAt() ? $user->getCredentialsExpireAt()->format('Y-m-d H:i:s') : null,
-                'expired'             => !$user->isAccountNonExpired(),
-                'credentialsExpired'  => !$user->isCredentialsNonExpired(),
                 'roles'               => $user->getRoles(),
                 'groups'              => $groups,
                 'createDate'          => $user->getCreatedAt()->format('Y-m-d H:i:s'),
@@ -294,20 +293,6 @@ class UsersController extends Controller
         // password
         if ($request->request->get('password')) {
             $user->setPlainPassword($request->request->get('password'));
-        }
-
-        // expiresAt
-        if ($request->request->get('expiresAt')) {
-            $user->setExpiresAt(new \DateTime($request->get('expiresAt')));
-        } else {
-            $user->setExpiresAt(null);
-        }
-
-        // credentialsExpireAt
-        if ($request->request->get('credentialsExpireAt')) {
-            $user->setCredentialsExpireAt(new \DateTime($request->get('credentialsExpireAt')));
-        } else {
-            $user->setCredentialsExpireAt(null);
         }
 
         // enabled

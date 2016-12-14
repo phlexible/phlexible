@@ -35,7 +35,6 @@ users:
     date: 'Date format'
     theme: Theme
     theme_description: 'Change your theme.'
-    expireDate: 'Expire date'
     createDate: 'Create date'
     createUser: 'Created by'
     modifyDate: 'Modify date'
@@ -50,7 +49,6 @@ users:
     apply: Apply
     reset: Reset
     cant_change_password: 'Can''t change password'
-    password_doesnt_expire: 'Password doesn''t expire'
     change_password_next_login: 'Force password change on next login'
     account: Account
     delete_user_warning: 'Do you really want to delete user "{0}"?'
@@ -81,20 +79,15 @@ users:
     password_are_the_same: 'Current and new passwords are the same.'
     status: Status
     active: Active
+    all: All
     enabled: Enabled
-    expired: Expired
-    expire_help: 'The users account expires at 00:00 of the given date.'
-    has_expire_date: 'Has expire date'
+    disabled: Disabled
     impersonate: Impersonate
-    account_expires_on: 'Account expires on'
-    credentials_expire_on: 'Password expires on'
     notify_user: 'Notify user'
     generate: Generate
     copy: Copy
     generated_password: 'Generated Password'
     generate_password_text: 'Enter a password, or use the field below to generate a password.'
-    account_is_expired: 'Account is expired.'
-    credentials_are_expired: 'Credentials are expired.'
     account_is_disabled: 'Account is disabled.'
     successor: Successor
     successor_header: 'Select successor'

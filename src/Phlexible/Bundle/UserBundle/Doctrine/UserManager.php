@@ -13,13 +13,13 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
 use FOS\UserBundle\Model\UserInterface;
-use FOS\UserBundle\Util\CanonicalizerInterface;
+use FOS\UserBundle\Util\CanonicalFieldsUpdater;
+use FOS\UserBundle\Util\PasswordUpdaterInterface;
 use Phlexible\Bundle\UserBundle\Event\UserEvent;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Bundle\UserBundle\Successor\SuccessorService;
 use Phlexible\Bundle\UserBundle\UserEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * User manager
@@ -54,14 +54,8 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     private $everyoneGroupId;
 
     /**
-     * @var string
-     */
-    private $userClass;
-
-    /**
-     * @param EncoderFactoryInterface  $encoderFactory
-     * @param CanonicalizerInterface   $usernameCanonicalizer
-     * @param CanonicalizerInterface   $emailCanonicalizer
+     * @param PasswordUpdaterInterface $passwordUpdater
+     * @param CanonicalFieldsUpdater   $canonicalFieldsUpdater
      * @param ObjectManager            $om
      * @param string                   $class
      * @param SuccessorService         $successorService
@@ -70,9 +64,8 @@ class UserManager extends BaseUserManager implements UserManagerInterface
      * @param string                   $everyoneGroupId
      */
     public function __construct(
-        EncoderFactoryInterface $encoderFactory,
-        CanonicalizerInterface $usernameCanonicalizer,
-        CanonicalizerInterface $emailCanonicalizer,
+        PasswordUpdaterInterface $passwordUpdater,
+        CanonicalFieldsUpdater $canonicalFieldsUpdater,
         ObjectManager $om,
         $class,
         SuccessorService $successorService,
@@ -80,7 +73,7 @@ class UserManager extends BaseUserManager implements UserManagerInterface
         $systemUserId,
         $everyoneGroupId)
     {
-        parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $om, $class);
+        parent::__construct($passwordUpdater, $canonicalFieldsUpdater, $om, $class);
 
         $this->successorService = $successorService;
         $this->dispatcher = $dispatcher;
@@ -222,13 +215,12 @@ class UserManager extends BaseUserManager implements UserManagerInterface
             ));
         }
 
-        if (isset($criteria['isExpired'])) {
-            $qb->andWhere($qb->expr()->isNotNull('u.expiresAt'));
-            $qb->andWhere($qb->expr()->lte('u.expiresAt', $qb->expr()->literal(date('Y-m-d H:i:s'))));
+        if (!empty($criteria['enabled'])) {
+            $qb->andWhere($qb->expr()->eq('u.enabled', 1));
         }
 
-        if (isset($criteria['hasExpireDate'])) {
-            $qb->andWhere($qb->expr()->isNotNull('u.expiresAt'));
+        if (!empty($criteria['disabled'])) {
+            $qb->andWhere($qb->expr()->eq('u.enabled', 0));
         }
 
         if (isset($criteria['roles']) and is_array($criteria['roles'])) {
