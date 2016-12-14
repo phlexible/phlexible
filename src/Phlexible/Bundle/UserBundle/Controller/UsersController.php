@@ -148,7 +148,7 @@ class UsersController extends Controller
      * @throws \Exception
      * @return ResultResponse
      * @Route("/create", name="users_users_create")
-     * @Method("POST")
+     * @Method(methods={"GET","POST"})
      * @ApiDoc(
      *   description="Create user",
      *   requirements={
@@ -168,10 +168,16 @@ class UsersController extends Controller
         $userManager = $this->get('phlexible_user.user_manager');
 
         if ($request->get('username') && $userManager->checkUsername($request->get('username'))) {
-            throw new \Exception('Username "' . $request->get('username') . '" already exists.');
+            return new ResultResponse(
+                false,
+                'Username "' . $request->get('username') . '" already exists.'
+            );
         }
         if ($request->get('email') && $userManager->checkEmail($request->get('email'))) {
-            throw new \Exception('Email "' . $request->get('email') . '" already exists.');
+            return new ResultResponse(
+                false,
+                'Email "' . $request->get('email') . '" already exists.'
+            );
         }
 
         $user = $userManager->createUser();
