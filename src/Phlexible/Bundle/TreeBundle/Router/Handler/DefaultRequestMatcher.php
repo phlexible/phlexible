@@ -165,7 +165,7 @@ class DefaultRequestMatcher implements RequestMatcherInterface
         } else {
             $siterootUrl = $this->matchSiterootUrl($request);
 
-            if (!($defaults = $this->matchSiterootPath($siterootUrl, $path))) {
+            if (!$siterootUrl || !($defaults = $this->matchSiterootPath($siterootUrl, $path))) {
                 return null;
             }
 

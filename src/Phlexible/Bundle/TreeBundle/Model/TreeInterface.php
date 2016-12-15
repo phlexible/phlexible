@@ -173,6 +173,13 @@ interface TreeInterface
     public function getInstances(TreeNodeInterface $node);
 
     /**
+     * @param TreeNodeInterface $treeNode
+     *
+     * @return array
+     */
+    public function getSavedLanguages(TreeNodeInterface $treeNode);
+
+    /**
      * @param TreeNodeInterface $node
      * @param string            $language
      *

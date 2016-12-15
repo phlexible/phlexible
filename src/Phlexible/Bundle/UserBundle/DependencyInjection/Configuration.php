@@ -37,7 +37,6 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->integerNode('min_length')->defaultValue(8)->info('Minimal password length.')->end()
-                        ->integerNode('expire_after_days')->defaultValue(0)->info('Passwords expire and have to be reset after this number of day.')->end()
                     ->end()
                 ->end()
                 ->arrayNode('defaults')
@@ -47,7 +46,6 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('theme')->defaultValue('default')->info('Default theme for new users.')->end()
                         ->booleanNode('force_password_change')->defaultValue(false)->info('Default value of force password change flag for new users.')->end()
                         ->booleanNode('cant_change_password')->defaultValue(false)->info('Default value of cant change password flag for new users.')->end()
-                        ->booleanNode('password_doesnt_expire')->defaultValue(false)->info('Default value of password doesnt expire flag for new users.')->end()
                     ->end()
                 ->end()
             ->end();

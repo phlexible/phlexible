@@ -35,7 +35,6 @@ users:
     date: Datumsformat
     theme: Theme
     theme_description: 'Ändern Sie Ihre Theme.'
-    expireDate: Ablaufdatum
     createDate: Erstellungsdatum
     createUser: 'Erstellt von'
     modifyDate: Änderungsdatum
@@ -50,7 +49,6 @@ users:
     apply: Anwenden
     reset: Zurücksetzen
     cant_change_password: 'Kann Passwort nicht ändern'
-    password_doesnt_expire: 'Passwort läuft nicht ab'
     change_password_next_login: 'Muss Passwort beim nächsten Login ändern'
     account: Zugang
     delete_user_warning: 'Möchten Sie den Benutzer "{0}" wirklich löschen?'
@@ -81,20 +79,15 @@ users:
     password_are_the_same: 'Aktuelles und neues Passwort sind gleich.'
     status: Status
     active: Aktiv
+    all: Alle
     enabled: Aktiv
-    expired: Abgelaufen
-    expire_help: 'Der Zugang des Benutzers läuft um 00:00 Uhr dieses Datums ab.'
-    has_expire_date: 'Hat Ablaufdatum'
+    disabled: Inaktiv
     impersonate: Imitieren
-    account_expires_on: 'Zugang gültig bis'
-    credentials_expire_on: 'Passwort gültig bis'
     notify_user: 'Benutzer benachrichtigen'
     generate: Erzeugen
     copy: Kopieren
     generated_password: 'Generiertes Passwort'
     generate_password_text: 'Geben Sie ein neues Passwort ein, oder benutzen Sie das Feld unten, um ein Passwort zu generieren.'
-    account_is_expired: 'Zugang ist abgelaufen.'
-    credentials_are_expired: 'Zugangsdaten sind abgelaufen.'
     account_is_disabled: 'Zugang ist deaktviert.'
     successor: Nachfolger
     successor_header: 'Nachfolger auswählen'

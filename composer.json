@@ -27,7 +27,7 @@
         "cogpowered/finediff": "^0.3",
         "doctrine/orm": "^2.4",
         "fluentdom/fluentdom": "^5.1",
-        "friendsofsymfony/user-bundle": "^2.0",
+        "friendsofsymfony/user-bundle": "^2.0,>=2.0.0-beta1",
         "imagine/imagine": "^0.6",
         "nelmio/api-doc-bundle": "^2.5",
         "phlexible/bundler": "~1.2.0",

@@ -29,7 +29,6 @@ class User extends BaseUser
     const PROPERTY_THEME = 'theme';
     const PROPERTY_INTERFACE_LANGUAGE = 'interfaceLanguage';
     const PROPERTY_NO_PASSWORD_CHANGE = 'noPasswordChange';
-    const PROPERTY_NO_PASSWORD_EXPIRE = 'noPasswordExpire';
     const PROPERTY_FORCE_PASSWORD_CHANGE = 'forcePasswordChange';
 
     /**
@@ -357,22 +356,6 @@ class User extends BaseUser
         }
 
         return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getExpiresAt()
-    {
-        return $this->expiresAt;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCredentialsExpireAt()
-    {
-        return $this->credentialsExpireAt;
     }
 
     /**

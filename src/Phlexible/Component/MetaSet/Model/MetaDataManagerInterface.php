@@ -30,16 +30,16 @@ interface MetaDataManagerInterface
     /**
      * @param string $value
      *
-     * @return MetaDataInterface[]
+     * @return MetaDataValue[]
      */
-    public function findByValue($value);
+    public function findRawByValue($value);
 
     /**
      * @param MetaSetFieldInterface $field
      *
      * @return MetaDataValue[]
      */
-    public function findByField(MetaSetFieldInterface $field);
+    public function findRawByField(MetaSetFieldInterface $field);
 
     /**
      * @param MetaSet $metaSet

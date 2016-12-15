@@ -314,6 +314,14 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    public function getSavedLanguages(TreeNodeInterface $node)
+    {
+        return $this->tree->getSavedLanguages($node);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isPublished(TreeNodeInterface $node, $language = null)
     {
         return $this->tree->isPublished($node, $language ?: $this->language);

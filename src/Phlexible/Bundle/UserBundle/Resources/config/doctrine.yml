@@ -3,10 +3,9 @@ services:
         class: Phlexible\Bundle\UserBundle\Doctrine\UserManager
         public: false
         arguments:
-            - "@security.encoder_factory"
-            - "@fos_user.util.username_canonicalizer"
-            - "@fos_user.util.email_canonicalizer"
-            - "@fos_user.entity_manager"
+            - "@fos_user.util.password_updater"
+            - "@fos_user.util.canonical_fields_updater"
+            - "@fos_user.object_manager"
             - "%fos_user.model.user.class%"
             - "@phlexible_user.successor_service"
             - "@event_dispatcher"

@@ -86,34 +86,20 @@ abstract class MetaDataManager implements MetaDataManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByValue($value)
+    public function findRawByValue($value)
     {
         $dataRepository = $this->getDataRepository();
         $qb = $dataRepository->createQueryBuilder('d');
         $qb
             ->where($qb->expr()->like('d.value', $qb->expr()->literal("%$value%")));
 
-        $metaDatas = [];
-
-        foreach ($qb->getQuery()->getScalarResult() as $row) {
-            $identifier = $row['set_id'];
-
-            if (!isset($metaDatas[$identifier])) {
-                $metaSet = $this->metaSetManager->find($row['set_id']);
-
-                $metaData = new MetaData($metaSet);
-                $metaDatas[$identifier] = $metaData;
-            } else {
-                $metaData = $metaDatas[$identifier];
-            }
-
-            $metaData->set($row['field_id'], $row['value'], $row['language']);
-        }
-
-        return $metaDatas;
+        return $qb->getQuery()->getResult();
     }
 
-    public function findByField(MetaSetFieldInterface $field)
+    /**
+     * {@inheritdoc}
+     */
+    public function findRawByField(MetaSetFieldInterface $field)
     {
         return $this->findMetaDataValues($field->getMetaSet(), null, $field->getId());
     }

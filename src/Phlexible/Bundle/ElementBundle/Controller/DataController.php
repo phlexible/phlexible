@@ -22,6 +22,7 @@ use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySeri
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -64,7 +65,6 @@ class DataController extends Controller
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
-        $stateManager = $this->get('phlexible_tree.state_manager');
         $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
         $lockManager = $this->get('phlexible_element.element_lock_manager');
         $userManager = $this->get('phlexible_user.user_manager');
@@ -467,8 +467,16 @@ class DataController extends Controller
         // state
 
         $status = '';
-        if ($stateManager->isPublished($node, $language)) {
-            $status = $stateManager->isAsync($node, $language) ? 'async' : 'online';
+        if ($teaser) {
+            $stateManager = $this->get('phlexible_teaser.state_manager');
+            if ($stateManager->isPublished($teaser, $language)) {
+                $status = $stateManager->isAsync($teaser, $language) ? 'async' : 'online';
+            }
+        } else {
+            $stateManager = $this->get('phlexible_tree.state_manager');
+            if ($stateManager->isPublished($node, $language)) {
+                $status = $stateManager->isAsync($node, $language) ? 'async' : 'online';
+            }
         }
 
         $icon = $iconResolver->resolveTreeNode($node, $language);
@@ -576,7 +584,8 @@ class DataController extends Controller
         $iconResolver = $this->get('phlexible_element.icon_resolver');
         $dataSaver = $this->get('phlexible_element.request.data_saver');
 
-        list($elementVersion, $treeNode, $teaser, $publishSlaves) = $dataSaver->save($request, $this->getUser());
+        /* @var $treeNode TreeNodeInterface */
+        list($elementVersion, $treeNode, $teaser, $publishSlaves, $status) = $dataSaver->save($request, $this->getUser());
 
         if ($teaser) {
             $icon = $iconResolver->resolveTeaser($teaser, $language);
@@ -593,6 +602,7 @@ class DataController extends Controller
             'restricted'    => $teaser ? '' : $treeNode->getAttribute('needAuthentication'),
             'publish_other' => $publishSlaves,
             'publish'       => $request->get('publish'),
+            'status'        => $status,
         ];
 
         return new ResultResponse(true, $msg, $data);

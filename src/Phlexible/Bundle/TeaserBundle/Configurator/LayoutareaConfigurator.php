@@ -102,8 +102,9 @@ class LayoutareaConfigurator implements ConfiguratorInterface
         $treeNodePath = $tree->getPath($treeNode);
 
         $language = $request->getLocale();
-        $availableLanguages = $request->attributes->get('availableLanguages');
         $isPreview = $request->attributes->get('_preview', false);
+
+        $this->teaserManager->setLanguage($language);
 
         $areas = [];
 

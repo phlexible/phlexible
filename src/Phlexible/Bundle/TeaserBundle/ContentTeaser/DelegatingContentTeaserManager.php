@@ -46,6 +46,19 @@ class DelegatingContentTeaserManager
     }
 
     /**
+     * @var string
+     */
+    private $language = 'en';
+
+    /**
+     * @param string $language
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+    }
+
+    /**
      * @var ContentTeaser[]
      */
     private $contentTeasers = array();
@@ -61,7 +74,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function find($id)
+    public function xfind($id)
     {
         return $this->createContentTeaserFromTeaser($this->teaserManager->find($id));
     }
@@ -69,7 +82,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    public function xfindBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         $teasers = array();
         foreach ($this->teaserManager->findBy($criteria, $orderBy, $limit, $offset) as $teaser) {
@@ -82,7 +95,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function findOneBy(array $criteria)
+    public function xfindOneBy(array $criteria)
     {
         return $this->createContentTeaserFromTeaser($this->teaserManager->findOneBy($criteria));
     }
@@ -188,7 +201,7 @@ class DelegatingContentTeaserManager
      *
      * @return ContentTeaser[]
      */
-    public function createContentTeasersFromTeasers(array $teasers)
+    private function createContentTeasersFromTeasers(array $teasers)
     {
         $contentTeasers = [];
         foreach ($teasers as $teaser) {
@@ -203,7 +216,7 @@ class DelegatingContentTeaserManager
      *
      * @return ContentTeaser
      */
-    public function createContentTeaserFromTeaser(Teaser $teaser)
+    private function createContentTeaserFromTeaser(Teaser $teaser)
     {
         if (!isset($this->contentTeasers[$teaser->getId()])) {
             $contentTeaser = new ContentTeaser();
@@ -220,8 +233,7 @@ class DelegatingContentTeaserManager
                 ->setCreatedAt($teaser->getCreatedAt())
                 ->setCreateUserId($teaser->getCreateUserId());
 
-            $language = 'de';
-            $contentTeaser->setTitle($this->mediator->getTitle($teaser, 'navigation', $language));
+            $contentTeaser->setTitle($this->mediator->getTitle($teaser, 'navigation', $this->language));
             $contentTeaser->setUniqueId($this->mediator->getUniqueId($teaser));
 
             $this->contentTeasers[$teaser->getId()] = $contentTeaser;

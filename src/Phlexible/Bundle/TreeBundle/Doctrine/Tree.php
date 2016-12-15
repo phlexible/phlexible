@@ -307,6 +307,30 @@ class Tree implements TreeInterface, WritableTreeInterface
     /**
      * {@inheritdoc}
      */
+    public function getSavedLanguages(TreeNodeInterface $treeNode)
+    {
+        $actions = $this->historyManager->findBy(
+            array(
+                'eid' => $treeNode->getTypeId(),
+                'action' => ElementHistoryManagerInterface::ACTION_CREATE_ELEMENT_VERSION
+            )
+        );
+
+        $languages = array();
+        foreach ($actions as $action) {
+            $languages[$action->getLanguage()] = $action->getLanguage();
+        }
+
+        $languages = array_filter(array_values($languages), function ($value) {
+            return !is_null($value);
+        });
+
+        return $languages;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isPublished(TreeNodeInterface $node, $language)
     {
         return $this->stateManager->isPublished($node, $language);

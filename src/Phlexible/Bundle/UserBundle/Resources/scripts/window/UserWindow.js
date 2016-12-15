@@ -254,20 +254,6 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
                         boxLabel: this.strings.cant_change_password,
                         hideLabel: true,
                         name: 'noPasswordChange'
-                    },
-                    {
-                        xtype: 'datefield',
-                        fieldLabel: this.strings.account_expires_on,
-                        name: 'expiresAt',
-                        format: 'Y-m-d',
-                        helpText: this.strings.expire_help
-                    },
-                    {
-                        xtype: 'datefield',
-                        fieldLabel: this.strings.credentials_expire_on,
-                        name: 'credentialsExpireAt',
-                        format: 'Y-m-d',
-                        helpText: this.strings.expire_help
                     }
                 ]
             }, {
@@ -353,25 +339,9 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
 
         this.tbar = new Ext.Toolbar({
             hidden: true,
-            cls: 'p-users-expired',
+            cls: 'p-users-disabled',
             items: [
                 '->',
-                {
-                    iconCls: 'p-user-user_account-icon',
-                    text: this.strings.account_is_expired,
-                    handler: function () {
-                        this.getComponent(0).setActiveTab(4);
-                    },
-                    scope: this
-                },
-                {
-                    iconCls: 'p-user-user_account-icon',
-                    text: this.strings.credentials_are_expired,
-                    handler: function () {
-                        this.getComponent(0).setActiveTab(4);
-                    },
-                    scope: this
-                },
                 {
                     iconCls: 'p-user-user_account-icon',
                     text: this.strings.account_is_disabled,
@@ -447,9 +417,7 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
         this.getCommentForm().setValues({comment: record.get('comment')});
 
         var properties = {
-            enabled: record.get('enabled'),
-            expiresAt: record.get('expiresAt'),
-            credentialsExpireAt: record.get('credentialsExpireAt')
+            enabled: record.get('enabled')
         };
         Ext.apply(properties, record.get('properties'));
 
@@ -462,23 +430,8 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
         //var groupsGrid = this.getComponent(0).getComponent(6);
         //groupsGrid.getStore().proxy.conn.url = Phlexible.Router.generate('users_user_groups', {userId: this.uid});
 
-        if (record.data.expired || record.data.credentialsExpired || !record.data.enabled) {
+        if (!record.data.enabled) {
             this.getTopToolbar().show();
-            if (record.data.expired) {
-                this.getTopToolbar().items.items[1].show();
-            } else {
-                this.getTopToolbar().items.items[1].hide();
-            }
-            if (record.data.credentialsExpired) {
-                this.getTopToolbar().items.items[2].show();
-            } else {
-                this.getTopToolbar().items.items[2].hide();
-            }
-            if (!record.data.enabled) {
-                this.getTopToolbar().items.items[3].show();
-            } else {
-                this.getTopToolbar().items.items[3].hide();
-            }
         }
     },
 
@@ -545,8 +498,6 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
 
         var params = {
             enabled: account.enabled ? 1 : 0,
-            expiresAt: account.expiresAt,
-            credentialsExpireAt: account.credentialsExpireAt,
             comment: commentForm.getValues().comment,
             roles: roles.join(','),
             groups: groups.join(',')
