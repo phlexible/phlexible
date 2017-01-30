@@ -1,37 +1,4 @@
 {
     "version": "1.0",
-    "name": "phlexible/element-bundle",
-    "path-mappings": {
-        "/phlexible/phlexibleelement/icons": "src/Phlexible/Bundle/ElementBundle/Resources/public/icons",
-        "/phlexible/phlexibleelement/menu": "src/Phlexible/Bundle/ElementBundle/Resources/menu",
-        "/phlexible/phlexibleelement/scripts": "src/Phlexible/Bundle/ElementBundle/Resources/scripts",
-        "/phlexible/phlexibleelement/styles": "src/Phlexible/Bundle/ElementBundle/Resources/styles",
-    },
-    "bindings": {
-        "4a429cc8-7160-57b8-a5dd-288675714103": {
-            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
-            "query": "/phlexible/phlexibleelement/styles/**/*.css",
-            "type": "phlexible/styles"
-        },
-        "7a6132c7-9d95-5bbd-8a2e-91d32ba0cfee": {
-            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
-            "query": "/phlexible/phlexibleelement/icons/*.png",
-            "type": "phlexible/icons"
-        },
-        "ce977efd-2297-552a-9b80-fefe0f26ad6e": {
-            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
-            "query": "/phlexible/phlexibleelement/scripts/**/*.js",
-            "type": "phlexible/scripts"
-        },
-        "ea1eef6c-591f-53c6-9327-1a4eaa87b70b": {
-            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
-            "query": "/phlexible/phlexibleelement/icons/*.gif",
-            "type": "phlexible/icons"
-        },
-        "f5ee43fe-44b1-593e-8c79-1cc51b4dd5dc": {
-            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
-            "query": "/phlexible/phlexibleelement/menu/*.yml",
-            "type": "phlexible/menu"
-        }
-    }
+    "name": "phlexible/element-renderer-bundle"
 }
