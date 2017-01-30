@@ -6,4 +6,3 @@ enabled:
 
 disabled:
   - function_declaration
-  - simplified_null_return
