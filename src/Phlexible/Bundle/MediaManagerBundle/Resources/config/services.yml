@@ -38,7 +38,7 @@ services:
 
     phlexible_media_manager.driver.doctrine:
         class: Phlexible\Component\Volume\Driver\DoctrineDriver
-        scope: prototype
+        shared: false
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@phlexible_media_manager.hash_calculator"
