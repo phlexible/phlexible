@@ -68,8 +68,13 @@ class AssetController extends Controller
      */
     public function cssAction(Request $request)
     {
+        $baseUrlContentFilter = $this->get('phlexible_gui.asset.base_url_content_filter');
+        $baseUrlContentFilter->setBasePath($request->getBasePath());
+        $baseUrlContentFilter->setBaseUrl($request->getBaseUrl());
+
         $cssBuilder = $this->get('phlexible_gui.asset.css_builder');
-        $asset = $cssBuilder->build($request->getBaseUrl(), $request->getBasePath());
+
+        $asset = $cssBuilder->build();
 
         $response = new BinaryFileResponse($asset->getFile(), 200, array('Content-Type' => 'text/css;charset=UTF-8'));
         if ($asset->getMapFile()) {
@@ -89,8 +94,13 @@ class AssetController extends Controller
      */
     public function cssMapAction(Request $request)
     {
+        $baseUrlContentFilter = $this->get('phlexible_gui.asset.base_url_content_filter');
+        $baseUrlContentFilter->setBasePath($request->getBasePath());
+        $baseUrlContentFilter->setBaseUrl($request->getBaseUrl());
+
         $cssBuilder = $this->get('phlexible_gui.asset.css_builder');
-        $asset = $cssBuilder->build($request->getBaseUrl(), $request->getBasePath());
+
+        $asset = $cssBuilder->build();
 
         return new BinaryFileResponse($asset->getMapFile(), 200, array('Content-Type' => 'application/json'));
     }

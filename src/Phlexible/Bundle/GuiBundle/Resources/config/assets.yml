@@ -5,9 +5,47 @@ services:
         arguments:
             - "@puli.discovery"
 
-    phlexible_gui.asset.mapped_content_builder:
+    phlexible_gui.asset.line_separator_content_filter:
+        class: Phlexible\Component\Bundler\Filter\LineSeparatorContentFilter
+        arguments:
+            - "\n"
+
+    phlexible_gui.asset.ensure_trailing_separator_content_filter:
+        class: Phlexible\Component\Bundler\Filter\EnsureTrailingSeparatorContentFilter
+        arguments:
+            - "\n"
+
+    phlexible_gui.asset.base_url_content_filter:
+        class: Phlexible\Component\Bundler\Filter\BaseUrlContentFilter
+        arguments:
+            - ""
+            - ""
+
+    phlexible_gui.asset.js_content_filter:
+        class: Phlexible\Component\Bundler\Filter\ChainContentFilter
+        arguments:
+            -
+                - "@phlexible_gui.asset.line_separator_content_filter"
+                - "@phlexible_gui.asset.ensure_trailing_separator_content_filter"
+
+    phlexible_gui.asset.css_content_filter:
+        class: Phlexible\Component\Bundler\Filter\ChainContentFilter
+        arguments:
+            -
+                - "@phlexible_gui.asset.js_content_filter"
+                - "@phlexible_gui.asset.base_url_content_filter"
+
+    phlexible_gui.asset.js_mapped_content_builder:
         class: Phlexible\Component\Bundler\ContentBuilder\MappedContentBuilder
         public: false
+        arguments:
+            - "@phlexible_gui.asset.js_content_filter"
+
+    phlexible_gui.asset.css_mapped_content_builder:
+        class: Phlexible\Component\Bundler\ContentBuilder\MappedContentBuilder
+        public: false
+        arguments:
+            - "@phlexible_gui.asset.css_content_filter"
 
     phlexible_gui.asset.require_script_resource_resolver:
         class: Phlexible\Component\Bundler\ResourceResolver\RequireScriptResourceResolver
@@ -30,7 +68,7 @@ services:
         arguments:
             - "@phlexible_gui.asset.resource_finder"
             - "@phlexible_gui.asset.require_script_resource_resolver"
-            - "@phlexible_gui.asset.mapped_content_builder"
+            - "@phlexible_gui.asset.js_mapped_content_builder"
             - "@phlexible_gui.compressor.javascript"
             - "%phlexible_gui.asset_cache_dir%"
             - "%kernel.debug%"
@@ -40,7 +78,7 @@ services:
         arguments:
             - "@phlexible_gui.asset.resource_finder"
             - "@phlexible_gui.asset.add_all_resource_resolver"
-            - "@phlexible_gui.asset.mapped_content_builder"
+            - "@phlexible_gui.asset.css_mapped_content_builder"
             - "@phlexible_gui.compressor.css"
             - "%phlexible_gui.asset_cache_dir%"
             - "%kernel.debug%"
