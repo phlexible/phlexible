@@ -1,5 +1,6 @@
 queue:
     queue: Warteschlange
+    jobs: Jobs
     no_jobs: 'Keine Jobs'
     reload: 'Neu laden'
     id: ID
@@ -9,3 +10,5 @@ queue:
     create_time: 'Angelegt an'
     start_time: 'Gestartet an'
     end_time: 'Beendet an'
+    empty_msg: 'Keine Jobs gefunden'
+    display_msg: 'Zeige Jobs {0} - {1} von {2}'

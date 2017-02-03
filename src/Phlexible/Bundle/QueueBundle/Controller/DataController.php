@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Data controller
@@ -28,15 +29,19 @@ class DataController extends Controller
     /**
      * Job list
      *
+     * @param Request $request
      * @return JsonResponse
      * @Route("/list", name="queue_list")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $jobManager = $this->get('phlexible_queue.job_manager');
 
+        $limit = $request->get('limit', 25);
+        $offset = $request->get('start', 0);
+
         $data = [];
-        foreach ($jobManager->findBy([], ['createdAt' => 'DESC']) as $queueItem) {
+        foreach ($jobManager->findBy([], ['createdAt' => 'DESC'], $limit, $offset) as $queueItem) {
             $data[] = [
                 'id'          => $queueItem->getId(),
                 'command'     => $queueItem->getCommand(),
@@ -49,7 +54,9 @@ class DataController extends Controller
             ];
         }
 
-        return new JsonResponse(['data' => $data]);
+        $total = $jobManager->countBy([]);
+
+        return new JsonResponse(['data' => $data, 'total' => $total]);
     }
 
 }

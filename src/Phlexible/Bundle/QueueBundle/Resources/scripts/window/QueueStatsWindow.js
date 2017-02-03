@@ -4,7 +4,7 @@ Ext.require('Phlexible.queue.model.Job');
 Ext.require('Ext.grid.RowExpander');
 
 Phlexible.queue.QueueStatsWindow = Ext.extend(Ext.Window, {
-    title: Phlexible.queue.Strings.queue,
+    title: Phlexible.queue.Strings.jobs,
     strings: Phlexible.queue.Strings,
     width: 900,
     height: 600,
@@ -22,21 +22,32 @@ Phlexible.queue.QueueStatsWindow = Ext.extend(Ext.Window, {
             )
         });
 
+        var store = new Ext.data.JsonStore({
+            url: Phlexible.Router.generate('queue_list'),
+            root: 'data',
+            id: 'id',
+            fields: Phlexible.queue.model.Job,
+            autoLoad: true,
+            totalProperty: 'total'
+        });
+
         this.items = {
             xtype: 'grid',
             border: false,
             autoExpandColumn: 2,
-            store: new Ext.data.JsonStore({
-                url: Phlexible.Router.generate('queue_list'),
-                root: 'data',
-                id: 'id',
-                fields: Phlexible.queue.model.Job,
-                autoLoad: true
-            }),
+            store: store,
             selModel: new Ext.grid.RowSelectionModel(),
             viewConfig: {
                 emptyText: this.strings.no_jobs
             },
+            bbar: new Ext.PagingToolbar({
+                pageSize: 25,
+                store: store,
+                displayInfo: true,
+                displayMsg: this.strings.display_msg,
+                emptyMsg: this.strings.empty_msg,
+                plugins: this.filters
+            }),
             columns: [
                 expander,
                 {
@@ -68,7 +79,8 @@ Phlexible.queue.QueueStatsWindow = Ext.extend(Ext.Window, {
                     header: this.strings.end_time,
                     dataIndex: 'end_time',
                     width: 120
-                }],
+                }
+            ],
             plugins: [
                 expander
             ]

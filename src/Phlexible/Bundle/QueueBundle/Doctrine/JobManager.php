@@ -117,7 +117,7 @@ class JobManager implements JobManagerInterface
             $qb->andWhere($qb->expr()->eq("j.$field", $qb->expr()->literal($value)));
         }
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
