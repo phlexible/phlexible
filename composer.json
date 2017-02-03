@@ -30,7 +30,7 @@
         "friendsofsymfony/user-bundle": "^2.0,>=2.0.0-beta1",
         "imagine/imagine": "^0.6",
         "nelmio/api-doc-bundle": "^2.5",
-        "phlexible/bundler": "~1.0.0",
+        "phlexible/bundler": "~1.0.0,>=1.0.0-alpha3",
         "php-ffmpeg/extras": "^0.3",
         "php-ffmpeg/php-ffmpeg": "^0.6",
         "php-poppler/php-poppler": "^1.0",
