@@ -22,3 +22,16 @@ services:
         tags:
             - {name: phlexible_element_renderer.configurator, priority: -300}
             - {name: monolog.logger, channel: element_renderer}
+
+
+    phlexible_tree.configurator.forward:
+        class: Phlexible\Bundle\TreeBundle\Configurator\ForwardConfigurator
+        public: false
+        arguments:
+            - "@event_dispatcher"
+            - "@logger"
+            - "@router"
+            - "@phlexible_tree.content_tree_manager"
+        tags:
+            - {name: phlexible_element_renderer.configurator, priority: 499}
+            - {name: monolog.logger, channel: element_renderer}
