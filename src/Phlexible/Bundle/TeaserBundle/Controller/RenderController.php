@@ -35,7 +35,12 @@ class RenderController extends Controller
      */
     public function htmlAction(Request $request, $teaserId)
     {
-        if ($request->get('preview')) {
+        $requestStack = $this->get('request_stack');
+        $masterRequest = $requestStack->getMasterRequest();
+
+        if ($request->get('preview') || $request->get('_preview')) {
+            $request->attributes->set('_preview', true);
+        } elseif ($masterRequest !== $request && $masterRequest->attributes->get('_preview')) {
             $request->attributes->set('_preview', true);
         }
 

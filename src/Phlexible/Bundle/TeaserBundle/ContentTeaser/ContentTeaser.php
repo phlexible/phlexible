@@ -34,6 +34,11 @@ class ContentTeaser extends Teaser
     private $uniqueId;
 
     /**
+     * @var int
+     */
+    private $version;
+
+    /**
      * @return string
      */
     public function getTitle()
@@ -69,6 +74,26 @@ class ContentTeaser extends Teaser
     public function setUniqueId($uniqueId)
     {
         $this->uniqueId = $uniqueId;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param int $version
+     *
+     * @return $this
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
 
         return $this;
     }

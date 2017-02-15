@@ -64,7 +64,7 @@ class ElementExtension extends \Twig_Extension
     }
 
     /**
-     * @param TreeNodeInterface|ContentTreeContext|int $eid
+     * @param ContentTeaser|TreeNodeInterface|ContentTreeContext|int $eid
      *
      * @return ContentElement|null
      */
@@ -75,7 +75,7 @@ class ElementExtension extends \Twig_Extension
         if ($eid instanceof ContentTeaser) {
             $teaser = $eid;
             $eid = $teaser->getTypeId();
-            $version = $this->teaserManager->getPublishedVersion($teaser, $language);
+            $version = $teaser->getVersion();
         } elseif ($eid instanceof TreeNodeInterface) {
             $node = $eid;
             $eid = $node->getTypeId();
