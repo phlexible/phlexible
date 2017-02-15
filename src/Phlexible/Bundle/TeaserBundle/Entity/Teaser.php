@@ -73,7 +73,7 @@ class Teaser
     private $sort;
 
     /**
-     * @var string
+     * @var array
      * @ORM\Column(type="json_array", nullable=true)
      */
     private $attributes;

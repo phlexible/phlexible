@@ -80,7 +80,6 @@ class TeaserConfigurator implements ConfiguratorInterface
 
         $teaser = $request->attributes->get('contentDocument');
 
-        $version = -1;
         if ($request->attributes->get('_preview')) {
             $element = $this->elementService->findElement($teaser->getTypeId());
             $version = $this->elementService->findLatestElementVersion($element)->getVersion();

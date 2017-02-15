@@ -127,9 +127,19 @@ class LayoutareaConfigurator implements ConfiguratorInterface
             $teasers = $this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath, false);
 
             foreach ($teasers as $index => $teaser) {
-                if (!$isPreview && !$this->teaserManager->isPublished($teaser, $language)) {
-                    unset ($teasers[$index]);
+                if (!$isPreview) {
+                    $version = $this->teaserManager->getPublishedVersion($teaser, $language);
+                    if (!$version) {
+                        unset ($teasers[$index]);
+                        continue;
+                    }
+                } else {
+                    $element = $this->elementService->findElement($teaser->getTypeId());
+                    $elementVersion = $this->elementService->findLatestElementVersion($element);
+                    $version = $elementVersion->getVersion();
                 }
+
+                $teaser->setVersion($version);
             }
 
             $areas[$layoutarea->getUniqueId()] = [
