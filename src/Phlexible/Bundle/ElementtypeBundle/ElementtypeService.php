@@ -147,7 +147,6 @@ class ElementtypeService
                     break;
                 }
             }
-
         }
 
         return $elementtypes;
