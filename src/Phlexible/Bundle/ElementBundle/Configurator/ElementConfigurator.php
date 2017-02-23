@@ -108,12 +108,16 @@ class ElementConfigurator implements ConfiguratorInterface
         }
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $forwardField = $contentElement->getMappedField()->getForward();
-        if ($forwardField) {
-            $forward = json_decode($forwardField);
-            $renderConfiguration->addFeature('forward')->setVariable('forward', $forward);
+        $mappedField = $contentElement->getMappedField();
+        if ($mappedField) {
+            $forwardField = $mappedField->getForward();
 
-            return;
+            if ($forwardField) {
+                $forward = json_decode($forwardField);
+                $renderConfiguration->addFeature('forward')->setVariable('forward', $forward);
+
+                return;
+            }
         }
 
         $renderConfiguration
