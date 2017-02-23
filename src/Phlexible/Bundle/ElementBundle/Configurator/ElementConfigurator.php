@@ -54,7 +54,6 @@ class ElementConfigurator implements ConfiguratorInterface
      */
     private $loader;
 
-
     /**
      * @param EventDispatcherInterface      $dispatcher
      * @param LoggerInterface               $logger
