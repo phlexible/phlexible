@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementBundle\Search;
 
 /**
- * EID search
+ * EID search.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

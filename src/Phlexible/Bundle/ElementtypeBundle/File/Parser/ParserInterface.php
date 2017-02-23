@@ -15,7 +15,7 @@ use FluentDOM\Document;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
- * Parser interface
+ * Parser interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

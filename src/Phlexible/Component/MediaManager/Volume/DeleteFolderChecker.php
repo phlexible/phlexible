@@ -17,7 +17,7 @@ use Phlexible\Component\Volume\Model\FolderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Delete folder checker
+ * Delete folder checker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

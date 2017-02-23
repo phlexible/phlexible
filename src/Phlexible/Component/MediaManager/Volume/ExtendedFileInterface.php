@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaManager\Volume;
 use Phlexible\Component\Volume\Model\FileInterface;
 
 /**
- * File interface
+ * File interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

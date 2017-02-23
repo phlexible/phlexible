@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaCacheBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Media cache role provider
+ * Media cache role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

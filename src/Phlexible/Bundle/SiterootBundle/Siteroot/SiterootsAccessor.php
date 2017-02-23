@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SiterootBundle\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 
 /**
- * Siteroots accessor
+ * Siteroots accessor.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -34,11 +34,11 @@ class SiterootsAccessor implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Whether a offset exists
+     * Whether a offset exists.
      *
      * @param mixed $offset
      *
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure
      */
     public function offsetExists($offset)
     {
@@ -46,11 +46,11 @@ class SiterootsAccessor implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Offset to retrieve
+     * Offset to retrieve.
      *
      * @param mixed $offset
      *
-     * @return mixed Can return all value types.
+     * @return mixed can return all value types
      */
     public function offsetGet($offset)
     {
@@ -58,7 +58,7 @@ class SiterootsAccessor implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Offset to set
+     * Offset to set.
      *
      * @param mixed $offset
      * @param mixed $value
@@ -68,7 +68,7 @@ class SiterootsAccessor implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Offset to unset
+     * Offset to unset.
      *
      * @param mixed $offset
      */
@@ -77,7 +77,7 @@ class SiterootsAccessor implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
      * @return \Traversable
      */

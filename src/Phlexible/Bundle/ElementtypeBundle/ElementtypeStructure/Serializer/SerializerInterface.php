@@ -14,14 +14,14 @@ namespace Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 
 /**
- * Serializer interface
+ * Serializer interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface SerializerInterface
 {
     /**
-     * Serialize structure
+     * Serialize structure.
      *
      * @param ElementtypeStructure $elementtypeStructure
      *

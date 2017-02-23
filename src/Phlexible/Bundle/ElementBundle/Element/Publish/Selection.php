@@ -15,7 +15,7 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Selection
+ * Selection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,7 +33,7 @@ class Selection
      */
     public function add(SelectionItem $item)
     {
-        $this->items[$item->getTarget()->getId() . '_' . $item->getLanguage()] = $item;
+        $this->items[$item->getTarget()->getId().'_'.$item->getLanguage()] = $item;
 
         return $this;
     }
@@ -46,7 +46,7 @@ class Selection
      */
     public function has($target, $language)
     {
-        $key = $target->getId() . '_' . $language;
+        $key = $target->getId().'_'.$language;
 
         return isset($this->items[$key]);
     }

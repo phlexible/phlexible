@@ -15,7 +15,7 @@ use org\bovigo\vfs\vfsStream;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader;
 
 /**
- * YAML file loader test
+ * YAML file loader test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -31,7 +31,7 @@ class YamlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoad()
     {
-        $items = <<<EOF
+        $items = <<<'EOF'
 menus:
     handle: menus
 
@@ -60,7 +60,7 @@ EOF;
      */
     public function testLoadWithInvalidParent()
     {
-        $items = <<<EOF
+        $items = <<<'EOF'
 config:
     parent: 123
     handle: configuration
@@ -70,7 +70,6 @@ EOF;
 
         $loader = new YamlFileLoader();
         $items = $loader->load(vfsStream::url('root/items.yml'));
-
     }
 
     /**
@@ -78,7 +77,7 @@ EOF;
      */
     public function testLoadWithMissingHandler()
     {
-        $items = <<<EOF
+        $items = <<<'EOF'
 menus:
 EOF;
 
@@ -93,7 +92,7 @@ EOF;
      */
     public function testLoadWithInvalidHandler()
     {
-        $items = <<<EOF
+        $items = <<<'EOF'
 menus:
     test: 123
 EOF;
@@ -109,7 +108,7 @@ EOF;
      */
     public function testLoadWithInvalidRoles()
     {
-        $items = <<<EOF
+        $items = <<<'EOF'
 menus:
     roles: abc
 EOF;

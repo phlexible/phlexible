@@ -15,7 +15,7 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
 
 /**
- * Siteroots callbacks
+ * Siteroots callbacks.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

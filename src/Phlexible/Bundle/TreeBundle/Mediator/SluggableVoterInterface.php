@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Mediator;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Sluggable voter interface
+ * Sluggable voter interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

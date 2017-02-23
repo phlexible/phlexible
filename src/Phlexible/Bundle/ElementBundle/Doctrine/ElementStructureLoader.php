@@ -21,7 +21,7 @@ use Phlexible\Bundle\ElementtypeBundle\File\Parser\XmlParser;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
- * Element version data
+ * Element version data.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Marcus Stöhr <mstoehr@brainbits.net>
@@ -62,7 +62,7 @@ class ElementStructureLoader
     private $map = [];
 
     /**
-     * Load data
+     * Load data.
      *
      * @param ElementVersion $elementVersion
      * @param string         $defaultLanguage
@@ -73,7 +73,7 @@ class ElementStructureLoader
     {
         $element = $elementVersion->getElement();
 
-        $identifier = $element->getEid() . '_' . $elementVersion->getVersion();
+        $identifier = $element->getEid().'_'.$elementVersion->getVersion();
 
         if (isset($this->map[$identifier])) {
             return $this->map[$identifier];
@@ -88,7 +88,7 @@ class ElementStructureLoader
         $dataRows = $this->queryValues($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
 
         $structures = [
-            null => $rootStructure = new ElementStructure()
+            null => $rootStructure = new ElementStructure(),
         ];
 
         $rootId = null;

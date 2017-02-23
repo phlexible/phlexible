@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Element\ElementHasher;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 
 /**
- * Teaserh hasher
+ * Teaserh hasher.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

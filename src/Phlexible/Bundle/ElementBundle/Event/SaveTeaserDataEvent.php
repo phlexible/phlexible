@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Save teaser data event
+ * Save teaser data event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

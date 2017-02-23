@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add permissions pass
+ * Add permissions pass.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

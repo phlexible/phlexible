@@ -25,7 +25,7 @@ class IconsBuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function testBuild()
     {
-        $imgFile = dirname(dirname(__DIR__)) . '/Resources/public/icons/component.png';
+        $imgFile = dirname(dirname(__DIR__)).'/Resources/public/icons/component.png';
 
         $root = vfsStream::setup('phlexible');
         $icon = vfsStream::newFile('phlexiblegui/icons/icon.png')->at($root)->setContent(file_get_contents($imgFile));
@@ -41,12 +41,11 @@ class IconsBuilderTest extends \PHPUnit_Framework_TestCase
 
         $result = $builder->build('/a');
 
-        $expected = <<<EOF
+        $expected = <<<'EOF'
 /* Created: _date_ */
 .p-gui-icon-icon {background-image: url(/a/bundles/phlexiblegui/icons/icon.png) !important;}
 
 EOF;
-;
 
         $this->assertFileExists($root->getChild('icons.css')->url());
         $this->assertEquals(new Asset($root->getChild('icons.css')->url()), $result);

@@ -18,7 +18,7 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
 
 /**
- * Tree node
+ * Tree node.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -42,7 +42,7 @@ class TreeNode implements TreeNodeInterface, HierarchicalDomainObjectInterface
 
     /**
      * @var int
-     * ORM\Column(name="parent_id", type="integer", nullable=true)
+     *          ORM\Column(name="parent_id", type="integer", nullable=true)
      * @ORM\ManyToOne(targetEntity="TreeNode")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */

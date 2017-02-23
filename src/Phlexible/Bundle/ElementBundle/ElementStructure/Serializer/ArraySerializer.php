@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\ElementStructure\Serializer;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 
 /**
- * Serializer interface
+ * Serializer interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -40,13 +40,13 @@ class ArraySerializer implements SerializerInterface
         $valueDatas = [];
         foreach ($elementStructure->getValues($language) as $value) {
             $valueData = [
-                'id'         => $value->getId(),
-                'dsId'       => $value->getDsId(),
-                'name'       => $value->getName(),
-                'type'       => $value->getType(),
-                'content'    => $value->getValue(),
+                'id' => $value->getId(),
+                'dsId' => $value->getDsId(),
+                'name' => $value->getName(),
+                'type' => $value->getType(),
+                'content' => $value->getValue(),
                 'attributes' => $value->getAttributes(),
-                'options'    => $value->getOptions(),
+                'options' => $value->getOptions(),
             ];
             if ($language !== $masterLanguage) {
                 $masterValue = $elementStructure->getValue($value->getName(), $masterLanguage);
@@ -65,15 +65,15 @@ class ArraySerializer implements SerializerInterface
         $structureData = [
             //'id'         => $elementStructure->getId(),
             //'dataId'     => $elementStructure->getDataId(),
-            'id'         => $elementStructure->getDataId(),
-            'dsId'       => $elementStructure->getDsId(),
-            'parentId'   => $elementStructure->getParentId(),
+            'id' => $elementStructure->getDataId(),
+            'dsId' => $elementStructure->getDsId(),
+            'parentId' => $elementStructure->getParentId(),
             'parentDsId' => $elementStructure->getParentDsId(),
-            'name'       => $elementStructure->getName(),
+            'name' => $elementStructure->getName(),
             'parentName' => $elementStructure->getParentName(),
             'attributes' => $elementStructure->getAttributes(),
             'structures' => $structureDatas,
-            'values'     => $valueDatas,
+            'values' => $valueDatas,
         ];
 
         return $structureData;

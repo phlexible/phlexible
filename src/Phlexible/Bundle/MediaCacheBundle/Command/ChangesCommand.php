@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Commit command
+ * Commit command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -59,9 +59,9 @@ class ChangesCommand extends ContainerAwareCommand
         if (count($changes)) {
             foreach ($changes as $change) {
                 $output->writeln(
-                    'FILE ' . $change->getFile()->getId() . ':' . $change->getFile()->getVersion() . ' ' .
-                    'TEMPLATE ' . $change->getTemplate()->getKey() . ' ' .
-                    'REVISION ' . $change->getRevision() . ' => ' . $change->getTemplate()->getRevision()
+                    'FILE '.$change->getFile()->getId().':'.$change->getFile()->getVersion().' '.
+                    'TEMPLATE '.$change->getTemplate()->getKey().' '.
+                    'REVISION '.$change->getRevision().' => '.$change->getTemplate()->getRevision()
                 );
             }
 

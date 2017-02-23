@@ -19,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Bundles controller
+ * Bundles controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class BundlesController extends Controller
 {
     /**
-     * List all Components
+     * List all Components.
      *
      * @return JsonResponse
      * @Route("", name="gui_bundles")
@@ -55,17 +55,17 @@ class BundlesController extends Controller
                 $package = current($namespaceParts);
             }
 
-            $icon = 'p-' . str_replace(['bundle', 'phlexible'], ['', ''], strtolower($id)) . '-component-icon';
+            $icon = 'p-'.str_replace(['bundle', 'phlexible'], ['', ''], strtolower($id)).'-component-icon';
 
             $reflection = new \ReflectionClass($class);
             $path = $reflection->getFileName();
 
             $modules[$id] = [
-                'id'          => $id,
-                'classname'   => $className,
-                'package'     => $package,
-                'icon'        => $icon,
-                'path'        => $path,
+                'id' => $id,
+                'classname' => $className,
+                'package' => $package,
+                'icon' => $icon,
+                'path' => $path,
             ];
         }
 
@@ -76,7 +76,7 @@ class BundlesController extends Controller
     }
 
     /**
-     * Filter values
+     * Filter values.
      *
      * @return JsonResponse
      * @Route("/filtervalues", name="gui_bundles_filtervalues")

@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
 
 /**
- * Elementtype event
+ * Elementtype event.
  *
  * @author Phillip Look <pl@brainbits.net>
  */

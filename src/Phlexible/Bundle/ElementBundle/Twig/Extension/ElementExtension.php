@@ -20,7 +20,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Twig element extension
+ * Twig element extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

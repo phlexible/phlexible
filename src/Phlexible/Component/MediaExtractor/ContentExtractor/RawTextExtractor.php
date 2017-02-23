@@ -16,7 +16,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Raw text content extract
+ * Raw text content extract.
  *
  * @author Phillip Look <plook@brainbits.net>
  */
@@ -60,5 +60,4 @@ class RawTextExtractor implements ExtractorInterface
 
         return $content;
     }
-
 }

@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Siteroot
+ * Siteroot.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -56,7 +56,7 @@ class Siteroot
     private $modifiedAt;
 
     /**
-     * @var  string
+     * @var string
      * @ORM\Column(name="modify_user_id", type="string", length=36, options={"fixed"=true})
      */
     private $modifyUserId;
@@ -215,7 +215,7 @@ class Siteroot
     }
 
     /**
-     * Set all titles
+     * Set all titles.
      *
      * @param array $titles
      *
@@ -229,7 +229,7 @@ class Siteroot
     }
 
     /**
-     * Return all titles
+     * Return all titles.
      *
      * @return array
      */
@@ -239,7 +239,7 @@ class Siteroot
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $language
      * @param string $title
@@ -254,7 +254,7 @@ class Siteroot
     }
 
     /**
-     * Return siteroot title
+     * Return siteroot title.
      *
      * @param string $language
      *
@@ -331,7 +331,7 @@ class Siteroot
     }
 
     /**
-     * Return all special tids
+     * Return all special tids.
      *
      * @return array
      */
@@ -353,7 +353,7 @@ class Siteroot
     }
 
     /**
-     * Return special tids for a language
+     * Return special tids for a language.
      *
      * @param string $language
      *
@@ -373,7 +373,7 @@ class Siteroot
     }
 
     /**
-     * Return a special tid
+     * Return a special tid.
      *
      * @param string $language
      * @param string $key
@@ -430,7 +430,7 @@ class Siteroot
     }
 
     /**
-     * Return the default url
+     * Return the default url.
      *
      * @param string $language
      *

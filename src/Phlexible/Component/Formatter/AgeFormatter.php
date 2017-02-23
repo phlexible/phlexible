@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Formatter;
 
 /**
- * Age formatter
+ * Age formatter.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -20,11 +20,11 @@ class AgeFormatter
 {
     /**
      * Format the difference of 2 dates in a human readable form
-     * If the second date is omitted, the current time will be used
+     * If the second date is omitted, the current time will be used.
      *
-     * @param string  $firstDate
-     * @param string  $secondDate
-     * @param boolean $returnAsArray
+     * @param string $firstDate
+     * @param string $secondDate
+     * @param bool   $returnAsArray
      *
      * @return string|array
      */
@@ -52,11 +52,11 @@ class AgeFormatter
 
     /**
      * Format the difference of 2 unix timestamps in a human readable form
-     * If the second date is omitted, the current time will be used
+     * If the second date is omitted, the current time will be used.
      *
-     * @param string  $firstTimestamp
-     * @param string  $secondTimestamp
-     * @param boolean $returnAsArray
+     * @param string $firstTimestamp
+     * @param string $secondTimestamp
+     * @param bool   $returnAsArray
      *
      * @return string|array
      */
@@ -93,7 +93,7 @@ class AgeFormatter
                     return array($diff, ($diff === 1 ? $single : $multi));
                 }
 
-                return $diff . ' ' . ($diff === 1 ? $single : $multi);
+                return $diff.' '.($diff === 1 ? $single : $multi);
             }
 
             $diff = (int) round($startDiff / $div);
@@ -103,6 +103,6 @@ class AgeFormatter
             return array($diff, ($diff === 1 ? $single : $multi));
         }
 
-        return $diff . ' ' . ($diff === 1 ? $single : $multi);
+        return $diff.' '.($diff === 1 ? $single : $multi);
     }
 }

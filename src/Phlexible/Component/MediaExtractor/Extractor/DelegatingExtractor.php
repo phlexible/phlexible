@@ -15,7 +15,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Delegating extractor
+ * Delegating extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

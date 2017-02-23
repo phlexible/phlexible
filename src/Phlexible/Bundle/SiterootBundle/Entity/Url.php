@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SiterootBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Siteroot url
+ * Siteroot url.
  *
  * @author Phillip Look <plook@brainbits.net>
  *

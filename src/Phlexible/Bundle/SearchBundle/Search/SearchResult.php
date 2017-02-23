@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\SearchBundle\Search;
 
 /**
- * Search result
+ * Search result.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -64,30 +64,30 @@ class SearchResult
      */
     public function __construct($id, $title, $author, $date, $image, $component, array $handler = null)
     {
-        $this->id        = $id;
-        $this->author    = $author;
-        $this->title     = $title;
-        $this->date      = $date;
+        $this->id = $id;
+        $this->author = $author;
+        $this->title = $title;
+        $this->date = $date;
         $this->component = $component;
-        $this->image     = $image;
-        $this->handler   = $handler;
+        $this->image = $image;
+        $this->handler = $handler;
     }
 
     /**
-     * Return array repesentation of this search result
+     * Return array repesentation of this search result.
      *
      * @return array
      */
     public function toArray()
     {
         return [
-            'id'        => $this->id,
-            'author'    => $this->author,
-            'title'     => $this->title,
-            'date'      => $this->date->format('U'),
+            'id' => $this->id,
+            'author' => $this->author,
+            'title' => $this->title,
+            'date' => $this->date->format('U'),
             'component' => $this->component,
-            'image'     => $this->image,
-            'handler'   => $this->handler
+            'image' => $this->image,
+            'handler' => $this->handler,
         ];
     }
 }

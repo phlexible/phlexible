@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Message listener
+ * Message listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -31,7 +31,7 @@ class MessageListener implements EventSubscriberInterface
     private $messageHandlers;
 
     /**
-     * @param HandlerCollection       $messageHandlers
+     * @param HandlerCollection $messageHandlers
      */
     public function __construct(HandlerCollection $messageHandlers)
     {
@@ -63,7 +63,7 @@ class MessageListener implements EventSubscriberInterface
     }
 
     /**
-     * On terminate
+     * On terminate.
      */
     public function onTerminate()
     {

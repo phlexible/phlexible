@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MetaSetBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Meta set role provider
+ * Meta set role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

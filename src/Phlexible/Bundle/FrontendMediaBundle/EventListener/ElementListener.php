@@ -20,7 +20,7 @@ use Phlexible\Bundle\QueueBundle\Model\JobManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Element listener
+ * Element listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

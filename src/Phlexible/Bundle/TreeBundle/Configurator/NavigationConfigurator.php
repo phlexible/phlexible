@@ -11,8 +11,8 @@
 
 namespace Phlexible\Bundle\TreeBundle\Configurator;
 
-use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
@@ -22,7 +22,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Navigation configurator
+ * Navigation configurator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

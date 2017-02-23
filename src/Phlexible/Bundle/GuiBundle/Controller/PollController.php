@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Poll controller
+ * Poll controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/gui/poll")
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 class PollController extends Controller
 {
     /**
-     * Poll Action
+     * Poll Action.
      *
      * @param Request $request
      *

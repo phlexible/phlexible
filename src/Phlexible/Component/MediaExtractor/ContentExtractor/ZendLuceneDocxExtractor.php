@@ -16,7 +16,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Zend lucene docx content extractor
+ * Zend lucene docx content extractor.
  *
  * @author Phillip Look <plook@brainbits.net>
  */
@@ -42,5 +42,4 @@ class ZendLuceneDocxExtractor implements ExtractorInterface
 
         return $content;
     }
-
 }

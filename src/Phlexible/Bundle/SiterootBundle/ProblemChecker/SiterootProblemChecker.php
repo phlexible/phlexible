@@ -16,7 +16,7 @@ use Phlexible\Bundle\ProblemBundle\ProblemChecker\ProblemCheckerInterface;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 
 /**
- * Siteroot problem checker
+ * Siteroot problem checker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -36,7 +36,7 @@ class SiterootProblemChecker implements ProblemCheckerInterface
     }
 
     /**
-     * Check for problems
+     * Check for problems.
      *
      * @return mixed
      */
@@ -63,7 +63,7 @@ class SiterootProblemChecker implements ProblemCheckerInterface
             if (!$siteRoot->getNavigations()) {
                 $problem = new Problem();
                 $problem
-                    ->setId('siteroots_no_navigation_' . $siteRoot->getId())
+                    ->setId('siteroots_no_navigation_'.$siteRoot->getId())
                     ->setCheckClass(__CLASS__)
                     ->setSeverity(Problem::SEVERITY_WARNING)
                     ->setMessage("No Navigation defined for Siteroot {$siteRoot->getTitle()}.")

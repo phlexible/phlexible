@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MessageBundle\Handler;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
- * Buffer handler
+ * Buffer handler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

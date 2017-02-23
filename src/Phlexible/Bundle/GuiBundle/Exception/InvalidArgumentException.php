@@ -12,11 +12,10 @@
 namespace Phlexible\Bundle\GuiBundle\Exception;
 
 /**
- * Invalid argument exception for gui bundle
+ * Invalid argument exception for gui bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
-
 }

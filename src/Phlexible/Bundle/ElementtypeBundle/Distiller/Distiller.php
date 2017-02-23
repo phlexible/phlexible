@@ -18,7 +18,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
- * Distiller
+ * Distiller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -66,7 +66,7 @@ class Distiller
 
             if ($field->isField()) {
                 $data[$childNode->getName()] = [
-                    'node'  => $childNode,
+                    'node' => $childNode,
                     'field' => $field,
                 ];
             }
@@ -76,9 +76,9 @@ class Distiller
 
                 if ($childNode->isRepeatable() || $childNode->isOptional()) {
                     $data[$node->getName()] = [
-                        'node'     => $childNode,
-                        'field'    => $field,
-                        'children' => $childData
+                        'node' => $childNode,
+                        'field' => $field,
+                        'children' => $childData,
                     ];
                 } else {
                     $data = array_merge($data, $childData);

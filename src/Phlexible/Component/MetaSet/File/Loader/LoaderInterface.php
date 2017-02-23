@@ -14,14 +14,14 @@ namespace Phlexible\Component\MetaSet\File\Loader;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
- * Loader interface
+ * Loader interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface LoaderInterface
 {
     /**
-     * Return supported extension
+     * Return supported extension.
      *
      * @return string
      */

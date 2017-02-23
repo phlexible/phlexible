@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Apply successor event
+ * Apply successor event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -38,7 +38,7 @@ class ApplySuccessorEvent extends Event
     public function __construct(UserInterface $fromUser, UserInterface $toUser)
     {
         $this->fromUser = $fromUser;
-        $this->toUser   = $toUser;
+        $this->toUser = $toUser;
     }
 
     /**

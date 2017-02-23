@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Folder controller
+ * Folder controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/folder")
@@ -78,16 +78,16 @@ class FolderController extends Controller
             }
 
             $tmp = [
-                'id'            => $subFolder->getId(),
-                'text'          => $subFolder->getName(),
-                'leaf'          => false,
-                'numChilds'     => $volume->countFilesByFolder($subFolder),
-                'draggable'     => true,
-                'expanded'      => true,
-                'allowDrop'     => true,
+                'id' => $subFolder->getId(),
+                'text' => $subFolder->getName(),
+                'leaf' => false,
+                'numChilds' => $volume->countFilesByFolder($subFolder),
+                'draggable' => true,
+                'expanded' => true,
+                'allowDrop' => true,
                 'allowChildren' => true,
-                'isTarget'      => true,
-                'rights'        => $userRights,
+                'isTarget' => true,
+                'rights' => $userRights,
             ];
 
             if ($volume->countFoldersByParentFolder($subFolder)) {
@@ -105,7 +105,7 @@ class FolderController extends Controller
     }
 
     /**
-     * List folders
+     * List folders.
      *
      * @param Request $request
      *
@@ -141,18 +141,18 @@ class FolderController extends Controller
                 $slot->setData(
                     [
                         [
-                            'id'        => $rootFolder->getId(),
-                            'site_id'   => $volume->getId(),
-                            'text'      => $rootFolder->getName(),
-                            'cls'       => 't-mediamanager-root',
-                            'leaf'      => !$volume->countFoldersByParentFolder($rootFolder),
+                            'id' => $rootFolder->getId(),
+                            'site_id' => $volume->getId(),
+                            'text' => $rootFolder->getName(),
+                            'cls' => 't-mediamanager-root',
+                            'leaf' => !$volume->countFoldersByParentFolder($rootFolder),
                             'numChilds' => $volume->countFilesByFolder($rootFolder),
                             'draggable' => false,
-                            'expanded'  => true,
+                            'expanded' => true,
                             'allowDrop' => true,
-                            'versions'  => $volume->hasFeature('versions'),
-                            'rights'    => $userRights,
-                        ]
+                            'versions' => $volume->hasFeature('versions'),
+                            'rights' => $userRights,
+                        ],
                     ]
                 );
 
@@ -208,18 +208,18 @@ class FolderController extends Controller
                     // TODO: also files in folder!
 
                     $tmp = [
-                        'id'        => $subFolder->getId(),
-                        'site_id'   => $volume->getId(),
-                        'text'      => $subFolder->getName(),
-                        'leaf'      => false,
+                        'id' => $subFolder->getId(),
+                        'site_id' => $volume->getId(),
+                        'text' => $subFolder->getName(),
+                        'leaf' => false,
                         'numChilds' => $volume->countFilesByFolder($subFolder),
                         'allowDrop' => true,
                         'allowChildren' => true,
                         'isTarget' => true,
-                        'versions'  => $volume->hasFeature('versions'),
-                        'rights'    => $userRights,
-                        'used_in'   => $usedIn,
-                        'used'      => $usage,
+                        'versions' => $volume->hasFeature('versions'),
+                        'rights' => $userRights,
+                        'used_in' => $usedIn,
+                        'used' => $usage,
                     ];
 
                     if (!$volume->countFoldersByParentFolder($subFolder)) {
@@ -246,7 +246,7 @@ class FolderController extends Controller
     }
 
     /**
-     * Create new folder
+     * Create new folder.
      *
      * @param Request $request
      *
@@ -265,12 +265,12 @@ class FolderController extends Controller
             $folder = $volume->createFolder($parentFolder, $name, array(), $this->getUser()->getId());
 
             return new ResultResponse(true, 'Folder created.', [
-                'folder_id'   => $folder->getId(),
-                'folder_name' => $folder->getName()
+                'folder_id' => $folder->getId(),
+                'folder_name' => $folder->getName(),
             ]);
         } catch (AlreadyExistsException $e) {
             return new ResultResponse(false, $e->getMessage(), [
-                'folder_name' => 'Folder already exists.'
+                'folder_name' => 'Folder already exists.',
             ]);
         } catch (\Exception $e) {
             return new ResultResponse(false, $e->getMessage());
@@ -278,7 +278,7 @@ class FolderController extends Controller
     }
 
     /**
-     * Rename folder
+     * Rename folder.
      *
      * @param Request $request
      *
@@ -297,12 +297,12 @@ class FolderController extends Controller
         $volume->renameFolder($folder, $folderName, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Folder renamed.', [
-            'folder_name' => $folderName
+            'folder_name' => $folderName,
         ]);
     }
 
     /**
-     * Delete folder
+     * Delete folder.
      *
      * @param Request $request
      *
@@ -327,7 +327,7 @@ class FolderController extends Controller
     }
 
     /**
-     * Move folder
+     * Move folder.
      *
      * @param Request $request
      *
@@ -350,7 +350,7 @@ class FolderController extends Controller
     }
 
     /**
-     * Folder properties
+     * Folder properties.
      *
      * @param Request $request
      *
@@ -370,12 +370,12 @@ class FolderController extends Controller
             $calculatedSize = $calculator->calculate($volume, $folder);
 
             $data = [
-                'title'       => $folder->getName(),
-                'type'        => 'folder',
-                'path'        => '/' . $folder->getPath(),
-                'size'        => $calculatedSize->getSize(),
-                'files'       => $calculatedSize->getNumFiles(),
-                'folders'     => $calculatedSize->getNumFolders(),
+                'title' => $folder->getName(),
+                'type' => 'folder',
+                'path' => '/'.$folder->getPath(),
+                'size' => $calculatedSize->getSize(),
+                'files' => $calculatedSize->getNumFiles(),
+                'folders' => $calculatedSize->getNumFolders(),
                 'create_time' => $folder->getCreatedAt()->format('U') * 1000,
                 'create_user' => $folder->getCreateUserId(),
                 'modify_time' => $folder->getModifiedAt()->format('U') * 1000,

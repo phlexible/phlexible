@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Validator\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Element validator
+ * Element validator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

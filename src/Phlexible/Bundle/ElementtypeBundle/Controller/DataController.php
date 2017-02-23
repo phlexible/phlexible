@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Data controller
+ * Data controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elementtypes/data")
@@ -36,12 +36,12 @@ class DataController extends Controller
     {
         $locator = $this->get('pattern_locator');
         $files = $locator->locate('*.gif', 'public/elementtypes', false);
-        $prefix = $request->getBasePath() . '/bundles/phlexibleelementtype/elementtypes/';
+        $prefix = $request->getBasePath().'/bundles/phlexibleelementtype/elementtypes/';
 
         foreach ($files as $file) {
             $data[basename($file)] = [
                 'title' => basename($file),
-                'url'   => $prefix . basename($file)
+                'url' => $prefix.basename($file),
             ];
         }
 

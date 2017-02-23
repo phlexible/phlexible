@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
 /**
- * Elementtype structure iterator
+ * Elementtype structure iterator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -104,7 +104,6 @@ class ElementtypeStructureIterator implements \RecursiveIterator
      */
     public function getChildren()
     {
-        return new ElementtypeStructureIterator($this->tree, $this->key());
+        return new self($this->tree, $this->key());
     }
-
 }

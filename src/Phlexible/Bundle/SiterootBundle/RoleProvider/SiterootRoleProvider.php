@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SiterootBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Siteroot role provider
+ * Siteroot role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

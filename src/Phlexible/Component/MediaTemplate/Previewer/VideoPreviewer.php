@@ -17,7 +17,7 @@ use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Video previewer
+ * Video previewer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -76,7 +76,7 @@ class VideoPreviewer implements PreviewerInterface
         }
 
         $extension = $this->applier->getExtension($template);
-        $cacheFilename = $this->cacheDir . 'preview_video.' . $extension;
+        $cacheFilename = $this->cacheDir.'preview_video.'.$extension;
         $video = $this->applier->apply($template, $filePath, $cacheFilename);
 
         if ($debug) {
@@ -85,7 +85,7 @@ class VideoPreviewer implements PreviewerInterface
 
             $debug = '';
             foreach ($handler->getRecords() as $record) {
-                $debug .= $record['message'] . PHP_EOL;
+                $debug .= $record['message'].PHP_EOL;
             }
 
             //$debug .= print_r($video->getStreams()->videos()->first(), 1);
@@ -95,14 +95,14 @@ class VideoPreviewer implements PreviewerInterface
 
         $videoStream = $video->getStreams()->videos()->first();
         $data = [
-            'file'     => basename($cacheFilename),
-            'size'     => filesize($cacheFilename),
+            'file' => basename($cacheFilename),
+            'size' => filesize($cacheFilename),
             'template' => $templateKey,
-            'width'    => $videoStream->get('width'),
-            'height'   => $videoStream->get('height'),
-            'format'   => $extension,
+            'width' => $videoStream->get('width'),
+            'height' => $videoStream->get('height'),
+            'format' => $extension,
             'mimetype' => $this->applier->getMimetype($template),
-            'debug'    => $debug
+            'debug' => $debug,
         ];
 
         return $data;

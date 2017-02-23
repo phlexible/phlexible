@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MediaType\Exception;
 
 /**
- * Exception interface for media type
+ * Exception interface for media type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExceptionInterface
 {
-
 }

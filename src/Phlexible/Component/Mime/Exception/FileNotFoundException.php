@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Mime\Exception;
 
 /**
- * Mime file not found exception
+ * Mime file not found exception.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
 class FileNotFoundException extends RuntimeException
 {
-
 }

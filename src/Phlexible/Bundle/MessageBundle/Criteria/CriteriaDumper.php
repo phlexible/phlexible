@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\MessageBundle\Criteria;
 
 /**
- * Message criteria dumper
+ * Message criteria dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -35,13 +35,13 @@ class CriteriaDumper
                 $type = $criterium->getType();
                 $value = $criterium->getValue();
                 if ($value instanceof \DateTime) {
-                    $parts[] = $type . ' = "' . $value->format('Y-m-d H:i:s') . '"';
+                    $parts[] = $type.' = "'.$value->format('Y-m-d H:i:s').'"';
                 } else {
-                    $parts[] = $type . ' = "' . $value . '"';
+                    $parts[] = $type.' = "'.$value.'"';
                 }
             }
         }
 
-        return '(' . implode(' ' . $mode . ' ', $parts) . ')';
+        return '('.implode(' '.$mode.' ', $parts).')';
     }
 }

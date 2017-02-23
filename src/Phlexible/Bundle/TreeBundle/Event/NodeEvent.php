@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Node event
+ * Node event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -35,7 +35,7 @@ class NodeEvent extends Event
     }
 
     /**
-     * Return node
+     * Return node.
      *
      * @return TreeNodeInterface
      */

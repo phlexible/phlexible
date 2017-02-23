@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaTemplate\Model;
 
 /**
- * Media template manager interface
+ * Media template manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -24,7 +24,7 @@ interface TemplateManagerInterface
     public function getCollection();
 
     /**
-     * Find template
+     * Find template.
      *
      * @param string $key
      *
@@ -40,14 +40,14 @@ interface TemplateManagerInterface
     public function findBy(array $criteria);
 
     /**
-     * Return all templates
+     * Return all templates.
      *
      * @return TemplateInterface[]
      */
     public function findAll();
 
     /**
-     * Update template
+     * Update template.
      *
      * @param TemplateInterface $template
      */

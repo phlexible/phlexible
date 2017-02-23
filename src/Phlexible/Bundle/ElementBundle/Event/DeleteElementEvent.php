@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Event;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 
 /**
- * Delete element event
+ * Delete element event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

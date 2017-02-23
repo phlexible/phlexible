@@ -17,7 +17,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Locator\PatternResourceLocator;
 
 /**
- * XML loader
+ * XML loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

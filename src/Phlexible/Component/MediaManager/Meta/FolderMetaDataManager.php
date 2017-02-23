@@ -21,7 +21,7 @@ use Phlexible\Component\MetaSet\Model\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
- * Folder meta data manager
+ * Folder meta data manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -61,7 +61,7 @@ class FolderMetaDataManager extends MetaDataManager
     {
         /* @var $folder ExtendedFolderInterface */
         $qb->join('d.folder', 'f');
-        $qb->andWhere($qb->expr()->eq("f.id", ':folderId'));
+        $qb->andWhere($qb->expr()->eq('f.id', ':folderId'));
         $qb->setParameter('folderId', $folder->getId());
     }
 

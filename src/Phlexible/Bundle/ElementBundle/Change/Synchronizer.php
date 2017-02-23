@@ -19,7 +19,7 @@ use Phlexible\Bundle\ElementtypeBundle\File\Dumper\XmlDumper;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
- * Synchronizer
+ * Synchronizer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -56,8 +56,7 @@ class Synchronizer
         ElementVersionManagerInterface $elementVersionManager,
         ElementSourceManagerInterface $elementSourceManager,
         XmlDumper $xmlDumper
-    )
-    {
+    ) {
         $this->elementSourceManager = $elementSourceManager;
         $this->elementVersionManager = $elementVersionManager;
         $this->xmlDumper = $xmlDumper;
@@ -94,7 +93,7 @@ class Synchronizer
                 $callback('start', $title, $revision, $current, $total);
             }
             foreach ($elementVersions as $elementVersion) {
-                $current++;
+                ++$current;
                 if ($callback) {
                     $callback('progress', $title, $revision, $current, $total);
                 }

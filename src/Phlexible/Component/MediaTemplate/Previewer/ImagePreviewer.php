@@ -17,7 +17,7 @@ use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Image previewer
+ * Image previewer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,7 +46,7 @@ class ImagePreviewer implements PreviewerInterface
     /**
      * {@inheritdoc}
      */
-    public function create($filePath,  array $params)
+    public function create($filePath, array $params)
     {
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {
@@ -76,20 +76,20 @@ class ImagePreviewer implements PreviewerInterface
         //$template->setNoCache();
 
         $extension = $this->applier->getExtension($template);
-        $cacheFilename = $this->cacheDir . 'preview_image.' . $extension;
+        $cacheFilename = $this->cacheDir.'preview_image.'.$extension;
         $image = $this->applier->apply($template, new File(), $filePath, $cacheFilename);
 
         $debug = json_encode($template->getParameters());
 
         $data = [
-            'file'     => basename($cacheFilename),
-            'size'     => filesize($cacheFilename),
+            'file' => basename($cacheFilename),
+            'size' => filesize($cacheFilename),
             'template' => $templateKey,
-            'width'    => $image->getSize()->getWidth(),
-            'height'   => $image->getSize()->getHeight(),
-            'format'   => $extension,
+            'width' => $image->getSize()->getWidth(),
+            'height' => $image->getSize()->getHeight(),
+            'format' => $extension,
             'mimetype' => $this->applier->getMimetype($template),
-            'debug'    => $debug,
+            'debug' => $debug,
         ];
 
         return $data;

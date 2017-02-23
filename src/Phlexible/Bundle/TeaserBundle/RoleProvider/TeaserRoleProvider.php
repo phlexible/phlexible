@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TeaserBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Teaser role provider
+ * Teaser role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

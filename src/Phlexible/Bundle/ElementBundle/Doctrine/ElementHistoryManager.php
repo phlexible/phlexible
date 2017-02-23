@@ -18,7 +18,7 @@ use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 
 /**
- * Element history manager
+ * Element history manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -51,7 +51,7 @@ class ElementHistoryManager implements ElementHistoryManagerInterface
                 $qb->addOrderBy("h.$field", $dir);
             }
         } else {
-            $qb->addOrderBy("h.id", "DESC");
+            $qb->addOrderBy('h.id', 'DESC');
         }
 
         if ($limit) {

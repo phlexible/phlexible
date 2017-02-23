@@ -17,7 +17,7 @@ use Phlexible\Component\MetaSet\Model\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
 /**
- * Element meta set resolver
+ * Element meta set resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

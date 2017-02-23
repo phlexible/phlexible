@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Distiller;
 
 /**
- * Class map
+ * Class map.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -28,7 +28,6 @@ class ClassMap
         $this->containers[$name] = $value;
 
         return $this;
-
     }
 
     /**

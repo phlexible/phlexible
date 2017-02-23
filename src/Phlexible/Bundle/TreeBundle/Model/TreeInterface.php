@@ -14,19 +14,19 @@ namespace Phlexible\Bundle\TreeBundle\Model;
 use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
 
 /**
- * Tree interface
+ * Tree interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface TreeInterface
 {
-    const SORT_MODE_TITLE       = 'title';
-    const SORT_MODE_CREATEDATE  = 'createdate';
+    const SORT_MODE_TITLE = 'title';
+    const SORT_MODE_CREATEDATE = 'createdate';
     const SORT_MODE_PUBLISHDATE = 'publishdate';
-    const SORT_MODE_CUSTOMDATE  = 'customdate';
-    const SORT_MODE_FREE        = 'free';
+    const SORT_MODE_CUSTOMDATE = 'customdate';
+    const SORT_MODE_FREE = 'free';
 
-    const SORT_DIR_ASC  = 'asc';
+    const SORT_DIR_ASC = 'asc';
     const SORT_DIR_DESC = 'desc';
 
     /**
@@ -35,14 +35,14 @@ interface TreeInterface
     public function getSiterootId();
 
     /**
-     * Return the root node
+     * Return the root node.
      *
      * @return TreeNodeInterface
      */
     public function getRoot();
 
     /**
-     * Return a node
+     * Return a node.
      *
      * @param int $id
      *
@@ -76,7 +76,7 @@ interface TreeInterface
     public function hasByTypeId($typeId, $type = null);
 
     /**
-     * Return child nodes
+     * Return child nodes.
      *
      * @param TreeNodeInterface $node
      *
@@ -94,7 +94,7 @@ interface TreeInterface
     public function hasChildren(TreeNodeInterface $node);
 
     /**
-     * Return parent node
+     * Return parent node.
      *
      * @param TreeNodeInterface $node
      *
@@ -103,7 +103,7 @@ interface TreeInterface
     public function getParent(TreeNodeInterface $node);
 
     /**
-     * Return ID path array
+     * Return ID path array.
      *
      * @param TreeNodeInterface $node
      *
@@ -112,7 +112,7 @@ interface TreeInterface
     public function getIdPath(TreeNodeInterface $node);
 
     /**
-     * Return node path array
+     * Return node path array.
      *
      * @param TreeNodeInterface $node
      *
@@ -239,5 +239,4 @@ interface TreeInterface
      * @return TreeNodeOnline
      */
     public function findOneOnlineByTreeNodeAndLanguage(TreeNodeInterface $node, $language);
-
 }

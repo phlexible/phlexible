@@ -18,7 +18,7 @@ use Phlexible\Component\Volume\Model\FileInterface;
 use Phlexible\Component\Volume\Model\FolderInterface;
 
 /**
- * Driver interface
+ * Driver interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

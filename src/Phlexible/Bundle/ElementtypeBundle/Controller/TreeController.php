@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tree controller
+ * Tree controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elementtypes/tree")
@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 class TreeController extends Controller
 {
     /**
-     * Return an Element Type Data Tree
+     * Return an Element Type Data Tree.
      *
      * @param Request $request
      *
@@ -68,37 +68,37 @@ class TreeController extends Controller
 
         $data = [
             [
-                'text'                 => $elementtype->getTitle($language)
-                    . ' [v' . $elementtype->getRevision() . ', '
-                    . $elementtype->getType() . ']',
-                'id'                   => md5(serialize($rootNode)),
-                'ds_id'                => $rootDsId,
-                'element_type_id'      => $elementtype->getId(),
+                'text' => $elementtype->getTitle($language)
+                    .' [v'.$elementtype->getRevision().', '
+                    .$elementtype->getType().']',
+                'id' => md5(serialize($rootNode)),
+                'ds_id' => $rootDsId,
+                'element_type_id' => $elementtype->getId(),
                 'element_type_version' => $elementtype->getRevision(),
-                'icon'                 => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
-                'cls'                  => 'p-elementtypes-type-' . $type,
-                'leaf'                 => false,
-                'expanded'             => true,
-                'type'                 => $rootType,
-                'allowDrag'            => ($type == Elementtype::TYPE_REFERENCE),
-                'allowDrop'            => $mode == 'edit',
-                'editable'             => $mode == 'edit',
-                'properties'           => [
+                'icon' => '/bundles/phlexibleelementtype/elementtypes/'.$elementtype->getIcon(),
+                'cls' => 'p-elementtypes-type-'.$type,
+                'leaf' => false,
+                'expanded' => true,
+                'type' => $rootType,
+                'allowDrag' => ($type === Elementtype::TYPE_REFERENCE),
+                'allowDrop' => $mode === 'edit',
+                'editable' => $mode === 'edit',
+                'properties' => [
                     'root' => [
-                        'title'               => $elementtype->getTitle($language),
-                        'reference_title'     => $elementtype->getTitle($language)
-                            . ' [v' . $elementtype->getRevision() . ']',
-                        'unique_id'           => $elementtype->getUniqueId(),
-                        'icon'                => $elementtype->getIcon(),
-                        'hide_children'       => $elementtype->getHideChildren() ? 'on' : '',
-                        'default_tab'         => $elementtype->getDefaultTab(),
+                        'title' => $elementtype->getTitle($language),
+                        'reference_title' => $elementtype->getTitle($language)
+                            .' [v'.$elementtype->getRevision().']',
+                        'unique_id' => $elementtype->getUniqueId(),
+                        'icon' => $elementtype->getIcon(),
+                        'hide_children' => $elementtype->getHideChildren() ? 'on' : '',
+                        'default_tab' => $elementtype->getDefaultTab(),
                         'default_content_tab' => $elementtype->getDefaultContentTab(),
-                        'type'                => $type,
-                        'template'            => $elementtype->getTemplate(),
-                        'metaset'             => $elementtype->getMetaSetId(),
-                        'comment'             => $elementtype->getComment(),
+                        'type' => $type,
+                        'template' => $elementtype->getTemplate(),
+                        'metaset' => $elementtype->getMetaSetId(),
+                        'comment' => $elementtype->getComment(),
                     ],
-                    'mappings' => $elementtype->getMappings()
+                    'mappings' => $elementtype->getMappings(),
                 ],
                 'children' => $this->recurseTree(
                     $elementtypeStructure,
@@ -107,15 +107,15 @@ class TreeController extends Controller
                     $mode,
                     false,
                     true
-                )
-            ]
+                ),
+            ],
         ];
 
         return new JsonResponse($data);
     }
 
     /**
-     * Build an Element Type data tree
+     * Build an Element Type data tree.
      *
      * @param ElementtypeStructure       $structure
      * @param ElementtypeStructureNode[] $nodes
@@ -142,31 +142,31 @@ class TreeController extends Controller
             /* @var $node ElementtypeStructureNode */
 
             $tmp = [
-                'text'       => $node->getLabel('fieldLabel', $language) . ' (' . $node->getName() . ')',
-                'id'         => md5(serialize($node)),
-                'ds_id'      => $node->getDsId(),
-                'cls'        => 'p-elementtypes-node p-elementtypes-type-' . $node->getType()
-                    . ($reference ? ' p-elementtypes-reference' : ''),
-                'leaf'       => true,
-                'expanded'   => false,
-                'type'       => $node->getType(),
-                'iconCls'    => $fieldRegistry->getField($node->getType())->getIcon(),
-                'reference'  => $reference,
-                'allowDrag'  => $allowDrag,
-                'allowDrop'  => $mode == 'edit' && !$reference,
-                'editable'   => $mode == 'edit' || !$reference,
+                'text' => $node->getLabel('fieldLabel', $language).' ('.$node->getName().')',
+                'id' => md5(serialize($node)),
+                'ds_id' => $node->getDsId(),
+                'cls' => 'p-elementtypes-node p-elementtypes-type-'.$node->getType()
+                    .($reference ? ' p-elementtypes-reference' : ''),
+                'leaf' => true,
+                'expanded' => false,
+                'type' => $node->getType(),
+                'iconCls' => $fieldRegistry->getField($node->getType())->getIcon(),
+                'reference' => $reference,
+                'allowDrag' => $allowDrag,
+                'allowDrop' => $mode === 'edit' && !$reference,
+                'editable' => $mode === 'edit' || !$reference,
                 'properties' => [
-                    'field'            => [
-                        'title'         => $node->getName(),
-                        'type'          => $node->getType(),
+                    'field' => [
+                        'title' => $node->getName(),
+                        'type' => $node->getType(),
                         'working_title' => $node->getName(),
-                        'comment'       => $node->getComment(),
-                        'image'         => ''
+                        'comment' => $node->getComment(),
+                        'image' => '',
                     ],
-                    'configuration'    => $node->getConfiguration(),
-                    'labels'           => $node->getLabels(),
-                    'validation'       => $node->getValidation()
-                ]
+                    'configuration' => $node->getConfiguration(),
+                    'labels' => $node->getLabels(),
+                    'validation' => $node->getValidation(),
+                ],
             ];
 
             if ($structure->hasChildNodes($node->getDsId())) {
@@ -188,7 +188,7 @@ class TreeController extends Controller
                 $children = $structure->getChildNodes($node->getDsId());
                 $referenceRoot = $children[0];
 
-                $tmp['text'] = $referenceElementtype->getTitle($language) . ' [v' . $referenceElementtype->getRevision() . ']';
+                $tmp['text'] = $referenceElementtype->getTitle($language).' [v'.$referenceElementtype->getRevision().']';
                 $tmp['leaf'] = false;
                 $tmp['expanded'] = true;
                 $tmp['reference'] = ['refID' => $referenceElementtype->getId(), 'refVersion' => $referenceElementtype->getRevision()];
@@ -212,7 +212,7 @@ class TreeController extends Controller
     }
 
     /**
-     * Save an Element Type data tree
+     * Save an Element Type data tree.
      *
      * @param Request $request
      *

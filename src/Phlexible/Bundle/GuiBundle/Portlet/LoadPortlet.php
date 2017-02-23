@@ -15,7 +15,7 @@ use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Load lortlet
+ * Load lortlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

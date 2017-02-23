@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 
 /**
- * Forward field mapper
+ * Forward field mapper.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */

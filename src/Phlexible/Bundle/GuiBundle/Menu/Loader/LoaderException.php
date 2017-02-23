@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
 
 /**
- * Loader exception
+ * Loader exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

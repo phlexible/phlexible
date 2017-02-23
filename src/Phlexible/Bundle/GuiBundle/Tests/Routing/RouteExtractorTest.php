@@ -16,11 +16,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Simple css compressor test
+ * Simple css compressor test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class CssiptCompressorTest extends \PHPUnit_Framework_TestCase
+class RouteExtractorTest extends \PHPUnit_Framework_TestCase
 {
     public function testExtract()
     {
@@ -28,7 +28,7 @@ class CssiptCompressorTest extends \PHPUnit_Framework_TestCase
         $router->getRouteCollection()->willReturn(array(
             new Route('/foo'),
             new Route('/bar', array('test' => 123)),
-            new Route('/baz/{id}', array('id' => 234))
+            new Route('/baz/{id}', array('id' => 234)),
         ));
 
         $request = new Request();

@@ -12,28 +12,28 @@
 namespace Phlexible\Bundle\GuiBundle\Security\RoleProvider;
 
 /**
- * Role provider interface
+ * Role provider interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface RoleProviderInterface
 {
     /**
-     * Provide simple roles
+     * Provide simple roles.
      *
      * @return array
      */
     public function provideRoles();
 
     /**
-     * Provide role hierarchy
+     * Provide role hierarchy.
      *
      * @return array
      */
     public function provideRoleHierarchy();
 
     /**
-     * Expose roles
+     * Expose roles.
      *
      * @return array
      */

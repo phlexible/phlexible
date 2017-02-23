@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 /**
- * XML content tree manager
+ * XML content tree manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -42,7 +42,7 @@ class XmlContentTreeManager implements ContentTreeManagerInterface
     public function findAll()
     {
         if ($this->trees === null) {
-            $xmlFiles = glob($this->xmlDir . '*.xml');
+            $xmlFiles = glob($this->xmlDir.'*.xml');
 
             foreach ($xmlFiles as $xmlFile) {
                 $this->trees[] = new XmlContentTree($xmlFile);

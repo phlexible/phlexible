@@ -15,7 +15,7 @@ use Phlexible\Component\Volume\Model\FileInterface;
 use Phlexible\Component\Volume\Model\FolderInterface;
 
 /**
- * Copy file event
+ * Copy file event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

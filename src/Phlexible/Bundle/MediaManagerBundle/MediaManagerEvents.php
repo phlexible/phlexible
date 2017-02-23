@@ -12,34 +12,34 @@
 namespace Phlexible\Bundle\MediaManagerBundle;
 
 /**
- * Media manager events
+ * Media manager events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class MediaManagerEvents
 {
     /**
-     * Fired when slots are gathered
+     * Fired when slots are gathered.
      */
     const GET_SLOTS = 'phlexible_media_manager.get_slots';
 
     /**
-     * Fired before meta information are saved
+     * Fired before meta information are saved.
      */
     const BEFORE_SAVE_META = 'phlexible_media_manager.before_save_meta';
 
     /**
-     * Fired when meta information are saved
+     * Fired when meta information are saved.
      */
     const SAVE_META = 'phlexible_media_manager.save_meta';
 
     /**
-     * Fired before meta information are saved
+     * Fired before meta information are saved.
      */
     const BEFORE_SAVE_FOLDER_META = 'phlexible_media_manager.before_save_folder_meta';
 
     /**
-     * Fired when meta information are saved
+     * Fired when meta information are saved.
      */
     const SAVE_FOLDER_META = 'phlexible_media_manager.save_folder_meta';
 

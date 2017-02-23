@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\MessageBundle\Handler;
 
 /**
- * Handler collection
+ * Handler collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

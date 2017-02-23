@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaTemplate\Model;
 
 /**
- * Image template
+ * Image template.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -34,17 +34,17 @@ class ImageTemplate extends AbstractTemplate
     public function getDefaultParameters()
     {
         return array(
-            'width'           => 0,
-            'height'          => 0,
-            'method'          => '',
-            'scale'           => '',
-            'for_web'         => 0,
-            'format'          => '',
-            'colorspace'      => '',
+            'width' => 0,
+            'height' => 0,
+            'method' => '',
+            'scale' => '',
+            'for_web' => 0,
+            'format' => '',
+            'colorspace' => '',
             'tiffcompression' => '',
-            'depth'           => '',
-            'quality'         => 0,
-            'backgroundcolor' => ''
+            'depth' => '',
+            'quality' => 0,
+            'backgroundcolor' => '',
         );
     }
 
@@ -70,7 +70,7 @@ class ImageTemplate extends AbstractTemplate
     }
 
     /**
-     * Set width
+     * Set width.
      *
      * @param int $width
      *
@@ -82,7 +82,7 @@ class ImageTemplate extends AbstractTemplate
     }
 
     /**
-     * Return width
+     * Return width.
      *
      * @return int
      */
@@ -92,7 +92,7 @@ class ImageTemplate extends AbstractTemplate
     }
 
     /**
-     * Set height
+     * Set height.
      *
      * @param int $height
      *
@@ -104,7 +104,7 @@ class ImageTemplate extends AbstractTemplate
     }
 
     /**
-     * Return height
+     * Return height.
      *
      * @return int
      */
@@ -114,7 +114,7 @@ class ImageTemplate extends AbstractTemplate
     }
 
     /**
-     * Set method
+     * Set method.
      *
      * @param string $method
      *
@@ -126,7 +126,7 @@ class ImageTemplate extends AbstractTemplate
     }
 
     /**
-     * Return method
+     * Return method.
      *
      * @return string
      */

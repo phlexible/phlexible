@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\FrontendMediaBundle\Field;
 use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
 
 /**
- * Folder field
+ * Folder field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Messages extension
+ * Messages extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -36,7 +36,7 @@ class PhlexibleMessageExtension extends Extension
         $config = $this->processConfiguration($configuration, $config);
 
         $handlers = [
-            new Reference('phlexible_message.handler.message_manager')
+            new Reference('phlexible_message.handler.message_manager'),
         ];
         if ($config['use_log_handler']) {
             $handlers[] = new Reference('phlexible_message.handler.log');

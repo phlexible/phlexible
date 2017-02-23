@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Filter controller
+ * Filter controller.
  *
  * @author Caspar Baratella <cb@brainbits.net>
  * @Route("/messages/filters")
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 class FiltersController extends Controller
 {
     /**
-     * List filters
+     * List filters.
      *
      * @return JsonResponse
      * @Route("", name="messages_filters")
@@ -45,15 +45,15 @@ class FiltersController extends Controller
                 foreach ($group as $criterium) {
                     $criteria[] = [
                         'criteria' => $criterium->getType(),
-                        'value'    => $criterium->getValue(),
-                        'group'    => $groupIndex + 1,
+                        'value' => $criterium->getValue(),
+                        'group' => $groupIndex + 1,
                     ];
                 }
             }
 
             $filters[] = [
-                'id'       => $filter->getId(),
-                'title'    => $filter->getTitle(),
+                'id' => $filter->getId(),
+                'title' => $filter->getTitle(),
                 'criteria' => $criteria,
             ];
         }
@@ -62,7 +62,7 @@ class FiltersController extends Controller
     }
 
     /**
-     * List filter values
+     * List filter values.
      *
      * @return JsonResponse
      * @Route("/filtervalues", name="messages_filter_filtervalues")
@@ -108,7 +108,7 @@ class FiltersController extends Controller
     }
 
     /**
-     * Create filter
+     * Create filter.
      *
      * @param Request $request
      *
@@ -134,7 +134,7 @@ class FiltersController extends Controller
     }
 
     /**
-     * Updates a Filter
+     * Updates a Filter.
      *
      * @param Request $request
      * @param string  $id
@@ -177,7 +177,7 @@ class FiltersController extends Controller
     }
 
     /**
-     * Delete filter
+     * Delete filter.
      *
      * @param string $id
      *
@@ -190,11 +190,11 @@ class FiltersController extends Controller
         $filter = $filterManager->find($id);
         $filterManager->deleteFilter($filter);
 
-        return new ResultResponse(true, 'Filter "' . $filter->getTitle() . '" deleted.');
+        return new ResultResponse(true, 'Filter "'.$filter->getTitle().'" deleted.');
     }
 
     /**
-     * Preview messages
+     * Preview messages.
      *
      * @param Request $request
      *
@@ -227,8 +227,8 @@ class FiltersController extends Controller
 
         if (!$criteria->count()) {
             return new JsonResponse([
-                'total'    => 0,
-                'messages' => []
+                'total' => 0,
+                'messages' => [],
             ]);
         }
 
@@ -241,20 +241,20 @@ class FiltersController extends Controller
         $data = [];
         foreach ($messages as $message) {
             $data[] = [
-                'subject'    => $message->getSubject(),
-                'body'       => nl2br($message->getBody()),
-                'priority'   => $priorityList[$message->getPriority()],
-                'type'       => $typeList[$message->getType()],
-                'channel'    => $message->getChannel(),
-                'role'       => $message->getRole(),
+                'subject' => $message->getSubject(),
+                'body' => nl2br($message->getBody()),
+                'priority' => $priorityList[$message->getPriority()],
+                'type' => $typeList[$message->getType()],
+                'channel' => $message->getChannel(),
+                'role' => $message->getRole(),
                 'created_at' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
-                'user'       => $message->getUser(),
+                'user' => $message->getUser(),
             ];
         }
 
         return new JsonResponse([
-            'total'    => $count,
-            'messages' => $data
+            'total' => $count,
+            'messages' => $data,
         ]);
     }
 }

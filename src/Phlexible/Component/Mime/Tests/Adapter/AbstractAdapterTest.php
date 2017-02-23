@@ -15,7 +15,7 @@ use Phlexible\Component\Mime\Adapter\AdapterInterface;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
- * Abstract adapter test
+ * Abstract adapter test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -71,7 +71,7 @@ abstract class AbstractAdapterTest extends TestCase
      */
     protected function getFile($name = '')
     {
-        return dirname(__DIR__) . '/fixture/' . $name;
+        return dirname(__DIR__).'/fixture/'.$name;
     }
 
     /**

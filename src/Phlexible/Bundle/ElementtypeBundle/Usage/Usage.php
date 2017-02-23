@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Usage;
 
 /**
- * Usage
+ * Usage.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

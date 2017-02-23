@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MessageBundle\Criteria;
 use Phlexible\Bundle\MessageBundle\Exception\InvalidArgumentException;
 
 /**
- * Message criteria
+ * Message criteria.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -23,25 +23,25 @@ class Criteria implements \IteratorAggregate, \Countable
     const MODE_OR = 'or';
     const MODE_AND = 'and';
 
-    const CRITERIUM_SUBJECT_LIKE     = 'subject_like';
+    const CRITERIUM_SUBJECT_LIKE = 'subject_like';
     const CRITERIUM_SUBJECT_NOT_LIKE = 'subject_not_like';
-    const CRITERIUM_BODY_LIKE        = 'body_like';
-    const CRITERIUM_BODY_NOT_LIKE    = 'body_not_like';
-    const CRITERIUM_PRIORITY_IS      = 'priority_is';
-    const CRITERIUM_PRIORITY_IN      = 'priority_in';
-    const CRITERIUM_PRIORITY_MIN     = 'priority_min';
-    const CRITERIUM_TYPE_IS          = 'type_is';
-    const CRITERIUM_TYPE_IN          = 'type_in';
-    const CRITERIUM_CHANNEL_IS       = 'channel_is';
-    const CRITERIUM_CHANNEL_LIKE     = 'channel_like';
-    const CRITERIUM_CHANNEL_IN       = 'channel_in';
-    const CRITERIUM_ROLE_IS          = 'role_is';
-    const CRITERIUM_ROLE_IN          = 'role_in';
-    const CRITERIUM_MIN_AGE          = 'min_age';
-    const CRITERIUM_MAX_AGE          = 'max_age';
-    const CRITERIUM_START_DATE       = 'start_date';
-    const CRITERIUM_END_DATE         = 'end_date';
-    const CRITERIUM_DATE_IS          = 'date_is';
+    const CRITERIUM_BODY_LIKE = 'body_like';
+    const CRITERIUM_BODY_NOT_LIKE = 'body_not_like';
+    const CRITERIUM_PRIORITY_IS = 'priority_is';
+    const CRITERIUM_PRIORITY_IN = 'priority_in';
+    const CRITERIUM_PRIORITY_MIN = 'priority_min';
+    const CRITERIUM_TYPE_IS = 'type_is';
+    const CRITERIUM_TYPE_IN = 'type_in';
+    const CRITERIUM_CHANNEL_IS = 'channel_is';
+    const CRITERIUM_CHANNEL_LIKE = 'channel_like';
+    const CRITERIUM_CHANNEL_IN = 'channel_in';
+    const CRITERIUM_ROLE_IS = 'role_is';
+    const CRITERIUM_ROLE_IN = 'role_in';
+    const CRITERIUM_MIN_AGE = 'min_age';
+    const CRITERIUM_MAX_AGE = 'max_age';
+    const CRITERIUM_START_DATE = 'start_date';
+    const CRITERIUM_END_DATE = 'end_date';
+    const CRITERIUM_DATE_IS = 'date_is';
 
     /**
      * @var array
@@ -67,6 +67,7 @@ class Criteria implements \IteratorAggregate, \Countable
      * @param string $mode
      *
      * @return $this
+     *
      * @throws InvalidArgumentException
      */
     public function setMode($mode)

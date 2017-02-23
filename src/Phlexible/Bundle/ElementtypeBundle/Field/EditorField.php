@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field;
 
 /**
- * Editor field
+ * Editor field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

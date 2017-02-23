@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaTemplate\Previewer;
 
 /**
- * Previewer interface
+ * Previewer interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

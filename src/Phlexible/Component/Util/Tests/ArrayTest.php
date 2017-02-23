@@ -14,7 +14,7 @@ namespace Phlexible\Component\Util\Tests;
 use Phlexible\Component\Util\ArrayUtil;
 
 /**
- * Array util Test
+ * Array util Test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -130,7 +130,6 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($this->util->get($src, 'xxx'));
     }
-
 
     public function testGroupByEmpty()
     {

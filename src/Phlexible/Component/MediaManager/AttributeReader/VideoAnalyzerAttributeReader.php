@@ -18,7 +18,7 @@ use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Video analyzer attribute reader
+ * Video analyzer attribute reader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -97,7 +97,7 @@ class VideoAnalyzerAttributeReader implements AttributeReaderInterface
             foreach ($streams as $stream) {
                 /* @var $stream Stream */
                 $index = $stream->get('index');
-                $prefix = 'stream_' . $index;
+                $prefix = 'stream_'.$index;
 
                 $type = 'media';
                 if ($stream->isVideo()) {
@@ -138,7 +138,7 @@ class VideoAnalyzerAttributeReader implements AttributeReaderInterface
                 }
             }
         } catch (\Exception $e) {
-            $this->logger->error('VideoAnalyzerAttributeReader failed to read attributes from asset: ' . $e->getMessage());
+            $this->logger->error('VideoAnalyzerAttributeReader failed to read attributes from asset: '.$e->getMessage());
         }
     }
 }

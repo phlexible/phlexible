@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
 /**
- * Elementtype structure node
+ * Elementtype structure node.
  *
  * @author Phillip Look <plook@brainbits.net>
  */

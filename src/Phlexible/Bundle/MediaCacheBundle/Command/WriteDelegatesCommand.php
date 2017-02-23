@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Write delegates command
+ * Write delegates command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -59,7 +59,7 @@ class WriteDelegatesCommand extends ContainerAwareCommand
                     );
                     $this->bar->start();
                 } elseif ($args[0] === 'update') {
-                    $this->bar->setMessage($args[1] . ' / ' . $args[2]);
+                    $this->bar->setMessage($args[1].' / '.$args[2]);
                     $this->bar->advance();
                 }
             }

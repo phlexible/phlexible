@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Status controller
+ * Status controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/status/media")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 class StatusController extends Controller
 {
     /**
-     * Show site status
+     * Show site status.
      *
      * @return Response
      * @Route("", name="mediamanager_status")
@@ -42,17 +42,17 @@ class StatusController extends Controller
             $sizeCalculator = new SizeCalculator();
             $calculatedSize = $sizeCalculator->calculate($volume, $volume->findRootFolder());
 
-            $out .= 'Volume: ' . $volumeKey . PHP_EOL;
+            $out .= 'Volume: '.$volumeKey.PHP_EOL;
             //            $out .= '  Driver:   ' . $site->getDriver() . PHP_EOL;
-            $out .= '  ID:       ' . $volume->getId() . PHP_EOL;
-            $out .= '  Quota:    ' . $volume->getQuota() . PHP_EOL;
-            $out .= '  Size:     ' . $calculatedSize->getSize() . PHP_EOL;
-            $out .= '  Folders:  ' . $calculatedSize->getNumFolders() . PHP_EOL;
-            $out .= '  Files:    ' . $calculatedSize->getNumFiles() . PHP_EOL;
-            $out .= '  RootDir:  ' . $volume->getRootDir() . PHP_EOL;
-            $out .= '    exists:   ' . (file_exists($volume->getRootDir()) ? 'OK' : 'Not OK') . PHP_EOL;
-            $out .= '    readable: ' . (is_readable($volume->getRootDir()) ? 'OK' : 'Not OK') . PHP_EOL;
-            $out .= '    writable: ' . (is_writable($volume->getRootDir()) ? 'OK' : 'Not OK') . PHP_EOL;
+            $out .= '  ID:       '.$volume->getId().PHP_EOL;
+            $out .= '  Quota:    '.$volume->getQuota().PHP_EOL;
+            $out .= '  Size:     '.$calculatedSize->getSize().PHP_EOL;
+            $out .= '  Folders:  '.$calculatedSize->getNumFolders().PHP_EOL;
+            $out .= '  Files:    '.$calculatedSize->getNumFiles().PHP_EOL;
+            $out .= '  RootDir:  '.$volume->getRootDir().PHP_EOL;
+            $out .= '    exists:   '.(file_exists($volume->getRootDir()) ? 'OK' : 'Not OK').PHP_EOL;
+            $out .= '    readable: '.(is_readable($volume->getRootDir()) ? 'OK' : 'Not OK').PHP_EOL;
+            $out .= '    writable: '.(is_writable($volume->getRootDir()) ? 'OK' : 'Not OK').PHP_EOL;
             $out .= PHP_EOL;
         }
 

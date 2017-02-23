@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaManager\Slot;
 
 /**
- * Media site slot
+ * Media site slot.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

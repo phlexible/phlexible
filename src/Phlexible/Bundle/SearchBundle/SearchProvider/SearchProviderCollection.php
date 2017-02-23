@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\SearchBundle\SearchProvider;
 
 /**
- * Search provider collection
+ * Search provider collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

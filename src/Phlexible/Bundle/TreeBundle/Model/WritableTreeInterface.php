@@ -14,14 +14,14 @@ namespace Phlexible\Bundle\TreeBundle\Model;
 use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
 
 /**
- * Writable tree interface
+ * Writable tree interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface WritableTreeInterface
 {
     /**
-     * Create a node
+     * Create a node.
      *
      * @param TreeNodeInterface $parentNode
      * @param TreeNodeInterface $afterNode
@@ -65,7 +65,7 @@ interface WritableTreeInterface
     );
 
     /**
-     * Reorder node
+     * Reorder node.
      *
      * @param TreeNodeInterface $node
      * @param TreeNodeInterface $beforeNode
@@ -75,7 +75,7 @@ interface WritableTreeInterface
     public function reorder(TreeNodeInterface $node, TreeNodeInterface $beforeNode);
 
     /**
-     * Reorder node
+     * Reorder node.
      *
      * @param TreeNodeInterface $node
      * @param array             $sortIds
@@ -85,7 +85,7 @@ interface WritableTreeInterface
     public function reorderChildren(TreeNodeInterface $node, array $sortIds);
 
     /**
-     * Move node
+     * Move node.
      *
      * @param TreeNodeInterface $node
      * @param TreeNodeInterface $toNode
@@ -94,7 +94,7 @@ interface WritableTreeInterface
     public function move(TreeNodeInterface $node, TreeNodeInterface $toNode, $uid);
 
     /**
-     * Delete node
+     * Delete node.
      *
      * @param TreeNodeInterface $node
      * @param string            $userId

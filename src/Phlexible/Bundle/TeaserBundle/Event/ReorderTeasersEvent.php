@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Reorder teasers event
+ * Reorder teasers event.
  *
  * @author Peter Fahsel <pfahsel@brainbits.net>
  */

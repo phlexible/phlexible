@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaManager\Slot;
 
 /**
- * Slot collection
+ * Slot collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -77,7 +77,7 @@ class Slots
     public function getSlot($key)
     {
         foreach ($this->slots as $slot) {
-            if ($slot->getKey() == $key) {
+            if ($slot->getKey() === $key) {
                 return $slot;
             }
         }

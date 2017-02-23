@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MetaSetBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Meta set bundle
+ * Meta set bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

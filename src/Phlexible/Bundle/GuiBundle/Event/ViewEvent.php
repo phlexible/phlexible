@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * View frame event
+ * View frame event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

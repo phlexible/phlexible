@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
- * Elementtype change
+ * Elementtype change.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

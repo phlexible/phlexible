@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MediaType\Exception;
 
 /**
- * Not found exception for media type
+ * Not found exception for media type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class NotFoundException extends RuntimeException
 {
-
 }

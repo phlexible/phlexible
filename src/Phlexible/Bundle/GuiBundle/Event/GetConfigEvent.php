@@ -15,7 +15,7 @@ use Phlexible\Bundle\GuiBundle\Config\Config;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Get config event
+ * Get config event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

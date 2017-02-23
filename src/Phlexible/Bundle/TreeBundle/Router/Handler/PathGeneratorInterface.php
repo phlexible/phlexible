@@ -14,14 +14,14 @@ namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Path generator interface
+ * Path generator interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface PathGeneratorInterface
 {
     /**
-     * Generate path
+     * Generate path.
      *
      * @param TreeNodeInterface $node
      * @param array             $parameters

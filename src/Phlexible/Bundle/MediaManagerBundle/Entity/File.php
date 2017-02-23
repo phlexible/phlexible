@@ -16,7 +16,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\Volume\Model\File as BaseFile;
 
 /**
- * File
+ * File.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

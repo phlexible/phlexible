@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaManager\AttributeReader;
 
 /**
- * Attribute bag
+ * Attribute bag.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -16,7 +16,7 @@ use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Online portlet
+ * Online portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,7 +43,7 @@ class OnlinePortlet extends Portlet
     }
 
     /**
-     * Return portlet data
+     * Return portlet data.
      *
      * @return array
      */
@@ -54,9 +54,9 @@ class OnlinePortlet extends Portlet
         $data = [];
         foreach ($users as $user) {
             $data[] = [
-                'uid'      => $user->getId(),
+                'uid' => $user->getId(),
                 'username' => $user->getUsername(),
-                'image'    => '/bundles/users/images/male-black-blonde.png',
+                'image' => '/bundles/users/images/male-black-blonde.png',
             ];
         }
 

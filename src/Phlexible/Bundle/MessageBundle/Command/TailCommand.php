@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Tail command
+ * Tail command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -61,17 +61,17 @@ class TailCommand extends ContainerAwareCommand
             foreach ($messages as $message) {
                 $output->writeln(
                     sprintf(
-                        "[%s] %s.%s: %s [%s, %s]",
+                        '[%s] %s.%s: %s [%s, %s]',
                         $message->getCreatedAt()->format('Y-m-d H:i:s'),
                         $priorities[$message->getPriority()],
                         $types[$message->getType()],
                         $message->getSubject(),
-                        $message->getChannel() ? : '-',
-                        $message->getRole() ? : '-'
+                        $message->getChannel() ?: '-',
+                        $message->getRole() ?: '-'
                     )
                 );
                 if ($showBody) {
-                    $output->writeln(' > ' . $message->getBody());
+                    $output->writeln(' > '.$message->getBody());
                 }
             }
         }
@@ -103,19 +103,19 @@ class TailCommand extends ContainerAwareCommand
 
                 $output->writeln(
                     sprintf(
-                        "[%s] %s.%s: %s [%s] [%s]",
+                        '[%s] %s.%s: %s [%s] [%s]',
                         $message->getCreatedAt()->format('Y-m-d H:i:s'),
                         $priorities[$message->getPriority()],
                         $types[$message->getType()],
                         $message->getSubject(),
-                        $message->getChannel() ? : '-',
-                        $message->getRole() ? : '-'
+                        $message->getChannel() ?: '-',
+                        $message->getRole() ?: '-'
                     )
                 );
 
                 if ($showBody || $message->getPriority() >= Message::PRIORITY_URGENT
                         || $message->getType() === Message::TYPE_ERROR) {
-                    $output->writeln(' > ' . $message->getBody());
+                    $output->writeln(' > '.$message->getBody());
                 }
             }
 
@@ -124,5 +124,4 @@ class TailCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

@@ -14,14 +14,14 @@ namespace Phlexible\Bundle\GuiBundle\Routing;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Route extractor interface
+ * Route extractor interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface RouteExtractorInterface
 {
     /**
-     * Return routes
+     * Return routes.
      *
      * @param Request $request
      *

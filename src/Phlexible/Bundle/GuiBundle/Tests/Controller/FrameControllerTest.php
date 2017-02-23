@@ -16,7 +16,7 @@ use Phlexible\Bundle\GuiBundle\Routing\ExtractedRoutes;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Frame controller test
+ * Frame controller test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

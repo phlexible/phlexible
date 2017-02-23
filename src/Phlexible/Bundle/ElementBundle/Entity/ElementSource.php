@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
- * Element source
+ * Element source.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

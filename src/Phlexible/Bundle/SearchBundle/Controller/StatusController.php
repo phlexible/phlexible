@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Status controller
+ * Status controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/status/search")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 class StatusController extends Controller
 {
     /**
-     * Return Search results
+     * Return Search results.
      *
      * @param Request $request
      *
@@ -54,7 +54,7 @@ class StatusController extends Controller
         $content .= '</table>';
 
         $content .= '<h3>Search:</h3>';
-        $content .= '<form><input name="query" value="' . $query . '"/><input type="submit" value="send" /></form>';
+        $content .= '<form><input name="query" value="'.$query.'"/><input type="submit" value="send" /></form>';
 
         if ($query) {
             $content .= '<h3>Results:</h3>';

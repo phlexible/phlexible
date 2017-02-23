@@ -12,18 +12,18 @@
 namespace Phlexible\Component\Formatter;
 
 /**
- * Filesize formatter
+ * Filesize formatter.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
 class FilesizeFormatter
 {
     /**
-     * Format a human readable filesize
+     * Format a human readable filesize.
      *
-     * @param integer $size
-     * @param integer $decimals
-     * @param boolean $binarySuffix
+     * @param int  $size
+     * @param int  $decimals
+     * @param bool $binarySuffix
      *
      * @return string
      */
@@ -66,6 +66,6 @@ class FilesizeFormatter
             $size = ceil($size);
         }
 
-        return sprintf("%s %s", $size, $suffix);
+        return sprintf('%s %s', $size, $suffix);
     }
 }

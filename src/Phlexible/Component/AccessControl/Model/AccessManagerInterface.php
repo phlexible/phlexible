@@ -14,7 +14,7 @@ namespace Phlexible\Component\AccessControl\Model;
 use Phlexible\Component\AccessControl\Domain\AccessControlList;
 
 /**
- * Access manager interface
+ * Access manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

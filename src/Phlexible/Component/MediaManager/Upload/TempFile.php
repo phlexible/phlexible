@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaManager\Upload;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
- * Temp file
+ * Temp file.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -162,7 +162,7 @@ class TempFile implements PathSourceInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getUseWizard()
     {

@@ -55,9 +55,9 @@ class ArrayUtil
     /**
      * Get the value in the array or a default value if key not exists.
      *
-     * @param array          $array
-     * @param integer|string $key
-     * @param mixed          $default
+     * @param array      $array
+     * @param int|string $key
+     * @param mixed      $default
      *
      * @return mixed
      */
@@ -125,7 +125,7 @@ class ArrayUtil
     }
 
     /**
-     * Search for a data in a multidimensional array
+     * Search for a data in a multidimensional array.
      *
      * Example:
      * $parents = array();
@@ -148,7 +148,7 @@ class ArrayUtil
         foreach ($parents as $key => $value) {
             $exists = true;
             foreach ($searched as $skey => $svalue) {
-                $exists = $exists && isset($parents[$key][$skey]) && $parents[$key][$skey] == $svalue;
+                $exists = $exists && isset($parents[$key][$skey]) && $parents[$key][$skey] === $svalue;
             }
 
             if ($exists) {
@@ -160,12 +160,12 @@ class ArrayUtil
     }
 
     /**
-     * Search in multidimensional array and return key
+     * Search in multidimensional array and return key.
      *
      * @param array $needle   the searched data
      * @param array $haystack the array to search in
      *
-     * @return boolean|integer
+     * @return bool|int
      */
     public function arraySearch($needle, $haystack)
     {
@@ -176,7 +176,7 @@ class ArrayUtil
         foreach ($haystack as $key => $value) {
             $exists = 0;
             foreach ($needle as $nkey => $nvalue) {
-                if (!empty($value[$nkey]) && $value[$nkey] == $nvalue) {
+                if (!empty($value[$nkey]) && $value[$nkey] === $nvalue) {
                     $exists = 1;
                 } else {
                     $exists = 0;

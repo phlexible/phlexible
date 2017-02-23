@@ -43,7 +43,7 @@ class Batch
     }
 
     /**
-     * Add file
+     * Add file.
      *
      * @param ExtendedFileInterface $file
      *
@@ -59,7 +59,7 @@ class Batch
     }
 
     /**
-     * Add files
+     * Add files.
      *
      * @param ExtendedFileInterface[] $files
      *
@@ -75,7 +75,7 @@ class Batch
     }
 
     /**
-     * Remove file
+     * Remove file.
      *
      * @param ExtendedFileInterface $file
      *
@@ -91,7 +91,7 @@ class Batch
     }
 
     /**
-     * Remove files
+     * Remove files.
      *
      * @param ExtendedFileInterface[] $files
      *
@@ -107,7 +107,7 @@ class Batch
     }
 
     /**
-     * Add template
+     * Add template.
      *
      * @param TemplateInterface $template
      *
@@ -123,7 +123,7 @@ class Batch
     }
 
     /**
-     * Add templates
+     * Add templates.
      *
      * @param TemplateInterface[] $templates
      *

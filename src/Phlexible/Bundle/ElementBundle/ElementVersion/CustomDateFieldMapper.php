@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 
 /**
- * Custom date field mapper
+ * Custom date field mapper.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */

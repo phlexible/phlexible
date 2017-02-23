@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Meta sets configuration
+ * Meta sets configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

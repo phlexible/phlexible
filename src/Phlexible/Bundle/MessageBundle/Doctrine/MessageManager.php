@@ -19,7 +19,7 @@ use Phlexible\Bundle\MessageBundle\Exception\LogicException;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 
 /**
- * Doctrine message manager
+ * Doctrine message manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

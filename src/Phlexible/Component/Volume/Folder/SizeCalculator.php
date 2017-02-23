@@ -15,7 +15,7 @@ use Phlexible\Component\Volume\Model\FolderInterface;
 use Phlexible\Component\Volume\VolumeInterface;
 
 /**
- * Size calculatur
+ * Size calculatur.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -38,7 +38,7 @@ class SizeCalculator
 
         foreach ($volume->findFilesByFolder($folder) as $file) {
             $size += $file->getSize();
-            $numFiles++;
+            ++$numFiles;
         }
 
         $calculatedsize = new CalculatedSize($size, 1, $numFiles);

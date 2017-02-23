@@ -12,13 +12,13 @@
 namespace Phlexible\Component\MediaCache\Storage;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaCache\Exception\InvalidArgumentException;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Local storage
+ * Local storage.
  *
  * @author Peter Fahsel <pfahsel@brainbits.net>
  * @author Thomas Heine <th@brainbits.net>
@@ -47,7 +47,7 @@ class LocalStorage extends AbstractStorage
             throw new InvalidArgumentException('No storage_dir.');
         }
 
-        $this->storageDir = rtrim($options['storage_dir'], '/') . '/';
+        $this->storageDir = rtrim($options['storage_dir'], '/').'/';
         $this->cacheManager = $cacheManager;
     }
 
@@ -56,8 +56,8 @@ class LocalStorage extends AbstractStorage
      */
     public function store(CacheItem $cacheItem, $filename)
     {
-        $cachePath = $this->storageDir . substr($cacheItem->getId(), 0, 3) . '/' . substr($cacheItem->getId(), 3, 3) . '/';
-        $cacheFilename = $cachePath . $cacheItem->getId() . '.' . $cacheItem->getExtension();
+        $cachePath = $this->storageDir.substr($cacheItem->getId(), 0, 3).'/'.substr($cacheItem->getId(), 3, 3).'/';
+        $cacheFilename = $cachePath.$cacheItem->getId().'.'.$cacheItem->getExtension();
 
         $filesystem = new Filesystem();
         $filesystem->mkdir($cachePath, 0777);
@@ -70,18 +70,18 @@ class LocalStorage extends AbstractStorage
      */
     public function getCacheUrls(ExtendedFileInterface $file, CacheItem $cacheItem, $baseUrl)
     {
-        $fileName      = $file->getName();
-        $cacheId       = $cacheItem->getId();
+        $fileName = $file->getName();
+        $cacheId = $cacheItem->getId();
         $cacheFileName = rawurlencode($this->replaceExtension($fileName, $cacheItem->getExtension()));
-        $iconFileName  = rawurlencode($this->replaceExtension($fileName, '.gif'));
+        $iconFileName = rawurlencode($this->replaceExtension($fileName, '.gif'));
 
         $urls = [
-            self::MEDIA_PATH_DOWNLOAD => $baseUrl . '/' . self::MEDIA_PATH_DOWNLOAD . '/' . $cacheId . '/' . $cacheFileName,
-            self::MEDIA_PATH_MEDIA    => $baseUrl . '/' . self::MEDIA_PATH_MEDIA . '/' . $cacheId . '/' . $cacheFileName,
-            self::MEDIA_PATH_ICON     => $baseUrl . '/' . self::MEDIA_PATH_ICON . '/' . $cacheId . '/16/' . $iconFileName,
+            self::MEDIA_PATH_DOWNLOAD => $baseUrl.'/'.self::MEDIA_PATH_DOWNLOAD.'/'.$cacheId.'/'.$cacheFileName,
+            self::MEDIA_PATH_MEDIA => $baseUrl.'/'.self::MEDIA_PATH_MEDIA.'/'.$cacheId.'/'.$cacheFileName,
+            self::MEDIA_PATH_ICON => $baseUrl.'/'.self::MEDIA_PATH_ICON.'/'.$cacheId.'/16/'.$iconFileName,
 
             //@todo remove, only in here for frontentmediamanager field image template compatibility reasons
-            self::MEDIA_PATH_IMAGE    => $baseUrl . '/' . self::MEDIA_PATH_MEDIA . '/' . $cacheId . '/' . $cacheFileName,
+            self::MEDIA_PATH_IMAGE => $baseUrl.'/'.self::MEDIA_PATH_MEDIA.'/'.$cacheId.'/'.$cacheFileName,
         ];
 
         return $urls;

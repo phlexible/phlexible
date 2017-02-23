@@ -16,7 +16,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Zend lucene pptx content extractor
+ * Zend lucene pptx content extractor.
  *
  * @author Phillip Look <plook@brainbits.net>
  */
@@ -42,5 +42,4 @@ class ZendLucenePptxExtractor implements ExtractorInterface
 
         return $content;
     }
-
 }

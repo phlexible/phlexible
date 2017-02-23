@@ -15,7 +15,7 @@ use Phlexible\Component\Volume\Model\FileInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * File event
+ * File event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

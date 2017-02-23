@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
- * Elements message
+ * Elements message.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -23,7 +23,7 @@ use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Psr\Log\LoggerInterface;
 
 /**
- * Image cache worker
+ * Image cache worker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -82,7 +82,7 @@ class ImageTemplateApplier
     public function getMimetype(ImageTemplate $template)
     {
         if ($template->getParameter('format')) {
-            return 'image/' . $template->getParameter('format');
+            return 'image/'.$template->getParameter('format');
         } else {
             return 'image/jpg';
         }
@@ -103,8 +103,8 @@ class ImageTemplateApplier
             // workaround for multi-page pdfs
             // might be removed when https://github.com/avalanche123/Imagine/pull/451 is merged
             $tmpFilename = sys_get_temp_dir().'/'.basename($filename);
-            $image->layers()->get(0)->save($tmpFilename.".jpg");
-            $image = $this->imagine->open($tmpFilename.".jpg");
+            $image->layers()->get(0)->save($tmpFilename.'.jpg');
+            $image = $this->imagine->open($tmpFilename.'.jpg');
         }
 
         $options = array();
@@ -202,7 +202,7 @@ class ImageTemplateApplier
             if (!$templateSize->contains($imageSize)) {
                 $ratios = array(
                     $templateSize->getWidth() / $imageSize->getWidth(),
-                    $templateSize->getHeight() / $imageSize->getHeight()
+                    $templateSize->getHeight() / $imageSize->getHeight(),
                 );
                 $ratio = max($ratios);
                 if (!$imageSize->contains($templateSize)) {

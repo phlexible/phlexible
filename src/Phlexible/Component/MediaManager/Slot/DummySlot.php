@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaManager\Slot;
 
 /**
- * Dummy slot
+ * Dummy slot.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

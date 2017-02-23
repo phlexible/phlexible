@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Dump command
+ * Dump command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -58,7 +58,7 @@ class DumpCommand extends ContainerAwareCommand
         $elementStructure = $elementService->findElementStructure($elementVersion, 'de');
 
         $output->write("<fg=red>Element $eid - Version {$elementVersion->getVersion()}");
-        if ($version && $version != $element->getLatestVersion()) {
+        if ($version && $version !== $element->getLatestVersion()) {
             $output->write(" - Latest Version {$element->getLatestVersion()}");
         }
         $output->writeln(" - Title {$elementVersion->getBackendTitle('de')}</fg=red>");
@@ -68,4 +68,3 @@ class DumpCommand extends ContainerAwareCommand
         return 0;
     }
 }
-

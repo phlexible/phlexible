@@ -20,7 +20,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * XML dumper
+ * XML dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -81,11 +81,11 @@ class XmlDumper
             $urlsNode->appendChild($urlNode);
 
             $idAttr = $dom->createAttribute('id');
-            $idAttr->value =  $url->getId();
+            $idAttr->value = $url->getId();
             $urlNode->appendChild($idAttr);
 
             $languageAttr = $dom->createAttribute('language');
-            $languageAttr->value =  $url->getLanguage();
+            $languageAttr->value = $url->getLanguage();
             $urlNode->appendChild($languageAttr);
 
             $targetAttr = $dom->createAttribute('target');

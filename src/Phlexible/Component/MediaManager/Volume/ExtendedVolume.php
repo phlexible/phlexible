@@ -18,7 +18,7 @@ use Phlexible\Component\Volume\Exception\IOException;
 use Phlexible\Component\Volume\Volume;
 
 /**
- * Extended volume
+ * Extended volume.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

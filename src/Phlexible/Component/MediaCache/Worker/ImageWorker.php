@@ -12,11 +12,11 @@
 namespace Phlexible\Component\MediaCache\Worker;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaExtractor\Transmutor;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaCache\Storage\StorageManager;
+use Phlexible\Component\MediaExtractor\Transmutor;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Applier\ImageTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Image cache worker
+ * Image cache worker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -139,7 +139,7 @@ class ImageWorker extends AbstractWorker
     }
 
     /**
-     * Apply template to filename
+     * Apply template to filename.
      *
      * @param CacheItem             $cacheItem
      * @param ImageTemplate         $template
@@ -157,7 +157,7 @@ class ImageWorker extends AbstractWorker
         $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
-        $tempFilename = $this->tempDir . '/' . $cacheItem->getId() . '.' . $template->getParameter('format');
+        $tempFilename = $this->tempDir.'/'.$cacheItem->getId().'.'.$template->getParameter('format');
 
         $pathinfo = pathinfo($file->getPhysicalPath());
 

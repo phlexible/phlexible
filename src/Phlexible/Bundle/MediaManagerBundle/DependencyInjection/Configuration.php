@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Media manager configuration
+ * Media manager configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

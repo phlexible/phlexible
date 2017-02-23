@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\GuiBundle\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * ExtJS result response
+ * ExtJS result response.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Phillip Look <pl@brainbits.net>
@@ -25,7 +25,7 @@ class ResultResponse extends JsonResponse
     const RESULT_FAILURE = false;
 
     /**
-     * Generate a standard result
+     * Generate a standard result.
      *
      * @param bool  $result     True for success, false for failure
      * @param array $message    (Optional) Message
@@ -43,7 +43,7 @@ class ResultResponse extends JsonResponse
     }
 
     /**
-     * Generate a standard result
+     * Generate a standard result.
      *
      * @param bool  $result     True for success, false for failure
      * @param array $message    (Optional) Message
@@ -59,8 +59,8 @@ class ResultResponse extends JsonResponse
 
         $values = [
             'success' => $result,
-            'msg'     => $message,
-            'data'    => $data,
+            'msg' => $message,
+            'data' => $data,
         ];
 
         if (is_array($additional) && count($additional)) {

@@ -14,7 +14,7 @@ namespace Phlexible\Component\Volume\Event;
 use Phlexible\Component\Volume\Model\FileInterface;
 
 /**
- * Rename file event
+ * Rename file event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MediaType\Exception;
 
 /**
- * Load exception for media type
+ * Load exception for media type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class LoadException extends RuntimeException
 {
-
 }

@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Test command
+ * Test command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -50,7 +50,6 @@ class TestCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $target = null;
         if ($input->getOption('error')) {
             $target = 'error';
@@ -77,7 +76,7 @@ class TestCommand extends ContainerAwareCommand
             $job = new Job('queue:test', ["--$target"]);
             $queueManager->addJob($job);
 
-            $output->writeln("Job created.");
+            $output->writeln('Job created.');
         } else {
             switch ($target) {
                 case 'error':
@@ -103,7 +102,7 @@ class TestCommand extends ContainerAwareCommand
 
                 case 'sleep30':
                     for ($i = 0; $i < 30; $i = $i + 5) {
-                        $output->writeln('Sleep(5) - ' . $i);
+                        $output->writeln('Sleep(5) - '.$i);
                         sleep(5);
                         $output->writeln('Awake');
                     }
@@ -113,5 +112,4 @@ class TestCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

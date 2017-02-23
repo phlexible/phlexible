@@ -19,7 +19,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
- * XML dumper
+ * XML dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -37,14 +37,14 @@ class XmlDumper implements DumperInterface
             'elementtype',
             '',
             [
-                'id'           => $elementtype->getId(),
-                'uniqueId'     => $elementtype->getUniqueId(),
-                'revision'     => $elementtype->getRevision(),
-                'type'         => $elementtype->getType(),
-                'icon'         => $elementtype->getIcon(),
-                'defaultTab'   => $elementtype->getDefaultTab(),
+                'id' => $elementtype->getId(),
+                'uniqueId' => $elementtype->getUniqueId(),
+                'revision' => $elementtype->getRevision(),
+                'type' => $elementtype->getType(),
+                'icon' => $elementtype->getIcon(),
+                'defaultTab' => $elementtype->getDefaultTab(),
                 'hideChildren' => $elementtype->getHideChildren() ? '1' : '0',
-                'deleted'      => $elementtype->getDeleted() ? '1' : '0',
+                'deleted' => $elementtype->getDeleted() ? '1' : '0',
             ]
         );
 
@@ -84,7 +84,6 @@ class XmlDumper implements DumperInterface
         }
 
         return $dom->saveXML();
-
     }
 
     /**
@@ -124,8 +123,8 @@ class XmlDumper implements DumperInterface
                             'label',
                             $languageValue,
                             [
-                                'type'     => $key,
-                                'language' => $language
+                                'type' => $key,
+                                'language' => $language,
                             ]
                         );
                     }

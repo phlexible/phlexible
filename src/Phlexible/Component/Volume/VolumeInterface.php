@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Volume interface
- * Represents a complete set of classes used to get a virtual set of folders and files
+ * Represents a complete set of classes used to get a virtual set of folders and files.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -301,6 +301,7 @@ interface VolumeInterface
      * @return FileInterface
      */
     public function hideFile(FileInterface $file, $userId);
+
     /**
      * @param FileInterface $file
      * @param string        $userId

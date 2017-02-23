@@ -17,7 +17,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 
 /**
- * Field mapper
+ * Field mapper.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -82,7 +82,7 @@ class FieldMapper
         $elementtype = $this->elementSourceManager->findElementtype($elementVersion->getElement()->getElementtypeId());
 
         if (!$elementtype) {
-            throw new \LogicException("No elementtype found.");
+            throw new \LogicException('No elementtype found.');
         }
 
         $titles = [];
@@ -103,7 +103,7 @@ class FieldMapper
         }
 
         if (empty($titles['backend'])) {
-            $titles['backend'] = '[' . $elementtype->getTitle() . ', ' . $language . ']';
+            $titles['backend'] = '['.$elementtype->getTitle().', '.$language.']';
         }
 
         return $titles;

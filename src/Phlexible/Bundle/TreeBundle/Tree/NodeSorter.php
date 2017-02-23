@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * NodeSorter
+ * NodeSorter.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -69,7 +69,7 @@ class NodeSorter
                     ->addSelect('evmf.backend AS sorter')
                     ->leftJoin('t', 'element', 'e', 't.type_id = e.eid')
                     ->leftJoin('e', 'element_version', 'ev', 'e.eid = ev.eid AND e.latest_version = ev.version')
-                    ->leftJoin('ev', 'element_version_mapped_field', 'evmf', 'ev.id = evmf.element_version_id AND evmf.language = ' . $this->connection->quote($this->sortLanguage))
+                    ->leftJoin('ev', 'element_version_mapped_field', 'evmf', 'ev.id = evmf.element_version_id AND evmf.language = '.$this->connection->quote($this->sortLanguage))
                     ->orderBy('evmf.backend', $sortDir);
                 break;
 
@@ -82,7 +82,7 @@ class NodeSorter
             case TreeInterface::SORT_MODE_PUBLISHDATE:
                 $queryBuilder
                     ->addSelect('to.publish_time AS sorter')
-                    ->leftJoin('t', 'tree_online', 'to', 'eto.tree_id = et.id AND eto.language = ' . $this->connection->quote($this->sortLanguage))
+                    ->leftJoin('t', 'tree_online', 'to', 'eto.tree_id = et.id AND eto.language = '.$this->connection->quote($this->sortLanguage))
                     ->orderBy('to.publish_time', $sortDir);
                 break;
 
@@ -91,7 +91,7 @@ class NodeSorter
                     ->addSelect('evmf.date AS sorter')
                     ->leftJoin('t', 'element', 'e', 't.type_id = e.eid')
                     ->leftJoin('e', 'element_version', 'ev', 'e.eid = ev.eid AND e.latest_version = ev.version')
-                    ->leftJoin('ev', 'element_version_mapped_field', 'evmf', 'ev.id = evmf.element_version_id AND evmf.language = ' . $this->connection->quote($this->sortLanguage))
+                    ->leftJoin('ev', 'element_version_mapped_field', 'evmf', 'ev.id = evmf.element_version_id AND evmf.language = '.$this->connection->quote($this->sortLanguage))
                     ->orderBy('evmf.date', $sortDir);
                 break;
 

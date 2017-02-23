@@ -15,7 +15,7 @@ use Phlexible\Component\Volume\Model\FolderInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Abstract folder event
+ * Abstract folder event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

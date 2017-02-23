@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SiterootBundle\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 
 /**
- * Siteroot hostname generator
+ * Siteroot hostname generator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

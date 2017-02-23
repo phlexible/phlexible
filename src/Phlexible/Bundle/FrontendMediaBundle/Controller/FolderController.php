@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Folder controller
+ * Folder controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/frontendmedia/folder")
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class FolderController extends Controller
 {
     /**
-     * Deliver a media asset
+     * Deliver a media asset.
      *
      * @return JsonResponse
      * @Route("/tree", name="frontendmedia_folder")
@@ -43,14 +43,14 @@ class FolderController extends Controller
             }
 
             $data[] = array(
-                'id'        => $rootFolder->getId(),
-                'site_id'   => $volume->getId(),
-                'text'      => $rootFolder->getName(),
-                'leaf'      => !$volume->countFoldersByParentFolder($rootFolder),
+                'id' => $rootFolder->getId(),
+                'site_id' => $volume->getId(),
+                'text' => $rootFolder->getName(),
+                'leaf' => !$volume->countFoldersByParentFolder($rootFolder),
                 'draggable' => false,
-                'expanded'  => true,
+                'expanded' => true,
                 'allowDrop' => true,
-                'children'  => $this->recurseFolders($volume, $rootFolder),
+                'children' => $this->recurseFolders($volume, $rootFolder),
             );
         }
 
@@ -74,13 +74,13 @@ class FolderController extends Controller
             }
 
             $tmp = array(
-                'id'        => $subFolder->getId(),
-                'site_id'   => $volume->getId(),
-                'text'      => $subFolder->getName(),
-                'leaf'      => false, //!$subFolder->hasSubFolders(),
+                'id' => $subFolder->getId(),
+                'site_id' => $volume->getId(),
+                'text' => $subFolder->getName(),
+                'leaf' => false, //!$subFolder->hasSubFolders(),
                 'numChilds' => $volume->countFoldersByParentFolder($subFolder),
                 'allowDrop' => true,
-                'children'  => $this->recurseFolders($volume, $subFolder),
+                'children' => $this->recurseFolders($volume, $subFolder),
             );
 
             if (!$tmp['numChilds']) {

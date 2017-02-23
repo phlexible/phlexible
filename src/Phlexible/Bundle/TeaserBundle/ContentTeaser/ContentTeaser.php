@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TeaserBundle\ContentTeaser;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 
 /**
- * Content teaser
+ * Content teaser.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

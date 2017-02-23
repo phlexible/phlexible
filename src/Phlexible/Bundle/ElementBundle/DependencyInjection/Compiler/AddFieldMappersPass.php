@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add field mappers pass
+ * Add field mappers pass.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

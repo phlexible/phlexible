@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Search controller
+ * Search controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/search/search")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SearchController extends Controller
 {
     /**
-     * Return search results
+     * Return search results.
      *
      * @param Request $request
      *
@@ -56,7 +56,7 @@ class SearchController extends Controller
 
         return new JsonResponse([
             'totalCount' => count($results),
-            'results'    => array_slice($results, $start, $limit)
+            'results' => array_slice($results, $start, $limit),
         ]);
     }
 }

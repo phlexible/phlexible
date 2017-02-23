@@ -18,7 +18,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
- * XML parser
+ * XML parser.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -89,7 +89,7 @@ class XmlParser implements ParserInterface
                     foreach ($fieldNodes as $fieldNode) {
                         /* @var $fieldNode Element */
                         $field = [
-                            'dsId'  => (string) $fieldNode->getAttribute('dsId'),
+                            'dsId' => (string) $fieldNode->getAttribute('dsId'),
                             'title' => (string) $fieldNode->getAttribute('title'),
                         ];
                         if ($fieldNode->hasAttribute('index')) {
@@ -103,7 +103,7 @@ class XmlParser implements ParserInterface
                 }
                 $mappings[$key] = [
                     'pattern' => $pattern,
-                    'fields'  => $fields,
+                    'fields' => $fields,
                 ];
             }
         }

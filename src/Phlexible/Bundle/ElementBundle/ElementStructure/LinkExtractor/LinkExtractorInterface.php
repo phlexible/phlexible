@@ -16,7 +16,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
 
 /**
- * Link extractor interface
+ * Link extractor interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -15,21 +15,21 @@ use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
- * Attribute reader interface
+ * Attribute reader interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface AttributeReaderInterface
 {
     /**
-     * Check if requirements for reader are given
+     * Check if requirements for reader are given.
      *
      * @return bool
      */
     public function isAvailable();
 
     /**
-     * Check if reader supports the given asset
+     * Check if reader supports the given asset.
      *
      * @param PathSourceInterface $fileSource
      * @param MediaType           $mediaType
@@ -39,12 +39,11 @@ interface AttributeReaderInterface
     public function supports(PathSourceInterface $fileSource, MediaType $mediaType);
 
     /**
-     * Read attributes
+     * Read attributes.
      *
      * @param PathSourceInterface $fileSource
      * @param MediaType           $mediaType
      * @param AttributeBag        $attributes
      */
     public function read(PathSourceInterface $fileSource, MediaType $mediaType, AttributeBag $attributes);
-
 }

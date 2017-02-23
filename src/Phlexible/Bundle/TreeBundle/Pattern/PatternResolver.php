@@ -16,7 +16,7 @@ use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Pattern resolver
+ * Pattern resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -45,7 +45,7 @@ class PatternResolver
     }
 
     /**
-     * Resolved page title by configured pattern
+     * Resolved page title by configured pattern.
      *
      * @param string         $patternName
      * @param Siteroot       $siteroot
@@ -66,7 +66,7 @@ class PatternResolver
     }
 
     /**
-     * Resolve page title by pattern
+     * Resolve page title by pattern.
      *
      * @param string         $pattern
      * @param Siteroot       $siteroot

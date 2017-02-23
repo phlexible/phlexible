@@ -17,7 +17,7 @@ use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Elementtype usage listeners
+ * Elementtype usage listeners.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -57,7 +57,7 @@ class ElementtypeUsageListener
             ->from('element', 'e')
             ->join('e', 'element_source', 'es', 'es.elementtype_id = e.elementtype_id')
             ->join('es', 'element_version', 'ev', 'ev.element_source_id = es.id')
-            ->leftJoin('ev', 'element_version_mapped_field', 'evmf', 'ev.id = evmf.element_version_id AND evmf.language = ' . $qb->expr()->literal($language))
+            ->leftJoin('ev', 'element_version_mapped_field', 'evmf', 'ev.id = evmf.element_version_id AND evmf.language = '.$qb->expr()->literal($language))
             ->where($qb->expr()->eq('e.elementtype_id', $qb->expr()->literal($elementtypeId)))
             ->groupBy('ev.eid');
 
@@ -66,7 +66,7 @@ class ElementtypeUsageListener
         foreach ($rows as $row) {
             $event->addUsage(
                 new Usage(
-                    $event->getElementtype()->getType() . ' element',
+                    $event->getElementtype()->getType().' element',
                     'element',
                     $row['eid'],
                     $row['title'],

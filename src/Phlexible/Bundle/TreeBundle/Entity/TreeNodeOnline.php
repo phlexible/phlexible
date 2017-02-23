@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Tree node online
+ * Tree node online.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

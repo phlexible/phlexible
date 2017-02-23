@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Debug controller
+ * Debug controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/debug")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 class DebugController extends Controller
 {
     /**
-     * File debug info
+     * File debug info.
      *
      * @param Request $request
      *
@@ -54,7 +54,7 @@ class DebugController extends Controller
     }
 
     /**
-     * File debug info
+     * File debug info.
      *
      * @param Request $request
      *
@@ -77,13 +77,13 @@ class DebugController extends Controller
         foreach ($cacheItems as $cacheItem) {
             $template = $templateManager->find($cacheItem->getTemplateKey());
             $storageKey = $template->getStorage();
-            $storage = $this->get('mediacache.storage.' . strtolower($storageKey));
+            $storage = $this->get('mediacache.storage.'.strtolower($storageKey));
 
             $urls = $storage->getCacheUrls($file, $cacheItem, $this->_request->getBaseUrl());
 
             $cache[] = [
-                'key'   => $cacheItem->getTemplateKey(),
-                'value' => $urls['media']
+                'key' => $cacheItem->getTemplateKey(),
+                'value' => $urls['media'],
             ];
         }
 

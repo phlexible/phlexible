@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Media cache bundle
+ * Media cache bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

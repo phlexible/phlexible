@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Save element data event
+ * Save element data event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

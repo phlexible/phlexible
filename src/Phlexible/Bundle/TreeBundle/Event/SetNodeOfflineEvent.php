@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Set node offline event
+ * Set node offline event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

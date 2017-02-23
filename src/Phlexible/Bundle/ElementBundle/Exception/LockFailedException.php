@@ -12,11 +12,10 @@
 namespace Phlexible\Bundle\ElementBundle\Exception;
 
 /**
- * Lock failed exception
+ * Lock failed exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class LockFailedException extends RuntimeException
 {
-
 }

@@ -12,7 +12,7 @@
 namespace Phlexible\Component\AccessControl\SecurityProvider;
 
 /**
- * Delegating security resolver
+ * Delegating security resolver.
  *
  * @author Marco Fischer <mf@brainbits.net>
  */

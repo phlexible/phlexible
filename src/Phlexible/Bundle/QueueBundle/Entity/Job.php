@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\QueueBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Job
+ * Job.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

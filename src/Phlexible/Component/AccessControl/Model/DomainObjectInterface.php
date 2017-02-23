@@ -12,21 +12,21 @@
 namespace Phlexible\Component\AccessControl\Model;
 
 /**
- * Domain object interface
+ * Domain object interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface DomainObjectInterface
 {
     /**
-     * Return domain object identifier
+     * Return domain object identifier.
      *
      * @return array
      */
     public function getObjectIdentifier();
 
     /**
-     * Return domain object type
+     * Return domain object type.
      *
      * @return array
      */

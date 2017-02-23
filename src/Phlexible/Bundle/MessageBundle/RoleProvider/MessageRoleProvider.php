@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MessageBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Message role provider
+ * Message role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

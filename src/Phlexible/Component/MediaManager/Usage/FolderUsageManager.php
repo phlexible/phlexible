@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 
 /**
- * Folder usage manager
+ * Folder usage manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -42,7 +42,7 @@ class FolderUsageManager
     }
 
     /**
-     * Return aggregated status
+     * Return aggregated status.
      *
      * @param ExtendedFolderInterface $folder
      *
@@ -59,7 +59,7 @@ class FolderUsageManager
     }
 
     /**
-     * Return highest aggregated status
+     * Return highest aggregated status.
      *
      * @param ExtendedFolderInterface $folder
      *
@@ -83,7 +83,7 @@ class FolderUsageManager
     }
 
     /**
-     * Return aggregated status
+     * Return aggregated status.
      *
      * @param ExtendedFolderInterface $folder
      *
@@ -101,8 +101,8 @@ class FolderUsageManager
         foreach ($qb->getQuery()->getScalarResult() as $row) {
             $usedIn[] = [
                 'usage_type' => $row['usageType'],
-                'usage_id'   => $row['usageId'],
-                'status'     => $row['status'],
+                'usage_id' => $row['usageId'],
+                'status' => $row['status'],
             ];
         }
 

@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
- * Icon controller
+ * Icon controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elements/icon")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class IconController extends Controller
 {
     /**
-     * Delivers an icon
+     * Delivers an icon.
      *
      * @param Request $request
      * @param string  $icon
@@ -44,5 +44,4 @@ class IconController extends Controller
 
         return new BinaryFileResponse($cacheFilename, 200, array('Content-Type' => 'image/png'), true, ResponseHeaderBag::DISPOSITION_INLINE);
     }
-
 }

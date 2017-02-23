@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaType\Compiler;
 use Phlexible\Component\MediaType\Model\MediaTypeCollection;
 
 /**
- * PHP compiler
+ * PHP compiler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

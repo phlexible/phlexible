@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 /**
- * Add fields pass
+ * Add fields pass.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

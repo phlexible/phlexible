@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Queue command
+ * Queue command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -130,14 +130,13 @@ class CreateCommand extends ContainerAwareCommand
                     [
                         $idx,
                         $cacheItem->getTemplateKey(),
-                        $folder->getPath() . $file->getName(),
-                        $cacheItem->getFileId()
+                        $folder->getPath().$file->getName(),
+                        $cacheItem->getFileId(),
                     ]
                 );
             }
             $table->render();
-            $output->writeln(count($queue) . ' total.');
-
+            $output->writeln(count($queue).' total.');
         } elseif ($input->getOption('queue')) {
             // via queue
 
@@ -147,7 +146,7 @@ class CreateCommand extends ContainerAwareCommand
                 $cacheManager->updateCacheItem($cacheItem);
             }
 
-            $output->writeln(count($queue) . ' items queued.');
+            $output->writeln(count($queue).' items queued.');
         } else {
             // create immediately
 
@@ -160,7 +159,7 @@ class CreateCommand extends ContainerAwareCommand
             $progress->finish();
 
             $output->writeln('');
-            $output->writeln(count($queue) . ' items processed.');
+            $output->writeln(count($queue).' items processed.');
         }
 
         return 0;

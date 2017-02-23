@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add help assets pass
+ * Add help assets pass.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

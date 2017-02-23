@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Latest files portlet
+ * Latest files portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -80,19 +80,19 @@ class LatestFilesPortlet extends Portlet
     }
 
     /**
-     * Return settings
+     * Return settings.
      *
      * @return array
      */
     public function getSettings()
     {
         return [
-            'style' => $this->style
+            'style' => $this->style,
         ];
     }
 
     /**
-     * Return Portlet data
+     * Return Portlet data.
      *
      * @return array
      */
@@ -116,19 +116,19 @@ class LatestFilesPortlet extends Portlet
                 $cacheStatus = [];
                 foreach ($cacheItems as $cacheItem) {
                     $cacheStatus[$cacheItem->getTemplateKey()] =
-                        $cacheItem->getCacheStatus() . ';' . $cacheItem->getCreatedAt()->format('YmdHis');
+                        $cacheItem->getCacheStatus().';'.$cacheItem->getCreatedAt()->format('YmdHis');
                 }
 
                 $data[] = [
-                    'id'                => sprintf('%s___%s', $file->getId(), $file->getVersion()),
-                    'file_id'           => $file->getId(),
-                    'file_version'      => $file->getVersion(),
-                    'folder_id'         => $file->getFolderId(),
-                    'folder_path'       => $folder->getIdPath(),
+                    'id' => sprintf('%s___%s', $file->getId(), $file->getVersion()),
+                    'file_id' => $file->getId(),
+                    'file_version' => $file->getVersion(),
+                    'folder_id' => $file->getFolderId(),
+                    'folder_path' => $folder->getIdPath(),
                     'document_type_key' => strtolower($file->getMediaType()),
-                    'time'              => $file->getCreatedAt()->format('U'),
-                    'title'             => $file->getName(),
-                    'cache'             => $cacheStatus
+                    'time' => $file->getCreatedAt()->format('U'),
+                    'title' => $file->getName(),
+                    'cache' => $cacheStatus,
                 ];
             }
         } catch (\Exception $e) {

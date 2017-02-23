@@ -16,7 +16,7 @@ use Phlexible\Bundle\GuiBundle\Menu\MenuItem;
 use Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection;
 
 /**
- * Hierarchy builder test
+ * Hierarchy builder test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

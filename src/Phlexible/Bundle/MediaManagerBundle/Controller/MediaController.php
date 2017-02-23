@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Media controller
+ * Media controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/media")
@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 class MediaController extends Controller
 {
     /**
-     * Deliver a media asset
+     * Deliver a media asset.
      *
      * @param Request $request
      *

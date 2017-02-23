@@ -12,11 +12,10 @@
 namespace Phlexible\Bundle\GuiBundle\Exception;
 
 /**
- * Exception interface for gui bundle
+ * Exception interface for gui bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExceptionInterface
 {
-
 }

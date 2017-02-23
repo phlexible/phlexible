@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Portlet controller
+ * Portlet controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/dashboard/portlets")
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 class PortletController extends Controller
 {
     /**
-     * Return portlets
+     * Return portlets.
      *
      * @return JsonResponse
      * @Route("", name="dashboard_portlets")
@@ -54,7 +54,7 @@ class PortletController extends Controller
     }
 
     /**
-     * Save portlets
+     * Save portlets.
      *
      * @param Request $request
      *

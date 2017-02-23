@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TeaserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Teaser online
+ * Teaser online.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

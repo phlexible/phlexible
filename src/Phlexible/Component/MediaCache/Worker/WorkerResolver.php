@@ -16,7 +16,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Cache worker resolver
+ * Cache worker resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -50,7 +50,7 @@ class WorkerResolver
     }
 
     /**
-     * Determine and return worker
+     * Determine and return worker.
      *
      * @param TemplateInterface     $template
      * @param ExtendedFileInterface $file
@@ -64,7 +64,6 @@ class WorkerResolver
             if ($worker->accept($template, $file, $mediaType)) {
                 return $worker;
             }
-
         }
 
         return null;

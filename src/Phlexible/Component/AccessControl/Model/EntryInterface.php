@@ -14,7 +14,7 @@ namespace Phlexible\Component\AccessControl\Model;
 use Phlexible\Component\AccessControl\Domain\AccessControlList;
 
 /**
- * Access control entry
+ * Access control entry.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

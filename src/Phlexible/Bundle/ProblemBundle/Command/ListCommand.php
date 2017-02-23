@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * List command
+ * List command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -48,7 +48,7 @@ class ListCommand extends ContainerAwareCommand
         }
 
         $cnt = count($problems);
-        $output->writeln('<error>Found ' . $cnt . ' Problem' . ($cnt > 1 ? 's' : '') . '</error>');
+        $output->writeln('<error>Found '.$cnt.' Problem'.($cnt > 1 ? 's' : '').'</error>');
         $output->writeln('');
 
         $table = new Table($output);
@@ -76,7 +76,7 @@ class ListCommand extends ContainerAwareCommand
                     $problem->isLive() ? 'live' : 'cached',
                     $problem->getSeverity(),
                     $problem->getMessage(),
-                    $problem->getHint()
+                    $problem->getHint(),
                 ]
             );
         }
@@ -85,5 +85,4 @@ class ListCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

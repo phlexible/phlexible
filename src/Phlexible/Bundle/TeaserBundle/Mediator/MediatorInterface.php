@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TeaserBundle\Mediator;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 
 /**
- * Mediator interface
+ * Mediator interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

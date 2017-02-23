@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Locks controller
+ * Locks controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elements/locks")
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 class LocksController extends Controller
 {
     /**
-     * List locks
+     * List locks.
      *
      * @return JsonResponse
      * @Route("/list", name="locks_list")
@@ -51,11 +51,11 @@ class LocksController extends Controller
             }
 
             $data[] = [
-                'id'        => $lock->getId(),
-                'uid'       => $lock->getUserId(),
-                'user'      => $username,
-                'ts'        => $lock->getLockedAt()->format('Y-m-d H:i:s'),
-                'eid'       => $lock->getElement()->getEid(),
+                'id' => $lock->getId(),
+                'uid' => $lock->getUserId(),
+                'user' => $username,
+                'ts' => $lock->getLockedAt()->format('Y-m-d H:i:s'),
+                'eid' => $lock->getElement()->getEid(),
                 'lock_type' => $lock->getType(),
             ];
         }
@@ -64,7 +64,7 @@ class LocksController extends Controller
     }
 
     /**
-     * Delete lock
+     * Delete lock.
      *
      * @param string $id
      *
@@ -82,7 +82,7 @@ class LocksController extends Controller
     }
 
     /**
-     * Delete my locks
+     * Delete my locks.
      *
      * @return ResultResponse
      * @Route("/deletemy", name="locks_delete_my")
@@ -99,11 +99,10 @@ class LocksController extends Controller
         }
 
         return new ResultResponse(true, 'My locks released.');
-
     }
 
     /**
-     * Delete all locks
+     * Delete all locks.
      *
      * @return ResultResponse
      * @Route("/flush", name="locks_flush")
@@ -118,7 +117,7 @@ class LocksController extends Controller
     }
 
     /**
-     * Lock element
+     * Lock element.
      *
      * @param Request $request
      *

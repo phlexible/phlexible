@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Subscriptions controller
+ * Subscriptions controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/messages/subscriptions")
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SubscriptionsController extends Controller
 {
     /**
-     * List subscriptions
+     * List subscriptions.
      *
      * @return JsonResponse
      * @Route("", name="messages_subscriptions")
@@ -39,10 +39,10 @@ class SubscriptionsController extends Controller
 
         foreach ($subscriptionManager->findAll() as $subscription) {
             $subscriptions[] = [
-                'id'       => $subscription->getId(),
+                'id' => $subscription->getId(),
                 'filterId' => $subscription->getFilter()->getId(),
-                'filter'   => $subscription->getFilter()->getTitle(),
-                'handler'  => $subscription->getHandler(),
+                'filter' => $subscription->getFilter()->getTitle(),
+                'handler' => $subscription->getHandler(),
             ];
         }
 
@@ -50,7 +50,7 @@ class SubscriptionsController extends Controller
     }
 
     /**
-     * Create subscription
+     * Create subscription.
      *
      * @param Request $request
      *
@@ -78,7 +78,7 @@ class SubscriptionsController extends Controller
     }
 
     /**
-     * Delete subscription
+     * Delete subscription.
      *
      * @param string $id
      *

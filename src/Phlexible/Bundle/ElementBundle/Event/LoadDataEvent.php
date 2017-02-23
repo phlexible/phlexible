@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Load data event
+ * Load data event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

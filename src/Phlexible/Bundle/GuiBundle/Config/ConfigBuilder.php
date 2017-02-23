@@ -16,7 +16,7 @@ use Phlexible\Bundle\GuiBundle\GuiEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Config builder
+ * Config builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -36,7 +36,7 @@ class ConfigBuilder
     }
 
     /**
-     * Gather configs and return config array
+     * Gather configs and return config array.
      *
      * @return array
      */

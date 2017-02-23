@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Rights controller
+ * Rights controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/rights")
@@ -30,11 +30,12 @@ use Symfony\Component\HttpFoundation\Request;
 class RightsController extends Controller
 {
     /**
-     * List subjects
+     * List subjects.
      *
      * @param Request $request
      *
      * @return JsonResponse
+     *
      * @throws \Exception
      * @Route("/identities", name="mediamanager_rights_identities")
      */
@@ -78,7 +79,7 @@ class RightsController extends Controller
             $map = array();
             foreach ($oi->getHierarchicalIdentifiers() as $identifier) {
                 foreach ($acl->getEntries() as $entry) {
-                    if ($entry->getObjectIdentifier() == $identifier) {
+                    if ($entry->getObjectIdentifier() === $identifier) {
                         $map[$entry->getSecurityType()][$entry->getSecurityIdentifier()][$entry->getObjectIdentifier()] = $entry;
                     }
                 }
@@ -90,20 +91,20 @@ class RightsController extends Controller
                 foreach ($securityIdentifiers as $securityIdentifier => $entries) {
                     $resolvedMasks = $maskResolver->resolve($entries, $oi->getIdentifier());
                     $identities[] = array(
-                        'id'                  => 0,//$ace->getId(),
-                        'objectType'          => $oi->getType(),
-                        'objectId'            => $oi->getIdentifier(),
-                        'effectiveMask'       => $resolvedMasks['effectiveMask'],
-                        'mask'                => $resolvedMasks['mask'],
-                        'stopMask'            => $resolvedMasks['stopMask'],
-                        'noInheritMask'       => $resolvedMasks['noInheritMask'],
-                        'parentMask'          => $resolvedMasks['parentMask'],
-                        'parentStopMask'      => $resolvedMasks['parentStopMask'],
+                        'id' => 0, //$ace->getId(),
+                        'objectType' => $oi->getType(),
+                        'objectId' => $oi->getIdentifier(),
+                        'effectiveMask' => $resolvedMasks['effectiveMask'],
+                        'mask' => $resolvedMasks['mask'],
+                        'stopMask' => $resolvedMasks['stopMask'],
+                        'noInheritMask' => $resolvedMasks['noInheritMask'],
+                        'parentMask' => $resolvedMasks['parentMask'],
+                        'parentStopMask' => $resolvedMasks['parentStopMask'],
                         'parentNoInheritMask' => $resolvedMasks['parentNoInheritMask'],
-                        'objectLanguage'      => null,
-                        'securityType'        => $securityType,
-                        'securityId'          => $securityIdentifier,
-                        'securityName'        => $securityResolver->resolveName($securityType, $securityIdentifier),
+                        'objectLanguage' => null,
+                        'securityType' => $securityType,
+                        'securityId' => $securityIdentifier,
+                        'securityName' => $securityResolver->resolveName($securityType, $securityIdentifier),
                     );
                 }
             }

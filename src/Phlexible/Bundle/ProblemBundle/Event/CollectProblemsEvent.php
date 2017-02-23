@@ -15,7 +15,7 @@ use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Collect problems event
+ * Collect problems event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

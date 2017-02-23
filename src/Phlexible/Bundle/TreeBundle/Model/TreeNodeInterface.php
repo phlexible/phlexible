@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Model;
 
 /**
- * Tree node interface
+ * Tree node interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -179,12 +179,12 @@ interface TreeNodeInterface
     public function setCreateUserId($createUid);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getInNavigation();
 
     /**
-     * @param boolean $inNavigation
+     * @param bool $inNavigation
      *
      * @return $this
      */
@@ -239,12 +239,12 @@ interface TreeNodeInterface
     public function setRoutes(array $routes);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getNeedAuthentication();
 
     /**
-     * @param boolean $needsAuthentication
+     * @param bool $needsAuthentication
      *
      * @return $this
      */

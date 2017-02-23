@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaToolBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Media tool bundle
+ * Media tool bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

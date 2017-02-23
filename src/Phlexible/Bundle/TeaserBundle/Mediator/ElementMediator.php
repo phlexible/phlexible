@@ -17,7 +17,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 
 /**
- * Element mediator
+ * Element mediator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -59,7 +59,7 @@ class ElementMediator implements MediatorInterface
      */
     public function getUniqueId(Teaser $teaser)
     {
-       return $this->elementService->findElementtype($this->getObject($teaser))->getUniqueId();
+        return $this->elementService->findElementtype($this->getObject($teaser))->getUniqueId();
     }
 
     /**

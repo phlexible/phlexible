@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Remove locks command
+ * Remove locks command.
  *
  * @author Phillip Look <pl@brainbits.net>
  */

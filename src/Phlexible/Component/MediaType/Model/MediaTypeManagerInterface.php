@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaType\Model;
 
 /**
- * Media type manager
+ * Media type manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -24,14 +24,14 @@ interface MediaTypeManagerInterface
     public function getCollection();
 
     /**
-     * Return new media type
+     * Return new media type.
      *
      * @return MediaType
      */
     public function create();
 
     /**
-     * Find media type
+     * Find media type.
      *
      * @param string $key
      *
@@ -40,7 +40,7 @@ interface MediaTypeManagerInterface
     public function find($key);
 
     /**
-     * Return media type by filename
+     * Return media type by filename.
      *
      * @param string $filename
      *
@@ -49,7 +49,7 @@ interface MediaTypeManagerInterface
     public function findByFilename($filename);
 
     /**
-     * Return media type by mimetype
+     * Return media type by mimetype.
      *
      * @param string $mimetype
      *
@@ -58,7 +58,7 @@ interface MediaTypeManagerInterface
     public function findByMimetype($mimetype);
 
     /**
-     * Return all media types
+     * Return all media types.
      *
      * @return MediaType[]
      */

@@ -16,7 +16,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
 /**
- * Meta set mapper
+ * Meta set mapper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

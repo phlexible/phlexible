@@ -14,7 +14,7 @@ namespace Phlexible\Component\Volume\Event;
 use Phlexible\Component\Volume\Model\FolderInterface;
 
 /**
- * Move folder event
+ * Move folder event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

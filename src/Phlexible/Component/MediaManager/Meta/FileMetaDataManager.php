@@ -21,7 +21,7 @@ use Phlexible\Component\MetaSet\Model\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
- * File meta data manager
+ * File meta data manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -61,9 +61,9 @@ class FileMetaDataManager extends MetaDataManager
     {
         /* @var $file ExtendedFileInterface */
         $qb->join('d.file', 'f');
-        $qb->andWhere($qb->expr()->eq("f.id", ':fileId'));
+        $qb->andWhere($qb->expr()->eq('f.id', ':fileId'));
         $qb->setParameter('fileId', $file->getId());
-        $qb->andWhere($qb->expr()->eq("f.version", ':fileVersion'));
+        $qb->andWhere($qb->expr()->eq('f.version', ':fileVersion'));
         $qb->setParameter('fileVersion', $file->getVersion());
     }
 

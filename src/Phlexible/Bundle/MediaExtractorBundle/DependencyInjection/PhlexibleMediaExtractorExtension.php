@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Media extractor extension
+ * Media extractor extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

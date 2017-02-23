@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 
 /**
- * File usage
+ * File usage.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -128,18 +128,18 @@ class FileUsage
     }
 
     /**
-     * Return array represenattion of this usage
+     * Return array represenattion of this usage.
      *
      * @return array
      */
     public function toArray()
     {
         return [
-            'fileId'      => $this->file->getId(),
+            'fileId' => $this->file->getId(),
             'fileVersion' => $this->file->getVersion(),
-            'usageType'   => $this->usageType,
-            'usageId'     => $this->usageId,
-            'status'      => $this->status,
+            'usageType' => $this->usageType,
+            'usageId' => $this->usageId,
+            'status' => $this->status,
         ];
     }
 }

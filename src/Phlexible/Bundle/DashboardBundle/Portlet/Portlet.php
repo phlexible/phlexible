@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\DashboardBundle\Portlet;
 
 /**
- * Portlet
+ * Portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -173,18 +173,18 @@ class Portlet
     }
 
     /**
-     * Return array representation of this portlet
+     * Return array representation of this portlet.
      *
      * @return array
      */
     public function toArray()
     {
         return array(
-            'id'       => $this->getId(),
-            'title'    => $this->getTitle(),
-            'class'    => $this->getClass(),
-            'iconCls'  => $this->getIconClass(),
-            'data'     => $this->getData(),
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'class' => $this->getClass(),
+            'iconCls' => $this->getIconClass(),
+            'data' => $this->getData(),
             'settings' => $this->getSettings(),
         );
     }

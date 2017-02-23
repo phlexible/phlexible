@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Media tool extension
+ * Media tool extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -41,22 +41,22 @@ class PhlexibleMediaToolExtension extends Extension
         $config = $this->processConfiguration($configuration, $config);
 
         $container->setParameter('phlexible_media_tool.swftools.configuration', array(
-            'pdf2swf.binaries'    => $config['swftools']['pdf2swf'],
-            'swfrender.binaries'  => $config['swftools']['swfrender'],
+            'pdf2swf.binaries' => $config['swftools']['pdf2swf'],
+            'swfrender.binaries' => $config['swftools']['swfrender'],
             'swfextract.binaries' => $config['swftools']['swfextract'],
-            'timeout'             => $config['swftools']['timeout']
+            'timeout' => $config['swftools']['timeout'],
         ));
 
         $container->setParameter('phlexible_media_tool.poppler.configuration', array(
-            'pdfinfo.binaries'   => $config['poppler']['pdfinfo'],
+            'pdfinfo.binaries' => $config['poppler']['pdfinfo'],
             'pdftotext.binaries' => $config['poppler']['pdftotext'],
             'pdftohtml.binaries' => $config['poppler']['pdftohtml'],
-            'timeout'            => $config['poppler']['timeout'],
+            'timeout' => $config['poppler']['timeout'],
         ));
 
         $container->setParameter('phlexible_media_tool.ffmpeg.configuration', array(
             'ffprobe.binaries' => $config['ffmpeg']['ffprobe'],
-            'ffmpeg.binaries'  => $config['ffmpeg']['ffmpeg'],
+            'ffmpeg.binaries' => $config['ffmpeg']['ffmpeg'],
         ));
 
         $container->setParameter('phlexible_media_tool.mime.file', $config['mime']['file']);

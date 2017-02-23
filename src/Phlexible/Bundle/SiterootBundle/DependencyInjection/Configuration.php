@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Container configuration
+ * Container configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -36,7 +36,9 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->children()
                             ->arrayNode('from')
-                                ->beforeNormalization()->ifString()->then(function ($v) { return array($v); })->end()
+                                ->beforeNormalization()->ifString()->then(function ($v) {
+                                    return array($v);
+                                })->end()
                                 ->prototype('scalar')->end()
                             ->end()
                             ->scalarNode('to')->end()

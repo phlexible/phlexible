@@ -15,14 +15,14 @@ use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface as BaseUserManagerInterface;
 
 /**
- * User manager interface
+ * User manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface UserManagerInterface extends BaseUserManagerInterface
 {
     /**
-     * Find user
+     * Find user.
      *
      * @param int $userId
      *
@@ -31,7 +31,7 @@ interface UserManagerInterface extends BaseUserManagerInterface
     public function find($userId);
 
     /**
-     * Find all users
+     * Find all users.
      *
      * @return UserInterface[]
      */
@@ -43,7 +43,7 @@ interface UserManagerInterface extends BaseUserManagerInterface
     public function countAll();
 
     /**
-     * Find user by username
+     * Find user by username.
      *
      * @param string $username
      *

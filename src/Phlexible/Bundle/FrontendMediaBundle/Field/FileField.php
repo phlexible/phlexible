@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\FrontendMediaBundle\Field;
 use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
 
 /**
- * Abstract media field
+ * Abstract media field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

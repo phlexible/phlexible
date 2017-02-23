@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MetaSet\Model;
 
 /**
- * Meta set collection
+ * Meta set collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -29,7 +29,7 @@ class MetaSetCollection
     private $nameMap = array();
 
     /**
-     * Add meta set
+     * Add meta set.
      *
      * @param MetaSetInterface $metaSet
      *

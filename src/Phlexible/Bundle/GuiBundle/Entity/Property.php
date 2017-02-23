@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\GuiBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Property
+ * Property.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

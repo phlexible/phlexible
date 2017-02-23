@@ -18,7 +18,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 
 /**
- * Delegating content tree
+ * Delegating content tree.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

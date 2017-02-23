@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Viability controller
+ * Viability controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elementtypes/viability")
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ViabilityController extends Controller
 {
     /**
-     * List Element Types
+     * List Element Types.
      *
      * @param Request $request
      *
@@ -46,39 +46,38 @@ class ViabilityController extends Controller
 
         $allowedForFull = $allowedForStructure = $allowedForArea = [
             Elementtype::TYPE_FULL,
-            Elementtype::TYPE_STRUCTURE
+            Elementtype::TYPE_STRUCTURE,
         ];
         $allowedForContainer = $allowedForPart = [
             Elementtype::TYPE_LAYOUTAREA,
-            Elementtype::TYPE_LAYOUTCONTAINER
+            Elementtype::TYPE_LAYOUTCONTAINER,
         ];
 
         $list = [];
         foreach ($elementtypes as $elementtype) {
             $type = $elementtype->getType();
 
-            if ($for == Elementtype::TYPE_FULL && !in_array($type, $allowedForFull)) {
+            if ($for === Elementtype::TYPE_FULL && !in_array($type, $allowedForFull)) {
                 continue;
-            } elseif ($for == Elementtype::TYPE_STRUCTURE && !in_array($type, $allowedForStructure)) {
+            } elseif ($for === Elementtype::TYPE_STRUCTURE && !in_array($type, $allowedForStructure)) {
                 continue;
-            } elseif ($for == Elementtype::TYPE_REFERENCE) {
+            } elseif ($for === Elementtype::TYPE_REFERENCE) {
                 continue;
-            } elseif ($for == Elementtype::TYPE_LAYOUTAREA && !in_array($type, $allowedForArea)) {
+            } elseif ($for === Elementtype::TYPE_LAYOUTAREA && !in_array($type, $allowedForArea)) {
                 continue;
-            } elseif ($for == Elementtype::TYPE_LAYOUTCONTAINER && !in_array($type, $allowedForContainer)) {
+            } elseif ($for === Elementtype::TYPE_LAYOUTCONTAINER && !in_array($type, $allowedForContainer)) {
                 continue;
-            } elseif ($for == Elementtype::TYPE_PART && !in_array($type, $allowedForPart)) {
+            } elseif ($for === Elementtype::TYPE_PART && !in_array($type, $allowedForPart)) {
                 continue;
             }
 
             $list[] = [
-                'id'      => $elementtype->getId(),
-                'type'    => $elementtype->getType(),
-                'title'   => $elementtype->getTitle(),
-                'icon'    => $elementtype->getIcon(),
-                'version' => $elementtype->getRevision()
+                'id' => $elementtype->getId(),
+                'type' => $elementtype->getType(),
+                'title' => $elementtype->getTitle(),
+                'icon' => $elementtype->getIcon(),
+                'version' => $elementtype->getRevision(),
             ];
-
         }
 
         return new JsonResponse(['elementtypes' => $list, 'total' => count($list)]);
@@ -102,9 +101,9 @@ class ViabilityController extends Controller
         foreach ($viabilityManager->findAllowedParents($elementtype) as $viability) {
             $viabilityElementtype = $elementtypeService->findElementtype($viability->getUnderElementtypeId());
             $viabilities[] = [
-                'id'    => $viabilityElementtype->getId(),
+                'id' => $viabilityElementtype->getId(),
                 'title' => $viabilityElementtype->getTitle(),
-                'icon'  => $viabilityElementtype->getIcon()
+                'icon' => $viabilityElementtype->getIcon(),
             ];
         }
 

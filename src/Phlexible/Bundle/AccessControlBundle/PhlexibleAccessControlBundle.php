@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Access control bundle
+ * Access control bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

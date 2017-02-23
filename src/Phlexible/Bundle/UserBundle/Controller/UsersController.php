@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Users controller
+ * Users controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/users/users")
@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
 class UsersController extends Controller
 {
     /**
-     * List users
+     * List users.
      *
      * @param Request $request
      *
@@ -83,7 +83,6 @@ class UsersController extends Controller
                     }
                     continue;
                 } elseif ($key === 'status_disabled') {
-
                     continue;
                 } elseif (substr($key, 0, 5) === 'role_') {
                     $criteria['roles'][] = strtoupper(substr($key, 5));
@@ -114,20 +113,20 @@ class UsersController extends Controller
             }
 
             $dummy = [
-                'uid'                 => $user->getId(),
-                'username'            => $user->getUsername(),
-                'email'               => $user->getEmail(),
-                'firstname'           => $user->getFirstname(),
-                'lastname'            => $user->getLastname(),
-                'comment'             => $user->getComment(),
-                'enabled'             => $user->isEnabled(),
-                'roles'               => $user->getRoles(),
-                'groups'              => $groups,
-                'createDate'          => $user->getCreatedAt()->format('Y-m-d H:i:s'),
-                'createUser'          => '',
-                'modifyDate'          => $user->getModifiedAt()->format('Y-m-d H:i:s'),
-                'modifyUser'          => '',
-                'properties'          => $user->getProperties(),
+                'uid' => $user->getId(),
+                'username' => $user->getUsername(),
+                'email' => $user->getEmail(),
+                'firstname' => $user->getFirstname(),
+                'lastname' => $user->getLastname(),
+                'comment' => $user->getComment(),
+                'enabled' => $user->isEnabled(),
+                'roles' => $user->getRoles(),
+                'groups' => $groups,
+                'createDate' => $user->getCreatedAt()->format('Y-m-d H:i:s'),
+                'createUser' => '',
+                'modifyDate' => $user->getModifiedAt()->format('Y-m-d H:i:s'),
+                'modifyUser' => '',
+                'properties' => $user->getProperties(),
             ];
 
             $users[] = $dummy;
@@ -136,17 +135,18 @@ class UsersController extends Controller
         return new JsonResponse(
             [
                 'users' => $users,
-                'count' => $userManager->countSearch($criteria)
+                'count' => $userManager->countSearch($criteria),
             ]
         );
     }
 
     /**
-     * Create user
+     * Create user.
      *
      * @param Request $request
      *
      * @throws \Exception
+     *
      * @return ResultResponse
      * @Route("/create", name="users_users_create")
      * @Method(methods={"GET","POST"})
@@ -171,13 +171,13 @@ class UsersController extends Controller
         if ($request->get('username') && $userManager->checkUsername($request->get('username'))) {
             return new ResultResponse(
                 false,
-                'Username "' . $request->get('username') . '" already exists.'
+                'Username "'.$request->get('username').'" already exists.'
             );
         }
         if ($request->get('email') && $userManager->checkEmail($request->get('email'))) {
             return new ResultResponse(
                 false,
-                'Email "' . $request->get('email') . '" already exists.'
+                'Email "'.$request->get('email').'" already exists.'
             );
         }
 
@@ -203,18 +203,19 @@ class UsersController extends Controller
         $userManager->updateUser($user);
 
         $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('User "' . $user->getUsername() . '" created.'));
+            ->post(UsersMessage::create('User "'.$user->getUsername().'" created.'));
 
         return new ResultResponse(true, "User {$user->getUsername()} created.");
     }
 
     /**
-     * Update user
+     * Update user.
      *
      * @param Request $request
      * @param string  $userId
      *
      * @throws \Exception
+     *
      * @return ResultResponse
      * @Route("/{userId}", name="users_users_update")
      * @Method("PUT")
@@ -241,11 +242,11 @@ class UsersController extends Controller
 
         if ($request->get('username') && $request->get('username') !== $user->getUsername()
                 && $userManager->checkUsername($request->get('username'))) {
-            throw new \Exception('Username "' . $request->get('username') . '" already exists.');
+            throw new \Exception('Username "'.$request->get('username').'" already exists.');
         }
         if ($request->get('email') && $request->get('email') !== $user->getEmail()
                 && $userManager->checkEmail($request->get('email'))) {
-            throw new \Exception('Email "' . $request->get('email') . '" already exists.');
+            throw new \Exception('Email "'.$request->get('email').'" already exists.');
         }
 
         $this->requestToUser($request, $user);
@@ -265,7 +266,7 @@ class UsersController extends Controller
         $userManager->updateUser($user);
 
         $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('User "' . $user->getUsername() . '" updated.'));
+            ->post(UsersMessage::create('User "'.$user->getUsername().'" updated.'));
 
         return new ResultResponse(true, "User {$user->getUsername()} updated.");
     }
@@ -338,7 +339,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Delete users
+     * Delete users.
      *
      * @param Request $request
      * @param string  $userId
@@ -362,13 +363,13 @@ class UsersController extends Controller
         $userManager->deleteUserWithSuccessor($user, $successorUser);
 
         $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('User "' . $user->getUsername() . '" deleted.'));
+            ->post(UsersMessage::create('User "'.$user->getUsername().'" deleted.'));
 
         return new ResultResponse(true);
     }
 
     /**
-     * Return filter values
+     * Return filter values.
      *
      * @return JsonResponse
      * @Route("/filtervalues", name="users_users_filtervalues")
@@ -386,13 +387,13 @@ class UsersController extends Controller
 
         $groups = [];
         foreach ($allGroups as $group) {
-            if ($group->getId() == $everyoneGroupId) {
+            if ($group->getId() === $everyoneGroupId) {
                 continue;
             }
 
             $groups[] = [
-                'id'    => $group->getId(),
-                'title' => $group->getName()
+                'id' => $group->getId(),
+                'title' => $group->getName(),
             ];
         }
 
@@ -407,14 +408,14 @@ class UsersController extends Controller
 
         $data = [
             'groups' => $groups,
-            'roles'  => $roles,
+            'roles' => $roles,
         ];
 
         return new JsonResponse($data);
     }
 
     /**
-     * Create password
+     * Create password.
      *
      * @return JsonResponse
      * @Route("/password", name="users_password")
@@ -433,7 +434,7 @@ class UsersController extends Controller
         return new JsonResponse(
             [
                 'password' => $password,
-                'success'  => true
+                'success' => true,
             ]
         );
     }

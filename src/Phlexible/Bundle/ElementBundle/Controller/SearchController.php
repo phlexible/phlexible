@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Search controller
+ * Search controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elements/search")
@@ -87,9 +87,9 @@ class SearchController extends Controller
                 /* @var $file ExtendedFileInterface */
 
                 $results[] = [
-                    'id'        => $file->getId(),
-                    'version'   => $file->getVersion(),
-                    'name'      => $file->getName(),
+                    'id' => $file->getId(),
+                    'version' => $file->getVersion(),
+                    'name' => $file->getName(),
                     'folder_id' => $file->getFolderId(),
                 ];
             }

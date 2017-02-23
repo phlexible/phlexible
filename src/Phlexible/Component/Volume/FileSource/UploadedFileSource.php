@@ -15,7 +15,7 @@ use Phlexible\Component\Volume\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Upload file source
+ * Upload file source.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -50,7 +50,7 @@ class UploadedFileSource implements PathSourceInterface
     public function __construct(UploadedFile $file, $mimeType = null)
     {
         if ($file->getError()) {
-            throw new InvalidArgumentException('Error in upload: ' . $file->getError());
+            throw new InvalidArgumentException('Error in upload: '.$file->getError());
         }
         if (!$file->getClientOriginalName()) {
             throw new InvalidArgumentException('Missing name.');
@@ -59,7 +59,7 @@ class UploadedFileSource implements PathSourceInterface
             throw new InvalidArgumentException('Missing type.');
         }
         if (!is_uploaded_file($file->getPathname())) {
-            throw new InvalidArgumentException('Not an uploaded file: ' . $file->getPathname());
+            throw new InvalidArgumentException('Not an uploaded file: '.$file->getPathname());
         }
 
         $this->name = $file->getClientOriginalName();

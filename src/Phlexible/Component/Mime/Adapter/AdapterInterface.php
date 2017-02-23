@@ -12,23 +12,23 @@
 namespace Phlexible\Component\Mime\Adapter;
 
 /**
- * Internet media type detector adapter interface
+ * Internet media type detector adapter interface.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
 interface AdapterInterface
 {
     /**
-     * Check if this adapter is available
+     * Check if this adapter is available.
      *
      * @param string $filename
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable($filename);
 
     /**
-     * Return internet media type string from file
+     * Return internet media type string from file.
      *
      * @param string $filename
      *

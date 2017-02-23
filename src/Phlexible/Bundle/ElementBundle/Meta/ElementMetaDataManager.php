@@ -21,7 +21,7 @@ use Phlexible\Component\MetaSet\Model\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
- * Element meta data manager
+ * Element meta data manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -61,7 +61,7 @@ class ElementMetaDataManager extends MetaDataManager
     {
         /* @var $elementVersion ElementVersion */
         $qb->join('d.elementVersion', 'e');
-        $qb->andWhere($qb->expr()->eq("e.id", ':elementVersionId'));
+        $qb->andWhere($qb->expr()->eq('e.id', ':elementVersionId'));
         $qb->setParameter('elementVersionId', $elementVersion->getId());
     }
 

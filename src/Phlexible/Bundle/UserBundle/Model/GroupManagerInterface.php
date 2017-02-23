@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\UserBundle\Model;
 use Phlexible\Bundle\UserBundle\Entity\Group;
 
 /**
- * Group manager interface
+ * Group manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -31,7 +31,7 @@ interface GroupManagerInterface
     public function create();
 
     /**
-     * Find group
+     * Find group.
      *
      * @param int $groupId
      *
@@ -40,14 +40,14 @@ interface GroupManagerInterface
     public function find($groupId);
 
     /**
-     * Find all groups
+     * Find all groups.
      *
      * @return Group[]
      */
     public function findAll();
 
     /**
-     * Find group by name
+     * Find group by name.
      *
      * @param string $name
      *

@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Init command
+ * Init command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

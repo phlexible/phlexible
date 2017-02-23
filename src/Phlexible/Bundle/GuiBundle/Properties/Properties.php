@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\GuiBundle\Entity\Property;
 
 /**
- * Properties
+ * Properties.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -40,7 +40,7 @@ class Properties
     }
 
     /**
-     * Get property
+     * Get property.
      *
      * @param string $component
      * @param string $name
@@ -62,7 +62,7 @@ class Properties
     }
 
     /**
-     * Set property
+     * Set property.
      *
      * @param string $component
      * @param string $name
@@ -95,7 +95,7 @@ class Properties
     }
 
     /**
-     * Remove property
+     * Remove property.
      *
      * @param string $component
      * @param string $name
@@ -114,7 +114,6 @@ class Properties
         }
 
         return $this;
-
     }
 
     /**

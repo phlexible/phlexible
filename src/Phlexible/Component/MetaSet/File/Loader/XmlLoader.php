@@ -15,7 +15,7 @@ use Phlexible\Component\MetaSet\Model\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaSetField;
 
 /**
- * XML loader
+ * XML loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -19,7 +19,7 @@ use Phlexible\Bundle\UserBundle\UsersMessage;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Successor service
+ * Successor service.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,7 +46,7 @@ class SuccessorService
     }
 
     /**
-     * Set successor
+     * Set successor.
      *
      * @param User $fromUser
      * @param User $toUser

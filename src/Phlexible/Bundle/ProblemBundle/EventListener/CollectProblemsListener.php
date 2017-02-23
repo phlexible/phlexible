@@ -16,7 +16,7 @@ use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Phlexible\Bundle\ProblemBundle\Event\CollectProblemsEvent;
 
 /**
- * Collect problems listener
+ * Collect problems listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -57,7 +57,7 @@ class CollectProblemsListener
             $problem = new Problem();
             $problem
                 ->setSeverity(Problem::SEVERITY_WARNING)
-                ->setMessage('Cached problems last check run was on "' . $lastRun . '", more than 24h ago.')
+                ->setMessage('Cached problems last check run was on "'.$lastRun.'", more than 24h ago.')
                 ->setHint('Install a cronjob for running the cached problem check command')
                 ->setIconClass('p-problem-component-icon')
                 ->setCreatedAt(new \DateTime())

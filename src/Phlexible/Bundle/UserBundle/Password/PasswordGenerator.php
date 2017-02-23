@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\UserBundle\Password;
 
 /**
- * Password generator
+ * Password generator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -22,15 +22,15 @@ class PasswordGenerator
     const TYPE_UNPRONOUNCABLE = 'unpronouncable';
 
     /**
-     * Create a single password
+     * Create a single password.
      *
-     * @param integer $length Length of the password.
-     * @param string  $type   Type of password (pronounceable, unpronounceable)
-     * @param string  $chars  Character which could be use in the
-     *                        unpronounceable password ex : 'A,B,C,D,E,F,G'
-     *                        or numeric, alphabetical or alphanumeric.
+     * @param int    $length length of the password
+     * @param string $type   Type of password (pronounceable, unpronounceable)
+     * @param string $chars  character which could be use in the
+     *                       unpronounceable password ex : 'A,B,C,D,E,F,G'
+     *                       or numeric, alphabetical or alphanumeric
      *
-     * @return string  Returns the generated password
+     * @return string Returns the generated password
      */
     public function create($length = 10, $type = self::TYPE_PRONOUNCABLE, $chars = null)
     {
@@ -47,21 +47,21 @@ class PasswordGenerator
     }
 
     /**
-     * Create pronounceable password
+     * Create pronounceable password.
      *
      * This method creates a string that consists of
      * vowels and consonats.
      *
      * @param int $length Length of the password
      *
-     * @return string  Returns the password
+     * @return string Returns the password
      */
     private function createPronounceable($length)
     {
         $retVal = '';
 
         /**
-         * List of vowels and vowel sounds
+         * List of vowels and vowel sounds.
          */
         $v = array(
             'a',
@@ -75,11 +75,11 @@ class PasswordGenerator
             'ea',
             'ou',
             'ia',
-            'ai'
+            'ai',
         );
 
         /**
-         * List of consonants and consonant sounds
+         * List of consonants and consonant sounds.
          */
         $c = array(
             'b',
@@ -110,28 +110,28 @@ class PasswordGenerator
             'ph',
             'st',
             'sl',
-            'cl'
+            'cl',
         );
 
         $vCount = 12;
         $cCount = 29;
 
-        for ($i = 0; $i < $length; $i++) {
-            $retVal .= $c[mt_rand(0, $cCount - 1)] . $v[mt_rand(0, $vCount - 1)];
+        for ($i = 0; $i < $length; ++$i) {
+            $retVal .= $c[mt_rand(0, $cCount - 1)].$v[mt_rand(0, $vCount - 1)];
         }
 
         return mb_substr($retVal, 0, $length, 'UTF-8');
     }
 
     /**
-     * Create unpronounceable password
+     * Create unpronounceable password.
      *
      * This method creates a random unpronounceable password
      *
      * @param int    $length Length of the password
-     * @param string $chars  Character which could be use in the
+     * @param string $chars  character which could be use in the
      *                       unpronounceable password ex : 'ABCDEFG'
-     *                       or numeric, alphabetical or alphanumeric.
+     *                       or numeric, alphabetical or alphanumeric
      *
      * @return string Returns the password
      */
@@ -139,7 +139,7 @@ class PasswordGenerator
     {
         $password = '';
 
-        /**
+        /*
          * List of character which could be use in the password
          */
         switch ($chars) {
@@ -165,7 +165,7 @@ class PasswordGenerator
 
             default:
                 /**
-                 * Some characters shouldn't be used
+                 * Some characters shouldn't be used.
                  */
                 $chars = trim($chars);
                 $chars = str_replace(array('+', '|', '$', '^', '/', '\\', ','), '', $chars);
@@ -174,15 +174,15 @@ class PasswordGenerator
                 break;
         }
 
-        /**
+        /*
          * Generate password
          */
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; ++$i) {
             $num = mt_rand(0, $numberOfPossibleCharacters - 1);
-            $password .= $chars{$num};
+            $password .= $chars[$num];
         }
 
-        /**
+        /*
          * Return password
          */
 

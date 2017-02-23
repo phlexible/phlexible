@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Twig url extension
+ * Twig url extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -86,7 +86,7 @@ class UrlExtension extends \Twig_Extension
                 } elseif ($link['type'] === 'external') {
                     return $link['url'];
                 } elseif ($link['type'] === 'mailto') {
-                    return 'mailto:' . $link['recipient'];
+                    return 'mailto:'.$link['recipient'];
                 }
             }
         } elseif (is_array($name) && isset($name['type']) && in_array($name['type'], array('internal', 'intrasiteroot', 'external', 'mailto'))) {
@@ -105,7 +105,7 @@ class UrlExtension extends \Twig_Extension
             } elseif ($link['type'] === 'external') {
                 return $link['url'];
             } elseif ($link['type'] === 'mailto') {
-                return 'mailto:' . $link['recipient'];
+                return 'mailto:'.$link['recipient'];
             }
         } elseif (strlen($name) && (is_int($name) || (int) $name)) {
             $tree = $this->contentTreeManager->findByTreeId((int) $name);
@@ -147,7 +147,7 @@ class UrlExtension extends \Twig_Extension
                 } elseif ($link['type'] === 'external') {
                     return $link['url'];
                 } elseif ($link['type'] === 'mailto') {
-                    return 'mailto:' . $link['recipient'];
+                    return 'mailto:'.$link['recipient'];
                 }
             }
         } elseif (is_array($name) && isset($name['type']) && in_array($name['type'], array('internal', 'intrasiteroot', 'external', 'mailto'))) {
@@ -162,7 +162,7 @@ class UrlExtension extends \Twig_Extension
             } elseif ($link['type'] === 'external') {
                 return $link['url'];
             } elseif ($link['type'] === 'mailto') {
-                return 'mailto:' . $link['recipient'];
+                return 'mailto:'.$link['recipient'];
             }
         } elseif (strlen($name) && (is_int($name) || (int) $name)) {
             $tree = $this->contentTreeManager->findByTreeId((int) $name);

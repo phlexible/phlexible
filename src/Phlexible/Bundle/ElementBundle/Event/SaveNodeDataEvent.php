@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Save node data event
+ * Save node data event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

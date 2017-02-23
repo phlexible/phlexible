@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MediaTemplate\Exception;
 
 /**
- * Invalid class exception
+ * Invalid class exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class InvalidClassException extends \InvalidArgumentException
 {
-
 }

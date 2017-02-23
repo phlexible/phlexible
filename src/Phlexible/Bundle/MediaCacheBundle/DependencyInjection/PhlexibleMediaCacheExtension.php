@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Media cache extension
+ * Media cache extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

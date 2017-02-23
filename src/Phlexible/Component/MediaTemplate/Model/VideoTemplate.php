@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaTemplate\Model;
 
 /**
- * Video template
+ * Video template.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -34,20 +34,20 @@ class VideoTemplate extends AbstractTemplate
     public function getDefaultParameters()
     {
         return [
-            'match_format'     => 0,
-            'for_web'          => 0,
-            'format'           => 'flv',
-            'deinterlace'      => 'flv',
-            'video_width'      => 0,
-            'video_height'     => 0,
-            'video_format'     => 'flv',
-            'video_bitrate'    => 0,
-            'video_framerate'  => 0,
-            'audio_format'     => 'mp3',
-            'audio_bitrate'    => 0,
+            'match_format' => 0,
+            'for_web' => 0,
+            'format' => 'flv',
+            'deinterlace' => 'flv',
+            'video_width' => 0,
+            'video_height' => 0,
+            'video_format' => 'flv',
+            'video_bitrate' => 0,
+            'video_framerate' => 0,
+            'audio_format' => 'mp3',
+            'audio_bitrate' => 0,
             'audio_samplerate' => 0,
             'audio_samplebits' => 0,
-            'audio_channels'   => 0,
+            'audio_channels' => 0,
         ];
     }
 
@@ -75,7 +75,7 @@ class VideoTemplate extends AbstractTemplate
     }
 
     /**
-     * Set width
+     * Set width.
      *
      * @param int $width
      *
@@ -87,7 +87,7 @@ class VideoTemplate extends AbstractTemplate
     }
 
     /**
-     * Return width
+     * Return width.
      *
      * @return int
      */
@@ -97,7 +97,7 @@ class VideoTemplate extends AbstractTemplate
     }
 
     /**
-     * Set height
+     * Set height.
      *
      * @param int $height
      *
@@ -109,7 +109,7 @@ class VideoTemplate extends AbstractTemplate
     }
 
     /**
-     * Return height
+     * Return height.
      *
      * @return int
      */

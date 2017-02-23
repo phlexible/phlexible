@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\FrontendMediaBundle\Usage;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 
 /**
- * Usage updater
+ * Usage updater.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

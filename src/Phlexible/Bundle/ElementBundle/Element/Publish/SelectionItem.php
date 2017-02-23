@@ -15,7 +15,7 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Selection item
+ * Selection item.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -85,7 +85,7 @@ class SelectionItem
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isInstance()
     {
@@ -131,5 +131,4 @@ class SelectionItem
     {
         return $this->version;
     }
-
 }

@@ -17,7 +17,7 @@ use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
 use Psr\Log\LoggerInterface;
 
 /**
- * Video template applier
+ * Video template applier.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -129,32 +129,32 @@ class VideoTemplateApplier
 
         if ($template->hasParameter('format', true)) {
             switch ($template->getParameter('format')) {
-                case 'flv';
+                case 'flv':
                     $format = new \Phlexible\Component\MediaTemplate\Ffmpeg\Format\Video\Flv();
                     break;
 
-                case 'ogg';
+                case 'ogg':
                     $format = new \FFMpeg\Format\Video\Ogg();
                     break;
 
-                case 'webm';
+                case 'webm':
                     $format = new \FFMpeg\Format\Video\WebM();
                     break;
 
-                case 'wmv';
+                case 'wmv':
                     $format = new \FFMpeg\Format\Video\WMV();
                     break;
 
-                case 'wmv3';
+                case 'wmv3':
                     $format = new \FFMpeg\Format\Video\WMV3();
                     break;
 
-                case '3gp';
+                case '3gp':
                     $format = new \FFMpeg\Format\Video\ThreeGP();
                     break;
 
-                case 'mp4';
-                case 'x264';
+                case 'mp4':
+                case 'x264':
                 default:
                     $format = new \FFMpeg\Format\Video\X264();
                     break;

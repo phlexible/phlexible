@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Component\Volume\VolumeInterface;
 
 /**
- * Folder
+ * Folder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -126,7 +126,7 @@ class Folder implements FolderInterface
     {
         return [
             'type' => 'folder',
-            'id'   => $this->id,
+            'id' => $this->id,
         ];
     }
 

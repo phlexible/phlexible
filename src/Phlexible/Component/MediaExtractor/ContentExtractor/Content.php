@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaExtractor\ContentExtractor;
 
 /**
- * Content
+ * Content.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -50,5 +50,4 @@ class Content
     {
         return $this->content;
     }
-
 }

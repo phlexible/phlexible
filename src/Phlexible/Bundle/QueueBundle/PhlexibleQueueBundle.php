@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\QueueBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Queue bundle
+ * Queue bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

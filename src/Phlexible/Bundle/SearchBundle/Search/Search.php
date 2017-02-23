@@ -16,7 +16,7 @@ use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Search
+ * Search.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -45,7 +45,7 @@ class Search
     }
 
     /**
-     * Query
+     * Query.
      *
      * @param string $query
      *

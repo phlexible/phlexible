@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementBundle\Search;
 
 /**
- * TID search
+ * TID search.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

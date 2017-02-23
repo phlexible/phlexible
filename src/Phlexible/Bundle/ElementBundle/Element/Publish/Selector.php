@@ -20,7 +20,7 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Selector
+ * Selector.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -265,7 +265,7 @@ class Selector
                 $elementVersion->getBackendTitle($language),
                 $isInstance,
                 $depth,
-                $path . '+' . $language . '+' . $treeNode->getId() . '+' . $language
+                $path.'+'.$language.'+'.$treeNode->getId().'+'.$language
             )
         );
     }
@@ -368,7 +368,7 @@ class Selector
                 $elementVersion->getBackendTitle($language),
                 $isInstance,
                 $depth,
-                $path . '+' . $language . '+' . $teaser->getId() . '+' . $language
+                $path.'+'.$language.'+'.$teaser->getId().'+'.$language
             )
         );
     }

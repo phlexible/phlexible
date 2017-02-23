@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Info controller
+ * Info controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/dashboard/info")
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 class InfoController extends Controller
 {
     /**
-     * Return info
+     * Return info.
      *
      * @param Request $request
      *
@@ -41,39 +41,39 @@ class InfoController extends Controller
         if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
             $lines[] = [
                 'Project:',
-                $this->container->getParameter('phlexible_gui.project.title') . ' '
-                    . $this->container->getParameter('phlexible_gui.project.version')
+                $this->container->getParameter('phlexible_gui.project.title').' '
+                    .$this->container->getParameter('phlexible_gui.project.version'),
             ];
             $lines[] = [
                 'Env:',
-                $this->container->getParameter('kernel.environment') . ($this->container->getParameter(
+                $this->container->getParameter('kernel.environment').($this->container->getParameter(
                     'kernel.debug'
-                ) ? ' [DEBUG]' : '')
+                ) ? ' [DEBUG]' : ''),
             ];
-            $lines[] = ['Host:', $request->server->get('SERVER_NAME') . ' [' . PHP_SAPI . ']'];
+            $lines[] = ['Host:', $request->server->get('SERVER_NAME').' ['.PHP_SAPI.']'];
 
             $connection = $this->getDoctrine()->getConnection();
             /* @var $connection \Doctrine\DBAL\Connection */
 
             $lines[] = [
                 'Default Database:',
-                $connection->getHost() . ' / ' . $connection->getDatabase() . ' [' . $connection->getDriver()->getName(
-                ) . ']'
+                $connection->getHost().' / '.$connection->getDatabase().' ['.$connection->getDriver()->getName(
+                ).']',
             ];
 
-            $lines[] = ['Session:', $request->getSession()->getId() . ' [' . $request->server->get('REMOTE_ADDR') . ']'];
+            $lines[] = ['Session:', $request->getSession()->getId().' ['.$request->server->get('REMOTE_ADDR').']'];
 
             $lines[] = [
                 'User:',
-                $this->getUser()->getUsername() . ' [' . implode(', ', $this->getUser()->getRoles()) . ']'
+                $this->getUser()->getUsername().' ['.implode(', ', $this->getUser()->getRoles()).']',
             ];
 
             $lines[] = ['UserAgent:', $request->server->get('HTTP_USER_AGENT')];
         } else {
             $lines[] = [
                 'Project:',
-                $this->container->getParameter('phlexible_gui.project.title') . ' '
-                . $this->container->getParameter('phlexible_gui.project.version')
+                $this->container->getParameter('phlexible_gui.project.title').' '
+                .$this->container->getParameter('phlexible_gui.project.version'),
             ];
         }
 
@@ -96,7 +96,7 @@ class InfoController extends Controller
             }
             $table .= PHP_EOL;
         }
-        $out = '<pre>' . $table . '</pre>';
+        $out = '<pre>'.$table.'</pre>';
 
         return new Response($out);
     }

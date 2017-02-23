@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaTemplate\Model;
 
 /**
- * Audio template
+ * Audio template.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -34,10 +34,10 @@ class AudioTemplate extends AbstractTemplate
     public function getDefaultParameters()
     {
         return array(
-            'audio_bitrate'    => '',
+            'audio_bitrate' => '',
             'audio_samplerate' => '',
             'audio_samplebits' => '',
-            'audio_channels'   => '',
+            'audio_channels' => '',
         );
     }
 

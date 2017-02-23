@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\QueueBundle;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
- * Queue message
+ * Queue message.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

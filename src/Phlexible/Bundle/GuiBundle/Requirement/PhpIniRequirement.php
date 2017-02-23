@@ -58,7 +58,7 @@ class PhpIniRequirement extends Requirement
                 );
             }
 
-            $fulfilled = $evaluation == $cfgValue;
+            $fulfilled = $evaluation === $cfgValue;
         }
 
         parent::__construct($fulfilled || ($approveCfgAbsence && false === $cfgValue), $testMessage, $helpHtml, $helpText, $optional);

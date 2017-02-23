@@ -20,7 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Distill command
+ * Distill command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,11 +46,10 @@ class DistillCommand extends ContainerAwareCommand
         $classMap = new ClassMap();
         foreach ($elementtypeService->findAllElementtypes() as $elementtype) {
             $this->mapElementtype($classMap, $elementtype);
-
         }
 
         $classes = array_reverse($classMap->all());
-        $output->writeln(count($classes) . ' classes');
+        $output->writeln(count($classes).' classes');
 
         foreach ($classes as $class => $values) {
             $output->writeln("<fg=yellow>$class</fg=yellow>");
@@ -101,7 +100,7 @@ class DistillCommand extends ContainerAwareCommand
                 $data[$childNode->getName()] = $childNode->getType();
             } else {
                 if ($childNode->isOptional() || $childNode->isRepeatable()) {
-                    $data[$childNode->getName()] = $this->toCamelCase($childNode->getName()) . '[]';
+                    $data[$childNode->getName()] = $this->toCamelCase($childNode->getName()).'[]';
                     $map = $this->iterateStructure($classMap, $structure, $childNode);
                     $classMap->add($this->toCamelCase($childNode->getName()), $map);
                 } else {
@@ -128,6 +127,6 @@ class DistillCommand extends ContainerAwareCommand
             $return .= ucfirst(trim($word));
         }
 
-        return ($return);
+        return $return;
     }
 }

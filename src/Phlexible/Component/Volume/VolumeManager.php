@@ -14,7 +14,7 @@ namespace Phlexible\Component\Volume;
 use Phlexible\Component\Volume\Exception\NotFoundException;
 
 /**
- * Volume manager
+ * Volume manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -63,11 +63,12 @@ class VolumeManager
     }
 
     /**
-     * Return volume by file ID
+     * Return volume by file ID.
      *
      * @param string $fileId
      *
      * @return Volume
+     *
      * @throws NotFoundException
      */
     public function getByFileId($fileId)
@@ -80,7 +81,7 @@ class VolumeManager
     }
 
     /**
-     * Return volume by file ID
+     * Return volume by file ID.
      *
      * @param string $fileId
      *
@@ -102,11 +103,12 @@ class VolumeManager
     }
 
     /**
-     * Return volume by folder ID
+     * Return volume by folder ID.
      *
      * @param string $folderId
      *
      * @return Volume
+     *
      * @throws NotFoundException
      */
     public function getByFolderId($folderId)
@@ -119,7 +121,7 @@ class VolumeManager
     }
 
     /**
-     * Return volume by folder ID
+     * Return volume by folder ID.
      *
      * @param string $folderId
      *
@@ -137,7 +139,7 @@ class VolumeManager
     }
 
     /**
-     * Return all volumes
+     * Return all volumes.
      *
      * @return Volume[]
      */

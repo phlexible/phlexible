@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MetaSetBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Meta data value
+ * Meta data value.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaTemplate\Model;
 
 /**
- * Template collection
+ * Template collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -24,7 +24,7 @@ class TemplateCollection
     private $templates = array();
 
     /**
-     * Add template
+     * Add template.
      *
      * @param TemplateInterface $template
      *

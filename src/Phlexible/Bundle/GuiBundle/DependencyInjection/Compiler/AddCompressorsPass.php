@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Add compressors pass
+ * Add compressors pass.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

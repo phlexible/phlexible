@@ -17,7 +17,7 @@ use Phlexible\Component\Volume\Model\FileInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Delete file checker
+ * Delete file checker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

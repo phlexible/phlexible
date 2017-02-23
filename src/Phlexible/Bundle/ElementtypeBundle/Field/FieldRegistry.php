@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
 use Phlexible\Bundle\ElementtypeBundle\Exception\FieldNotAvailableException;
 
 /**
- * Field registry
+ * Field registry.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -69,7 +69,7 @@ class FieldRegistry
     }
 
     /**
-     * Returns all titles
+     * Returns all titles.
      *
      * @param bool $onlyUsable
      *
@@ -91,11 +91,12 @@ class FieldRegistry
     }
 
     /**
-     * Get a field
+     * Get a field.
      *
      * @param string $key
      *
      * @throws FieldNotAvailableException
+     *
      * @return Field
      */
     public function getField($key)

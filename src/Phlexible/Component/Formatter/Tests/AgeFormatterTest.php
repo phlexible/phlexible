@@ -14,7 +14,7 @@ namespace Phlexible\Component\Formatter\Tests;
 use Phlexible\Component\Formatter\AgeFormatter;
 
 /**
- * Age formatter tests
+ * Age formatter tests.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

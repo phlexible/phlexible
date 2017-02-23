@@ -14,7 +14,7 @@ namespace Phlexible\Component\Volume\Driver;
 use Phlexible\Component\Volume\VolumeInterface;
 
 /**
- * Abstract driver
+ * Abstract driver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

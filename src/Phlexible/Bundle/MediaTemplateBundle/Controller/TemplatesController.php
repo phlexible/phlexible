@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Templates controller
+ * Templates controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediatemplates/templates")
@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 class TemplatesController extends Controller
 {
     /**
-     * List mediatemplates
+     * List mediatemplates.
      *
      * @return JsonResponse
      * @Route("/list", name="mediatemplates_templates_list")
@@ -50,8 +50,8 @@ class TemplatesController extends Controller
             }
 
             $templates[] = [
-                'key'  => $template->getKey(),
-                'type' => $template->getType()
+                'key' => $template->getKey(),
+                'type' => $template->getType(),
             ];
         }
 
@@ -59,11 +59,12 @@ class TemplatesController extends Controller
     }
 
     /**
-     * Create mediatemplate
+     * Create mediatemplate.
      *
      * @param Request $request
      *
      * @throws \InvalidArgumentException
+     *
      * @return ResultResponse
      * @Route("/create", name="mediatemplates_templates_create")
      */
@@ -72,7 +73,7 @@ class TemplatesController extends Controller
         $templateRepository = $this->get('phlexible_media_template.template_manager');
 
         $type = $request->get('type');
-        $key  = $request->get('key');
+        $key = $request->get('key');
 
         switch ($type) {
             case 'image':
@@ -95,6 +96,6 @@ class TemplatesController extends Controller
 
         $templateRepository->updateTemplate($template);
 
-        return new ResultResponse(true, 'New "' . $type . '" template "' . $key . '" created.');
+        return new ResultResponse(true, 'New "'.$type.'" template "'.$key.'" created.');
     }
 }

@@ -15,14 +15,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Resources controller
+ * Resources controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class ResourcesController extends Controller
 {
     /**
-     * Return user javascripts
+     * Return user javascripts.
      *
      * @return Response
      */
@@ -31,15 +31,15 @@ class ResourcesController extends Controller
         $locator = $this->get('file_locator');
 
         $content =
-            file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/ChangePasswordWindow.js')) .
-            file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/ValidateWindow.js')) .
+            file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/ChangePasswordWindow.js')).
+            file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/ValidateWindow.js')).
             file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/SetPasswordWindow.js'));
 
         return new Response($content, 200, ['Content-Type' => 'text/javascript']);
     }
 
     /**
-     * Return user stylesheets
+     * Return user stylesheets.
      *
      * @return Response
      */
@@ -51,7 +51,7 @@ class ResourcesController extends Controller
     }
 
     /**
-     * Return users icons
+     * Return users icons.
      *
      * @return Response
      */
@@ -63,7 +63,7 @@ class ResourcesController extends Controller
     }
 
     /**
-     * Return users translations
+     * Return users translations.
      *
      * @param string $language
      *
@@ -79,4 +79,3 @@ class ResourcesController extends Controller
         return new Response($content, 200, ['Content-Type' => 'text/javascript']);
     }
 }
-

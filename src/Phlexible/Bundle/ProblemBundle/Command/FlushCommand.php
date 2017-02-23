@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Flush command
+ * Flush command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -47,9 +47,8 @@ class FlushCommand extends ContainerAwareCommand
 
         $em->flush();
 
-        $output->writeln(count($problems) . ' problems flushed.');
+        $output->writeln(count($problems).' problems flushed.');
 
         return 0;
     }
-
 }

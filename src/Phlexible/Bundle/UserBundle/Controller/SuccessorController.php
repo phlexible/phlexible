@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Successor controller
+ * Successor controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/users/successor")
@@ -56,8 +56,8 @@ class SuccessorController extends Controller
             }
 
             $users[$user->getDisplayName()] = [
-                'uid'  => $user->getId(),
-                'name' => $user->getDisplayName()
+                'uid' => $user->getId(),
+                'name' => $user->getDisplayName(),
             ];
         }
 

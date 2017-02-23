@@ -15,7 +15,7 @@ use Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Get menu event
+ * Get menu event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -16,7 +16,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * XML writer
+ * XML writer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -47,7 +47,7 @@ class XmlWriter implements WriterInterface
      */
     public function write(Elementtype $elementtype)
     {
-        $filename = $this->resourceDir . '/' . $elementtype->getId() . '.xml';
+        $filename = $this->resourceDir.'/'.$elementtype->getId().'.xml';
         $content = $this->dumper->dump($elementtype);
 
         $filesystem = new Filesystem();

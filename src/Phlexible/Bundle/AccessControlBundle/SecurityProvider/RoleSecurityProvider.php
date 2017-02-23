@@ -16,7 +16,7 @@ use Phlexible\Component\AccessControl\SecurityProvider\SecurityResolverInterface
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
- * Role security provider
+ * Role security provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -63,14 +63,14 @@ class RoleSecurityProvider implements SecurityProviderInterface, SecurityResolve
         foreach ($this->roles as $role) {
             $data[] = array(
                 'securityType' => 'Symfony\Component\Security\Core\Role',
-                'securityId'   => $role,
+                'securityId' => $role,
                 'securityName' => $role,
             );
         }
 
         return array(
             'count' => count($data),
-            'data'  => $data,
+            'data' => $data,
         );
     }
 }

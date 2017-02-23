@@ -13,8 +13,8 @@ namespace Phlexible\Bundle\TeaserBundle\Configurator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager;
@@ -24,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Layout area configurator
+ * Layout area configurator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -130,7 +130,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
                 if (!$isPreview) {
                     $version = $this->teaserManager->getPublishedVersion($teaser, $language);
                     if (!$version) {
-                        unset ($teasers[$index]);
+                        unset($teasers[$index]);
                         continue;
                     }
                 } else {
@@ -143,9 +143,9 @@ class LayoutareaConfigurator implements ConfiguratorInterface
             }
 
             $areas[$layoutarea->getUniqueId()] = [
-                'title'    => $layoutarea->getTitle(),
+                'title' => $layoutarea->getTitle(),
                 'uniqueId' => $layoutarea->getUniqueId(),
-                'children' => $teasers
+                'children' => $teasers,
             ];
 
             //$areaEvent = new Brainbits_Event_Notification(new stdClass(), 'area');

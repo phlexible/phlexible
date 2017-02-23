@@ -19,7 +19,7 @@ use Phlexible\Bundle\ElementBundle\Exception\LockFailedException;
 use Phlexible\Bundle\ElementBundle\Model\ElementLockManagerInterface;
 
 /**
- * Element lock manager
+ * Element lock manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Phillip Look <pl@brainbits.net>

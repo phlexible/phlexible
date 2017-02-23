@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Index view
+ * Index view.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

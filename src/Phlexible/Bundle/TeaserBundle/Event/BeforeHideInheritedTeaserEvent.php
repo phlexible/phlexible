@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TeaserBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Before show inherited teaser event
+ * Before show inherited teaser event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

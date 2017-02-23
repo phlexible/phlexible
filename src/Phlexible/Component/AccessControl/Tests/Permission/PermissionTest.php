@@ -14,7 +14,7 @@ namespace Phlexible\Component\AccessControl\Tests\Permission;
 use Phlexible\Component\AccessControl\Permission\Permission;
 
 /**
- * Permission test
+ * Permission test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

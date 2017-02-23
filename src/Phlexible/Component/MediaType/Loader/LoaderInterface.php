@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaType\Loader;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Media type loader interface
+ * Media type loader interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

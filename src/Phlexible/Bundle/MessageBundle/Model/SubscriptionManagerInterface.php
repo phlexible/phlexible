@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MessageBundle\Model;
 use Phlexible\Bundle\MessageBundle\Entity\Subscription;
 
 /**
- * Subscription manager interface
+ * Subscription manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

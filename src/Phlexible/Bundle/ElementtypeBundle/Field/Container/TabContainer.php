@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field\Container;
 
 /**
- * Tab container
+ * Tab container.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

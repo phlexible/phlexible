@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * User event
+ * User event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

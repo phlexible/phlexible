@@ -17,7 +17,7 @@ use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Cache status portlet
+ * Cache status portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -45,7 +45,7 @@ class CacheStatusPortlet extends Portlet
     }
 
     /**
-     * Return Portlet data
+     * Return Portlet data.
      *
      * @return array
      */

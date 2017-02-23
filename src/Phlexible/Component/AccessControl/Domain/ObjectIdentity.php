@@ -17,7 +17,7 @@ use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Symfony\Component\Security\Core\Util\ClassUtils;
 
 /**
- * Object identity
+ * Object identity.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

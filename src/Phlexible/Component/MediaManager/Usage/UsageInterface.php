@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaManager\Usage;
 
 /**
- * Usage interface
+ * Usage interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

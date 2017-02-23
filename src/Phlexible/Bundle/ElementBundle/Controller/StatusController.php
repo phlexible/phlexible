@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Status controller
+ * Status controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/status/elements")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 class StatusController extends Controller
 {
     /**
-     * List all Elements
+     * List all Elements.
      *
      * @return Response
      * @Route("", name="elements_status")
@@ -124,20 +124,20 @@ class StatusController extends Controller
             $numGroupedElementTypeElements[$row['id']] = $row['cnt'];
         }
 
-        $out .= '##### Elements ############################################' . PHP_EOL;
+        $out .= '##### Elements ############################################'.PHP_EOL;
         $out .= PHP_EOL;
-        $out .= $numElements . ' elements' . PHP_EOL;
+        $out .= $numElements.' elements'.PHP_EOL;
         $out .= PHP_EOL;
-        $out .= $numTreeElements . ' tree elements' . PHP_EOL;
-        $out .= $numTeaserElements . ' teaser elements' . PHP_EOL;
+        $out .= $numTreeElements.' tree elements'.PHP_EOL;
+        $out .= $numTeaserElements.' teaser elements'.PHP_EOL;
         $out .= PHP_EOL;
-        $out .= ($numTreeElements + $numTeaserElements) . ' used elements' . PHP_EOL;
-        $out .= $numUnusedElements . ' unused elements' . PHP_EOL;
-        $out .= '(= ' . ($numTreeElements + $numTeaserElements + $numUnusedElements) . ' elements)' . PHP_EOL;
+        $out .= ($numTreeElements + $numTeaserElements).' used elements'.PHP_EOL;
+        $out .= $numUnusedElements.' unused elements'.PHP_EOL;
+        $out .= '(= '.($numTreeElements + $numTeaserElements + $numUnusedElements).' elements)'.PHP_EOL;
         $out .= PHP_EOL;
-        $out .= $numElementVersions . ' element versions' . PHP_EOL;
+        $out .= $numElementVersions.' element versions'.PHP_EOL;
         $out .= PHP_EOL;
-        $out .= 'Top 5 most element versions:' . PHP_EOL;
+        $out .= 'Top 5 most element versions:'.PHP_EOL;
         $i = 0;
         foreach ($numGroupedElementVersions as $eid => $count) {
             if ($i >= 5) {
@@ -145,40 +145,40 @@ class StatusController extends Controller
             }
             $element = $elementService->findElement($eid);
             $elementVersion = $elementService->findLatestElementVersion($element);
-            $out .= '  ' . str_pad($elementVersion->getBackendTitle('de', 'en') . ' [' . $eid . ']', 40, ' ')
-                . ' => ' . str_pad($count, 4, ' ', STR_PAD_LEFT) . ' versions' . PHP_EOL;
-            $i++;
+            $out .= '  '.str_pad($elementVersion->getBackendTitle('de', 'en').' ['.$eid.']', 40, ' ')
+                .' => '.str_pad($count, 4, ' ', STR_PAD_LEFT).' versions'.PHP_EOL;
+            ++$i;
         }
         $out .= PHP_EOL;
-        $out .= '##### Element Types #######################################' . PHP_EOL;
+        $out .= '##### Element Types #######################################'.PHP_EOL;
         $out .= PHP_EOL;
-        $out .= $numElementTypes . ' element types' . PHP_EOL;
-        $out .= $numUnusedElementTypes . ' unused element types' . PHP_EOL;
+        $out .= $numElementTypes.' element types'.PHP_EOL;
+        $out .= $numUnusedElementTypes.' unused element types'.PHP_EOL;
         $out .= PHP_EOL;
-        $out .= $numElementTypeVersions . ' element type versions' . PHP_EOL;
+        $out .= $numElementTypeVersions.' element type versions'.PHP_EOL;
         $out .= PHP_EOL;
-        $out .= 'Top 5 most element type versions:' . PHP_EOL;
+        $out .= 'Top 5 most element type versions:'.PHP_EOL;
         $i = 0;
         foreach ($numGroupedElementTypeVersions as $etId => $count) {
             if ($i >= 5) {
                 break;
             }
             $elementtype = $elementtypeService->findElementtype($etId);
-            $out .= '  ' . str_pad($elementtype->getTitle() . ' [' . $etId . ']', 40, ' ')
-                . ' => ' . str_pad($count, 4, ' ', STR_PAD_LEFT) . ' versions' . PHP_EOL;
-            $i++;
+            $out .= '  '.str_pad($elementtype->getTitle().' ['.$etId.']', 40, ' ')
+                .' => '.str_pad($count, 4, ' ', STR_PAD_LEFT).' versions'.PHP_EOL;
+            ++$i;
         }
         $out .= PHP_EOL;
-        $out .= 'Top 5 most element types by elements:' . PHP_EOL;
+        $out .= 'Top 5 most element types by elements:'.PHP_EOL;
         $i = 0;
         foreach ($numGroupedElementTypeElements as $etId => $count) {
             if ($i >= 5) {
                 break;
             }
             $elementtype = $elementtypeService->findElementtype($etId);
-            $out .= '  ' . str_pad($elementtype->getTitle() . ' [' . $etId . ']', 40, ' ') . ' => '
-                . str_pad($count, 4, ' ', STR_PAD_LEFT) . ' elements' . PHP_EOL;
-            $i++;
+            $out .= '  '.str_pad($elementtype->getTitle().' ['.$etId.']', 40, ' ').' => '
+                .str_pad($count, 4, ' ', STR_PAD_LEFT).' elements'.PHP_EOL;
+            ++$i;
         }
 
         return new Response($out);

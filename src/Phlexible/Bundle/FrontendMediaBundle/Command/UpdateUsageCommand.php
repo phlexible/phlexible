@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Update usage command
+ * Update usage command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,7 +33,6 @@ class UpdateUsageCommand extends ContainerAwareCommand
             ->setDescription('Update usage for element.')
             ->addArgument('eid', InputArgument::OPTIONAL, 'EID');
     }
-
 
     /**
      * {@inheritdoc}
@@ -54,6 +53,7 @@ class UpdateUsageCommand extends ContainerAwareCommand
                 } catch (\Exception $e) {
                     $output->writeln('<error>'.$e->getMessage().'</error>');
                 }
+
                 return 0;
             }
             $output->write('Updating Element '.$element->getEid().' ... ');
@@ -63,7 +63,6 @@ class UpdateUsageCommand extends ContainerAwareCommand
             } catch (\Exception $e) {
                 $output->writeln('<error>'.$e->getMessage().'</error>');
             }
-
         } else {
             $usageUpdater->removeObsolete();
             $offset = 0;
@@ -84,8 +83,6 @@ class UpdateUsageCommand extends ContainerAwareCommand
             } while (count($elements));
         }
 
-
         return 0;
     }
 }
-

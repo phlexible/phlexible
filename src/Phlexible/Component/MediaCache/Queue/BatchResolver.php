@@ -16,7 +16,7 @@ use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 
 /**
- * Resolves batch into queue
+ * Resolves batch into queue.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,7 +43,7 @@ class BatchResolver
     }
 
     /**
-     * Resolve batch to queue items
+     * Resolve batch to queue items.
      *
      * @param Batch $batch
      * @param array $flags
@@ -66,7 +66,6 @@ class BatchResolver
                 $cacheItem = $this->cacheManager->findByTemplateAndFile($template->getKey(), $fileId, $fileVersion);
 
                 if (count($flags)) {
-
                     if (isset($flags['error']) && !$this->isError($cacheItem)) {
                         continue;
                     }
@@ -79,7 +78,6 @@ class BatchResolver
                         continue;
                     }
                 }
-
 
                 if (!$cacheItem) {
                     $cacheItem = new CacheItem();

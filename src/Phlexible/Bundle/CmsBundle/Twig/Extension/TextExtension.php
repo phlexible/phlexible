@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\CmsBundle\Twig\Extension;
 use Phlexible\Component\Util\StringUtil;
 
 /**
- * Twig text extension
+ * Twig text extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -32,7 +32,7 @@ class TextExtension extends \Twig_Extension
     }
 
     /**
-     * Truncate text preserving html tags
+     * Truncate text preserving html tags.
      *
      * @param string $str
      * @param int    $length
@@ -48,7 +48,7 @@ class TextExtension extends \Twig_Extension
     }
 
     /**
-     * Convert newlines to paragraph tags
+     * Convert newlines to paragraph tags.
      *
      * @param string $str
      *
