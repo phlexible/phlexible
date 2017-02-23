@@ -251,7 +251,7 @@ class ElementtypeService
         $uniqId = uniqid();
 
         foreach ($elementtype->getTitles() as $language => $title) {
-          $elementtype->setTitle($language, $title.' - copy - '.$uniqId);
+            $elementtype->setTitle($language, $title.' - copy - '.$uniqId);
         }
 
         $elementtypeStructure = new ElementtypeStructure();
