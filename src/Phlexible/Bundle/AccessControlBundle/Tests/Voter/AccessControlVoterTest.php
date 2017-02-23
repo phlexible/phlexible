@@ -43,7 +43,6 @@ class TestObject implements ObjectIdentityInterface
     }
 }
 
-
 /**
  * Access control voter test.
  *
