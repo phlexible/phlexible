@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Volume\Exception;
 
 /**
- * Not writable exception
+ * Not writable exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class NotWritableException extends RuntimeException
 {
-
 }

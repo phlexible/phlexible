@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\GroupInterface;
 
 /**
- * Group
+ * Group.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -296,4 +296,3 @@ class Group implements GroupInterface
         return $this;
     }
 }
-

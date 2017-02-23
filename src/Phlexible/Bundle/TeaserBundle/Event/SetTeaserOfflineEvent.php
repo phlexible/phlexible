@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TeaserBundle\Event;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 
 /**
- * Set teaser offline event
+ * Set teaser offline event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

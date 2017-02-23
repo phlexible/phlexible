@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\CmsBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Cms role provider
+ * Cms role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Before move node event
+ * Before move node event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

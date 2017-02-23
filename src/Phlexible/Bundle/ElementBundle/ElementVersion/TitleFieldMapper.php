@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 
 /**
- * Title field mapper
+ * Title field mapper.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -46,7 +46,7 @@ class TitleFieldMapper implements FieldMapperInterface
                 return null;
                 //throw new \Exception("Value for dsId '$dsId' not found.");
             }
-            $replace['$' . $field['index']] = $value->getValue();
+            $replace['$'.$field['index']] = $value->getValue();
         }
         $title = str_replace(array_keys($replace), array_values($replace), $pattern);
 

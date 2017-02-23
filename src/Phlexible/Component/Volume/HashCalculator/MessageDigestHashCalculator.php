@@ -17,7 +17,7 @@ use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
 
 /**
- * Message digest hash calculator
+ * Message digest hash calculator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -48,6 +48,7 @@ class MessageDigestHashCalculator implements HashCalculatorInterface
      * @param FileSourceInterface $fileSource
      *
      * @throws RuntimeException
+     *
      * @return string
      */
     public function fromFileSource(FileSourceInterface $fileSource)

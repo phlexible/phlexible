@@ -26,7 +26,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Teaser manager
+ * Teaser manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -168,7 +168,7 @@ class TeaserManager implements TeaserManagerInterface
         $teasers = $this->getTeaserRepository()->findBy(
             [
                 'layoutareaId' => $layoutarea->getId(),
-                'treeId'       => $treeNode->getId()
+                'treeId' => $treeNode->getId(),
             ],
             array('sort' => 'ASC')
         );
@@ -205,7 +205,7 @@ class TeaserManager implements TeaserManagerInterface
     {
         return $this->getTeaserRepository()->findBy(
             [
-                'type'   => $teaser->getType(),
+                'type' => $teaser->getType(),
                 'typeId' => $teaser->getTypeId(),
             ]
         );
@@ -281,8 +281,7 @@ class TeaserManager implements TeaserManagerInterface
         array $hideIds = null,
         $masterLanguage = 'en',
         $userId
-    )
-    {
+    ) {
         $teaser = new Teaser();
         $teaser
             ->setTreeId($treeId)
@@ -355,7 +354,7 @@ class TeaserManager implements TeaserManagerInterface
             ->setTreeId($treeNode->getId())
             ->setLayoutareaId($layoutAreaId)
             ->setCreateUserId($userId)
-            ->setCreatedAt(new \DateTime);
+            ->setCreatedAt(new \DateTime());
 
         $event = new TeaserEvent($teaser);
         if ($this->dispatcher->dispatch(TeaserEvents::BEFORE_CREATE_TEASER_INSTANCE, $event)->isPropagationStopped()) {
@@ -398,7 +397,6 @@ class TeaserManager implements TeaserManagerInterface
 
         $event = new TeaserEvent($teaser);
         $this->dispatcher->dispatch(TeaserEvents::UPDATE_TEASER, $event);
-
     }
 
     /**
@@ -441,7 +439,7 @@ class TeaserManager implements TeaserManagerInterface
         }
 
         $event = new DeleteTeaserEvent($teaser, $teaserId, $userId);
-        $this-> dispatcher->dispatch(TeaserEvents::DELETE_TEASER, $event);
+        $this->dispatcher->dispatch(TeaserEvents::DELETE_TEASER, $event);
     }
 
     /**

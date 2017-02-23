@@ -11,8 +11,8 @@
 
 namespace Phlexible\Bundle\TreeBundle\Configurator;
 
-use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
@@ -23,11 +23,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Forward configurator
+ * Forward configurator.
  *
  * @author Jens Schulze
  */
-class ForwardConfigurator implements ConfiguratorInterface {
+class ForwardConfigurator implements ConfiguratorInterface
+{
     /**
      * @var EventDispatcherInterface
      */
@@ -48,11 +49,10 @@ class ForwardConfigurator implements ConfiguratorInterface {
      */
     private $contentTreeManager;
 
-
     /**
-     * @param EventDispatcherInterface $dispatcher
-     * @param LoggerInterface $logger
-     * @param RouterInterface $router
+     * @param EventDispatcherInterface    $dispatcher
+     * @param LoggerInterface             $logger
+     * @param RouterInterface             $router
      * @param ContentTreeManagerInterface $contentTreeManager
      */
     public function __construct(
@@ -61,16 +61,17 @@ class ForwardConfigurator implements ConfiguratorInterface {
         RouterInterface $router,
         ContentTreeManagerInterface $contentTreeManager
     ) {
-        $this->dispatcher         = $dispatcher;
-        $this->logger             = $logger;
-        $this->router             = $router;
+        $this->dispatcher = $dispatcher;
+        $this->logger = $logger;
+        $this->router = $router;
         $this->contentTreeManager = $contentTreeManager;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function configure(Request $request, Configuration $renderConfiguration) {
+    public function configure(Request $request, Configuration $renderConfiguration)
+    {
         if (!$renderConfiguration->hasFeature('forward')) {
             return;
         }
@@ -81,16 +82,16 @@ class ForwardConfigurator implements ConfiguratorInterface {
             case 'internal':
             case 'intrasiteroot':
                 $contentTreeNode = $this->contentTreeManager->findByTreeId($forward->tid)->get($forward->tid);
-                $url             = $this->router->generate($contentTreeNode);
+                $url = $this->router->generate($contentTreeNode);
                 break;
             case 'external':
                 $url = $forward->url;
                 break;
             default:
-                $url = NULL;
+                $url = null;
         }
         if ($url) {
-            $thisUrl = $request->getBaseUrl() . $request->getPathInfo();
+            $thisUrl = $request->getBaseUrl().$request->getPathInfo();
 //            if ($url !== $thisUrl) {
             $renderConfiguration->setResponse(new RedirectResponse($url));
 //            }

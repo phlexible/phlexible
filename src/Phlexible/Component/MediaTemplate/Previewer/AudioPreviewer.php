@@ -17,7 +17,7 @@ use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Audio preview
+ * Audio preview.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -76,7 +76,7 @@ class AudioPreviewer implements PreviewerInterface
         }
 
         $extension = $this->applier->getExtension($template);
-        $cacheFilename = $this->cacheDir . 'preview_audio.' . $extension;
+        $cacheFilename = $this->cacheDir.'preview_audio.'.$extension;
         $this->applier->apply($template, $filePath, $cacheFilename);
 
         if ($debug) {
@@ -85,19 +85,19 @@ class AudioPreviewer implements PreviewerInterface
 
             $debug = '';
             foreach ($handler->getRecords() as $record) {
-                $debug .= $record['message'] . PHP_EOL;
+                $debug .= $record['message'].PHP_EOL;
             }
         } else {
             $debug = '';
         }
 
         $data = [
-            'file'     => basename($cacheFilename),
-            'size'     => filesize($cacheFilename),
+            'file' => basename($cacheFilename),
+            'size' => filesize($cacheFilename),
             'template' => $templateKey,
-            'format'   => $extension,
+            'format' => $extension,
             'mimetype' => $this->applier->getMimetype($template),
-            'debug'    => $debug,
+            'debug' => $debug,
         ];
 
         return $data;

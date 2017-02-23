@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Tree saver
+ * Tree saver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -41,12 +41,13 @@ class TreeSaver
     }
 
     /**
-     * Save an Element Type data tree
+     * Save an Element Type data tree.
      *
      * @param Request       $request
      * @param UserInterface $user
      *
      * @throws InvalidArgumentException
+     *
      * @return Elementtype
      */
     public function save(Request $request, UserInterface $user)
@@ -65,7 +66,7 @@ class TreeSaver
         $rootMappings = !empty($rootProperties['mappings']) ? $rootProperties['mappings'] : null;
         $rootDsId = !empty($rootData['ds_id']) ? $rootData['ds_id'] : Uuid::generate();
 
-        if (!isset($rootData['type']) || ($rootData['type'] != 'root' && $rootData['type'] != 'referenceroot')) {
+        if (!isset($rootData['type']) || ($rootData['type'] !== 'root' && $rootData['type'] !== 'referenceroot')) {
             throw new InvalidArgumentException('Invalid root node.');
         }
 
@@ -179,7 +180,7 @@ class TreeSaver
             //    ->setSort(++$sort)
             ;
 
-            if ($row['type'] == 'reference' && isset($row['reference']['new'])) {
+            if ($row['type'] === 'reference' && isset($row['reference']['new'])) {
                 $firstChild = $row['children'][0];
 
                 $referenceRootDsId = Uuid::generate();
@@ -195,8 +196,8 @@ class TreeSaver
 
                 $referenceElementtype = $this->elementtypeService->createElementtype(
                     'reference',
-                    'reference_' . $firstChild['properties']['field']['working_title'] . '_' . uniqid(),
-                    'Reference ' . $firstChild['properties']['field']['working_title'],
+                    'reference_'.$firstChild['properties']['field']['working_title'].'_'.uniqid(),
+                    'Reference '.$firstChild['properties']['field']['working_title'],
                     '_fallback.gif',
                     $referenceElementtypeStructure,
                     array(),
@@ -206,18 +207,18 @@ class TreeSaver
 
                 $node
                     ->setType('reference')
-                    ->setName('reference_' . $referenceElementtype->getUniqueId())
+                    ->setName('reference_'.$referenceElementtype->getUniqueId())
                     ->setReferenceElementtypeId($referenceElementtype->getId())
                     //->setReferenceVersion($referenceElementtypeVersion->getVersion())
                 ;
 
                 $elementtypeStructure->addNode($node);
-            } elseif ($row['type'] == 'reference') {
+            } elseif ($row['type'] === 'reference') {
                 $referenceElementtype = $this->elementtypeService->findElementtype($row['reference']['refID']);
 
                 $node
                     ->setType('reference')
-                    ->setName('reference_' . $referenceElementtype->getUniqueId())
+                    ->setName('reference_'.$referenceElementtype->getUniqueId())
                     ->setReferenceElementtypeId($referenceElementtype->getId())
                 //    ->setReferenceVersion($row['reference']['refVersion'])
                 ;

@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle;
 
 /**
- * Tree events
+ * Tree events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -119,8 +119,7 @@ class TreeEvents
     const REORDER_CHILD_NODES = 'phlexible_tree.reorder_child_nodes';
 
     /**
-     * Fired when the tree is filtered
+     * Fired when the tree is filtered.
      */
     const TREE_FILTER = 'phlexible_tree.tree_filter';
-
 }

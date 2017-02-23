@@ -17,7 +17,7 @@ use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Tree listener
+ * Tree listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -48,7 +48,7 @@ class TreeListener implements EventSubscriberInterface
             array('treeId' => $nodeId)
         );
 
-        foreach ($teasers as $teaser)  {
+        foreach ($teasers as $teaser) {
             $this->teaserManager->deleteTeaser($teaser, $userId);
         }
     }
@@ -59,7 +59,7 @@ class TreeListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            TreeEvents::DELETE_NODE => 'onDeleteNode'
+            TreeEvents::DELETE_NODE => 'onDeleteNode',
         );
     }
 }

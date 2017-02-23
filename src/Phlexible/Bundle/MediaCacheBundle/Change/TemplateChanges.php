@@ -20,7 +20,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
 
 /**
- * Template changes
+ * Template changes.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

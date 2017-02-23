@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\GuiBundle\Routing;
 
 /**
- * Extracted routes
+ * Extracted routes.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,7 +46,7 @@ class ExtractedRoutes
     }
 
     /**
-     * Return base url
+     * Return base url.
      *
      * @return string
      */
@@ -56,7 +56,7 @@ class ExtractedRoutes
     }
 
     /**
-     * Return base path
+     * Return base path.
      *
      * @return string
      */
@@ -66,7 +66,7 @@ class ExtractedRoutes
     }
 
     /**
-     * Return routes
+     * Return routes.
      *
      * @return array
      */

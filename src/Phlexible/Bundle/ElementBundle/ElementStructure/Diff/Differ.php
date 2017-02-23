@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 
 /**
- * Differ
+ * Differ.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -111,7 +111,7 @@ class Differ
      */
     private function applyModifiedValue(ElementStructureValue $value, $oldValue)
     {
-        $granularity = new \cogpowered\FineDiff\Granularity\Word;
+        $granularity = new \cogpowered\FineDiff\Granularity\Word();
         $diff = new \cogpowered\FineDiff\Diff($granularity);
 
         $value

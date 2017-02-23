@@ -17,7 +17,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Content element loader
+ * Content element loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

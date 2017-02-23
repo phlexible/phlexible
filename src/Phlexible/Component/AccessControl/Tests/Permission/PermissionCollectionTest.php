@@ -15,7 +15,7 @@ use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 
 /**
- * Permission collection test
+ * Permission collection test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Delete node event
+ * Delete node event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -44,7 +44,7 @@ class DeleteNodeEvent extends NodeEvent
     }
 
     /**
-     * Return node ID
+     * Return node ID.
      *
      * @return int
      */
@@ -54,7 +54,7 @@ class DeleteNodeEvent extends NodeEvent
     }
 
     /**
-     * Return user ID
+     * Return user ID.
      *
      * @return string
      */

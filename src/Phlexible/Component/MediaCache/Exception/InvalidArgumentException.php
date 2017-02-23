@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MediaCache\Exception;
 
 /**
- * Invalid argument exception for media cache
+ * Invalid argument exception for media cache.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
-
 }

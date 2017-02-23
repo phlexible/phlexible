@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Diff command
+ * Diff command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -74,4 +74,3 @@ class DiffCommand extends ContainerAwareCommand
         return 0;
     }
 }
-

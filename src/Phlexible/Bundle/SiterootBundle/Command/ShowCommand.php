@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Show command
+ * Show command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -40,15 +40,15 @@ class ShowCommand extends ContainerAwareCommand
         $siterootManager = $this->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
         foreach ($siterootManager->findAll() as $siteroot) {
-            $output->write('<info>' . $siteroot->getTitle('en') . '</info>');
+            $output->write('<info>'.$siteroot->getTitle('en').'</info>');
 
             if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                 $output->writeln('');
-                $output->writeln('  ID: ' . $siteroot->getId());
+                $output->writeln('  ID: '.$siteroot->getId());
                 if ($siteroot->getUrls()) {
                     $output->writeln('  Urls:');
                     foreach ($siteroot->getUrls() as $url) {
-                        $output->writeln('    ' . $url->getHostname() . ' => ' . $url->getTarget());
+                        $output->writeln('    '.$url->getHostname().' => '.$url->getTarget());
                     }
                 }
 
@@ -56,17 +56,15 @@ class ShowCommand extends ContainerAwareCommand
                     $output->writeln('  Special TIDs:');
                     foreach ($siteroot->getSpecialTids() as $specialTid) {
                         $name = $specialTid['name'];
-                        $value = ($specialTid['language'] ? $specialTid['language'] . ':' : '') . $specialTid['treeId'];
+                        $value = ($specialTid['language'] ? $specialTid['language'].':' : '').$specialTid['treeId'];
                         $output->writeln("    $name => $value");
                     }
                 }
             } else {
-                $output->writeln(': ' . $siteroot->getId());
+                $output->writeln(': '.$siteroot->getId());
             }
         }
 
         return 0;
     }
-
 }
-

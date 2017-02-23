@@ -16,7 +16,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Element validator
+ * Element validator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

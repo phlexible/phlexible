@@ -20,14 +20,14 @@ use Phlexible\Bundle\MessageBundle\Entity\Filter;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
- * Message repository
+ * Message repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class MessageRepository extends EntityRepository
 {
     /**
-     * Find messages by criteria
+     * Find messages by criteria.
      *
      * @param Criteria $criteria
      * @param array    $order
@@ -103,10 +103,10 @@ class MessageRepository extends EntityRepository
         $roles = $this->createQueryBuilder('m')->select('DISTINCT m.role')->getQuery()->getScalarResult();
 
         return [
-            'channels'   => array_column($channels, 'channel'),
-            'types'      => array_column($types, 'type'),
+            'channels' => array_column($channels, 'channel'),
+            'types' => array_column($types, 'type'),
             'priorities' => array_column($priorities, 'priority'),
-            'roles'      => array_column($roles, 'role'),
+            'roles' => array_column($roles, 'role'),
         ];
     }
 
@@ -132,10 +132,10 @@ class MessageRepository extends EntityRepository
         $roles = $roleQb->select('DISTINCT m.role')->getQuery()->getScalarResult();
 
         return [
-            'channels'   => array_column($channels, 'channel'),
-            'types'      => array_column($types, 'type'),
+            'channels' => array_column($channels, 'channel'),
+            'types' => array_column($types, 'type'),
             'priorities' => array_column($priorities, 'priority'),
-            'roles'      => array_column($roles, 'role'),
+            'roles' => array_column($roles, 'role'),
         ];
     }
 
@@ -161,7 +161,7 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * Apply criteria to select
+     * Apply criteria to select.
      *
      * @param Criteria     $criteria
      * @param QueryBuilder $qb
@@ -242,7 +242,7 @@ class MessageRepository extends EntityRepository
                 break;
 
             case Criteria::CRITERIUM_CHANNEL_IS:
-                $composite->add($qb->expr()->eq("$prefix.channel", $qb->expr()->literal("value")));
+                $composite->add($qb->expr()->eq("$prefix.channel", $qb->expr()->literal('value')));
                 break;
 
             case Criteria::CRITERIUM_CHANNEL_LIKE:
@@ -261,7 +261,7 @@ class MessageRepository extends EntityRepository
                 break;
 
             case Criteria::CRITERIUM_ROLE_IS:
-                $composite->add($qb->expr()->eq("$prefix.role", $qb->expr()->literal("value")));
+                $composite->add($qb->expr()->eq("$prefix.role", $qb->expr()->literal('value')));
                 break;
 
             case Criteria::CRITERIUM_ROLE_IN:

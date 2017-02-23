@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Mime\Adapter;
 
 /**
- * Internet media type detector fallback adapter
+ * Internet media type detector fallback adapter.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -93,7 +93,7 @@ class FallbackAdapter extends CompositeAdapter
     }
 
     /**
-     * Check wether or not we have to use the fallback adapter
+     * Check wether or not we have to use the fallback adapter.
      *
      * @param string $filename
      * @param string $internetMediaTypeString

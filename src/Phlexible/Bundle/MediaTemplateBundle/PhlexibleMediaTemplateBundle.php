@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaTemplateBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Media template bundle
+ * Media template bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

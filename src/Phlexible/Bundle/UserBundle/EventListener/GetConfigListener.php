@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
- * Get config listener
+ * Get config listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -84,7 +84,7 @@ class GetConfigListener
             ->set('defaults', $this->defaults);
 
         foreach ($user->getProperties() as $key => $value) {
-            $event->getConfig()->set('user.property.' . $key, $value);
+            $event->getConfig()->set('user.property.'.$key, $value);
         }
     }
 }

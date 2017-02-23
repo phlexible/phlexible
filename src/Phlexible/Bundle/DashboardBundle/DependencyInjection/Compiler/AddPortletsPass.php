@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add portlets pass
+ * Add portlets pass.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

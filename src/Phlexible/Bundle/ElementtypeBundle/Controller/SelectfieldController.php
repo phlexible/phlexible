@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Selectfield Controller
+ * Selectfield Controller.
  *
  * @author Matthias Harmuth <mharmuth@brainbits.net>
  * @Route("/elementtypes/selectfield")
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SelectfieldController extends Controller
 {
     /**
-     * Return available functions
+     * Return available functions.
      *
      * @return JsonResponse
      * @Route("/select", name="elementtypes_selectfield_providers")
@@ -39,7 +39,7 @@ class SelectfieldController extends Controller
         $data = [];
         foreach ($selectFieldProviders->all() as $selectFieldProvider) {
             $data[] = [
-                'name'  => $selectFieldProvider->getName(),
+                'name' => $selectFieldProvider->getName(),
                 'title' => $selectFieldProvider->getTitle($this->getUser()->getInterfaceLanguage('en')),
             ];
         }
@@ -48,7 +48,7 @@ class SelectfieldController extends Controller
     }
 
     /**
-     * Return selectfield data for lists
+     * Return selectfield data for lists.
      *
      * @param Request $request
      *

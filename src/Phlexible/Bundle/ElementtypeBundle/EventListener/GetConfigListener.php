@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\EventListener;
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 
 /**
- * Elementtypes listeners
+ * Elementtypes listeners.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -42,5 +42,4 @@ class GetConfigListener
 
         $config->set('suggest.seperator', $this->separator);
     }
-
 }

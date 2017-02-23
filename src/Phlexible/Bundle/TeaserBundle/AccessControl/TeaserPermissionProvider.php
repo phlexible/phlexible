@@ -16,7 +16,7 @@ use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionProviderInterface;
 
 /**
- * Teaser permission provider
+ * Teaser permission provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

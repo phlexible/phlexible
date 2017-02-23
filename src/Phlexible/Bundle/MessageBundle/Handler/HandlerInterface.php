@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MessageBundle\Handler;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
- * Handler interface
+ * Handler interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

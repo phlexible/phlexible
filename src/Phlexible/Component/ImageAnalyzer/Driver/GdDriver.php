@@ -14,7 +14,7 @@ namespace Phlexible\Component\ImageAnalyzer\Driver;
 use Phlexible\Component\ImageAnalyzer\ImageInfo;
 
 /**
- * GD image analyzer driver
+ * GD image analyzer driver.
  *
  * @author Stephan Wentz <stephan@wentz.it>
  */

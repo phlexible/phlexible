@@ -14,7 +14,7 @@ namespace Phlexible\Component\ImageAnalyzer;
 use Phlexible\Component\ImageAnalyzer\Driver\DriverInterface;
 
 /**
- * Image analyzer
+ * Image analyzer.
  *
  * @author Stephan Wentz <stephan@wentz.it>
  */

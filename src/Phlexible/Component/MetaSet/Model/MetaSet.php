@@ -14,7 +14,7 @@ namespace Phlexible\Component\MetaSet\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Meta set
+ * Meta set.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

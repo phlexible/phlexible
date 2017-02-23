@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Volume\Exception;
 
 /**
- * Exception interface for volume
+ * Exception interface for volume.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExceptionInterface
 {
-
 }

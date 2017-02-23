@@ -16,7 +16,7 @@ use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Log handler
+ * Log handler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -48,27 +48,27 @@ class LogHandler implements HandlerInterface
         $priority = $message->getPriority();
 
         $channel = $message->getChannel();
-        $role    = $message->getRole();
+        $role = $message->getRole();
         $subject = $message->getSubject();
-        $body    = $message->getBody();
+        $body = $message->getBody();
 
         // build message
         $msg = "Message ($priority)";
 
         if (!empty($channel)) {
-            $msg .= ' in channel ' . $channel;
+            $msg .= ' in channel '.$channel;
         }
 
         if (!empty($role)) {
-            $msg .= ' with role ' . $role;
+            $msg .= ' with role '.$role;
         }
 
-        $msg .= ': ' . $subject;
+        $msg .= ': '.$subject;
 
         // log message
         if ($message->getType() === Message::TYPE_ERROR) {
             if (!empty($body)) {
-                $msg .= PHP_EOL . $body;
+                $msg .= PHP_EOL.$body;
             }
 
             $this->logger->error($msg);

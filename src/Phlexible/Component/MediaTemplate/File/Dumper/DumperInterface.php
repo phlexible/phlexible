@@ -14,14 +14,14 @@ namespace Phlexible\Component\MediaTemplate\File\Dumper;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Dumper interface
+ * Dumper interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface DumperInterface
 {
     /**
-     * Return supported extension
+     * Return supported extension.
      *
      * @return string
      */

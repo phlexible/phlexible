@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaType\Model;
 use Symfony\Component\Config\FileLocatorInterface;
 
 /**
- * Media type icon resolver
+ * Media type icon resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -34,7 +34,7 @@ class IconResolver
     }
 
     /**
-     * Resolve icon
+     * Resolve icon.
      *
      * @param MediaType $mediaType
      * @param int       $requestedSize

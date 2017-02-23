@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Successor command
+ * Successor command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

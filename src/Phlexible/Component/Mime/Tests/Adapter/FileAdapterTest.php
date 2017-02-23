@@ -14,7 +14,7 @@ namespace Phlexible\Component\Mime\Tests\Adapter;
 use Phlexible\Component\Mime\Adapter\FileAdapter;
 
 /**
- * File adapter test
+ * File adapter test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

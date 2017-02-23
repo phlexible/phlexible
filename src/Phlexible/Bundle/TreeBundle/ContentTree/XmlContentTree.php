@@ -20,7 +20,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 
 /**
- * XML content tree
+ * XML content tree.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -179,7 +179,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate
         foreach ($specialTidElements as $specialTidElement) {
             /* @var $specialTidElement \DOMElement */
             $name = $specialTidElement->getAttribute('name');
-            $language = $specialTidElement->getAttribute('language') ? : null;
+            $language = $specialTidElement->getAttribute('language') ?: null;
             $specialTids[] = ['name' => $name, 'language' => $language, 'treeId' => (int) $specialTidElement->textContent];
         }
         $siteroot->setSpecialTids($specialTids);

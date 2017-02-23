@@ -16,7 +16,7 @@ use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionProviderInterface;
 
 /**
- * Media manager permission provider
+ * Media manager permission provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

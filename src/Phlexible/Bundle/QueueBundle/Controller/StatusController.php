@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Status controller
+ * Status controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/status/queue")
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 class StatusController extends Controller
 {
     /**
-     * Return queue status
+     * Return queue status.
      *
      * @return Response
      * @Route("", name="queue_status")
@@ -39,18 +39,17 @@ class StatusController extends Controller
 
         foreach ($jobManager->findAll() as $job) {
             $data[] = [
-                'id'        => $job->getId(),
-                'command'   => $job->getCommand(),
+                'id' => $job->getId(),
+                'command' => $job->getCommand(),
                 'arguments' => implode(' ', $job->getArguments()),
-                'priority'  => $job->getPriority(),
-                'status'    => $job->getStatus(),
+                'priority' => $job->getPriority(),
+                'status' => $job->getStatus(),
             ];
         }
 
-        $out = '<pre>Current jobs: ' . PHP_EOL;
+        $out = '<pre>Current jobs: '.PHP_EOL;
         $out .= print_r($data, 1);
 
         return new Response($out);
     }
-
 }

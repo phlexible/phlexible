@@ -26,7 +26,7 @@ use Phlexible\Component\Volume\Model\FolderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Database driver
+ * Database driver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -120,7 +120,7 @@ class DoctrineDriver extends AbstractDriver
         $folder = $this->getFolderRepository()->findOneBy(
             [
                 'volumeId' => $this->getVolume()->getId(),
-                'id'       => $id
+                'id' => $id,
             ]
         );
 
@@ -139,7 +139,7 @@ class DoctrineDriver extends AbstractDriver
         $folder = $this->getFolderRepository()->findOneBy(
             [
                 'volumeId' => $this->getVolume()->getId(),
-                'parentId' => null
+                'parentId' => null,
             ]
         );
 
@@ -160,7 +160,7 @@ class DoctrineDriver extends AbstractDriver
         $folder = $this->getFolderRepository()->findOneBy(
             [
                 'volumeId' => $this->getVolume()->getId(),
-                'path'     => $path
+                'path' => $path,
             ]
         );
 
@@ -227,8 +227,8 @@ class DoctrineDriver extends AbstractDriver
     {
         $file = $this->getFileRepository()->findOneBy(
             [
-                'id'      => $id,
-                'version' => $version
+                'id' => $id,
+                'version' => $version,
             ]
         );
 
@@ -313,7 +313,6 @@ class DoctrineDriver extends AbstractDriver
      */
     public function countFiles(array $criteria)
     {
-
         $qb = $this->getFileRepository()->createQueryBuilder('fi');
         $qb->select('COUNT(fi.id)');
 
@@ -371,8 +370,8 @@ class DoctrineDriver extends AbstractDriver
 
         $file = $this->getFileRepository()->findOneBy(
             [
-                'name'   => $name,
-                'folder' => $folder
+                'name' => $name,
+                'folder' => $folder,
             ]
         );
 
@@ -390,7 +389,7 @@ class DoctrineDriver extends AbstractDriver
     {
         $files = $this->getFileRepository()->findBy(
             [
-                'id' => $id
+                'id' => $id,
             ]
         );
 
@@ -413,7 +412,7 @@ class DoctrineDriver extends AbstractDriver
         $includeHidden = false)
     {
         $criteria = [
-            'folder' => $folder
+            'folder' => $folder,
         ];
 
         if (!$includeHidden) {
@@ -607,8 +606,8 @@ class DoctrineDriver extends AbstractDriver
             return;
         }
 
-        $oldPath = rtrim($oldPath, '/') . '/';
-        $replacePath = rtrim($folder->getPath(), '/') . '/';
+        $oldPath = rtrim($oldPath, '/').'/';
+        $replacePath = rtrim($folder->getPath(), '/').'/';
 
         $qb = $this->getFolderRepository()->createQueryBuilder('fo');
         $qb
@@ -634,8 +633,8 @@ class DoctrineDriver extends AbstractDriver
     {
         $this->updateFolder($folder);
 
-        $oldPath = rtrim($oldPath, '/') . '/';
-        $replacePath = rtrim($folder->getPath(), '/') . '/';
+        $oldPath = rtrim($oldPath, '/').'/';
+        $replacePath = rtrim($folder->getPath(), '/').'/';
 
         $qb = $this->getFolderRepository()->createQueryBuilder('fo');
         $qb
@@ -670,7 +669,7 @@ class DoctrineDriver extends AbstractDriver
     {
         if ($folder->getParentId()) {
             $targetFolder = $this->findFolder($folder->getParentId());
-            $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
+            $folderPath = trim($targetFolder->getPath().'/'.$folder->getName(), '/');
         } else {
             $folderPath = '';
         }
@@ -686,7 +685,7 @@ class DoctrineDriver extends AbstractDriver
     public function validateRenameFolder(FolderInterface $folder)
     {
         $targetFolder = $this->findFolder($folder->getParentId());
-        $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
+        $folderPath = trim($targetFolder->getPath().'/'.$folder->getName(), '/');
 
         if ($this->findFolderByPath($folderPath)) {
             throw new AlreadyExistsException("Folder {$folderPath} already exists.");
@@ -699,7 +698,7 @@ class DoctrineDriver extends AbstractDriver
     public function validateMoveFolder(FolderInterface $folder)
     {
         $targetFolder = $this->findFolder($folder->getParentId());
-        $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
+        $folderPath = trim($targetFolder->getPath().'/'.$folder->getName(), '/');
 
         if ($this->findFolderByPath($folderPath)) {
             throw new AlreadyExistsException("Folder {$folderPath} already exists.");
@@ -711,7 +710,7 @@ class DoctrineDriver extends AbstractDriver
      */
     public function validateCopyFolder(FolderInterface $folder, FolderInterface $targetFolder)
     {
-        $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
+        $folderPath = trim($targetFolder->getPath().'/'.$folder->getName(), '/');
 
         if ($this->findFolderByPath($folderPath)) {
             throw new AlreadyExistsException("Folder {$folderPath} already exists.");
@@ -723,7 +722,7 @@ class DoctrineDriver extends AbstractDriver
      */
     public function validateCreateFile(FileInterface $file, FolderInterface $folder)
     {
-        $filePath = $file->getFolder()->getPath() . '/' . $file->getName();
+        $filePath = $file->getFolder()->getPath().'/'.$file->getName();
         if ($this->findFileByPath($filePath)) {
             throw new AlreadyExistsException("File {$filePath} already exists.");
         }
@@ -742,7 +741,7 @@ class DoctrineDriver extends AbstractDriver
      */
     public function validateMoveFile(FileInterface $file, FolderInterface $folder)
     {
-        $filePath = $folder->getPath() . '/' . $file->getName();
+        $filePath = $folder->getPath().'/'.$file->getName();
         if ($this->findFileByPath($filePath)) {
             throw new AlreadyExistsException("File {$filePath} already exists.");
         }
@@ -767,7 +766,7 @@ class DoctrineDriver extends AbstractDriver
     {
         $filesystem = new Filesystem();
 
-        $physicalPath = $this->getVolume()->getRootDir() . $folder->getPath();
+        $physicalPath = $this->getVolume()->getRootDir().$folder->getPath();
 
         if ($filesystem->exists($physicalPath) && !is_dir($physicalPath)) {
             throw new IOException('Delete folder failed, not a folder.');

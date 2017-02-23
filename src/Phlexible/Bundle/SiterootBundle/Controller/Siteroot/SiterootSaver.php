@@ -18,7 +18,7 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Siteroot saver
+ * Siteroot saver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -38,7 +38,7 @@ class SiterootSaver
     }
 
     /**
-     * Save siteroot
+     * Save siteroot.
      *
      * @param Request $request
      *
@@ -120,10 +120,10 @@ class SiterootSaver
         foreach ($specialTidsData as $row) {
             $row['language'] = !empty($row['language']) ? $row['language'] : '';
 
-            $specialTids[$row['key'] . '__' . $row['language']] = [
-                'name'     => $row['key'],
+            $specialTids[$row['key'].'__'.$row['language']] = [
+                'name' => $row['key'],
                 'language' => $row['language'] ?: null,
-                'treeId'   => $row['tid'],
+                'treeId' => $row['tid'],
             ];
         }
         $siteroot->setSpecialTids(array_values($specialTids));

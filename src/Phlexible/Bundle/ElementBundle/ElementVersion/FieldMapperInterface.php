@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 
 /**
- * Field mapper interface
+ * Field mapper interface.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */

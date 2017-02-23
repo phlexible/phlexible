@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
- * Content tree node
+ * Content tree node.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

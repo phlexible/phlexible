@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Configure event
+ * Configure event.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */

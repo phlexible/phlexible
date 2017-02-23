@@ -18,7 +18,7 @@ use PHPExiftool\Driver\Value\ValueInterface;
 use PHPExiftool\Reader;
 
 /**
- * GetId3 attribute reader
+ * GetId3 attribute reader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

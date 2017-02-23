@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\GuiBundle\Menu;
 
 /**
- * Hierarchy builder
+ * Hierarchy builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -31,7 +31,7 @@ class HierarchicalSorter
     }
 
     /**
-     * Filter handlers by parent name
+     * Filter handlers by parent name.
      *
      * @param string             $parent
      * @param MenuItemCollection $items

@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Volume\Exception;
 
 /**
- * Invalid argument exception for volume
+ * Invalid argument exception for volume.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
-
 }

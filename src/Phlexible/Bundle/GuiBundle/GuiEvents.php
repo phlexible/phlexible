@@ -12,24 +12,24 @@
 namespace Phlexible\Bundle\GuiBundle;
 
 /**
- * Frame events
+ * Frame events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class GuiEvents
 {
     /**
-     * Get config event
+     * Get config event.
      */
     const GET_CONFIG = 'phlexible_gui.get_config';
 
     /**
-     * Get menu event
+     * Get menu event.
      */
     const GET_MENU = 'phlexible_gui.get_menu';
 
     /**
-     * View frame event
+     * View frame event.
      */
     const VIEW_FRAME = 'phlexible_gui.view_frame';
 }

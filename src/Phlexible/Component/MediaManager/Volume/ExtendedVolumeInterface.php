@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaManager\Volume;
 use Phlexible\Component\Volume\VolumeInterface;
 
 /**
- * Extended volume interface
+ * Extended volume interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

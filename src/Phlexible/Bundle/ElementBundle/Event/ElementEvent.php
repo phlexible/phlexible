@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Element event
+ * Element event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

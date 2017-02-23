@@ -22,7 +22,7 @@ use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Access manager
+ * Access manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -107,11 +107,11 @@ class AccessManager implements AccessManagerInterface
         $conn = $this->getConnection();
 
         if ($this->findObjectIdentityId($objectIdentity)) {
-            throw new \Exception("Identity is already persisted.");
+            throw new \Exception('Identity is already persisted.');
         }
 
         $data = array(
-            'type'       => $objectIdentity->getType(),
+            'type' => $objectIdentity->getType(),
             'identifier' => $objectIdentity->getIdentifier(),
         );
         $conn->insert('acl_object_identity', $data);
@@ -191,12 +191,12 @@ class AccessManager implements AccessManagerInterface
 
         foreach ($acl->getEntries() as $entry) {
             $conn->insert('acl_entry', array(
-                'object_identity_id'  => $objectIdentityId,
-                'security_type'       => $entry->getSecurityType(),
+                'object_identity_id' => $objectIdentityId,
+                'security_type' => $entry->getSecurityType(),
                 'security_identifier' => $entry->getSecurityIdentifier(),
-                'mask'                => $entry->getMask(),
-                'stop_mask'           => $entry->getStopMask(),
-                'no_inherit_mask'     => $entry->getNoInheritMask(),
+                'mask' => $entry->getMask(),
+                'stop_mask' => $entry->getStopMask(),
+                'no_inherit_mask' => $entry->getNoInheritMask(),
             ));
         }
 
@@ -211,12 +211,12 @@ class AccessManager implements AccessManagerInterface
         $conn = $this->getConnection();
 
         $conn->delete('acl_entry', array(
-            'type'       => $objectIdentity->getType(),
+            'type' => $objectIdentity->getType(),
             'identifier' => $objectIdentity->getIdentifier(),
         ));
 
         $conn->delete('acl_object_identity', array(
-            'type'       => $objectIdentity->getType(),
+            'type' => $objectIdentity->getType(),
             'identifier' => $objectIdentity->getIdentifier(),
         ));
     }

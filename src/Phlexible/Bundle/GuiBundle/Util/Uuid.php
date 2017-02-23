@@ -14,14 +14,14 @@ namespace Phlexible\Bundle\GuiBundle\Util;
 use Rhumsaa\Uuid\Uuid as BaseUuid;
 
 /**
- * Uuid generator wrapper
+ * Uuid generator wrapper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class Uuid
 {
     /**
-     * Generate a version 4 (random) UUID
+     * Generate a version 4 (random) UUID.
      *
      * @return string
      */
@@ -30,5 +30,3 @@ class Uuid
         return BaseUuid::uuid4()->toString();
     }
 }
-
-

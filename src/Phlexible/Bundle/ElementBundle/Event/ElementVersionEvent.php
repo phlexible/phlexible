@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Element version event
+ * Element version event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

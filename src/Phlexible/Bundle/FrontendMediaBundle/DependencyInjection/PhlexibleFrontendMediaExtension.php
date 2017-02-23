@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Frontend media extension
+ * Frontend media extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaTemplate\Model;
 
 /**
- * Template interface
+ * Template interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Mediator;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Element mediator
+ * Element mediator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,6 +46,7 @@ class Mediator implements MediatorInterface
 
         return $this;
     }
+
     /**
      * {@inheritdoc}
      */

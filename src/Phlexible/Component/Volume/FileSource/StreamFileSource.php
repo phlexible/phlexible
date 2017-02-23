@@ -14,7 +14,7 @@ namespace Phlexible\Component\Volume\FileSource;
 use Phlexible\Component\Volume\Exception\InvalidArgumentException;
 
 /**
- * Stream file source
+ * Stream file source.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

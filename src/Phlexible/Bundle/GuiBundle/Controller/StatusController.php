@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Status controller
+ * Status controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/status/gui")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 class StatusController extends Controller
 {
     /**
-     * List status actions
+     * List status actions.
      *
      * @return Response
      * @Route("", name="gui_status")
@@ -43,7 +43,7 @@ class StatusController extends Controller
     }
 
     /**
-     * Show events
+     * Show events.
      *
      * @return Response
      * @Route("/listeners", name="gui_status_listeners")
@@ -56,12 +56,12 @@ class StatusController extends Controller
         sort($listenerNames);
 
         $output = '<pre>';
-        $output .= str_repeat('=', 3) . str_pad(' Events / Listeners ', 80, '=') . PHP_EOL . PHP_EOL;
+        $output .= str_repeat('=', 3).str_pad(' Events / Listeners ', 80, '=').PHP_EOL.PHP_EOL;
 
         foreach ($listenerNames as $listenerName) {
             $listeners = $dispatcher->getListeners($listenerName);
 
-            $output .= $listenerName . ' (<a href="#' . $listenerName . '">' . count($listeners) . ' listeners</a>)' . PHP_EOL;
+            $output .= $listenerName.' (<a href="#'.$listenerName.'">'.count($listeners).' listeners</a>)'.PHP_EOL;
         }
 
         foreach ($listenerNames as $listenerName) {
@@ -71,17 +71,17 @@ class StatusController extends Controller
                 $listenerName = '(global)';
             }
 
-            $output .= PHP_EOL . PHP_EOL . str_repeat('-', 3) . '<a name="' . $listenerName . '"></a>' . str_pad(' ' . $listenerName . ' ', 80, '-') . PHP_EOL . PHP_EOL;
+            $output .= PHP_EOL.PHP_EOL.str_repeat('-', 3).'<a name="'.$listenerName.'"></a>'.str_pad(' '.$listenerName.' ', 80, '-').PHP_EOL.PHP_EOL;
 
             foreach ($listeners as $listener) {
                 if (is_array($listener)) {
                     if (is_object($listener[0])) {
-                        $listener = get_class($listener[0]) . '->' . $listener[1] . '()';
+                        $listener = get_class($listener[0]).'->'.$listener[1].'()';
                     } else {
-                        $listener = implode('::', $listener) . '()';
+                        $listener = implode('::', $listener).'()';
                     }
                 }
-                $output .= '* ' . $listener . PHP_EOL;
+                $output .= '* '.$listener.PHP_EOL;
             }
         }
 
@@ -89,7 +89,7 @@ class StatusController extends Controller
     }
 
     /**
-     * phpinfo
+     * phpinfo.
      *
      * @param Request $request
      *
@@ -108,7 +108,7 @@ class StatusController extends Controller
     }
 
     /**
-     * Show load
+     * Show load.
      *
      * @return Response
      * @Route("/load", name="gui_status_load")
@@ -120,4 +120,3 @@ class StatusController extends Controller
         return new Response($output);
     }
 }
-

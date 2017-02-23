@@ -14,7 +14,7 @@ namespace Phlexible\Component\Volume\Event;
 use Phlexible\Component\Volume\Model\FolderInterface;
 
 /**
- * Copy folder event
+ * Copy folder event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field;
 
 /**
- * Number field
+ * Number field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,5 +33,4 @@ class NumberField extends AbstractField
     {
         return 'float';
     }
-
 }

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 
 /**
- * Get config listener
+ * Get config listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

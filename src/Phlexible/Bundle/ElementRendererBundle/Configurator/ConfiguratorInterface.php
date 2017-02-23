@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementRendererBundle\Configurator;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Configurator interface
+ * Configurator interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

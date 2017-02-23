@@ -16,7 +16,7 @@ use Phlexible\Component\AccessControl\Domain\Entry;
 use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
 
 /**
- * Hierarchy mask resolver test
+ * Hierarchy mask resolver test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

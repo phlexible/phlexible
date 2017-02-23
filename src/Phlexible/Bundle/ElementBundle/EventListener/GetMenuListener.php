@@ -18,7 +18,7 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Get menu listener
+ * Get menu listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -90,11 +90,11 @@ class GetMenuListener
             $menuItem->setParameters(
                 [
                     'siteroot_id' => $siteroot->getId(),
-                    'title'       => $siteroot->getTitle(),
+                    'title' => $siteroot->getTitle(),
                 ]
             );
 
-            $items->set('siteroot_' . $siteroot->getId(), $menuItem);
+            $items->set('siteroot_'.$siteroot->getId(), $menuItem);
         }
     }
 }

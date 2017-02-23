@@ -12,14 +12,14 @@
 namespace Phlexible\Component\AccessControl\Model;
 
 /**
- * Hierarchical domain object interface
+ * Hierarchical domain object interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface HierarchicalDomainObjectInterface extends DomainObjectInterface
 {
     /**
-     * Return hierarchical domain identifier path
+     * Return hierarchical domain identifier path.
      *
      * @return array
      */

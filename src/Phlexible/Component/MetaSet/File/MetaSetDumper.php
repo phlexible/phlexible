@@ -15,7 +15,7 @@ use Phlexible\Component\MetaSet\File\Dumper\DumperInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
- * Meta set dumper
+ * Meta set dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,7 +46,7 @@ class MetaSetDumper
      */
     public function dumpMetaSet(MetaSetInterface $metaSet)
     {
-        $filename = strtolower($metaSet->getId() . '.' . $this->dumper->getExtension());
-        $this->dumper->dump($this->fileDir . $filename, $metaSet);
+        $filename = strtolower($metaSet->getId().'.'.$this->dumper->getExtension());
+        $this->dumper->dump($this->fileDir.$filename, $metaSet);
     }
 }

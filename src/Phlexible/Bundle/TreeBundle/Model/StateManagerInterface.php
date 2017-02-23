@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Model;
 use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
 
 /**
- * State manager interface
+ * State manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

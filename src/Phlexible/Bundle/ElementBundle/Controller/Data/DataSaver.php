@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Data saver
+ * Data saver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -118,7 +118,7 @@ class DataSaver
     }
 
     /**
-     * Save element data
+     * Save element data.
      *
      * @param Request       $request
      * @param UserInterface $user
@@ -585,6 +585,7 @@ class DataSaver
      * @param bool                 $masterLanguage
      *
      * @throws InvalidArgumentException
+     *
      * @return ElementStructure
      */
     private function applyValues(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values, $language, array $map = null, $masterLanguage = false)
@@ -676,7 +677,7 @@ class DataSaver
             }
             $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);
             if (!$elementStructure) {
-                throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: " . print_r($map, true));
+                throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: ".print_r($map, true));
             }
             if ($masterLanguage && ($node->getConfigurationValue('synchronized') === 'synchronized' || $node->getConfigurationValue('synchronized') === 'synchronized_unlink')) {
                 if ($node->getConfigurationValue('synchronized') === 'synchronized') {

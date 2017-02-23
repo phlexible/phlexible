@@ -12,11 +12,10 @@
 namespace Phlexible\Bundle\TreeBundle\Exception;
 
 /**
- * Node not found exception
+ * Node not found exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class NodeNotFoundException extends RuntimeException
 {
-
 }

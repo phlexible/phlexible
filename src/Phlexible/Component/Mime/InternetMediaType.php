@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Mime;
 
 /**
- * Internet media type
+ * Internet media type.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -46,7 +46,7 @@ class InternetMediaType
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -60,7 +60,7 @@ class InternetMediaType
     }
 
     /**
-     * Return type
+     * Return type.
      *
      * @return string
      */
@@ -72,7 +72,7 @@ class InternetMediaType
     /**
      * Is a type set?
      *
-     * @return boolean
+     * @return bool
      */
     public function hasType()
     {
@@ -80,7 +80,7 @@ class InternetMediaType
     }
 
     /**
-     * Set subtype
+     * Set subtype.
      *
      * @param string $subtype
      *
@@ -94,7 +94,7 @@ class InternetMediaType
     }
 
     /**
-     * Return subtype
+     * Return subtype.
      *
      * @return string
      */
@@ -106,7 +106,7 @@ class InternetMediaType
     /**
      * Is a subtype set?
      *
-     * @return boolean
+     * @return bool
      */
     public function hasSubtype()
     {
@@ -114,7 +114,7 @@ class InternetMediaType
     }
 
     /**
-     * Set parameters
+     * Set parameters.
      *
      * @param array $paramaters
      *
@@ -128,7 +128,7 @@ class InternetMediaType
     }
 
     /**
-     * Return parameters
+     * Return parameters.
      *
      * @return string
      */
@@ -140,7 +140,7 @@ class InternetMediaType
     /**
      * Are parameters set?
      *
-     * @return boolean
+     * @return bool
      */
     public function hasParameters()
     {
@@ -148,7 +148,7 @@ class InternetMediaType
     }
 
     /**
-     * Set parameter
+     * Set parameter.
      *
      * @param string $attribute
      * @param string $value
@@ -163,7 +163,7 @@ class InternetMediaType
     }
 
     /**
-     * Return parameter
+     * Return parameter.
      *
      * @param string $attribute
      *
@@ -175,7 +175,7 @@ class InternetMediaType
     }
 
     /**
-     * Return string representation
+     * Return string representation.
      *
      * @return string
      */
@@ -185,7 +185,7 @@ class InternetMediaType
     }
 
     /**
-     * Return string representation
+     * Return string representation.
      *
      * @return string
      */
@@ -199,16 +199,16 @@ class InternetMediaType
 
         $parameters = '';
         foreach ($this->parameters as $attribute => $value) {
-            $parameters .= ' ' . $attribute . '=' . $value;
+            $parameters .= ' '.$attribute.'='.$value;
         }
 
-        $string .= ';' . $parameters;
+        $string .= ';'.$parameters;
 
         return $string;
     }
 
     /**
-     * Return string representation without parameters
+     * Return string representation without parameters.
      *
      * @return string
      */
@@ -224,6 +224,6 @@ class InternetMediaType
             return $string;
         }
 
-        return $this->getType() . '/' . $this->getSubtype();
+        return $this->getType().'/'.$this->getSubtype();
     }
 }

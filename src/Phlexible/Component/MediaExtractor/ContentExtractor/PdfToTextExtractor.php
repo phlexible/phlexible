@@ -17,7 +17,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
 use Poppler\Processor\PdfFile;
 
 /**
- * PDF to text content extractor
+ * PDF to text content extractor.
  *
  * @author Phillip Look <plook@brainbits.net>
  */
@@ -57,5 +57,4 @@ class PdfToTextExtractor implements ExtractorInterface
 
         return $content;
     }
-
 }

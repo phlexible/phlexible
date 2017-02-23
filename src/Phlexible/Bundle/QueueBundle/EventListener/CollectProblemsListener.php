@@ -16,7 +16,7 @@ use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Phlexible\Bundle\ProblemBundle\Event\CollectProblemsEvent;
 
 /**
- * Collect problems listener
+ * Collect problems listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

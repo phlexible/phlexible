@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\GuiBundle\Security\RoleProvider;
 
 /**
- * Role provider
+ * Role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

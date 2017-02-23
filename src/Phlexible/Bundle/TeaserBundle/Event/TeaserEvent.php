@@ -15,7 +15,7 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Teaser event
+ * Teaser event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

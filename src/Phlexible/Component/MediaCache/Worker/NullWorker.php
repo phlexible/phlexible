@@ -12,15 +12,15 @@
 namespace Phlexible\Component\MediaCache\Worker;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Psr\Log\LoggerInterface;
 
 /**
- * Null cache worker
+ * Null cache worker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -42,16 +42,15 @@ class NullWorker extends AbstractWorker
     private $logger;
 
     /**
-     * @param CacheManagerInterface     $cacheManager
-     * @param CacheIdStrategyInterface  $cacheIdStrategy
-     * @param LoggerInterface           $logger
+     * @param CacheManagerInterface    $cacheManager
+     * @param CacheIdStrategyInterface $cacheIdStrategy
+     * @param LoggerInterface          $logger
      */
     public function __construct(
         CacheManagerInterface $cacheManager,
         CacheIdStrategyInterface $cacheIdStrategy,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->cacheManager = $cacheManager;
         $this->cacheIdStrategy = $cacheIdStrategy;
         $this->logger = $logger;

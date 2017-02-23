@@ -17,7 +17,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 
 /**
- * XML loader
+ * XML loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -41,7 +41,7 @@ class XmlLoader
      */
     public function load($eid, $version, $language)
     {
-        $pathname = $this->xmlDir . '/' . $eid . '_' . $language . '.xml';
+        $pathname = $this->xmlDir.'/'.$eid.'_'.$language.'.xml';
 
         if (!file_exists($pathname)) {
             return null;

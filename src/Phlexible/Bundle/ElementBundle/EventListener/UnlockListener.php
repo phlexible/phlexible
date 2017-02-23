@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\UserBundle\Event\UserEvent;
 
 /**
- * Unlock listener
+ * Unlock listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -36,7 +36,7 @@ class UnlockListener
 
     /**
      * User delete callback
-     * Cleanup users locks
+     * Cleanup users locks.
      *
      * @param UserEvent $event
      */

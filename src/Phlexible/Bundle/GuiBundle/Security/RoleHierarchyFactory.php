@@ -15,7 +15,7 @@ use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProviderInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 /**
- * Role hierarchy factory
+ * Role hierarchy factory.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

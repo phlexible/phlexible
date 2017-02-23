@@ -16,7 +16,7 @@ use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionProviderInterface;
 
 /**
- * Tree permission provider
+ * Tree permission provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

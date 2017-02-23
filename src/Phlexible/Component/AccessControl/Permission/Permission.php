@@ -14,7 +14,7 @@ namespace Phlexible\Component\AccessControl\Permission;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 
 /**
- * Permission
+ * Permission.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -57,7 +57,7 @@ class Permission
     }
 
     /**
-     * Return bit
+     * Return bit.
      *
      * @return int
      */

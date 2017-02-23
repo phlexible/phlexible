@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Twig media extension
+ * Twig media extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -290,15 +290,15 @@ class MediaExtension extends \Twig_Extension
         $attributes = $file->getAttributes();
 
         $info = [
-            'name'          => $file->getName(),
-            'mimetype'      => $file->getMimeType(),
+            'name' => $file->getName(),
+            'mimetype' => $file->getMimeType(),
             'mediaCategory' => $file->getMediaCategory(),
-            'mediaType'     => $file->getMediaType(),
-            'size'          => $file->getSize(),
-            'attributes'    => !empty($attributes['fileattributes']) ? $attributes['fileattributes'] : array(),
-            'createdAt'     => $file->getCreatedAt(),
-            'modifiedAt'    => $file->getModifiedAt(),
-            'meta'          => [],
+            'mediaType' => $file->getMediaType(),
+            'size' => $file->getSize(),
+            'attributes' => !empty($attributes['fileattributes']) ? $attributes['fileattributes'] : array(),
+            'createdAt' => $file->getCreatedAt(),
+            'modifiedAt' => $file->getModifiedAt(),
+            'meta' => [],
         ];
 
         $metasets = $this->metaSetResolver->resolve($file);

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaTemplateBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Media template role provider
+ * Media template role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

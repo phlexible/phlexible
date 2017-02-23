@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MetaSet\Model;
 
 /**
- * Meta set field interface
+ * Meta set field interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Component\AccessControl\Permission;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 
 /**
- * Permission resolver
+ * Permission resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -25,6 +25,7 @@ class PermissionResolver
      * @param int                  $mask
      *
      * @throws InvalidArgumentException
+     *
      * @return Permission[]
      */
     public function resolve(PermissionCollection $permissions, $mask)

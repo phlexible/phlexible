@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaType\Compiler;
 use Phlexible\Component\MediaType\Model\MediaTypeCollection;
 
 /**
- * CSS generator
+ * CSS generator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

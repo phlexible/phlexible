@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Mime\Exception;
 
 /**
- * Mime runtime exception
+ * Mime runtime exception.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
 class RuntimeException extends \RuntimeException
 {
-
 }

@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Messages portlet
+ * Messages portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -64,7 +64,7 @@ class MessagesPortlet extends Portlet
     }
 
     /**
-     * Return Portlet data
+     * Return Portlet data.
      *
      * @return array
      */
@@ -96,17 +96,17 @@ class MessagesPortlet extends Portlet
 
             $i = 0;
             do {
-                $subject .= ($i ? '<wbr />' : '') . mb_substr($message->getSubject(), $i, $i + 30, 'UTF-8');
+                $subject .= ($i ? '<wbr />' : '').mb_substr($message->getSubject(), $i, $i + 30, 'UTF-8');
                 $i += 30;
             } while ($i <= strlen($message->getSubject()));
 
             $data[] = [
-                'id'       => $message->getId(),
-                'subject'  => $subject,
-                'time'     => $message->getCreatedAt()->format('U'),
+                'id' => $message->getId(),
+                'subject' => $subject,
+                'time' => $message->getCreatedAt()->format('U'),
                 'priority' => $priorityList[$message->getPriority()],
-                'type'     => $typeList[$message->getType()],
-                'channel'  => $message->getChannel(),
+                'type' => $typeList[$message->getType()],
+                'channel' => $message->getChannel(),
             ];
         }
 

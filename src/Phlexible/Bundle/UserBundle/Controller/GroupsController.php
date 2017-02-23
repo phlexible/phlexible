@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Groups controller
+ * Groups controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/users/groups")
@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 class GroupsController extends Controller
 {
     /**
-     * List groups
+     * List groups.
      *
      * @return JsonResponse
      * @Route("", name="users_groups_list")
@@ -53,11 +53,11 @@ class GroupsController extends Controller
             sort($members);
 
             $groups[] = [
-                'gid'       => $group->getId(),
-                'name'      => $group->getName(),
-                'readonly'  => false,
+                'gid' => $group->getId(),
+                'name' => $group->getName(),
+                'readonly' => false,
                 'memberCnt' => count($members),
-                'members'   => $members
+                'members' => $members,
             ];
         }
 
@@ -65,7 +65,7 @@ class GroupsController extends Controller
     }
 
     /**
-     * Create new group
+     * Create new group.
      *
      * @param Request $request
      *
@@ -95,13 +95,13 @@ class GroupsController extends Controller
         $groupManager->updateGroup($group);
 
         $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('Group "' . $group->getName() . '" created.'));
+            ->post(UsersMessage::create('Group "'.$group->getName().'" created.'));
 
         return new ResultResponse(true, "Group $name created.");
     }
 
     /**
-     * Rename group
+     * Rename group.
      *
      * @param Request $request
      * @param string  $groupId
@@ -132,13 +132,13 @@ class GroupsController extends Controller
         $groupManager->updateGroup($group);
 
         $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('Group "' . $group->getName() . '" updated.'));
+            ->post(UsersMessage::create('Group "'.$group->getName().'" updated.'));
 
         return new ResultResponse(true, "Group $oldName renamed to $name.");
     }
 
     /**
-     * Delete group
+     * Delete group.
      *
      * @param string $groupId
      *
@@ -159,7 +159,7 @@ class GroupsController extends Controller
         $groupManager->deleteGroup($group);
 
         $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('Group "' . $group->getName() . '" deleted.'));
+            ->post(UsersMessage::create('Group "'.$group->getName().'" deleted.'));
 
         return new ResultResponse(true, "Group $name deleted.");
     }

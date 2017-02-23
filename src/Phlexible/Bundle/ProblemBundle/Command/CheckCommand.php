@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Check command
+ * Check command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -64,10 +64,10 @@ class CheckCommand extends ContainerAwareCommand
 
                 if (array_key_exists($existingProblemId, $problemIds)) {
                     $handled = true;
-                    $style->text("= " . $existingProblemId);
+                    $style->text('= '.$existingProblemId);
                     $existingProblem->setLastCheckedAt(new \DateTime());
-                    unset ($problems[$problemIds[$existingProblemId]]);
-                    unset ($existingProblems[$existingProblemKey]);
+                    unset($problems[$problemIds[$existingProblemId]]);
+                    unset($existingProblems[$existingProblemKey]);
                 }
             }
 
@@ -105,13 +105,13 @@ class CheckCommand extends ContainerAwareCommand
         $countAdd = count($problemList['add']);
         $countRemove = count($problemList['remove']);
         if ($countAdd) {
-            $body .= PHP_EOL . '+ ' . implode(PHP_EOL . '+ ', $problemList['add']);
+            $body .= PHP_EOL.'+ '.implode(PHP_EOL.'+ ', $problemList['add']);
             $subject = "Problem check found $countAdd new problem(s)";
             $total = "Problem check found <fg=red>$countAdd new</fg=red> problem(s)";
             $priority = ProblemsMessage::PRIORITY_HIGH;
         }
         if ($countRemove) {
-            $body .= PHP_EOL . '- ' . implode(PHP_EOL . '- ', $problemList['remove']);
+            $body .= PHP_EOL.'- '.implode(PHP_EOL.'- ', $problemList['remove']);
             $subject = "Problem check removed $countRemove existing problem(s)";
             $total = "Problem check removed <fg=green>$countRemove existing</fg=green> problem(s)";
             $priority = ProblemsMessage::PRIORITY_NORMAL;
@@ -136,5 +136,4 @@ class CheckCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

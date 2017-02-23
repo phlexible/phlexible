@@ -26,7 +26,7 @@ class TestPermissionProvider implements PermissionProviderInterface
     }
 }
 /**
- * Permission registry test
+ * Permission registry test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\File\Writer;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
- * Writer interface
+ * Writer interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

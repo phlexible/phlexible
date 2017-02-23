@@ -16,7 +16,7 @@ use Phlexible\Component\MetaSet\Model\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
 /**
- * File meta set resolver
+ * File meta set resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

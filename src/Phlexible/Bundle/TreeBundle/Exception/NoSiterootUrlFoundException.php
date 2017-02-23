@@ -12,11 +12,10 @@
 namespace Phlexible\Bundle\TreeBundle\Exception;
 
 /**
- * No siteroot url found exception
+ * No siteroot url found exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class NoSiterootUrlFoundException extends RuntimeException
 {
-
 }

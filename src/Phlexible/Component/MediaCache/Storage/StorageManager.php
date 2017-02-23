@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaCache\Storage;
 use Phlexible\Component\MediaCache\Exception\InvalidArgumentException;
 
 /**
- * Storage manager
+ * Storage manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -52,6 +52,7 @@ class StorageManager
      * @param string $name
      *
      * @return StorageInterface
+     *
      * @throws InvalidArgumentException
      */
     public function get($name)

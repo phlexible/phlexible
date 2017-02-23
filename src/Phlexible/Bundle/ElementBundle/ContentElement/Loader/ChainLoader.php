@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementBundle\ContentElement\Loader;
 
 /**
- * Chain loader
+ * Chain loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Stats command
+ * Stats command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -49,8 +49,8 @@ class StatsCommand extends ContainerAwareCommand
         $cntOk = $cacheManager->countBy(['cacheStatus' => CacheItem::STATUS_OK]);
         $cntDelegate = $cacheManager->countBy(['cacheStatus' => CacheItem::STATUS_DELEGATE]);
 
-        $output->writeln($cntCache . ' cached items.');
-        $output->writeln($cntWaiting . ' waiting items.');
+        $output->writeln($cntCache.' cached items.');
+        $output->writeln($cntWaiting.' waiting items.');
         $output->writeln('------------------------------');
         $output->writeln("<info>OK:       $cntOk</info>");
         $output->writeln("Delegate: $cntDelegate");
@@ -59,5 +59,4 @@ class StatsCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

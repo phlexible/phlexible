@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * File meta controller
+ * File meta controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/filemeta")
@@ -55,11 +55,11 @@ class FileMetaController extends Controller
                 $options = $optionResolver->resolve($field);
 
                 $fieldData = [
-                    'key'          => $field->getName(),
-                    'type'         => $field->getType(),
-                    'options'      => $options,
-                    'readonly'     => $field->isReadonly(),
-                    'required'     => $field->isRequired(),
+                    'key' => $field->getName(),
+                    'type' => $field->getType(),
+                    'options' => $options,
+                    'readonly' => $field->isReadonly(),
+                    'required' => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
                 ];
 
@@ -74,8 +74,8 @@ class FileMetaController extends Controller
 
             $meta[] = [
                 'set_id' => $metaSet->getId(),
-                'title'  => $metaSet->getName(),
-                'fields' => $fieldDatas
+                'title' => $metaSet->getName(),
+                'fields' => $fieldDatas,
             ];
         }
 
@@ -176,7 +176,7 @@ class FileMetaController extends Controller
         $sets = [];
         foreach ($metaSets as $metaSet) {
             $sets[] = [
-                'id'   => $metaSet->getId(),
+                'id' => $metaSet->getId(),
                 'name' => $metaSet->getName(),
             ];
         }

@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Twig_Environment;
 
 /**
- * User mailer
+ * User mailer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -54,7 +54,7 @@ class Mailer
     }
 
     /**
-     * Send an email to a user showing the new password
+     * Send an email to a user showing the new password.
      *
      * @param UserInterface $user
      */
@@ -73,7 +73,7 @@ class Mailer
     }
 
     /**
-     * Send an email to a user showing the new password
+     * Send an email to a user showing the new password.
      *
      * @param UserInterface $user
      */

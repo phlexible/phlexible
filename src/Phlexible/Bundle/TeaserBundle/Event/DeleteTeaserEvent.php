@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TeaserBundle\Event;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 
 /**
- * Delete teaser event
+ * Delete teaser event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

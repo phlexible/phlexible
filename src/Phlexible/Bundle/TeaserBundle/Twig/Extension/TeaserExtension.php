@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Teaser extension
+ * Teaser extension.
  *
  * @author Stephan Wentz <sw@symfony.com>
  */
@@ -58,7 +58,7 @@ class TeaserExtension extends \Twig_Extension
     }
 
     /**
-     * Renders a teaser
+     * Renders a teaser.
      *
      * @param ContentTeaser $teaser
      * @param array         $parameters

@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersionMappedField;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 
 /**
- * Content element
+ * Content element.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -96,7 +96,7 @@ class ContentElement
         ElementStructure $structure
     ) {
         $this->eid = (int) $eid;
-        $this->uniqueId = $uniqueId ? : null;
+        $this->uniqueId = $uniqueId ?: null;
         $this->elementtypeId = $elementtypeId;
         $this->elementtypeUniqueId = $elementtypeUniqueId;
         $this->elementtypeType = $elementtypeType;

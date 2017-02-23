@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Asset controller
+ * Asset controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/gui/asset")
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AssetController extends Controller
 {
     /**
-     * Output scripts
+     * Output scripts.
      *
      * @return Response
      * @Route("/gui.js", name="asset_scripts")
@@ -45,7 +45,7 @@ class AssetController extends Controller
     }
 
     /**
-     * Output scripts map
+     * Output scripts map.
      *
      * @return Response
      * @Route("/gui.js.map", name="asset_scripts_map")
@@ -59,7 +59,7 @@ class AssetController extends Controller
     }
 
     /**
-     * Output css
+     * Output css.
      *
      * @param Request $request
      *
@@ -85,7 +85,7 @@ class AssetController extends Controller
     }
 
     /**
-     * Output css map
+     * Output css map.
      *
      * @param Request $request
      *
@@ -106,7 +106,7 @@ class AssetController extends Controller
     }
 
     /**
-     * Output icon styles
+     * Output icon styles.
      *
      * @param Request $request
      *
@@ -122,7 +122,7 @@ class AssetController extends Controller
     }
 
     /**
-     * Output translations
+     * Output translations.
      *
      * @param Request $request
      * @param string  $language
@@ -138,4 +138,3 @@ class AssetController extends Controller
         return new BinaryFileResponse($asset->getFile(), 200, array('Content-Type' => 'text/javascript;charset=UTF-8'));
     }
 }
-

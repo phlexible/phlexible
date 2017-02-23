@@ -17,7 +17,7 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Get config listener
+ * Get config listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -82,8 +82,7 @@ class GetConfigListener
         $createUseMultilanguage,
         $createRestricted,
         $availableLanguages
-    )
-    {
+    ) {
         $this->siterootManager = $siterootManager;
         $this->treeManager = $treeManager;
         $this->authorizationChecker = $authorizationChecker;

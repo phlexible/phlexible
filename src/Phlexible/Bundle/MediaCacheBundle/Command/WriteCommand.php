@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Write command
+ * Write command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -60,7 +60,7 @@ class WriteCommand extends ContainerAwareCommand
 
         $current = 0;
         foreach ($cacheManager->findBy(array('queueStatus' => CacheItem::QUEUE_WAITING)) as $cacheItem) {
-            $current++;
+            ++$current;
             if ($progress) {
                 $progress->advance();
             }
@@ -70,6 +70,7 @@ class WriteCommand extends ContainerAwareCommand
                 function ($status, $worker, CacheItem $cacheItem = null) use ($output, $breakOnError, $current, $total) {
                     if (!$cacheItem) {
                         $output->writeln('No cache item');
+
                         return;
                     }
                     $worker = ($worker ? get_class($worker) : '-');
@@ -78,18 +79,18 @@ class WriteCommand extends ContainerAwareCommand
                     if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                         if ($status === 'no_worker' || $status === 'no_cacheitem') {
                             $output->writeln(
-                                "$current / $total " .
-                                "<fg=red>[$status]</fg=red> " .
-                                "worker:$worker " .
-                                "fileId:$fileId " .
+                                "$current / $total ".
+                                "<fg=red>[$status]</fg=red> ".
+                                "worker:$worker ".
+                                "fileId:$fileId ".
                                 "templateKey:$templateKey"
                             );
                         } elseif ($status === 'processing') {
                             $output->writeln(
-                                "$current / $total " .
-                                "<info>[$status]</info> " .
-                                "worker:$worker " .
-                                "fileId:$fileId " .
+                                "$current / $total ".
+                                "<info>[$status]</info> ".
+                                "worker:$worker ".
+                                "fileId:$fileId ".
                                 "templateKey:$templateKey"
                             );
                         } else {
@@ -97,13 +98,13 @@ class WriteCommand extends ContainerAwareCommand
                             $size = $cacheItem->getFileSize();
                             $color = ($status === 'ok' ? 'green' : ($status === 'error' ? 'red' : 'yellow'));
                             $output->writeln(
-                                "$current / $total " .
-                                "<comment>[result]</comment> " .
-                                "<fg=$color>status:$status</fg=$color> " .
-                                "worker:$worker " .
-                                "fileId:$fileId " .
-                                "templateKey:$templateKey " .
-                                "mimeType:$mimeType " .
+                                "$current / $total ".
+                                '<comment>[result]</comment> '.
+                                "<fg=$color>status:$status</fg=$color> ".
+                                "worker:$worker ".
+                                "fileId:$fileId ".
+                                "templateKey:$templateKey ".
+                                "mimeType:$mimeType ".
                                 "size: $size"
                             );
                         }

@@ -14,7 +14,7 @@ namespace Phlexible\Component\Mime\Tests\Adapter;
 use Phlexible\Component\Mime\Adapter\FileinfoAdapter;
 
 /**
- * Fileinfo adapter test
+ * Fileinfo adapter test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

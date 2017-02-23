@@ -20,7 +20,7 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Phlexible\Component\Volume\VolumeManager;
 
 /**
- * File usage
+ * File usage.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -47,10 +47,10 @@ class FolderUsageUpdater
     private $volumeManager;
 
     /**
-     * @param EntityManager  $entityManager
-     * @param TreeManager    $treeManager
-     * @param TeaserManager  $teaserManager
-     * @param VolumeManager  $volumeManager
+     * @param EntityManager $entityManager
+     * @param TreeManager   $treeManager
+     * @param TeaserManager $teaserManager
+     * @param VolumeManager $volumeManager
      */
     public function __construct(
         EntityManager $entityManager,

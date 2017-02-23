@@ -12,11 +12,10 @@
 namespace Phlexible\Bundle\SiterootBundle\Exception;
 
 /**
- * Exception interface for siteroot bundle
+ * Exception interface for siteroot bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExceptionInterface
 {
-
 }

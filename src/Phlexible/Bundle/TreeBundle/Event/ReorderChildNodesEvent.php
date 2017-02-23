@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Reorder child nodes event
+ * Reorder child nodes event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

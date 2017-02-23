@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field;
 
 /**
- * Radio field
+ * Radio field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

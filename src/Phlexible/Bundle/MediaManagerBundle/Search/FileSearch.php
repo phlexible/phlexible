@@ -11,15 +11,15 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Search;
 
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * File search
+ * File search.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -111,13 +111,13 @@ class FileSearch implements SearchProviderInterface
                 $file->getName(),
                 $createUser->getDisplayName(),
                 $file->getCreatedAt(),
-                '/media/' . $file->getId() . '/_mm_small',
+                '/media/'.$file->getId().'/_mm_small',
                 'Mediamanager File Search',
                 [
-                    'handler'    => 'media',
+                    'handler' => 'media',
                     'parameters' => [
-                        'start_file_id'     => $file->getId(),
-                        'start_folder_path' => '/' . implode('/', $folderPath)
+                        'start_file_id' => $file->getId(),
+                        'start_folder_path' => '/'.implode('/', $folderPath),
                     ],
                 ]
             );

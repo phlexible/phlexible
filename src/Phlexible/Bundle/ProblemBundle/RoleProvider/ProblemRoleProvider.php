@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ProblemBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Problem role provider
+ * Problem role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

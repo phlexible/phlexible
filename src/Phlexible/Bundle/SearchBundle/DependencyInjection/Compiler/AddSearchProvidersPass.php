@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add search providers pass
+ * Add search providers pass.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

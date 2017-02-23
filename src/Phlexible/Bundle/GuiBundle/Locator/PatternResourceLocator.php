@@ -52,12 +52,12 @@ class PatternResourceLocator extends FileLocator
     public function locate($name, $currentPath = null, $first = true)
     {
         $paths = [];
-        $path = $this->kernel->getRootDir() . '/Resources/' . $currentPath;
+        $path = $this->kernel->getRootDir().'/Resources/'.$currentPath;
         if (file_exists($path)) {
             $paths[] = $path;
         }
         foreach ($this->kernel->getBundles() as $bundle) {
-            $path = $bundle->getPath() . '/Resources/' . $currentPath;
+            $path = $bundle->getPath().'/Resources/'.$currentPath;
             if (file_exists($path)) {
                 $paths[] = $path;
             }

@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Upload controller
+ * Upload controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/upload")
@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 class UploadController extends Controller
 {
     /**
-     * Upload File
+     * Upload File.
      *
      * @param Request $request
      *
@@ -56,7 +56,7 @@ class UploadController extends Controller
                     'Target folder not found.',
                     [
                         'params' => $request->request->all(),
-                        'files'  => $request->files->all(),
+                        'files' => $request->files->all(),
                     ]
                 );
             }
@@ -67,7 +67,7 @@ class UploadController extends Controller
                     'No files received.',
                     [
                         'params' => $request->request->all(),
-                        'files'  => $request->files->all(),
+                        'files' => $request->files->all(),
                     ]
                 );
             }
@@ -81,24 +81,24 @@ class UploadController extends Controller
                 $file = $uploadHandler->handle($uploadedFile, $folderId, $this->getUser()->getId());
 
                 if ($file) {
-                    $cnt++;
+                    ++$cnt;
 
-                    $body = 'Filename: ' . $uploadedFile->getClientOriginalName() . PHP_EOL
-                        . 'Folder:   ' . $folder->getName() . PHP_EOL
-                        . 'Filesize: ' . $uploadedFile->getSize() . PHP_EOL
-                        . 'Filetype: ' . $file->getMimeType() . PHP_EOL;
+                    $body = 'Filename: '.$uploadedFile->getClientOriginalName().PHP_EOL
+                        .'Folder:   '.$folder->getName().PHP_EOL
+                        .'Filesize: '.$uploadedFile->getSize().PHP_EOL
+                        .'Filetype: '.$file->getMimeType().PHP_EOL;
 
-                    $message = MediaManagerMessage::create('File "' . $file->getName() . '" uploaded.', $body);
+                    $message = MediaManagerMessage::create('File "'.$file->getName().'" uploaded.', $body);
                     $this->get('phlexible_message.message_poster')->post($message);
                 }
             }
 
             return new ResultResponse(
                 true,
-                $cnt . ' file(s) uploaded.',
+                $cnt.' file(s) uploaded.',
                 [
                     'params' => $request->request->all(),
-                    'files'  => $request->files->all(),
+                    'files' => $request->files->all(),
                 ]
             );
         } catch (\Exception $e) {
@@ -107,9 +107,9 @@ class UploadController extends Controller
                 $e->getMessage(),
                 [
                     'params' => $request->request->all(),
-                    'files'  => $request->files->all(),
-                    'trace'  => $e->getTraceAsString(),
-                    'traceArray'  => $e->getTrace(),
+                    'files' => $request->files->all(),
+                    'trace' => $e->getTraceAsString(),
+                    'traceArray' => $e->getTrace(),
                 ]
             );
         }
@@ -145,13 +145,13 @@ class UploadController extends Controller
             $data = [
                 'versions' => $supportsVersions,
                 'temp_key' => $tempFile->getId(),
-                'temp_id'  => $tempFile->getId(),
-                'new_id'   => $tempFile->getFileId(),
+                'temp_id' => $tempFile->getId(),
+                'new_id' => $tempFile->getFileId(),
                 'new_name' => $newName,
                 'new_type' => $newType->getName(),
                 'new_size' => $tempFile->getSize(),
-                'wizard'   => false,
-                'total'    => $tempStorage->count(),
+                'wizard' => false,
+                'total' => $tempStorage->count(),
             ];
 
             if ($tempFile->getFileId()) {
@@ -160,7 +160,7 @@ class UploadController extends Controller
                 $alternativeName = $tempHandler->createAlternateFilename($tempFile, $volume);
 
                 $data['old_name'] = $tempFile->getName();
-                $data['old_id']   = $tempFile->getFileId();
+                $data['old_id'] = $tempFile->getFileId();
                 $data['old_type'] = $oldFile->getMediaType();
                 $data['old_size'] = $oldFile->getSize();
                 $data['alternative_name'] = $alternativeName;
@@ -223,7 +223,7 @@ class UploadController extends Controller
             $tempHandler->handle($action, $tempId);
         }
 
-        return new ResultResponse(true, ($all ? 'All' : 'File') . ' saved with action ' . $action);
+        return new ResultResponse(true, ($all ? 'All' : 'File').' saved with action '.$action);
     }
 
     /**
@@ -244,7 +244,7 @@ class UploadController extends Controller
         $template = $templateManager->find($templateKey);
         $tempFile = $tempStorage->get($tempId);
 
-        $outFilename = $this->container->getParameter('phlexible_media_manager.temp_dir') . 'preview.png';
+        $outFilename = $this->container->getParameter('phlexible_media_manager.temp_dir').'preview.png';
         $imageApplier->apply($template, new File(), $tempFile->getPath(), $outFilename);
 
         $response = new BinaryFileResponse($outFilename, 200, array('Content-Type' => 'image/png'));
@@ -264,7 +264,7 @@ class UploadController extends Controller
         foreach ($allSets as $key => $set) {
             $sets[] = [
                 'key' => $key,
-                'title' => $set->getTitle()
+                'title' => $set->getTitle(),
             ];
         }
 
@@ -304,7 +304,7 @@ class UploadController extends Controller
                 $meta[$key]['tkey'] = $pageKeys[$key];
             }
 
-            if ($row['type'] == 'select') {
+            if ($row['type'] === 'select') {
                 $options = explode(',', $row['options']);
 
                 foreach ($options as $k => $okey) {
@@ -317,7 +317,7 @@ class UploadController extends Controller
                 }
 
                 $meta[$key]['options'] = $options;
-            } elseif ($row['type'] == 'suggest') {
+            } elseif ($row['type'] === 'suggest') {
                 $sourceId = $row['options'];
                 $options = ['source_id' => $sourceId];
 
@@ -332,7 +332,6 @@ class UploadController extends Controller
                     foreach ($keys as $value) {
                         $options["values_$language"][] = [$value, $value];
                     }
-
                 }
 
                 $meta[$key]['options'] = $options;
@@ -357,7 +356,7 @@ class UploadController extends Controller
                         $meta[$key]['tkey'] = $pageKeys[$key];
                     }
 
-                    if ($row['type'] == 'select') {
+                    if ($row['type'] === 'select') {
                         $options = explode(',', $row['options']);
 
                         foreach ($options as $k => $okey) {
@@ -370,7 +369,7 @@ class UploadController extends Controller
                         }
 
                         $meta[$key]['options'] = $options;
-                    } elseif ($row['type'] == 'suggest') {
+                    } elseif ($row['type'] === 'suggest') {
                         $sourceId = $row['options'];
                         $options = ['source_id' => $sourceId];
 
@@ -391,7 +390,6 @@ class UploadController extends Controller
                     }
                 }
             } catch (\Exception $e) {
-
             }
         }
 

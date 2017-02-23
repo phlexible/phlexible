@@ -12,11 +12,10 @@
 namespace Phlexible\Component\AccessControl\Exception;
 
 /**
- * Exception interface for access control bundle
+ * Exception interface for access control bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExceptionInterface
 {
-
 }

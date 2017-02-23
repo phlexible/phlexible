@@ -14,7 +14,7 @@ namespace Phlexible\Component\Mime;
 use Phlexible\Component\Mime\Adapter\AdapterInterface;
 
 /**
- * This class provides automatic mimetype detection functionality
+ * This class provides automatic mimetype detection functionality.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -40,7 +40,7 @@ class MimeDetector
     }
 
     /**
-     * Set adapter
+     * Set adapter.
      *
      * @param AdapterInterface $adapter
      */
@@ -50,7 +50,7 @@ class MimeDetector
     }
 
     /**
-     * Return adapter
+     * Return adapter.
      *
      * @return AdapterInterface
      */
@@ -60,7 +60,7 @@ class MimeDetector
     }
 
     /**
-     * Detect the internet media type for the given file
+     * Detect the internet media type for the given file.
      *
      * @param string $filename
      * @param string $return
@@ -108,7 +108,7 @@ class MimeDetector
     }
 
     /**
-     * Parse string to internet media type
+     * Parse string to internet media type.
      *
      * @param string $internetMediaTypeString
      *

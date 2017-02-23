@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field;
 
 /**
- * Timecode field
+ * Timecode field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

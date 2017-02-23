@@ -15,13 +15,12 @@ use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
- * Ensure media manager initialized before filter listener
+ * Ensure media manager initialized before filter listener.
  *
  * @author Tim Hoepfner <thoepfner@brainbits.net>
  */
 class EnsureMediaManagerInitializedBeforeFilterListener
 {
-
     /**
      * @var VolumeManager
      */
@@ -29,6 +28,7 @@ class EnsureMediaManagerInitializedBeforeFilterListener
 
     /**
      * EnsureMediaManagerInitializedBeforeFilter constructor.
+     *
      * @param VolumeManager $volumeManager
      */
     public function __construct(VolumeManager $volumeManager)
@@ -38,6 +38,7 @@ class EnsureMediaManagerInitializedBeforeFilterListener
 
     /**
      * @param FilterControllerEvent $event
+     *
      * @throws \Exception
      */
     public function onKernelController(FilterControllerEvent $event)
@@ -73,14 +74,15 @@ class EnsureMediaManagerInitializedBeforeFilterListener
     /**
      * Determine if a given string starts with a given substring.
      *
-     * @param  string  $haystack
-     * @param  string|array  $needles
+     * @param string       $haystack
+     * @param string|array $needles
+     *
      * @return bool
      */
     private function startsWith($haystack, $needles)
     {
         foreach ((array) $needles as $needle) {
-            if ($needle != '' && mb_strpos($haystack, $needle) === 0) {
+            if ($needle !== '' && mb_strpos($haystack, $needle) === 0) {
                 return true;
             }
         }

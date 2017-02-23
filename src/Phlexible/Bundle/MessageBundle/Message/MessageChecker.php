@@ -18,14 +18,14 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Exception\InvalidArgumentException;
 
 /**
- * Message check
+ * Message check.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class MessageChecker
 {
     /**
-     * Check if message satisfies the given filter
+     * Check if message satisfies the given filter.
      *
      * @param Filter  $filter
      * @param Message $message
@@ -38,12 +38,13 @@ class MessageChecker
     }
 
     /**
-     * Check if message satisfies the given criteria
+     * Check if message satisfies the given criteria.
      *
      * @param Criteria $criteria
      * @param Message  $message
      *
      * @throws InvalidArgumentException
+     *
      * @return bool
      */
     public function check(Criteria $criteria, Message $message)
@@ -56,18 +57,17 @@ class MessageChecker
 
                 return true;
             } elseif (!$criterium instanceof Criterium) {
-                throw new InvalidArgumentException('Criterium is neither of type Criterium nor Criteria. Type is ' . gettype($criterium));
+                throw new InvalidArgumentException('Criterium is neither of type Criterium nor Criteria. Type is '.gettype($criterium));
             }
 
-            $type  = $criterium->getType();
+            $type = $criterium->getType();
             $value = $criterium->getValue();
 
             if (!strlen($value)) {
                 continue;
             }
 
-            switch ($type)
-            {
+            switch ($type) {
                 case Criteria::CRITERIUM_SUBJECT_LIKE:
                     if (stristr($message->getSubject(), $value) === false) {
                         continue 2;
@@ -93,7 +93,7 @@ class MessageChecker
                     break;
 
                 case Criteria::CRITERIUM_PRIORITY_IS:
-                    if ($message->getPriority() != $value) {
+                    if ($message->getPriority() !== $value) {
                         continue 2;
                     }
                     break;
@@ -111,7 +111,7 @@ class MessageChecker
                     break;
 
                 case Criteria::CRITERIUM_TYPE_IS:
-                    if ($message->getType() != $value) {
+                    if ($message->getType() !== $value) {
                         continue 2;
                     }
                     break;
@@ -123,7 +123,7 @@ class MessageChecker
                     break;
 
                 case Criteria::CRITERIUM_CHANNEL_IS:
-                    if ($message->getChannel() != $value) {
+                    if ($message->getChannel() !== $value) {
                         continue 2;
                     }
                     break;
@@ -141,7 +141,7 @@ class MessageChecker
                     break;
 
                 case Criteria::CRITERIUM_ROLE_IS:
-                    if ($message->getRole() != $value) {
+                    if ($message->getRole() !== $value) {
                         continue 2;
                     }
                     break;

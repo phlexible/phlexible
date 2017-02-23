@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\QueueBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Queue role provider
+ * Queue role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Element version repository
+ * Element version repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Mime\Tests\Adapter;
 
 /**
- * Abstract concrete adapter test
+ * Abstract concrete adapter test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -67,11 +67,11 @@ abstract class AbstractConcreteAdapterTest extends AbstractAdapterTest
             try {
                 $mimeType = $adapter->getInternetMediaTypeStringFromFile($this->getFile($file));
             } catch (\Exception $e) {
-                $this->fail('Unexpected exception: ' . get_class($e) . ' (' . $e->getMessage() . ')');
+                $this->fail('Unexpected exception: '.get_class($e).' ('.$e->getMessage().')');
             }
 
             if (!in_array($mimeType, $expectedMimeTypes)) {
-                $fails[] = $file . ': got ' . $mimeType . ', expected ' . implode(' | ', $expectedMimeTypes);
+                $fails[] = $file.': got '.$mimeType.', expected '.implode(' | ', $expectedMimeTypes);
             }
         }
 

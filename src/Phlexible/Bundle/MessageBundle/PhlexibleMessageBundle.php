@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MessageBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Message bundle
+ * Message bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

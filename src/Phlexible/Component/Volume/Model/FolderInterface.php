@@ -14,7 +14,7 @@ namespace Phlexible\Component\Volume\Model;
 use Phlexible\Component\Volume\VolumeInterface;
 
 /**
- * Folder interface
+ * Folder interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

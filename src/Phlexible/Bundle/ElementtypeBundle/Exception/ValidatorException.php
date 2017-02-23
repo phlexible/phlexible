@@ -14,11 +14,10 @@ namespace Phlexible\Bundle\ElementtypeBundle\Exception;
 use Symfony\Component\Validator\Exception\ValidatorException as BaseValidatorException;
 
 /**
- * Validator exception
+ * Validator exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class ValidatorException extends BaseValidatorException
 {
-
 }

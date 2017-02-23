@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * List controller
+ * List controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/tree/list")
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ListController extends Controller
 {
     /**
-     * List all Elements
+     * List all Elements.
      *
      * @param Request $request
      *
@@ -77,30 +77,29 @@ class ListController extends Controller
         }
 
         $parent = [
-            'tid'             => (int) $tid,
-            'teaser_id'       => (int) 0,
-            'eid'             => (int) $eid,
-            'title'           => $elementVersion->getBackendTitle($language, $elementMasterLanguage),
+            'tid' => (int) $tid,
+            'teaser_id' => (int) 0,
+            'eid' => (int) $eid,
+            'title' => $elementVersion->getBackendTitle($language, $elementMasterLanguage),
             'element_type_id' => $elementtype->getId(),
-            'element_type'    => $elementtype->getTitle(),
-            'icon'            => $iconResolver->resolveTreeNode($node, $language),
-            'author'          => 'author',
-            'version'         => $elementVersion->getVersion(),
-            'create_time'     => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
-            'publish_time'    => $node->getTree()->getPublishedAt($node, $language) ? $node->getTree()->getPublishedAt($node, $language)->format('Y-m-d H:i:s') : null,
-            'custom_date'     => $elementVersion->getCustomDate($language) ? $elementVersion->getCustomDate($language)->format('Y-m-d H:i:s') : null,
-            'language'        => $language,
-            'sort'            => 0,
-            'sort_mode'       => $node->getSortMode(),
-            'sort_dir'        => $node->getSortDir(),
-            'version_latest'  => 1, //(int) $node->getLatestVersion(),
-            'version_online'  => 2, //(int) $node->getOnlineVersion($language),
-            'status'          => ' o_O ',
-            'rights'          => $userRights,
-            'qtip'            =>
-                $elementtype->getTitle() . ', Version ' . $elementtype->getRevision() . '<br>' .
-                'Version ' . $elementVersion->getVersion() . '<br>' .
-                37 . ' Versions<br>'
+            'element_type' => $elementtype->getTitle(),
+            'icon' => $iconResolver->resolveTreeNode($node, $language),
+            'author' => 'author',
+            'version' => $elementVersion->getVersion(),
+            'create_time' => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
+            'publish_time' => $node->getTree()->getPublishedAt($node, $language) ? $node->getTree()->getPublishedAt($node, $language)->format('Y-m-d H:i:s') : null,
+            'custom_date' => $elementVersion->getCustomDate($language) ? $elementVersion->getCustomDate($language)->format('Y-m-d H:i:s') : null,
+            'language' => $language,
+            'sort' => 0,
+            'sort_mode' => $node->getSortMode(),
+            'sort_dir' => $node->getSortDir(),
+            'version_latest' => 1, //(int) $node->getLatestVersion(),
+            'version_online' => 2, //(int) $node->getOnlineVersion($language),
+            'status' => ' o_O ',
+            'rights' => $userRights,
+            'qtip' => $elementtype->getTitle().', Version '.$elementtype->getRevision().'<br>'.
+                'Version '.$elementVersion->getVersion().'<br>'.
+                37 .' Versions<br>',
         ];
 
         $filter = new TreeFilter(
@@ -134,30 +133,30 @@ class ListController extends Controller
             $childElementtype = $elementService->findElementtype($childElement);
 
             $data[] = [
-                'tid'             => (int) $childNode->getId(),
-                'eid'             => (int) $childElement->getEid(),
-                '_type'           => 'element',
-                'title'           => $childTitle,
+                'tid' => (int) $childNode->getId(),
+                'eid' => (int) $childElement->getEid(),
+                '_type' => 'element',
+                'title' => $childTitle,
                 'element_type_id' => $childElementtype->getId(),
-                'element_type'    => $childElementtype->getTitle(),
-                'navigation'      => 0, //$childNode->inNavigation($childElementVersion->getVersion()),
-                'restricted'      => 0, //$childNode->isRestricted($childElementVersion->getVersion()),
-                'icon'            => $iconResolver->resolveTreeNode($childNode, $language),
-                'author'          => 'author',
-                'version'         => $childElementVersion->getVersion(),
-                'create_time'     => $childNode->getCreatedAt()->format('Y-m-d H:i:s'),
+                'element_type' => $childElementtype->getTitle(),
+                'navigation' => 0, //$childNode->inNavigation($childElementVersion->getVersion()),
+                'restricted' => 0, //$childNode->isRestricted($childElementVersion->getVersion()),
+                'icon' => $iconResolver->resolveTreeNode($childNode, $language),
+                'author' => 'author',
+                'version' => $childElementVersion->getVersion(),
+                'create_time' => $childNode->getCreatedAt()->format('Y-m-d H:i:s'),
                 // 'change_time'     => $child['modify_time'],
-                'publish_time'    => $childNode->getTree()->getPublishedAt($childNode, $language) ? $node->getTree()->getPublishedAt($childNode, $language)->format('Y-m-d H:i:s') : null,
-                'custom_date'     => $childElementVersion->getCustomDate($language) ? $childElementVersion->getCustomDate($language)->format('Y-m-d H:i:s') : null,
-                'language'        => $language,
-                'sort'            => (int) $childNode->getSort(),
-                'version_latest'  => 1, //(int) $childNode->getLatestVersion(),
-                'version_online'  => 2, //(int) $childNode->getOnlineVersion($language),
-                'status'          => '>o>',
-                'rights'          => $userRights,
-                'qtip'            => $childElementtype->getTitle() . ', ' .
-                    'ET Version ' . $childElementtype->getRevision() . '<br>' .
-                    'Version ' . $childElementVersion->getVersion() . '<br>',
+                'publish_time' => $childNode->getTree()->getPublishedAt($childNode, $language) ? $node->getTree()->getPublishedAt($childNode, $language)->format('Y-m-d H:i:s') : null,
+                'custom_date' => $childElementVersion->getCustomDate($language) ? $childElementVersion->getCustomDate($language)->format('Y-m-d H:i:s') : null,
+                'language' => $language,
+                'sort' => (int) $childNode->getSort(),
+                'version_latest' => 1, //(int) $childNode->getLatestVersion(),
+                'version_online' => 2, //(int) $childNode->getOnlineVersion($language),
+                'status' => '>o>',
+                'rights' => $userRights,
+                'qtip' => $childElementtype->getTitle().', '.
+                    'ET Version '.$childElementtype->getRevision().'<br>'.
+                    'Version '.$childElementVersion->getVersion().'<br>',
             ];
         }
 
@@ -165,13 +164,13 @@ class ListController extends Controller
 
         return new JsonResponse([
             'parent' => $parent,
-            'list'   => $data,
-            'total'  => $cnt
+            'list' => $data,
+            'total' => $cnt,
         ]);
     }
 
     /**
-     * Node reordering
+     * Node reordering.
      *
      * @param Request $request
      *

@@ -15,7 +15,7 @@ use Phlexible\Component\MediaTemplate\Exception\InvalidClassException;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * XML loader
+ * XML loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

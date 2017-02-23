@@ -15,7 +15,7 @@ use Phlexible\Component\Bundler\Builder\ResolvingBuilder;
 use Phlexible\Component\Bundler\ResourceResolver\ResolvedResources;
 
 /**
- * Scripts builder
+ * Scripts builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,7 +43,7 @@ class ScriptsBuilder extends ResolvingBuilder
     protected function sanitizePath($path)
     {
         return preg_match('#^/phlexible/([a-z0-9\-_.]+)/scripts/([/A-Za-z0-9\-_.]+\.js)$#', $path, $match)
-            ? $match[1] . '/' . $match[2]
+            ? $match[1].'/'.$match[2]
             : $path;
     }
 
@@ -52,18 +52,18 @@ class ScriptsBuilder extends ResolvingBuilder
      */
     protected function prefixContent(ResolvedResources $resources)
     {
-        $prefix = '/* JS created on: ' . date('Y-m-d H:i:s') . ' */' . PHP_EOL;
+        $prefix = '/* JS created on: '.date('Y-m-d H:i:s').' */'.PHP_EOL;
 
         if (!$this->isDebug() || !count($resources->getUnusedResources())) {
             return $prefix;
         }
 
-        $prefix .= '/* ' . PHP_EOL;
-        $prefix .= ' * Unused resources:' . PHP_EOL;
+        $prefix .= '/* '.PHP_EOL;
+        $prefix .= ' * Unused resources:'.PHP_EOL;
         foreach ($resources->getUnusedResources() as $unusedResource) {
-            $prefix .= ' * ' . $unusedResource->getPath() . PHP_EOL;
+            $prefix .= ' * '.$unusedResource->getPath().PHP_EOL;
         }
-        $prefix .= ' */' . PHP_EOL;
+        $prefix .= ' */'.PHP_EOL;
 
         return $prefix;
     }

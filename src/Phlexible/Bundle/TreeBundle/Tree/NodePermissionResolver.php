@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Node permission resolver
+ * Node permission resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

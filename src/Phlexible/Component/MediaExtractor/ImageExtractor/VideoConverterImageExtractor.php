@@ -17,7 +17,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Video converter extractor
+ * Video converter extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -65,7 +65,7 @@ class VideoConverterImageExtractor implements ExtractorInterface
         $imageFilename = null;
 
         try {
-            $imageFilename = $this->tempDir . '/' . uniqid() . '.jpg';
+            $imageFilename = $this->tempDir.'/'.uniqid().'.jpg';
 
             $this->converter
                 ->open($filename)

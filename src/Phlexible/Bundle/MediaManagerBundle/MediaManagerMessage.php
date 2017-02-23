@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaManagerBundle;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
- * Media manager message
+ * Media manager message.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

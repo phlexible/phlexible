@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Content element builder
+ * Content element builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -56,10 +56,10 @@ class ContentElementBuilder
      */
     public function build($eid, $version, $language)
     {
-        $element            = $this->elementService->findElement($eid);
-        $elementVersion     = $this->elementService->findElementVersion($element, $version);
-        $elementStructure   = $this->elementService->findElementStructure($elementVersion, $language);
-        $elementtype        = $this->elementService->findElementtype($element);
+        $element = $this->elementService->findElement($eid);
+        $elementVersion = $this->elementService->findElementVersion($element, $version);
+        $elementStructure = $this->elementService->findElementStructure($elementVersion, $language);
+        $elementtype = $this->elementService->findElementtype($element);
 
         $mappedFields = $elementVersion->getMappedFields();
         if (isset($mappedFields[$language])) {

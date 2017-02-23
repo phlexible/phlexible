@@ -14,7 +14,6 @@ namespace Phlexible\Component\MediaCache\Queue;
 use Phlexible\Bundle\GuiBundle\Properties\Properties;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
-use Phlexible\Component\MediaCache\Queue as BaseQueue;
 use Phlexible\Component\MediaCache\Worker\WorkerResolver;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
@@ -22,7 +21,7 @@ use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Filesystem\LockHandler;
 
 /**
- * Queue processor
+ * Queue processor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -114,6 +113,7 @@ class QueueProcessor
 
     /**
      * @return LockHandler
+     *
      * @throws AlreadyRunningException
      */
     private function lock()

@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Folder meta controller
+ * Folder meta controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/foldermeta")
@@ -54,11 +54,11 @@ class FolderMetaController extends Controller
                 $options = $optionResolver->resolve($field);
 
                 $fieldData = [
-                    'key'          => $field->getName(),
-                    'type'         => $field->getType(),
-                    'options'      => $options,
-                    'readonly'     => $field->isReadonly(),
-                    'required'     => $field->isRequired(),
+                    'key' => $field->getName(),
+                    'type' => $field->getType(),
+                    'options' => $options,
+                    'readonly' => $field->isReadonly(),
+                    'required' => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
                 ];
 
@@ -73,8 +73,8 @@ class FolderMetaController extends Controller
 
             $meta[] = [
                 'set_id' => $metaSet->getId(),
-                'title'  => $metaSet->getName(),
-                'fields' => $fieldDatas
+                'title' => $metaSet->getName(),
+                'fields' => $fieldDatas,
             ];
         }
 
@@ -173,7 +173,7 @@ class FolderMetaController extends Controller
         $sets = [];
         foreach ($metaSets as $metaSet) {
             $sets[] = [
-                'id'   => $metaSet->getId(),
+                'id' => $metaSet->getId(),
                 'name' => $metaSet->getName(),
             ];
         }

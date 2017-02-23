@@ -15,7 +15,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Default cache id strategy
+ * Default cache id strategy.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

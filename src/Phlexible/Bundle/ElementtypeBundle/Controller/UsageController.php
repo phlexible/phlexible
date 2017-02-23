@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Usage controller
+ * Usage controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elementtypes/usage")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 class UsageController extends Controller
 {
     /**
-     * Show Usage of an Element Type
+     * Show Usage of an Element Type.
      *
      * @param Request $request
      *
@@ -46,10 +46,10 @@ class UsageController extends Controller
         $usages = [];
         foreach ($usageManager->getUsage($elementtype) as $usage) {
             $usages[] = [
-                'type'           => $usage->getType(),
-                'as'             => $usage->getAs(),
-                'id'             => $usage->getId(),
-                'title'          => $usage->getTitle(),
+                'type' => $usage->getType(),
+                'as' => $usage->getAs(),
+                'id' => $usage->getId(),
+                'title' => $usage->getTitle(),
                 'latest_version' => $usage->getLatestVersion(),
             ];
         }

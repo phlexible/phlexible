@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Elementtype manager
+ * Elementtype manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

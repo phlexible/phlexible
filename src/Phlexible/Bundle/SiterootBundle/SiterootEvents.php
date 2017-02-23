@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\SiterootBundle;
 
 /**
- * Siteroot events
+ * Siteroot events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Component\Volume\VolumeInterface;
 
 /**
- * File
+ * File.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -240,7 +240,7 @@ class File implements FileInterface
     public function getPhysicalPath()
     {
         $rootDir = rtrim($this->getVolume()->getRootDir(), '/');
-        $physicalPath = $rootDir . '/' . $this->hash;
+        $physicalPath = $rootDir.'/'.$this->hash;
 
         return $physicalPath;
     }

@@ -14,14 +14,14 @@ namespace Phlexible\Component\MediaTemplate\File\Loader;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Loader interface
+ * Loader interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface LoaderInterface
 {
     /**
-     * Return supported extension
+     * Return supported extension.
      *
      * @return string
      */

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementRendererBundle\Configurator;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Element renderer configuration
+ * Element renderer configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

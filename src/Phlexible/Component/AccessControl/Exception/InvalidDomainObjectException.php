@@ -12,11 +12,10 @@
 namespace Phlexible\Component\AccessControl\Exception;
 
 /**
- * Invalid domain object exception for access control bundle
+ * Invalid domain object exception for access control bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class InvalidDomainObjectException extends InvalidArgumentException
 {
-
 }

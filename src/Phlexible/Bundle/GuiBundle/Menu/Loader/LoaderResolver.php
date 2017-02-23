@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
 
 /**
- * Loader resolver
+ * Loader resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

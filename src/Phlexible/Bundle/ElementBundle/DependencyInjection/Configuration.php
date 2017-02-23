@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Elements configuration
+ * Elements configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field;
 
 /**
- * Base field
+ * Base field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

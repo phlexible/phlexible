@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaType\Model;
 
 /**
- * Media type
+ * Media type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -104,7 +104,7 @@ class MediaType
     }
 
     /**
-     * Return localized title
+     * Return localized title.
      *
      * @param string $code
      *
@@ -120,7 +120,7 @@ class MediaType
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $code
      * @param string $title

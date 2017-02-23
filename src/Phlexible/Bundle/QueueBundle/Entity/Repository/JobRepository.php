@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\QueueBundle\Entity\Job;
 
 /**
- * Queue item repository
+ * Queue item repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -57,7 +57,7 @@ class JobRepository extends EntityRepository
     }
 
     /**
-     * Return job statistics
+     * Return job statistics.
      *
      * @param int $status
      *
@@ -80,7 +80,7 @@ class JobRepository extends EntityRepository
             if (!isset($stats[$class])) {
                 $stats[$class] = 0;
             }
-            $stats[$class]++;
+            ++$stats[$class];
         }
 
         return $stats;

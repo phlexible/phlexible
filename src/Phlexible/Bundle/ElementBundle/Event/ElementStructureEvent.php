@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Element structure event
+ * Element structure event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

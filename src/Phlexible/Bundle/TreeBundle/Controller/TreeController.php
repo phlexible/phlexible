@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tree controller
+ * Tree controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Marcus Stöhr <mstoehr@brainbits.net>
@@ -36,7 +36,7 @@ class TreeController extends Controller
     const MODE_ET_TARGET = 4;
 
     /**
-     * Return the Element data tree
+     * Return the Element data tree.
      *
      * @param Request $request
      *
@@ -81,7 +81,7 @@ class TreeController extends Controller
     }
 
     /**
-     * List all element types
+     * List all element types.
      *
      * @param Request $request
      *
@@ -106,10 +106,10 @@ class TreeController extends Controller
             }
 
             $data[$childElementtype->getTitle().'_'.$childElementtype->getId()] = [
-                'id'    => $childElementtype->getId(),
+                'id' => $childElementtype->getId(),
                 'title' => $childElementtype->getTitle(),
-                'icon'  => $iconResolver->resolveElementtype($childElementtype),
-                'type'  => $childElementtype->getType(),
+                'icon' => $iconResolver->resolveElementtype($childElementtype),
+                'type' => $childElementtype->getType(),
             ];
         }
         ksort($data);
@@ -146,9 +146,9 @@ class TreeController extends Controller
 
         $data = [];
         $data[] = [
-            'id'    => '0',
+            'id' => '0',
             'title' => $firstString,
-            'icon'  => $iconResolver->resolveIcon('_top.gif'),
+            'icon' => $iconResolver->resolveIcon('_top.gif'),
         ];
 
         foreach ($tree->getChildren($node) as $childNode) {
@@ -156,9 +156,9 @@ class TreeController extends Controller
             $childElementVersion = $elementService->findLatestElementVersion($childElement);
 
             $data[] = [
-                'id'    => $childNode->getId(),
-                'title' => $childElementVersion->getBackendTitle($language, $childElementVersion->getElement()->getMasterLanguage()) . ' [' . $childNode->getId() . ']',
-                'icon'  => $iconResolver->resolveTreeNode($childNode, $language),
+                'id' => $childNode->getId(),
+                'title' => $childElementVersion->getBackendTitle($language, $childElementVersion->getElement()->getMasterLanguage()).' ['.$childNode->getId().']',
+                'icon' => $iconResolver->resolveTreeNode($childNode, $language),
             ];
         }
 
@@ -166,7 +166,7 @@ class TreeController extends Controller
     }
 
     /**
-     * Create an Element
+     * Create an Element.
      *
      * @param Request $request
      *
@@ -201,7 +201,7 @@ class TreeController extends Controller
         $node = $tree->create(
             $parentNode,
             $afterNode,
-            'element-' . $elementSource->getType(),
+            'element-'.$elementSource->getType(),
             $element->getEid(),
             [],
             $this->getUser()->getId(),
@@ -213,19 +213,19 @@ class TreeController extends Controller
 
         return new ResultResponse(
             true,
-            'Element EID "' . $element->getEid() . ' (' . $masterLanguage . ')" created.',
+            'Element EID "'.$element->getEid().' ('.$masterLanguage.')" created.',
             [
-                'eid'             => $element->getEid(),
-                'tid'             => $node->getId(),
+                'eid' => $element->getEid(),
+                'tid' => $node->getId(),
                 'master_language' => $masterLanguage,
-                'navigation'      => $navigation,
-                'restricted'      => $restricted
+                'navigation' => $navigation,
+                'restricted' => $restricted,
             ]
         );
     }
 
     /**
-     * Create an Element
+     * Create an Element.
      *
      * @param Request $request
      *
@@ -253,7 +253,7 @@ class TreeController extends Controller
     }
 
     /**
-     * Copy an Element
+     * Copy an Element.
      *
      * @param Request $request
      *
@@ -320,7 +320,7 @@ class TreeController extends Controller
     }
 
     /**
-     * Move an Element
+     * Move an Element.
      *
      * @param Request $request
      *
@@ -350,7 +350,7 @@ class TreeController extends Controller
 
     /**
      * predelete action
-     * check if element has instances
+     * check if element has instances.
      *
      * @param Request $request
      *
@@ -384,7 +384,7 @@ class TreeController extends Controller
                     $instanceTitle,
                     $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
                     (bool) $instanceNode->getTree()->isInstanceMaster($instanceNode),
-                    (bool) ($instanceNode->getId() === $nodeId)
+                    (bool) ($instanceNode->getId() === $nodeId),
                 ];
             }
 
@@ -395,7 +395,7 @@ class TreeController extends Controller
     }
 
     /**
-     * Delete an Element
+     * Delete an Element.
      *
      * @param Request $request
      *
@@ -412,8 +412,8 @@ class TreeController extends Controller
         $treeManager = $this->get('phlexible_tree.tree_manager');
 
         foreach ($treeIds as $treeId) {
-            $tree       = $treeManager->getByNodeId($treeId);
-            $node       = $tree->get($treeId);
+            $tree = $treeManager->getByNodeId($treeId);
+            $node = $tree->get($treeId);
 
             $tree->delete($node, $this->getUser()->getId());
         }

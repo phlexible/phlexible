@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 
 /**
- * Folder usage
+ * Folder usage.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -125,17 +125,17 @@ class FolderUsage
     }
 
     /**
-     * Return array represenattion of this usage
+     * Return array represenattion of this usage.
      *
      * @return array
      */
     public function toArray()
     {
         return [
-            'folderId'  => $this->folder->getId(),
+            'folderId' => $this->folder->getId(),
             'usageType' => $this->usageType,
-            'usageId'   => $this->usageId,
-            'status'    => $this->status,
+            'usageId' => $this->usageId,
+            'status' => $this->status,
         ];
     }
 }

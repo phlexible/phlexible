@@ -16,7 +16,7 @@ use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 use Poppler\Processor\PdfFile;
 
 /**
- * pdfinfo attribute reader
+ * pdfinfo attribute reader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -40,7 +40,7 @@ class PdfInfoAttributeReader implements AttributeReaderInterface
      */
     public function isAvailable()
     {
-       return true;
+        return true;
     }
 
     /**

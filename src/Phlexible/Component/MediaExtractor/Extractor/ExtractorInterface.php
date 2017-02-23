@@ -15,14 +15,14 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Extractor interface
+ * Extractor interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExtractorInterface
 {
     /**
-     * Check if extractor supports the given asset
+     * Check if extractor supports the given asset.
      *
      * @param ExtendedFileInterface $file
      * @param MediaType             $mediaType
@@ -33,7 +33,7 @@ interface ExtractorInterface
     public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat);
 
     /**
-     * Extract from file
+     * Extract from file.
      *
      * @param ExtendedFileInterface $file
      * @param MediaType             $mediaType

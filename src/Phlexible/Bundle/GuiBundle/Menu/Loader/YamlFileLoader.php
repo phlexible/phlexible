@@ -16,7 +16,7 @@ use Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection;
 use Symfony\Component\Yaml\Parser;
 
 /**
- * YAML file loader
+ * YAML file loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -51,6 +51,7 @@ class YamlFileLoader implements LoaderInterface
      * @param string $file
      *
      * @throws LoaderException
+     *
      * @return MenuItemCollection
      */
     private function import($file)
@@ -67,7 +68,7 @@ class YamlFileLoader implements LoaderInterface
                 throw new LoaderException("Data type of handle has to be string, $name given.");
             }
             if (isset($handlerData['roles']) && !is_array($handlerData['roles'])) {
-                throw new LoaderException("Data type of roles has to be array.");
+                throw new LoaderException('Data type of roles has to be array.');
             }
 
             if (!isset($handlerData['parent'])) {

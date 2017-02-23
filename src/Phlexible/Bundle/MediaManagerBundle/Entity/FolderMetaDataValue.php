@@ -16,7 +16,7 @@ use Phlexible\Bundle\MetaSetBundle\Entity\MetaDataValue;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 
 /**
- * Folder meta
+ * Folder meta.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

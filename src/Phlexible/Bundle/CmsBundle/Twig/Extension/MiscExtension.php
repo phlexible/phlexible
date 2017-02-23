@@ -15,7 +15,7 @@ use Phlexible\Component\Formatter\AgeFormatter;
 use Phlexible\Component\Formatter\FilesizeFormatter;
 
 /**
- * Twig misc extension
+ * Twig misc extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -45,7 +45,7 @@ class MiscExtension extends \Twig_Extension
     }
 
     /**
-     * Generate and return a unique id
+     * Generate and return a unique id.
      *
      * @param string $prefix
      *
@@ -57,14 +57,14 @@ class MiscExtension extends \Twig_Extension
         $id = ++self::$id;
 
         if ($prefix) {
-            $id = $prefix . $id;
+            $id = $prefix.$id;
         }
 
         return $id;
     }
 
     /**
-     * Return readable file size for given value
+     * Return readable file size for given value.
      *
      * @param int  $size
      * @param int  $decimals
@@ -80,7 +80,7 @@ class MiscExtension extends \Twig_Extension
     }
 
     /**
-     * Return age string for given date
+     * Return age string for given date.
      *
      * @param string      $date1
      * @param string|null $date2

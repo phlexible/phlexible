@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Access control configuration
+ * Access control configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

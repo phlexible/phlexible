@@ -15,7 +15,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
- * Exif extension attribute reader
+ * Exif extension attribute reader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

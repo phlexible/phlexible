@@ -21,14 +21,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Frame controller
+ * Frame controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class FrameController extends Controller
 {
     /**
-     * Render Frame
+     * Render Frame.
      *
      * @param Request $request
      *
@@ -42,13 +42,13 @@ class FrameController extends Controller
         $viewIndex = $this->get('phlexible_gui.view.index');
 
         return [
-            'scripts'  => $viewIndex->get($request),
+            'scripts' => $viewIndex->get($request),
             'noScript' => $viewIndex->getNoScript(),
         ];
     }
 
     /**
-     * Return configuration
+     * Return configuration.
      *
      * @return JsonResponse
      * @Route("/gui/config", name="gui_config")
@@ -66,7 +66,7 @@ class FrameController extends Controller
     }
 
     /**
-     * Return menu
+     * Return menu.
      *
      * @return JsonResponse
      * @Route("/gui/menu", name="gui_menu")
@@ -85,7 +85,7 @@ class FrameController extends Controller
     }
 
     /**
-     * Return routes
+     * Return routes.
      *
      * @param Request $request
      *

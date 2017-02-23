@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 
 /**
- * Delegating content tree manager
+ * Delegating content tree manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MediaType\Exception;
 
 /**
- * Runtime exception for media type
+ * Runtime exception for media type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
-
 }

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Mediator;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Viewable voter
+ * Viewable voter.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

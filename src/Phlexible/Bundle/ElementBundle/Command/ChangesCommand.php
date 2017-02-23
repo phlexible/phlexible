@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Changes command
+ * Changes command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -37,7 +37,6 @@ class ChangesCommand extends ContainerAwareCommand
             ->addOption('commit', null, InputOption::VALUE_NONE, 'Commit changes')
             ->addOption('queue', null, InputOption::VALUE_NONE, 'Via queue');
     }
-
 
     /**
      * {@inheritdoc}
@@ -57,7 +56,7 @@ class ChangesCommand extends ContainerAwareCommand
                     'New Revision',
                     'Old Revisions',
                     'Needs import?',
-                    '# Element source updates'
+                    '# Element source updates',
                     ]);
 
                 foreach ($changes as $change) {
@@ -70,8 +69,8 @@ class ChangesCommand extends ContainerAwareCommand
                             $change->getElementtype()->getTitle(),
                             $change->getElementtype()->getRevision(),
                             implode(',', $oldRevisions),
-                            $change->getNeedImport() ? '<fg=green>' . $change->getReason() . '</fg=green>': '-',
-                            count($change->getOutdatedElementSources()) ?: '-'
+                            $change->getNeedImport() ? '<fg=green>'.$change->getReason().'</fg=green>' : '-',
+                            count($change->getOutdatedElementSources()) ?: '-',
                         ]
                     );
                 }
@@ -99,7 +98,7 @@ class ChangesCommand extends ContainerAwareCommand
                             case 'noop':
                                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                                     $output->writeln("$title (Revision $revision) ... ");
-                                    $output->writeln("<fg=yellow>no changes</>                          ");
+                                    $output->writeln('<fg=yellow>no changes</>                          ');
                                 }
                         }
                     });
@@ -114,4 +113,3 @@ class ChangesCommand extends ContainerAwareCommand
         // TODO: meta, titles
     }
 }
-

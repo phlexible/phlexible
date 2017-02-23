@@ -12,11 +12,10 @@
 namespace Phlexible\Component\AccessControl\Exception;
 
 /**
- * Invalid argument exception for access control bundle
+ * Invalid argument exception for access control bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
-
 }

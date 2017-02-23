@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Elementtype role provider
+ * Elementtype role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

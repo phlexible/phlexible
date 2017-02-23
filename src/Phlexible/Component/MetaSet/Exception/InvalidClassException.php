@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MetaSet\Exception;
 
 /**
- * Invalid class exception for meta set
+ * Invalid class exception for meta set.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class InvalidClassException extends InvalidArgumentException
 {
-
 }

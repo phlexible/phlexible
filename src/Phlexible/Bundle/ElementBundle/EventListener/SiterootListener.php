@@ -21,7 +21,7 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 
 /**
- * Siteroot listener
+ * Siteroot listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -118,18 +118,18 @@ class SiterootListener
         $mappings = [
             'backend' => [
                 'fields' => [
-                    ['ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1]
+                    ['ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1],
                 ],
-                'pattern' => '$1'
-            ]
+                'pattern' => '$1',
+            ],
         ];
 
         $user = $this->userManager->find($siteroot->getModifyUserId());
 
         $elementtype = $this->elementtypeService->createElementtype(
             'structure',
-            'site_root_' . $siteroot->getId(),
-            'Site root ' . $siteroot->getTitle(),
+            'site_root_'.$siteroot->getId(),
+            'Site root '.$siteroot->getTitle(),
             'www_root.gif',
             $elementtypeStructure,
             $mappings,

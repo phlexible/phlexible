@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Elementtype bundle
+ * Elementtype bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

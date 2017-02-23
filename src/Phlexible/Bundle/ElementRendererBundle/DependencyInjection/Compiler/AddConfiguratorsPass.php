@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add configurators pass
+ * Add configurators pass.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -30,7 +30,7 @@ class AddConfiguratorsPass implements CompilerPassInterface
         $configurators = array();
         foreach ($container->findTaggedServiceIds('phlexible_element_renderer.configurator') as $id => $attributes) {
             if (!isset($attributes[0]['priority'])) {
-                throw new \InvalidArgumentException("Missing priority");
+                throw new \InvalidArgumentException('Missing priority');
             }
             $configurators[$attributes[0]['priority']][] = new Reference($id);
         }

@@ -17,7 +17,7 @@ use Phlexible\Bundle\MessageBundle\Entity\Repository\FilterRepository;
 use Phlexible\Bundle\MessageBundle\Model\FilterManagerInterface;
 
 /**
- * Doctrine filter manager
+ * Doctrine filter manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

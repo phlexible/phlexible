@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaCacheBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Media cache item
+ * Media cache item.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -23,15 +23,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CacheItem
 {
-    const STATUS_WAITING  = 'waiting';
-    const STATUS_OK       = 'ok';
+    const STATUS_WAITING = 'waiting';
+    const STATUS_OK = 'ok';
     const STATUS_DELEGATE = 'delegate';
-    const STATUS_ERROR    = 'error';
-    const STATUS_MISSING  = 'missing';
+    const STATUS_ERROR = 'error';
+    const STATUS_MISSING = 'missing';
 
     const QUEUE_WAITING = 'waiting';
-    const QUEUE_ERROR   = 'error';
-    const QUEUE_DONE    = 'done';
+    const QUEUE_ERROR = 'error';
+    const QUEUE_DONE = 'done';
 
     /**
      * @var string

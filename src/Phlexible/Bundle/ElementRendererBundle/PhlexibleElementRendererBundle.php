@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Element renderer component
+ * Element renderer component.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

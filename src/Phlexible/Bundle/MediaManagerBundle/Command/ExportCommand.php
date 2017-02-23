@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Export command
+ * Export command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -59,7 +59,7 @@ class ExportCommand extends ContainerAwareCommand
 
             return 1;
         }
-        $target = rtrim($target, '/') . '/';
+        $target = rtrim($target, '/').'/';
 
         $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
         $volume = $volumeManager->getById($volume);
@@ -70,19 +70,19 @@ class ExportCommand extends ContainerAwareCommand
         foreach ($rii as $folder) {
             $folderPath = $folder->getPath();
 
-            $filesystem->mkdir($target . $folderPath);
+            $filesystem->mkdir($target.$folderPath);
 
             foreach ($volume->findFilesByFolder($folder) as $file) {
                 $fileName = $file->getName();
                 $filePath = $file->getPhysicalPath();
 
-                $targetPath = $target . $folderPath . $fileName;
+                $targetPath = $target.$folderPath.$fileName;
 
                 if ($symlink) {
                     if ($filesystem->exists($filePath)) {
                         $filesystem->symlink($filePath, $targetPath);
                     } else {
-                        $filesystem->symlink($filePath . '.nonexistant', $targetPath);
+                        $filesystem->symlink($filePath.'.nonexistant', $targetPath);
                     }
                 } else {
                     if ($filesystem->exists($filePath)) {

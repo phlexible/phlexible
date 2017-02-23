@@ -17,7 +17,7 @@ use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
 use Psr\Log\LoggerInterface;
 
 /**
- * Audio cache worker
+ * Audio cache worker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -29,7 +29,7 @@ class AudioTemplateApplier
     private $converter;
 
     /**
-     * @param FFMpeg  $converter
+     * @param FFMpeg $converter
      */
     public function __construct(FFMpeg $converter)
     {
@@ -119,7 +119,6 @@ class AudioTemplateApplier
                 default:
                     $format = new \FFMpeg\Format\Audio\Mp3();
                     break;
-
             }
         } else {
             $format = new \FFMpeg\Format\Audio\Mp3();

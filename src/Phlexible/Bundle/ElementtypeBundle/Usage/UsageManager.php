@@ -17,7 +17,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Usage manager
+ * Usage manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ImageAnalyzer;
 
 /**
- * Image analysis result
+ * Image analysis result.
  *
  * @author Stephan Wentz <stephan@wentz.it>
  */
@@ -24,12 +24,12 @@ class ImageInfo
     private $analyzer;
 
     /**
-     * @var integer
+     * @var int
      */
     private $width;
 
     /**
-     * @var integer
+     * @var int
      */
     private $height;
 
@@ -39,7 +39,7 @@ class ImageInfo
     private $format;
 
     /**
-     * @var integer
+     * @var int
      */
     private $colors;
 
@@ -54,7 +54,7 @@ class ImageInfo
     private $compression;
 
     /**
-     * @var integer
+     * @var int
      */
     private $quality;
 
@@ -119,7 +119,7 @@ class ImageInfo
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getWidth()
     {
@@ -131,12 +131,12 @@ class ImageInfo
      */
     public function getSize()
     {
-        return $this->width && $this->height ? $this->width . 'x' . $this->height : null;
+        return $this->width && $this->height ? $this->width.'x'.$this->height : null;
     }
 
     /**
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      *
      * @return $this
      */
@@ -151,7 +151,7 @@ class ImageInfo
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getHeight()
     {
@@ -159,7 +159,7 @@ class ImageInfo
     }
 
     /**
-     * @param integer $height
+     * @param int $height
      *
      * @return $this
      */
@@ -347,7 +347,7 @@ class ImageInfo
      */
     public function getResolution()
     {
-        return $this->resolutionX && $this->resolutionY ? $this->resolutionX . 'x' . $this->resolutionY : null;
+        return $this->resolutionX && $this->resolutionY ? $this->resolutionX.'x'.$this->resolutionY : null;
     }
 
     /**

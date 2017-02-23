@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\GuiBundle\View;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Abstract view
+ * Abstract view.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,7 +33,7 @@ abstract class AbstractView
      */
     public function addScript($src, $type = 'text/javascript')
     {
-        $this->parts[] = '<script type="' . $type . '" src="' . $src . '"></script>' . PHP_EOL;
+        $this->parts[] = '<script type="'.$type.'" src="'.$src.'"></script>'.PHP_EOL;
 
         return $this;
     }
@@ -46,7 +46,7 @@ abstract class AbstractView
      */
     public function addInlineScript($script, $type = 'text/javascript')
     {
-        $this->parts[] = '<script type="' . $type . '">' . PHP_EOL . $script . PHP_EOL . '</script>' . PHP_EOL;
+        $this->parts[] = '<script type="'.$type.'">'.PHP_EOL.$script.PHP_EOL.'</script>'.PHP_EOL;
 
         return $this;
     }
@@ -61,7 +61,7 @@ abstract class AbstractView
      */
     public function addLink($href, $type = 'text/css', $rel = 'stylesheet', $media = 'screen')
     {
-        $this->parts[] = '<link href="' . $href . '" media="' . $media . '" rel="' . $rel . '" type="' . $type . '" />';
+        $this->parts[] = '<link href="'.$href.'" media="'.$media.'" rel="'.$rel.'" type="'.$type.'" />';
 
         return $this;
     }
@@ -74,7 +74,7 @@ abstract class AbstractView
      */
     public function addInlineStyle($style, $type = 'text/css')
     {
-        $this->parts[] = ' <style type="' . $type . '">' . $style . '</style>';
+        $this->parts[] = ' <style type="'.$type.'">'.$style.'</style>';
 
         return $this;
     }

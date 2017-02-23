@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MessageBundle\Model;
 use Phlexible\Bundle\MessageBundle\Entity\Filter;
 
 /**
- * Filter manager
+ * Filter manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

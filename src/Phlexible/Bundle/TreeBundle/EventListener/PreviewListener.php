@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RequestContextAwareInterface;
 
 /**
- * Preview listener
+ * Preview listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

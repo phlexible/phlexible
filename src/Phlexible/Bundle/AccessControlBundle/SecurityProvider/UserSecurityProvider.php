@@ -16,7 +16,7 @@ use Phlexible\Component\AccessControl\SecurityProvider\SecurityProviderInterface
 use Phlexible\Component\AccessControl\SecurityProvider\SecurityResolverInterface;
 
 /**
- * User security provider
+ * User security provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -36,7 +36,7 @@ class UserSecurityProvider implements SecurityProviderInterface, SecurityResolve
     }
 
     /**
-     * Return security name
+     * Return security name.
      *
      * @param string $securityType
      * @param string $securityId
@@ -53,7 +53,7 @@ class UserSecurityProvider implements SecurityProviderInterface, SecurityResolve
     }
 
     /**
-     * Return users
+     * Return users.
      *
      * @param string $query
      * @param int    $limit
@@ -70,14 +70,14 @@ class UserSecurityProvider implements SecurityProviderInterface, SecurityResolve
         foreach ($users as $user) {
             $data[] = array(
                 'securityType' => get_class($user),
-                'securityId'   => $user->getId(),
+                'securityId' => $user->getId(),
                 'securityName' => $user->getDisplayName(),
             );
         }
 
         return array(
             'total' => $this->userManager->countAll(),
-            'data'  => $data,
+            'data' => $data,
         );
     }
 }

@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * List controller
+ * List controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elementtypes/list")
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ListController extends Controller
 {
     /**
-     * List elementtypes
+     * List elementtypes.
      *
      * @param Request $request
      *
@@ -52,12 +52,12 @@ class ListController extends Controller
                 continue;
             }
 
-            $elementtypes[$elementtype->getTitle() . $elementtype->getId()] = [
-                'id'      => $elementtype->getId(),
-                'title'   => $elementtype->getTitle(),
-                'icon'    => $elementtype->getIcon(),
+            $elementtypes[$elementtype->getTitle().$elementtype->getId()] = [
+                'id' => $elementtype->getId(),
+                'title' => $elementtype->getTitle(),
+                'icon' => $elementtype->getIcon(),
                 'version' => $elementtype->getRevision(),
-                'type'    => $elementtype->getType(),
+                'type' => $elementtype->getType(),
             ];
         }
 
@@ -76,13 +76,13 @@ class ListController extends Controller
 
         return new JsonResponse([
             'elementtypes' => $elementtypes,
-            'total'        => count($elementtypes),
-            'changes'      => $hasChanges,
+            'total' => count($elementtypes),
+            'changes' => $hasChanges,
         ]);
     }
 
     /**
-     * Create an elementtype
+     * Create an elementtype.
      *
      * @param Request $request
      *
@@ -106,7 +106,7 @@ class ListController extends Controller
     }
 
     /**
-     * Delete an elementtype
+     * Delete an elementtype.
      *
      * @param Request $request
      *
@@ -126,7 +126,7 @@ class ListController extends Controller
     }
 
     /**
-     * Duplicate elementtype
+     * Duplicate elementtype.
      *
      * @param Request $request
      *

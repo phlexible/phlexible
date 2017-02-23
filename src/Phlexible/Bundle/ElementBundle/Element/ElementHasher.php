@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 
 /**
- * Element hasher
+ * Element hasher.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -79,23 +79,23 @@ class ElementHasher
         $elementtypeVersion = $elementVersion->getElementtypeVersion();
 
         // TODO: meta resolver
-        $meta = [];//$this->_db->fetchCol($selectMeta);
+        $meta = []; //$this->_db->fetchCol($selectMeta);
         sort($meta);
 
         $rii = new \RecursiveIteratorIterator($elementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
         $content = [];
         foreach ($rii as $structure) {
             foreach ($structure->getValues() as $value) {
-                $content[$structure->getId() . '__' . $value->getId()] = $value->getValue();
+                $content[$structure->getId().'__'.$value->getId()] = $value->getValue();
             }
         }
 
         $values = [
-            'eid'                => $eid,
-            'elementtypeId'      => $elementtypeId,
+            'eid' => $eid,
+            'elementtypeId' => $elementtypeId,
             'elementtypeVersion' => $elementtypeVersion,
-            'meta'               => $meta,
-            'content'            => $content,
+            'meta' => $meta,
+            'content' => $content,
         ];
 
         return $values;

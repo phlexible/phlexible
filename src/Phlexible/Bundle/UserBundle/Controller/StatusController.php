@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Status controller
+ * Status controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/status/user")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 class StatusController extends Controller
 {
     /**
-     * Show security status
+     * Show security status.
      *
      * @return Response
      * @Route("", name="phlexible_status_user")
@@ -35,14 +35,14 @@ class StatusController extends Controller
     public function indexAction()
     {
         $body = '';
-        $body .= '<a href="' . $this->generateUrl('phlexible_status_user_context') . '">Context</a><br />';
-        $body .= '<a href="' . $this->generateUrl('phlexible_status_user_session') . '">Session</a>';
+        $body .= '<a href="'.$this->generateUrl('phlexible_status_user_context').'">Context</a><br />';
+        $body .= '<a href="'.$this->generateUrl('phlexible_status_user_session').'">Session</a>';
 
         return new Response($body);
     }
 
     /**
-     * Show security context
+     * Show security context.
      *
      * @return Response
      * @Route("/context", name="phlexible_status_user_context")
@@ -55,8 +55,8 @@ class StatusController extends Controller
         $user = $token->getUser();
 
         $output = '<pre>';
-        $output .= 'Token class: ' . get_class($token) . PHP_EOL;
-        $output .= 'User class:  ' . (is_object($user) ? get_class($user) : $user) . PHP_EOL;
+        $output .= 'Token class: '.get_class($token).PHP_EOL;
+        $output .= 'User class:  '.(is_object($user) ? get_class($user) : $user).PHP_EOL;
         $output .= PHP_EOL;
         $output .= 'Token username: ';
         $output .= print_r($token->getUsername(), 1).PHP_EOL;
@@ -71,7 +71,7 @@ class StatusController extends Controller
     }
 
     /**
-     * Show session
+     * Show session.
      *
      * @param Request $request
      *
@@ -87,14 +87,14 @@ class StatusController extends Controller
             if (is_object($value)) {
                 $o = get_class($value);
             } elseif (is_array($value)) {
-                $o = 'array ' . count($value);
+                $o = 'array '.count($value);
             } else {
                 $o = $value;
                 if (@unserialize($o)) {
                     $o = unserialize($o);
                 }
             }
-            $output .= '<li>'.$key . ': ' . $o . '</li>';
+            $output .= '<li>'.$key.': '.$o.'</li>';
         }
         $output .= '</ul>';
 

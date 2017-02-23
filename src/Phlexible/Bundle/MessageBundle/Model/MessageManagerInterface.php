@@ -16,14 +16,14 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Exception\LogicException;
 
 /**
- * Message manager
+ * Message manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface MessageManagerInterface
 {
     /**
-     * Find messages
+     * Find messages.
      *
      * @param array $criteria
      * @param null  $orderBy
@@ -35,7 +35,7 @@ interface MessageManagerInterface
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * Find message
+     * Find message.
      *
      * @param array $criteria
      * @param null  $orderBy
@@ -45,7 +45,7 @@ interface MessageManagerInterface
     public function findOneBy(array $criteria, $orderBy = null);
 
     /**
-     * Find messages by criteria
+     * Find messages by criteria.
      *
      * @param Criteria $criteria
      * @param string   $order
@@ -64,28 +64,28 @@ interface MessageManagerInterface
     public function countByCriteria(Criteria $criteria);
 
     /**
-     * Get priority map
+     * Get priority map.
      *
      * @return array
      */
     public function getPriorityNames();
 
     /**
-     * Return type map
+     * Return type map.
      *
      * @return array
      */
     public function getTypeNames();
 
     /**
-     * Return facets
+     * Return facets.
      *
      * @return array
      */
     public function getFacets();
 
     /**
-     * Return facets
+     * Return facets.
      *
      * @param Criteria $criteria
      *
@@ -94,7 +94,7 @@ interface MessageManagerInterface
     public function getFacetsByCriteria(Criteria $criteria);
 
     /**
-     * Update message
+     * Update message.
      *
      * @param Message $message
      *
@@ -103,10 +103,9 @@ interface MessageManagerInterface
     public function updateMessage(Message $message);
 
     /**
-     * Delete message
+     * Delete message.
      *
      * @param Message $message
      */
     public function deleteMessage(Message $message);
-
 }

@@ -23,7 +23,7 @@ use Phlexible\Bundle\SiterootBundle\SiterootsMessage;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Siteroot identifier
+ * Siteroot identifier.
  *
  * @author Matthias Harmuth <mharmuth@brainbits.net>
  */

@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
- * Differ
+ * Differ.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

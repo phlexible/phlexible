@@ -14,7 +14,7 @@ namespace Phlexible\Component\Formatter\Tests;
 use Phlexible\Component\Formatter\FilesizeFormatter;
 
 /**
- * Filesize formatter test
+ * Filesize formatter test.
  */
 class FilesizeFormatterTest extends \PHPUnit_Framework_TestCase
 {
@@ -102,5 +102,4 @@ class FilesizeFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('1.50 PiB', $this->formatter->formatFilesize(pow(1024, 5) * 1.5, 2, true));
         $this->assertEquals('1536.00 PiB', $this->formatter->formatFilesize(pow(1024, 6) * 1.5, 2, true));
     }
-
 }

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Element history
+ * Element history.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

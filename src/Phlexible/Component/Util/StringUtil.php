@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Util;
 
 /**
- * String utils
+ * String utils.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  * @author Phillip Look <plook@brainbits.net>
@@ -20,12 +20,12 @@ namespace Phlexible\Component\Util;
 class StringUtil
 {
     /**
-     * Function truncates a HTML string, preserving and closing all tags
+     * Function truncates a HTML string, preserving and closing all tags.
      *
-     * @param string  $str
-     * @param integer $textMaxLength
-     * @param string  $postString
-     * @param string  $encoding
+     * @param string $str
+     * @param int    $textMaxLength
+     * @param string $postString
+     * @param string $encoding
      *
      * @return string
      */
@@ -47,20 +47,20 @@ class StringUtil
         $inEntity = false;
 
         // loop through str, start at cursor position
-        for ($i = $htmlPos; $i < $htmlLength; $i++) {
+        for ($i = $htmlPos; $i < $htmlLength; ++$i) {
             // extract multibyte encoded char on cursor position
             $char = mb_substr($str, $i, 1, $encoding);
 
-            if ($char == '&') {
+            if ($char === '&') {
                 if (!$inEntity) {
                     $inEntity = true;
                 }
-            } elseif ($char == ';') {
+            } elseif ($char === ';') {
                 if ($inEntity) {
                     $inEntity = false;
                 }
             } // check on an angle bracket assuming text following is a tag
-            elseif ($char == '<') {
+            elseif ($char === '<') {
                 // sub cursor position inside the tag (after the first angle bracket)
                 $tagPos = $i + 1;
                 // remember first position inside the tag
@@ -76,7 +76,7 @@ class StringUtil
                 $isClosingTag = false;
 
                 // loop through text inside the tag until it is closed
-                for ($j = $tagPos; $j < $htmlLength; $j++) {
+                for ($j = $tagPos; $j < $htmlLength; ++$j) {
                     // extract multibyte encoded char on sub cursor position
                     $charTag = mb_substr($str, $j, 1, $encoding);
 
@@ -88,13 +88,13 @@ class StringUtil
                     }
                     // seems to be an '<>' entity
                     // not a valid tag, set mark and break
-                    elseif ($tagFirst == $j
+                    elseif ($tagFirst === $j
                         && $charTag === '>'
                     ) {
                         $isTag = false;
                         break;
                     } // closing tag, set mark
-                    elseif ($tagFirst == $j
+                    elseif ($tagFirst === $j
                         && $charTag === '/'
                     ) {
                         $isClosingTag = true;
@@ -106,7 +106,7 @@ class StringUtil
                         $tagName .= $charTag;
                     }
 
-                    $tagSize++;
+                    ++$tagSize;
                 }
 
                 // valid tag
@@ -132,14 +132,13 @@ class StringUtil
                 }
             } // normal char, increase textLength
             else {
-                $textLength++;
+                ++$textLength;
             }
 
             // if maximum length reached break
             if (!$inEntity && $textLength >= $textMaxLength) {
                 break;
             }
-
         }
 
         // set cursor to new position
@@ -157,7 +156,7 @@ class StringUtil
         if (count($closeTag)) {
             foreach (array_reverse($closeTag) as $tag) {
                 $tokens = explode(' ', $tag);
-                $ret .= "</" . $tokens[0] . ">";
+                $ret .= '</'.$tokens[0].'>';
             }
         }
 
@@ -166,7 +165,7 @@ class StringUtil
 
     /**
      * Remove broken HTML entities from input string.
-     * (e.g. 'Welcome in K&ouml' -> 'Welcome in K')
+     * (e.g. 'Welcome in K&ouml' -> 'Welcome in K').
      *
      * @param string $html
      *
@@ -201,7 +200,7 @@ class StringUtil
 
     /**
      * Converts line breaks into <br /> tags
-     * and double <br /> to </p><p> tags
+     * and double <br /> to </p><p> tags.
      *
      * @param string $string
      *
@@ -211,7 +210,7 @@ class StringUtil
     {
         // replace lineFeed with <br /> tag
         $lineFeed = chr(10);
-        $value = preg_replace('#' . $lineFeed . '#', '<br />', $string);
+        $value = preg_replace('#'.$lineFeed.'#', '<br />', $string);
 
         // replace double <br /> tags with </p><p> tags
         $pattern = '#<br />([ ]*)<br />#';

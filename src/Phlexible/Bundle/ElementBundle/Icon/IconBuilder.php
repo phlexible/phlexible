@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Icon;
 use Symfony\Component\Config\FileLocatorInterface;
 
 /**
- * Icon builder
+ * Icon builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -41,7 +41,7 @@ class IconBuilder
     }
 
     /**
-     * Get asset path
+     * Get asset path.
      *
      * @param string $icon
      * @param array  $params
@@ -78,14 +78,14 @@ class IconBuilder
             $filename = $fallback;
         } else {
             $prefix = '@PhlexibleElementtypeBundle/Resources/public/elementtypes/';
-            $filename = $this->locator->locate($prefix. $icon);
+            $filename = $this->locator->locate($prefix.$icon);
 
             if (!file_exists($filename)) {
                 $filename = $fallback;
             }
         }
 
-        $cacheFilename = $this->cacheDir . '/' . md5(basename($filename) . '__' . implode('__', $overlay)) . '.png';
+        $cacheFilename = $this->cacheDir.'/'.md5(basename($filename).'__'.implode('__', $overlay)).'.png';
 
         if (!file_exists($cacheFilename) || (time() - filemtime($cacheFilename)) > 60 * 60 * 24 * 30) {
             $target = imagecreate(18, 18);
@@ -101,7 +101,7 @@ class IconBuilder
             if (!empty($overlay['status'])) {
                 // apply status overlay
                 $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'status_' . $overlay['status'] . '.gif')
+                    $this->locator->locate($overlayDir.'status_'.$overlay['status'].'.gif')
                 );
                 imagecopy($target, $overlayIcon, 9, 9, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
@@ -110,7 +110,7 @@ class IconBuilder
             if (!empty($overlay['timer'])) {
                 // apply timer overlay
                 $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'timer.gif')
+                    $this->locator->locate($overlayDir.'timer.gif')
                 );
                 imagecopy($target, $overlayIcon, 10, 0, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
@@ -119,7 +119,7 @@ class IconBuilder
             if (!empty($overlay['sort'])) {
                 // apply timer overlay
                 $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'sort_' . $overlay['sort'] . '.gif')
+                    $this->locator->locate($overlayDir.'sort_'.$overlay['sort'].'.gif')
                 );
                 imagecopy($target, $overlayIcon, 10, 0, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
@@ -128,7 +128,7 @@ class IconBuilder
             if (!empty($overlay['instance'])) {
                 // apply alias overlay
                 $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'instance_' . $overlay['instance'] . '.gif')
+                    $this->locator->locate($overlayDir.'instance_'.$overlay['instance'].'.gif')
                 );
                 imagecopy($target, $overlayIcon, 0, 10, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
@@ -137,7 +137,7 @@ class IconBuilder
             if (!empty($overlay['lock'])) {
                 // apply lock overlay
                 $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'lock_' . $overlay['lock'] . '.gif')
+                    $this->locator->locate($overlayDir.'lock_'.$overlay['lock'].'.gif')
                 );
                 imagecopy($target, $overlayIcon, 0, 0, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
@@ -154,13 +154,13 @@ class IconBuilder
     }
 
     /**
-     * Flush
+     * Flush.
      */
     public function flush()
     {
         $cacheDir = $this->getCacheDir();
 
-        $files = glob($cacheDir . '*.png');
+        $files = glob($cacheDir.'*.png');
 
         foreach ($files as $file) {
             unlink($file);

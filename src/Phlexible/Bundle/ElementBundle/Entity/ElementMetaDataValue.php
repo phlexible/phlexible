@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaDataValue;
 
 /**
- * Element meta
+ * Element meta.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -63,5 +63,4 @@ class ElementMetaDataValue extends MetaDataValue
 
         return $this;
     }
-
 }

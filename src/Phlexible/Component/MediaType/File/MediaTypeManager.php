@@ -11,12 +11,12 @@
 
 namespace Phlexible\Component\MediaType\File;
 
-use Phlexible\Component\Mime\MimeDetector;
 use Phlexible\Component\MediaType\Model\MediaTypeCollection;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
+use Phlexible\Component\Mime\MimeDetector;
 
 /**
- * Media type manager
+ * Media type manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

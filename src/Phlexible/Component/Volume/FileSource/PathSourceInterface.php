@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Volume\FileSource;
 
 /**
- * Path based file source interface
+ * Path based file source interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

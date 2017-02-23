@@ -12,14 +12,14 @@
 namespace Phlexible\Bundle\TreeBundle\Model;
 
 /**
- * Tree filter
+ * Tree filter.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface TreeFilterInterface
 {
     /**
-     * Set filter values
+     * Set filter values.
      *
      * @param array $filterValues
      *
@@ -40,7 +40,7 @@ interface TreeFilterInterface
     public function getPager($id);
 
     /**
-     * Set sort mode
+     * Set sort mode.
      *
      * @param string $sortMode
      *
@@ -57,14 +57,14 @@ interface TreeFilterInterface
     public function getIds($limit = null, $start = null);
 
     /**
-     * Return filter values
+     * Return filter values.
      *
      * @return array
      */
     public function getFilterValues();
 
     /**
-     * Set sort dir
+     * Set sort dir.
      *
      * @param string $sortDir
      *
@@ -73,14 +73,14 @@ interface TreeFilterInterface
     public function setSortDir($sortDir);
 
     /**
-     * Return sort mode
+     * Return sort mode.
      *
      * @return string
      */
     public function getSortMode();
 
     /**
-     * Return sort dir
+     * Return sort dir.
      *
      * @return string
      */

@@ -15,7 +15,7 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Message event
+ * Message event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -35,7 +35,7 @@ class MessageEvent extends Event
     }
 
     /**
-     * Return mailserver
+     * Return mailserver.
      *
      * @return Message
      */

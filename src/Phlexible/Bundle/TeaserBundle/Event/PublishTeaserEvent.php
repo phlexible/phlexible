@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TeaserBundle\Event;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 
 /**
- * Publish teaser event
+ * Publish teaser event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -52,7 +52,7 @@ class PublishTeaserEvent extends TeaserEvent
     }
 
     /**
-     * Return version
+     * Return version.
      *
      * @return int
      */

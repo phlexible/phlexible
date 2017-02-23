@@ -18,7 +18,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Database tree
+ * Database tree.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

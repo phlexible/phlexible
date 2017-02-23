@@ -14,14 +14,14 @@ namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
 use Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection;
 
 /**
- * Loader interface
+ * Loader interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface LoaderInterface
 {
     /**
-     * Load config file
+     * Load config file.
      *
      * @param string $file
      *

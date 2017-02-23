@@ -14,7 +14,7 @@ namespace Phlexible\Component\Volume;
 use Phlexible\Component\Volume\Folder\SizeCalculator;
 
 /**
- * Quota
+ * Quota.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -50,47 +50,47 @@ class Quota
     }
 
     /**
-     * Return string representation
+     * Return string representation.
      *
      * @return string
      */
     public function __toString()
     {
-        return '<pre>' .
-            'Hard Quota:     ' . $this->getHardQuota() . PHP_EOL .
-            'Soft Quota:     ' . $this->getSoftQuota() . PHP_EOL .
-            'Soft Quota %:   ' . $this->getSoftQuotaPercent() . PHP_EOL .
-            'Usage:          ' . $this->getUsage() . PHP_EOL .
-            'Usage %:        ' . $this->getUsagePercent() . PHP_EOL .
-            'Remaining SQ:   ' . $this->getRemainingSoftQuota() . PHP_EOL .
-            'Remaining SQ %: ' . $this->getRemainingSoftQuotaPercent() . PHP_EOL .
-            'Remaining HQ:   ' . $this->getRemainingHardQuota() . PHP_EOL .
-            'Remaining HQ %: ' . $this->getRemainingHardQuotaPercent() . PHP_EOL .
+        return '<pre>'.
+            'Hard Quota:     '.$this->getHardQuota().PHP_EOL.
+            'Soft Quota:     '.$this->getSoftQuota().PHP_EOL.
+            'Soft Quota %:   '.$this->getSoftQuotaPercent().PHP_EOL.
+            'Usage:          '.$this->getUsage().PHP_EOL.
+            'Usage %:        '.$this->getUsagePercent().PHP_EOL.
+            'Remaining SQ:   '.$this->getRemainingSoftQuota().PHP_EOL.
+            'Remaining SQ %: '.$this->getRemainingSoftQuotaPercent().PHP_EOL.
+            'Remaining HQ:   '.$this->getRemainingHardQuota().PHP_EOL.
+            'Remaining HQ %: '.$this->getRemainingHardQuotaPercent().PHP_EOL.
             '';
     }
 
     /**
-     * Return array representation
+     * Return array representation.
      *
      * @return array
      */
     public function toArray()
     {
         return [
-            'hard_quota'                   => $this->getHardQuota(),
-            'soft_quota'                   => $this->getSoftQuota(),
-            'soft_quota_percent'           => $this->getSoftQuotaPercent(),
-            'usage'                        => $this->getUsage(),
-            'usage_percent'                => $this->getUsagePercent(),
-            'remaining_soft_quota'         => $this->getRemainingSoftQuota(),
+            'hard_quota' => $this->getHardQuota(),
+            'soft_quota' => $this->getSoftQuota(),
+            'soft_quota_percent' => $this->getSoftQuotaPercent(),
+            'usage' => $this->getUsage(),
+            'usage_percent' => $this->getUsagePercent(),
+            'remaining_soft_quota' => $this->getRemainingSoftQuota(),
             'remaining_soft_quota_percent' => $this->getRemainingSoftQuotaPercent(),
-            'remaining_hard_quota'         => $this->getRemainingHardQuota(),
+            'remaining_hard_quota' => $this->getRemainingHardQuota(),
             'remaining_hard_quota_percent' => $this->getRemainingHardQuotaPercent(),
         ];
     }
 
     /**
-     * Return soft Quota in bytes
+     * Return soft Quota in bytes.
      *
      * @return int
      */
@@ -100,7 +100,7 @@ class Quota
     }
 
     /**
-     * Return soft Quota in percent
+     * Return soft Quota in percent.
      *
      * @return float
      */
@@ -110,7 +110,7 @@ class Quota
     }
 
     /**
-     * Return hard Quota in bytes
+     * Return hard Quota in bytes.
      *
      * @return int
      */
@@ -120,7 +120,7 @@ class Quota
     }
 
     /**
-     * Return Usage in bytes
+     * Return Usage in bytes.
      *
      * @return int
      */
@@ -137,7 +137,7 @@ class Quota
     }
 
     /**
-     * Return Usage in percent
+     * Return Usage in percent.
      *
      * @return float
      */
@@ -153,7 +153,7 @@ class Quota
     }
 
     /**
-     * Return remaining soft quota in bytes
+     * Return remaining soft quota in bytes.
      *
      * @return int
      */
@@ -169,7 +169,7 @@ class Quota
     }
 
     /**
-     * Return remaining soft quota in percent
+     * Return remaining soft quota in percent.
      *
      * @return float
      */
@@ -185,7 +185,7 @@ class Quota
     }
 
     /**
-     * Return remaining hard quota in bytes
+     * Return remaining hard quota in bytes.
      *
      * @return int
      */
@@ -201,7 +201,7 @@ class Quota
     }
 
     /**
-     * Return remaining hard quota in percent
+     * Return remaining hard quota in percent.
      *
      * @return float
      */

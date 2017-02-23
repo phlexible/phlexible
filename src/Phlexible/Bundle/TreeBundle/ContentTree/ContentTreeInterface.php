@@ -18,7 +18,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Content tree interface
+ * Content tree interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -89,8 +89,6 @@ interface ContentTreeInterface extends TreeInterface
 
     /**
      * @param TreeNodeInterface $node
-     *
-     * @return null
      */
     public function getContent(TreeNodeInterface $node);
 }

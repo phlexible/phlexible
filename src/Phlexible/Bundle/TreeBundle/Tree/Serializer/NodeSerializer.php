@@ -19,7 +19,7 @@ use Phlexible\Bundle\TreeBundle\Tree\NodePermissionResolver;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * Tree interface
+ * Tree interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -64,7 +64,7 @@ class NodeSerializer
     }
 
     /**
-     * Serialize nodes
+     * Serialize nodes.
      *
      * @param TreeNodeInterface[] $nodes
      * @param string              $language
@@ -88,7 +88,7 @@ class NodeSerializer
     }
 
     /**
-     * Serialize node
+     * Serialize node.
      *
      * @param TreeNodeInterface $node
      * @param string            $language
@@ -138,36 +138,36 @@ class NodeSerializer
             $allowedElementtypeIds[] = $allowedElementtype->getId();
         }
 
-        $qtip = 'TID: ' . $node->getId() . '<br />' .
-            'EID: ' . $element->getEid() . '<br />' .
-            'Version: ' . $elementVersion->getVersion() . '<br />' .
-            '<hr>' .
-            'Element Type: ' . $elementtype->getTitle() . '<br />' .
-            'Element Type Version: ' . $elementtype->getRevision() .
+        $qtip = 'TID: '.$node->getId().'<br />'.
+            'EID: '.$element->getEid().'<br />'.
+            'Version: '.$elementVersion->getVersion().'<br />'.
+            '<hr>'.
+            'Element Type: '.$elementtype->getTitle().'<br />'.
+            'Element Type Version: '.$elementtype->getRevision().
             $lockQtip;
 
         $data = [
-            'id'                  => $node->getID(),
-            'eid'                 => $element->getEid(),
-            'text'                => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()),
-            'icon'                => $this->iconResolver->resolveTreeNode($node, $language),
-            'navigation'          => $node->getInNavigation(),
-            'restricted'          => $node->getNeedAuthentication(),
-            'element_type'        => $elementtype->getTitle(),
-            'element_type_id'     => $elementtype->getId(),
-            'element_type_type'   => $elementtype->getType(),
-            'alias'               => $node->getTree()->isInstance($node),
-            'allow_drag'          => true,
-            'sort_mode'           => $node->getSortMode(),
-            'areas'               => [355],
-            'allowed_et'          => $allowedElementtypeIds,
-            'is_published'        => $this->stateManager->isPublished($node, $language),
-            'rights'              => $userRights,
-            'qtip'                => $qtip,
-            'allow_children'      => $elementtype->getHideChildren() ? false : true,
-            'default_tab'         => $elementtype->getDefaultTab(),
+            'id' => $node->getID(),
+            'eid' => $element->getEid(),
+            'text' => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()),
+            'icon' => $this->iconResolver->resolveTreeNode($node, $language),
+            'navigation' => $node->getInNavigation(),
+            'restricted' => $node->getNeedAuthentication(),
+            'element_type' => $elementtype->getTitle(),
+            'element_type_id' => $elementtype->getId(),
+            'element_type_type' => $elementtype->getType(),
+            'alias' => $node->getTree()->isInstance($node),
+            'allow_drag' => true,
+            'sort_mode' => $node->getSortMode(),
+            'areas' => [355],
+            'allowed_et' => $allowedElementtypeIds,
+            'is_published' => $this->stateManager->isPublished($node, $language),
+            'rights' => $userRights,
+            'qtip' => $qtip,
+            'allow_children' => $elementtype->getHideChildren() ? false : true,
+            'default_tab' => $elementtype->getDefaultTab(),
             'default_content_tab' => $elementtype->getDefaultContentTab(),
-            'masterlanguage'      => $element->getMasterLanguage()
+            'masterlanguage' => $element->getMasterLanguage(),
         ];
 
         if (count($node->getTree()->getChildren($node)) && !$elementtype->getHideChildren()) {

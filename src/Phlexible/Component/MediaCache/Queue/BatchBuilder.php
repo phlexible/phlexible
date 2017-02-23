@@ -17,7 +17,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
 
 /**
- * Queue batch
+ * Queue batch.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -54,7 +54,7 @@ class BatchBuilder
     }
 
     /**
-     * Create a new batch with given template and file
+     * Create a new batch with given template and file.
      *
      * @param TemplateInterface     $template
      * @param ExtendedFileInterface $file
@@ -75,7 +75,7 @@ class BatchBuilder
     }
 
     /**
-     * Create a new batch with all templates
+     * Create a new batch with all templates.
      *
      * @return Batch
      */
@@ -89,7 +89,7 @@ class BatchBuilder
     }
 
     /**
-     * Create a new batch with all files
+     * Create a new batch with all files.
      *
      * @return Batch
      */
@@ -103,7 +103,7 @@ class BatchBuilder
     }
 
     /**
-     * Create a new batch with all templates and all files
+     * Create a new batch with all templates and all files.
      *
      * @return Batch
      */

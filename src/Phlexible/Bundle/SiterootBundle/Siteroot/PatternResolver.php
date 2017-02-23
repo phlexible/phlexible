@@ -16,7 +16,7 @@ use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Pattern resolver
+ * Pattern resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,7 +43,7 @@ class PatternResolver
     }
 
     /**
-     * Return siteroot title
+     * Return siteroot title.
      *
      * @param Siteroot       $siteroot
      * @param ElementVersion $elementVersion
@@ -76,9 +76,9 @@ class PatternResolver
     {
         $replace = [
             '%s' => $siteroot->getTitle(),
-            '%b' => '[' . $this->translator->trans('siteroots.element_backend_title', [], 'gui', $language) . ']',
-            '%p' => '[' . $this->translator->trans('siteroots.element_page_title', [], 'gui', $language) . ']',
-            '%n' => '[' . $this->translator->trans('siteroots.element_navigation_title', [], 'gui', $language) . ']',
+            '%b' => '['.$this->translator->trans('siteroots.element_backend_title', [], 'gui', $language).']',
+            '%p' => '['.$this->translator->trans('siteroots.element_page_title', [], 'gui', $language).']',
+            '%n' => '['.$this->translator->trans('siteroots.element_navigation_title', [], 'gui', $language).']',
             '%r' => $this->projectTitle,
         ];
 
@@ -95,23 +95,23 @@ class PatternResolver
         return [
             [
                 'placeholder' => '%s',
-                'title'       => $this->translator->trans('siteroots.siteroot_title', [], 'gui', $language)
+                'title' => $this->translator->trans('siteroots.siteroot_title', [], 'gui', $language),
             ],
             [
                 'placeholder' => '%b',
-                'title'       => $this->translator->trans('siteroots.element_backend_title', [], 'gui', $language)
+                'title' => $this->translator->trans('siteroots.element_backend_title', [], 'gui', $language),
             ],
             [
                 'placeholder' => '%p',
-                'title'       => $this->translator->trans('siteroots.element_page_title', [], 'gui', $language)
+                'title' => $this->translator->trans('siteroots.element_page_title', [], 'gui', $language),
             ],
             [
                 'placeholder' => '%n',
-                'title'       => $this->translator->trans('siteroots.element_navigation_title', [], 'gui', $language)
+                'title' => $this->translator->trans('siteroots.element_navigation_title', [], 'gui', $language),
             ],
             [
                 'placeholder' => '%r',
-                'title'       => $this->translator->trans('siteroots.project_title', [], 'gui', $language)
+                'title' => $this->translator->trans('siteroots.project_title', [], 'gui', $language),
             ],
         ];
     }

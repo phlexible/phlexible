@@ -14,7 +14,7 @@ namespace Phlexible\Component\Volume\Event;
 use Phlexible\Component\Volume\Model\FolderInterface;
 
 /**
- * Rename folder event
+ * Rename folder event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

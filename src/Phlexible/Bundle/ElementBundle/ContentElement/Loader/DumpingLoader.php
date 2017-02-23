@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\ContentElement\Loader;
 use Phlexible\Bundle\ElementBundle\ContentElement\Dumper\DumperInterface;
 
 /**
- * Chain loader
+ * Chain loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

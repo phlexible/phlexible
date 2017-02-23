@@ -14,7 +14,7 @@ namespace Phlexible\Component\ImageAnalyzer\Driver;
 use Phlexible\Component\ImageAnalyzer\ImageInfo;
 
 /**
- * Imagick extension image analyzer driver
+ * Imagick extension image analyzer driver.
  *
  * @author Stephan Wentz <stephan@wentz.it>
  */
@@ -79,7 +79,6 @@ class ImagickDriver implements DriverInterface
      */
     private function mapType($type)
     {
-
         switch ($type) {
             case \Imagick::IMGTYPE_BILEVEL:
                 return 'BILEVEL';
@@ -108,7 +107,7 @@ class ImagickDriver implements DriverInterface
     }
 
     /**
-     * @param integer $colorspace
+     * @param int $colorspace
      *
      * @return null|string
      */

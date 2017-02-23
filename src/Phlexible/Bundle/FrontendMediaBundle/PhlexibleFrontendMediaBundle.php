@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\FrontendMediaBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Frontend media bundle
+ * Frontend media bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

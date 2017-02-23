@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\UserBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * User bundle
+ * User bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

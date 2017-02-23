@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SiterootBundle;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
- * Siteroots message
+ * Siteroots message.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

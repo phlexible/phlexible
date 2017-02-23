@@ -14,7 +14,7 @@ namespace Phlexible\Component\ImageAnalyzer\Driver;
 use Phlexible\Component\ImageAnalyzer\ImageInfo;
 
 /**
- * Image analyzer driver interface
+ * Image analyzer driver interface.
  *
  * @author Stephan Wentz <stephan@wentz.it>
  */
@@ -22,12 +22,14 @@ interface DriverInterface
 {
     /**
      * @param string $filename
-     * @return boolean
+     *
+     * @return bool
      */
     public function isAvailable($filename = null);
 
     /**
      * @param string $filename
+     *
      * @return ImageInfo
      */
     public function analyze($filename);

@@ -15,7 +15,7 @@ use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Get config listener
+ * Get config listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,16 +43,16 @@ class GetConfigListener
         $config = $event->getConfig();
 
         $defaultPortlets = [
-            'online-portlet'   => [
+            'online-portlet' => [
                 'mode' => 'opened',
-                'col'  => 1,
-                'pos'  => 1
+                'col' => 1,
+                'pos' => 1,
             ],
             'problems-portlet' => [
                 'mode' => 'opened',
-                'col'  => 0,
-                'pos'  => 2
-            ]
+                'col' => 0,
+                'pos' => 2,
+            ],
         ];
 
         if ($user->getProperty('portlets')) {

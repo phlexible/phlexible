@@ -12,14 +12,14 @@
 namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
 
 /**
- * Loader resolver interface
+ * Loader resolver interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface LoaderResolverInterface
 {
     /**
-     * Resolve loader for file
+     * Resolve loader for file.
      *
      * @param string $file
      *

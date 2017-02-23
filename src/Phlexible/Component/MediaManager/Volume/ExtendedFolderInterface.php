@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaManager\Volume;
 use Phlexible\Component\Volume\Model\FolderInterface;
 
 /**
- * Extended folder interface
+ * Extended folder interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

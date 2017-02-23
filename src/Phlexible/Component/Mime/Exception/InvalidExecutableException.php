@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Mime\Exception;
 
 /**
- * Mime invalid executable exception
+ * Mime invalid executable exception.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
 class InvalidExecutableException extends RuntimeException
 {
-
 }

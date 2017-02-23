@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Dump command
+ * Dump command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -60,9 +60,8 @@ class DumpCommand extends ContainerAwareCommand
         }
 
         $xmlDir = $this->getContainer()->getParameter('phlexible_tree.content.xml_dir');
-        $dumper->dump($tree, $siteroot, $xmlDir . $siteroot->getId() . '.xml');
+        $dumper->dump($tree, $siteroot, $xmlDir.$siteroot->getId().'.xml');
 
         return 0;
     }
 }
-

@@ -15,7 +15,7 @@ use Phlexible\Component\Volume\FileSource\FileSourceInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
 
 /**
- * Hash calculator interface
+ * Hash calculator interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

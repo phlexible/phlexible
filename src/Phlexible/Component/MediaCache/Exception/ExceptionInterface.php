@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MediaCache\Exception;
 
 /**
- * Exception interface for media cache
+ * Exception interface for media cache.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExceptionInterface
 {
-
 }
