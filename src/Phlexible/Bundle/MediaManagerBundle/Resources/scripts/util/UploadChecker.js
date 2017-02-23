@@ -1,6 +1,8 @@
 Ext.provide('Phlexible.mediamanager.UploadChecker');
 
 Ext.require('Phlexible.mediamanager.FileReplaceWindow');
+Ext.require('Phlexible.mediamanager.FileUploadWizard');
+Ext.require('Phlexible.mediamanager.model.TempFile');
 
 Phlexible.mediamanager.UploadChecker = function(config) {
     config = config || {};
@@ -17,6 +19,10 @@ Phlexible.mediamanager.UploadChecker = function(config) {
     }
 };
 Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
+    /**
+     * @property {Phlexible.mediamanager.model.TempFile} currentFile
+     */
+
     check: function() {
         if (this.isRunning()) {
             return;
@@ -40,8 +46,58 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
         return this.running;
     },
 
-    getCurrent: function() {
-        return this.current;
+    getCurrentFile: function() {
+        return this.currentFile;
+    },
+
+    discardAllFiles: function(values, callback, scope) {
+        values.all = true;
+        this.send('discard', values, callback, scope)
+    },
+
+    discardFile: function(values, callback, scope) {
+        this.send('discard', values, callback, scope)
+    },
+
+    keepFile: function(values, callback, scope) {
+        this.send('keep', values, callback, scope)
+    },
+
+    replaceFile: function(values, callback, scope) {
+        this.send('replace', values, callback, scope)
+    },
+
+    saveFileVersion: function(values, callback, scope) {
+        this.send('save_version', values, callback, scope)
+    },
+
+    saveFile: function(values, callback, scope) {
+        this.send('save', values, callback, scope)
+    },
+
+    send: function(action, values, callback, scope) {
+        Ext.apply(values, {
+            action: action,
+            temp_key: this.currentFile.get('temp_key'),
+            temp_id: this.currentFile.get('temp_id')
+        });
+
+        Ext.Ajax.request({
+            url: Phlexible.Router.generate('mediamanager_upload_save'),
+            params: values,
+            success: function (response) {
+                var data = Ext.decode(response.responseText);
+
+                if (data.success && action === 'discard' && action === 'discard_all') {
+                    this.getFilesGrid().getStore().reload();
+                }
+
+                if (callback && scope) {
+                    callback.call(this);
+                }
+            },
+            scope: this
+        });
     },
 
     onCheckResponse: function(response) {
@@ -69,7 +125,7 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
             return;
         }
 
-        this.current = data;
+        this.currentFile = new Phlexible.mediamanager.model.TempFile(data);
 
         if (data.wizard) {
             if (this.replace) {
@@ -77,13 +133,7 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
             }
             if (!this.wizard) {
                 this.wizard = new Phlexible.mediamanager.FileUploadWizard({
-                    uploadChecker: this,
-                    listeners: {
-                        update: function () {
-                            this.getFilesGrid().getStore().reload();
-                        },
-                        scope: this
-                    }
+                    uploadChecker: this
                 });
             }
             this.wizard.show();
@@ -98,11 +148,11 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
                     uploadChecker: this,
                     listeners: {
                         save: function(action, all) {
-                            var file = this.getCurrent(),
+                            var file = this.getCurrentFile(),
                                 params = {
                                     all: all ? 1 : 0,
-                                    temp_key: file.temp_key,
-                                    temp_id: file.temp_id,
+                                    temp_key: file.get('temp_key'),
+                                    temp_id: file.get('temp_id'),
                                     'do': action
                                 };
 

@@ -11,8 +11,8 @@ mediamanager:
     fill_required_fields: 'Bitte füllen Sie alle Pflichtfelder aus.'
     meta: Meta
     metasets: Meta Sets
-    file_meta: Datei-Meta
-    folder_meta: Ordner-Meta
+    file_meta: Datei-Metadaten
+    folder_meta: Ordner-Metadaten
     no_meta_values: 'Keine Metadaten'
     key: Schlüssel
     value: Wert

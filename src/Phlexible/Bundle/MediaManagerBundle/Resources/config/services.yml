@@ -63,6 +63,9 @@ services:
             - "@phlexible_media_manager.volume_manager"
             - "@phlexible_media_manager.upload.temp_storage"
             - "@phlexible_media_tool.mime.detector"
+            - "@phlexible_media_type.media_type_manager"
+            - "%phlexible_media_manager.wizard_categories%"
+            - "%phlexible_media_manager.wizard_types%"
 
     # access control permission providers
     phlexible_media_manager.permission_provider:

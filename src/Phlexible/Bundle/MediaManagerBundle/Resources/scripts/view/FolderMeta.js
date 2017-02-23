@@ -1,12 +1,14 @@
 Ext.provide('Phlexible.mediamanager.FolderMeta');
 
-Ext.require('Phlexible.mediamanager.FileMeta');
+Ext.require('Phlexible.mediamanager.Meta');
 Ext.require('Phlexible.mediamanager.FolderMetaGrid');
 
-Phlexible.mediamanager.FolderMeta = Ext.extend(Phlexible.mediamanager.FileMeta, {
+Phlexible.mediamanager.FolderMeta = Ext.extend(Phlexible.mediamanager.Meta, {
     title: Phlexible.mediamanager.Strings.folder_meta,
 
-    right: Phlexible.mediamanager.Rights.FOLDER_MODIFY,
+    getRight: function() {
+        return Phlexible.mediamanager.Rights.FOLDER_MODIFY;
+    },
 
     initUrls: function () {
         this.urls = {

@@ -125,6 +125,7 @@ class UploadController extends Controller
         $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $mimeDetector = $this->get('phlexible_media_tool.mime.detector');
 
         $data = [];
 
@@ -133,7 +134,7 @@ class UploadController extends Controller
             $volume = $volumeManager->getByFolderId($tempFile->getFolderId());
             $supportsVersions = $volume->hasFeature('versions');
             $newName = basename($tempFile->getName());
-            $mimetype = $this->get('phlexible_media_tool.mime.detector')->detect($tempFile->getPath(), MimeDetector::RETURN_STRING);
+            $mimetype = $mimeDetector->detect($tempFile->getPath(), MimeDetector::RETURN_STRING);
             $newType = null;
             if (trim($mimetype)) {
                 $newType = $mediaTypeManager->findByMimetype($mimetype);
@@ -253,29 +254,50 @@ class UploadController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return JsonResponse
-     * @Route("/metasets", name="mediamanager_upload_metasets")
+     * @Route("/metaset", name="mediamanager_upload_metaset")
      */
-    public function metasetsAction()
+    public function metasetAction(Request $request)
     {
-        $allSets = $this->getContainer()->get('metasets.repository')->getAll();
+        $metaSetId = $request->get('set_id');
 
-        $sets = [];
-        foreach ($allSets as $key => $set) {
-            $sets[] = [
-                'key' => $key,
-                'title' => $set->getTitle()
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $optionResolver = $this->get('phlexible_meta_set.option_resolver');
+
+        $metaSet = $metaSetManager->find($metaSetId);
+
+        $fieldDatas = [];
+
+        foreach ($metaSet->getFields() as $field) {
+            $options = $optionResolver->resolve($field);
+
+            $fieldData = [
+                'key'          => $field->getName(),
+                'type'         => $field->getType(),
+                'options'      => $options,
+                'readonly'     => $field->isReadonly(),
+                'required'     => $field->isRequired(),
+                'synchronized' => $field->isSynchronized(),
             ];
+
+            $fieldDatas[] = $fieldData;
         }
 
-        return new JsonResponse(['metasets' => $sets]);
+        $meta = [
+            'set_id' => $metaSet->getId(),
+            'title'  => $metaSet->getName(),
+            'fields' => $fieldDatas
+        ];
+
+        return new JsonResponse(['metaset' => $meta]);
     }
 
     /**
      * @return JsonResponse
-     * @Route("/meta", name="mediamanager_upload_meta")
+     * @Route("/meta_old", name="mediamanager_upload_meta_old")
      */
-    public function metaAction()
+    public function metaOldAction()
     {
         $additionalMetaSet = $this->_getParam('metaset', null);
 

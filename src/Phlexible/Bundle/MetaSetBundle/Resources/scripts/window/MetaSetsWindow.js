@@ -7,6 +7,8 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
     width: 400,
     height: 300,
     layout: 'fit',
+    modal: true,
+    constrainHeader: true,
 
     baseParams: {},
 
@@ -25,11 +27,27 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
                 {
                     iconCls: 'p-metaset-delete-icon',
                     tooltip: this.strings.remove_metaset,
-                    callback: this.removeMetaSet.createDelegate(this),
+                    callback: this.removeMetaSet,
                     scope: this
                 }
             ]
         });
+
+        var storeConfig = {
+                fields: ['id', 'name'],
+                id: 'id',
+                baseParams: this.baseParams,
+                autoLoad: true,
+                sortInfo: {field: "name", direction: "ASC"}
+            },
+            store;
+        if (typeof this.urls.list === 'function') {
+            storeConfig.data = this.urls.list(this);
+        } else {
+            storeConfig.url = this.urls.list;
+            storeConfig.root = 'sets';
+        }
+        store = new Ext.data.JsonStore(storeConfig);
 
         this.items = [
             {
@@ -38,15 +56,7 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
                 viewConfig: {
                     forceFit: true
                 },
-                store: new Ext.data.JsonStore({
-                    url: this.urls.list,
-                    fields: ['id', 'name'],
-                    root: 'sets',
-                    id: 'id',
-                    baseParams: this.baseParams,
-                    autoLoad: true,
-                    sortInfo: {field: "name", direction: "ASC"}
-                }),
+                store: store,
                 columns: [
                     {
                         header: this.strings.metaset,
@@ -127,30 +137,6 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
             combo.store.removeAt(idx);
         }
         combo.setValue(null);
-        return;
-
-        Ext.Ajax.request({
-            url: this.urls.add,
-            params: Ext.apply({}, {set_id: set_id}, this.baseParams),
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
-
-                if (data.success) {
-                    var combo = this.getTopToolbar().items.items[0];
-                    var r = combo.store.getById(set_id);
-                    combo.store.remove(r);
-
-                    this.getComponent(0).store.reload();
-
-                    Phlexible.success(data.msg);
-
-                    this.fireEvent('addset');
-                } else {
-                    Ext.MessageBox.alert('Failure', data.msg);
-                }
-            },
-            scope: this
-        });
     },
 
     removeMetaSet: function (grid, record) {
@@ -158,46 +144,23 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
 
         var combo = this.getTopToolbar().items.items[0];
         combo.store.addSorted(new Ext.data.Record({id: record.get('id'), name: record.get('name')}));
-        return;
-
-        var r = this.getComponent(0).getSelectionModel().getSelected();
-        var set_id = r.data.set_id;
-
-        var newRecord = new Ext.data.Record({
-            set_id: set_id,
-            name: r.data.name
-        });
-        var combo = this.getTopToolbar().items.items[0];
-        var r = combo.store.insert(0, newRecord);
-
-        Ext.Ajax.request({
-            url: this.urls.remove,
-            params: Ext.apply({}, {set_id: set_id}, this.baseParams),
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
-
-                if (data.success) {
-                    this.getComponent(0).store.reload();
-
-                    Phlexible.success(data.msg);
-
-                    this.fireEvent('removeset');
-                } else {
-                    Ext.MessageBox.alert('Failure', data.msg);
-                }
-            },
-            scope: this
-        });
     },
 
     save: function() {
-        var ids = [];
+        var params = Phlexible.clone(this.baseParams);
+        params.ids = [];
         Ext.each(this.getComponent(0).getStore().getRange(), function(record) {
-            ids.push(record.get('id'));
+            params.ids.push(record.get('id'));
         });
 
-        var params = Phlexible.clone(this.baseParams);
-        params.ids = ids.join(',');
+        if (typeof this.urls.save === 'function') {
+            this.urls.save(params, this);
+            this.fireEvent('updatesets');
+            this.close();
+            return;
+        }
+
+        params.ids = params.ids.join(',');
 
         Ext.Ajax.request({
             url: this.urls.save,

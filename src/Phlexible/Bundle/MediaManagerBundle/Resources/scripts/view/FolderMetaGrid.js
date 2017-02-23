@@ -1,11 +1,9 @@
 Ext.provide('Phlexible.mediamanager.FolderMetaGrid');
 
-Ext.require('Phlexible.mediamanager.FileMetaGrid');
+Ext.require('Phlexible.mediamanager.MetaGrid');
 
-Phlexible.mediamanager.FolderMetaGrid = Ext.extend(Phlexible.mediamanager.FileMetaGrid, {
-    title: Phlexible.metasets.Strings.folder_meta,
-
-    right: Phlexible.mediamanager.Rights.FOLDER_MODIFY
+Phlexible.mediamanager.FolderMetaGrid = Ext.extend(Phlexible.mediamanager.MetaGrid, {
+    title: Phlexible.metasets.Strings.folder_meta
 });
 
 Ext.reg('mediamanager-foldermetagrid', Phlexible.mediamanager.FolderMetaGrid);

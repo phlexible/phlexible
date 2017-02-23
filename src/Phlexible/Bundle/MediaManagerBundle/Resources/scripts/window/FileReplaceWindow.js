@@ -11,8 +11,8 @@ Phlexible.mediamanager.FileReplaceWindowTemplate = new Ext.XTemplate(
             '<div class="p-filereplace-header">',
                 '{header}',
             '</div>',
-                '<div class="p-filereplace-text">',
-            '{text}',
+            '<div class="p-filereplace-text">',
+                '{text}',
             '</div>',
             '<tpl if="src">',
             '<div>',
@@ -88,48 +88,48 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
     },
 
     loadFile: function () {
-        var file = this.uploadChecker.getCurrent(),
+        var file = this.uploadChecker.getCurrentFile(),
             data = [];
 
         data.push({
             action: 'discard',
             header: this.strings.delete_uploaded_file,
             text: this.strings.delete_uploaded_file_desc,
-            id: file.old_id,
-            name: file.old_name,
-            type: file.old_type,
-            size: file.old_size,
-            src: Phlexible.Router.generate('mediamanager_media', {file_id: file.old_id, template_key: '_mm_medium'})
+            id: file.get('old_id'),
+            name: file.get('old_name'),
+            type: file.get('old_type'),
+            size: file.get('old_size'),
+            src: Phlexible.Router.generate('mediamanager_media', {file_id: file.get('old_id'), template_key: '_mm_medium'})
         });
 
-        if (!file.versions) {
+        if (!file.get('versions')) {
             data.push({
                 action: 'replace',
                 header: this.strings.replace_existing_file,
                 text: this.strings.replace_existing_file_desc,
-                id: file.new_id,
-                name: file.old_name,
-                type: file.new_type,
-                size: file.new_size,
-                src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.temp_key, id: file.temp_id, template: '_mm_medium'})
+                id: file.get('new_id'),
+                name: file.get('old_name'),
+                type: file.get('new_type'),
+                size: file.get('new_size'),
+                src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.get('temp_key'), id: file.get('temp_id'), template: '_mm_medium'})
             });
         } else {
             data.push({
                 action: 'add_version',
                 header: 'Als neue Version der bestehenden Datei speichern.',
                 text: 'Es werden keine Daten verändert. Die vorhandene Datei wird um diese Datei ergänzt:',
-                id: file.new_id,
-                name: file.new_name,
-                type: file.new_type,
-                size: file.new_size,
-                src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.temp_key, id: file.temp_id, template: '_mm_medium'})
+                id: file.get('new_id'),
+                name: file.get('new_name'),
+                type: file.get('new_type'),
+                size: file.get('new_size'),
+                src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.get('temp_key'), id: file.get('temp_id'), template: '_mm_medium'})
             });
         }
 
         data.push({
             action: 'keep',
             header: this.strings.keep_both_files,
-            text: String.format(this.strings.keep_both_files_desc, file.alternative_name.shorten(60)),
+            text: String.format(this.strings.keep_both_files_desc, file.get('alternative_name').shorten(60)),
             id: '',
             name: '',
             type: '',

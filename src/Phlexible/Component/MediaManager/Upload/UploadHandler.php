@@ -12,6 +12,7 @@
 namespace Phlexible\Component\MediaManager\Upload;
 
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Mime\MimeDetector;
 use Phlexible\Component\Volume\FileSource\UploadedFileSource;
 use Phlexible\Component\Volume\VolumeManager;
@@ -40,22 +41,65 @@ class UploadHandler
     private $mimeDetector;
 
     /**
+     * @var MediaTypeManagerInterface
+     */
+    private $mediaTypeManager;
+
+    /**
+     * @var array|null
+     */
+    private $wizardCategories;
+
+    /**
+     * @var array|null
+     */
+    private $wizardTypes;
+
+    /**
      * @param VolumeManager  $volumeManager
      * @param TempStorage    $tempStorage
      * @param MimeDetector   $mimeDetector
+     * @param MediaTypeManagerInterface   $mediaTypeManager
+     * @param array|null     $wizardCategories
+     * @param array|null     $wizardTypes
      */
-    public function __construct(VolumeManager $volumeManager, TempStorage $tempStorage, MimeDetector $mimeDetector)
-    {
+    public function __construct(
+        VolumeManager $volumeManager,
+        TempStorage $tempStorage,
+        MimeDetector $mimeDetector,
+        MediaTypeManagerInterface $mediaTypeManager,
+        array $wizardCategories = null,
+        array $wizardTypes = null
+    ) {
         $this->volumeManager = $volumeManager;
         $this->tempStorage = $tempStorage;
         $this->mimeDetector = $mimeDetector;
+        $this->mediaTypeManager = $mediaTypeManager;
+        $this->wizardCategories = $wizardCategories;
+        $this->wizardTypes = $wizardTypes;
     }
 
     /**
+     * @param UploadedFileSource $uploadFileSource
+     *
      * @return bool
      */
-    private function useWizard()
+    private function useWizard(UploadedFileSource $uploadFileSource)
     {
+        $newType = $this->mediaTypeManager->findByMimetype($uploadFileSource->getMimeType());
+
+        if (!$newType) {
+            return false;
+        }
+
+        if ($this->wizardCategories !== null && in_array($newType->getCategory(), $this->wizardCategories)) {
+            return true;
+        }
+
+        if ($this->wizardTypes !== null && in_array($newType->getName(), $this->wizardTypes)) {
+            return true;
+        }
+
         return false;
     }
 
@@ -82,7 +126,7 @@ class UploadHandler
             $originalFileId = $file->getId();
         }
 
-        $useWizard = $this->useWizard();
+        $useWizard = $this->useWizard($uploadFileSource);
 
         if ($originalFileId || $useWizard) {
             return $this->tempStorage->store(
