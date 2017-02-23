@@ -69,7 +69,25 @@ class ElementtypeService
     }
 
     /**
-     * Find element type by unique ID
+     * Find element type by unique id
+     *
+     * @param string $uniqueId
+     *
+     * @return Elementtype|null
+     */
+    public function findElementtypeByUniqueId($uniqueId)
+    {
+        foreach ($this->elementtypeManager->findAll() as $elementtype) {
+            if ($elementtype->getUniqueId() === $uniqueId) {
+                return $elementtype;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Find element type by type
      *
      * @param string $type
      *
