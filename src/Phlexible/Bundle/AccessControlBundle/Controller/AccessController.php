@@ -12,6 +12,8 @@
 namespace Phlexible\Bundle\AccessControlBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\MediaManagerBundle\Entity\Folder;
+use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
 use Phlexible\Component\AccessControl\Domain\Entry;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
@@ -113,11 +115,11 @@ class AccessController extends Controller
 
         if ($objectType === 'teaser') {
             $path = array($objectId);
-        } elseif ($objectType === 'Phlexible\Bundle\TreeBundle\Entity\TreeNode') {
+        } elseif ($objectType === TreeNode::class) {
             $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($objectId);
             $node = $tree->get($objectId);
             $objectIdentity = HierarchicalObjectIdentity::fromDomainObject($node);
-        } elseif ($objectType === 'Phlexible\Bundle\MediaManagerBundle\Entity\Folder') {
+        } elseif ($objectType === Folder::clas) {
             $volume = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($objectId);
             $folder = $volume->findFolder($objectId);
             $objectIdentity = HierarchicalObjectIdentity::fromDomainObject($folder);

@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\AccessControlBundle\SecurityProvider;
 
+use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\AccessControl\SecurityProvider\SecurityProviderInterface;
 use Phlexible\Component\AccessControl\SecurityProvider\SecurityResolverInterface;
@@ -45,7 +46,7 @@ class UserSecurityProvider implements SecurityProviderInterface, SecurityResolve
      */
     public function resolveName($securityType, $securityId)
     {
-        if ($securityType !== 'Phlexible\Bundle\UserBundle\Entity\User') {
+        if ($securityType !== User::class) {
             return null;
         }
 

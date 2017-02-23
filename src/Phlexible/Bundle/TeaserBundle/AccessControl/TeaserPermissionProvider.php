@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\TeaserBundle\AccessControl;
 
+use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionProviderInterface;
@@ -30,7 +31,7 @@ class TeaserPermissionProvider implements PermissionProviderInterface
     /**
      * @param string $objectType
      */
-    public function __construct($objectType = 'Phlexible\Bundle\TeaserBundle\Entity\Teaser')
+    public function __construct($objectType = Teaser::class)
     {
         $this->objectType = $objectType;
     }

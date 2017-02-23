@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
+use Phlexible\Bundle\MediaManagerBundle\Entity\Folder;
 use Phlexible\Component\AccessControl\Domain\AccessControlList;
 use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
@@ -48,7 +49,7 @@ class RightsController extends Controller
 
         if ($objectType === 'teaser') {
             $path = array($objectId);
-        } elseif ($objectType === 'Phlexible\Bundle\MediaManagerBundle\Entity\Folder') {
+        } elseif ($objectType === Folder::class) {
             $volume = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($objectId);
             $folder = $volume->findFolder($objectId);
             $identity = HierarchicalObjectIdentity::fromDomainObject($folder);

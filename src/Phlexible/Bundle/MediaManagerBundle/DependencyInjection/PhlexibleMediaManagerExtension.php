@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\DependencyInjection;
 
+use Phlexible\Component\MediaManager\Volume\ExtendedVolume;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,7 +45,7 @@ class PhlexibleMediaManagerExtension extends Extension
         foreach ($config['volumes'] as $name => $volumeConfig) {
             $driverId = $volumeConfig['driver'];
 
-            $volumeDefinition = new Definition('Phlexible\Component\MediaManager\Volume\ExtendedVolume', [
+            $volumeDefinition = new Definition(ExtendedVolume::class, [
                 $volumeConfig['id'],
                 rtrim($volumeConfig['root_dir'], '/').'/',
                 $volumeConfig['quota'],

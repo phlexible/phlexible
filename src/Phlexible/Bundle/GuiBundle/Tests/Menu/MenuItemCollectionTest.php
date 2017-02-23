@@ -13,13 +13,16 @@ namespace Phlexible\Bundle\GuiBundle\Tests\Menu;
 
 use Phlexible\Bundle\GuiBundle\Menu\MenuItem;
 use Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Menu item collection test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection
  */
-class MenuItemCollectionTest extends \PHPUnit_Framework_TestCase
+class MenuItemCollectionTest extends TestCase
 {
     public function testMerge()
     {

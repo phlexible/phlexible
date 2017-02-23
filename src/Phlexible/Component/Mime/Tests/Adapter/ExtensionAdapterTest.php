@@ -17,6 +17,8 @@ use Phlexible\Component\Mime\Adapter\ExtensionAdapter;
  * Extension adapter test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\Mime\Adapter\ExtensionAdapter
  */
 class ExtensionAdapterTest extends AbstractConcreteAdapterTest
 {

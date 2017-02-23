@@ -12,11 +12,14 @@
 namespace Phlexible\Component\Formatter\Tests;
 
 use Phlexible\Component\Formatter\FilesizeFormatter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Filesize formatter test.
+ *
+ * @covers \Phlexible\Component\Formatter\FilesizeFormatter
  */
-class FilesizeFormatterTest extends \PHPUnit_Framework_TestCase
+class FilesizeFormatterTest extends TestCase
 {
     /**
      * @var FilesizeFormatter

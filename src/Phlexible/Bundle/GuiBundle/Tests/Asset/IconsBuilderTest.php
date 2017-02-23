@@ -16,12 +16,15 @@ use Phlexible\Bundle\GuiBundle\Asset\IconsBuilder;
 use Phlexible\Component\Bundler\Asset\Asset;
 use Phlexible\Component\Bundler\Compressor\CompressorInterface;
 use Phlexible\Component\Bundler\Finder\ResourceFinderInterface;
+use PHPUnit\Framework\TestCase;
 use Puli\Repository\Resource\FileResource;
 
 /**
+ * Icons builder test.
+ *
  * @covers \Phlexible\Bundle\GuiBundle\Asset\IconsBuilder
  */
-class IconsBuilderTest extends \PHPUnit_Framework_TestCase
+class IconsBuilderTest extends TestCase
 {
     public function testBuild()
     {

@@ -12,13 +12,16 @@
 namespace Phlexible\Component\ImageAnalyzer\Tests\Driver;
 
 use Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Imagick driver test.
  *
  * @author Stephan Wentz <stephan@wentz.it>
+ *
+ * @covers \Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver
  */
-class ImagickDriverTest extends \PHPUnit_Framework_TestCase
+class ImagickDriverTest extends TestCase
 {
     public function setUp()
     {
@@ -31,7 +34,7 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(__DIR__.'/../files/test.tif', array(
-                'analyzer' => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
+                'analyzer' => ImagickDriver::class,
                 'colorspace' => 'SRGB',
                 'compression' => 'None',
                 'depth' => '8',
@@ -48,7 +51,7 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
                 'width' => '466',
             )),
             array(__DIR__.'/../files/test.jpg', array(
-                'analyzer' => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
+                'analyzer' => ImagickDriver::class,
                 'colorspace' => 'SRGB',
                 'compression' => 'JPEG',
                 'depth' => '8',
@@ -65,7 +68,7 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
                 'width' => '466',
             )),
             array(__DIR__.'/../files/test_cmyk.jpg', array(
-                'analyzer' => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
+                'analyzer' => ImagickDriver::class,
                 'colorspace' => 'CMYK',
                 'compression' => 'JPEG',
                 'depth' => '8',
@@ -82,7 +85,7 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
                 'width' => '466',
             )),
             array(__DIR__.'/../files/test.gif', array(
-                'analyzer' => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
+                'analyzer' => ImagickDriver::class,
                 'colorspace' => 'SRGB',
                 'compression' => 'LZW',
                 'depth' => '8',
@@ -99,7 +102,7 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
                 'width' => '466',
             )),
             array(__DIR__.'/../files/test.png', array(
-                'analyzer' => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
+                'analyzer' => ImagickDriver::class,
                 'colorspace' => 'SRGB',
                 'compression' => 'Zip',
                 'depth' => '8',

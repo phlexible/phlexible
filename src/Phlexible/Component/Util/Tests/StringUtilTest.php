@@ -12,13 +12,16 @@
 namespace Phlexible\Component\Util\Tests;
 
 use Phlexible\Component\Util\StringUtil;
+use PHPUnit\Framework\TestCase;
 
 /**
  * String util Test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\Util\StringUtil
  */
-class StringUtilTest extends \PHPUnit_Framework_TestCase
+class StringUtilTest extends TestCase
 {
     /**
      * @var StringUtil

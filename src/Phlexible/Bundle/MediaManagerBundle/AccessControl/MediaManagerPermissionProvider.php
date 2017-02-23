@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\AccessControl;
 
+use Phlexible\Bundle\MediaManagerBundle\Entity\Folder;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionProviderInterface;
@@ -30,7 +31,7 @@ class MediaManagerPermissionProvider implements PermissionProviderInterface
     /**
      * @param string $objectType
      */
-    public function __construct($objectType = 'Phlexible\Bundle\MediaManagerBundle\Entity\Folder')
+    public function __construct($objectType = Folder::class)
     {
         $this->objectType = $objectType;
     }

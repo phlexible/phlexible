@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
+use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
 use Phlexible\Component\AccessControl\Domain\AccessControlList;
 use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
@@ -44,7 +45,7 @@ class RightsController extends Controller
 
         if ($objectType === 'teaser') {
             $path = array($objectId);
-        } elseif ($objectType === 'Phlexible\Bundle\TreeBundle\Entity\TreeNode') {
+        } elseif ($objectType === TreeNode::class) {
             $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($objectId);
             $node = $tree->get($objectId);
             $identity = HierarchicalObjectIdentity::fromDomainObject($node);

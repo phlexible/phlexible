@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\AccessControl;
 
+use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionProviderInterface;
@@ -30,7 +31,7 @@ class TreePermissionProvider implements PermissionProviderInterface
     /**
      * @param string $objectType
      */
-    public function __construct($objectType = 'Phlexible\Bundle\TreeBundle\Entity\TreeNode')
+    public function __construct($objectType = TreeNode::class)
     {
         $this->objectType = $objectType;
     }

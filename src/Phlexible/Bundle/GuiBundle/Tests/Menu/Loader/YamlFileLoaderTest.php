@@ -13,13 +13,16 @@ namespace Phlexible\Bundle\GuiBundle\Tests\Menu\Loader;
 
 use org\bovigo\vfs\vfsStream;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader;
+use PHPUnit\Framework\TestCase;
 
 /**
  * YAML file loader test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader
  */
-class YamlFileLoaderTest extends \PHPUnit_Framework_TestCase
+class YamlFileLoaderTest extends TestCase
 {
     public function testSupports()
     {

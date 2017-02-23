@@ -13,14 +13,19 @@ namespace Phlexible\Bundle\GuiBundle\Tests\Controller;
 
 use Phlexible\Bundle\GuiBundle\Controller\FrameController;
 use Phlexible\Bundle\GuiBundle\Routing\ExtractedRoutes;
+use Phlexible\Bundle\GuiBundle\Routing\RouteExtractorInterface;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Frame controller test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Bundle\GuiBundle\Controller\FrameController
  */
-class FrameControllerTest extends \PHPUnit_Framework_TestCase
+class FrameControllerTest extends TestCase
 {
     public function testRoutesAction()
     {
@@ -28,10 +33,10 @@ class FrameControllerTest extends \PHPUnit_Framework_TestCase
 
         $extractedRoutes = new ExtractedRoutes('', '', array('test'));
 
-        $routeExtractor = $this->prophesize('Phlexible\Bundle\GuiBundle\Routing\RouteExtractorInterface');
+        $routeExtractor = $this->prophesize(RouteExtractorInterface::class);
         $routeExtractor->extract($request)->willReturn($extractedRoutes);
 
-        $container = $this->prophesize('Symfony\Component\DependencyInjection\ContainerInterface');
+        $container = $this->prophesize(ContainerInterface::class);
         $container->get('phlexible_gui.route_extractor')->willReturn($routeExtractor->reveal());
 
         $controller = new FrameController();

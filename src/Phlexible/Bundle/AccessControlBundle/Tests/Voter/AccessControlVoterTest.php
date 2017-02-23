@@ -20,6 +20,7 @@ use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -42,7 +43,13 @@ class TestObject implements ObjectIdentityInterface
     }
 }
 
-class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
+
+/**
+ * Access control voter test.
+ *
+ * @covers \Phlexible\Bundle\AccessControlBundle\Voter\AccessControlVoter
+ */
+class AccessControlVoterTest extends TestCase
 {
     public function testVoteIsAbstainedForNonDomainObject()
     {

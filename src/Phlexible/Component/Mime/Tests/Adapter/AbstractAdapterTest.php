@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Mime\Tests\Adapter;
 
 use Phlexible\Component\Mime\Adapter\AdapterInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Abstract adapter test.
@@ -78,15 +78,4 @@ abstract class AbstractAdapterTest extends TestCase
      * @return AdapterInterface
      */
     abstract protected function createAdapter();
-
-    /**
-     * @return AdapterInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function createAdapterMock()
-    {
-        $adapterMock = $this->getMockBuilder(AdapterInterface::class)
-            ->getMock();
-
-        return $adapterMock;
-    }
 }

@@ -13,11 +13,13 @@ namespace Phlexible\Component\Mime\Tests;
 
 use Phlexible\Component\Mime\Adapter\AdapterInterface;
 use Phlexible\Component\Mime\MimeDetector;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * @author Stephan Wentz <swentz@brainbits.net>
+ *
+ * @covers \Phlexible\Component\Mime\MimeDetector
  */
 class MimeDetectorTest extends TestCase
 {

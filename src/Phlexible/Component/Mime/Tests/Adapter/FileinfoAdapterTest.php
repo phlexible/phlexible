@@ -17,6 +17,8 @@ use Phlexible\Component\Mime\Adapter\FileinfoAdapter;
  * Fileinfo adapter test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\Mime\Adapter\FileinfoAdapter
  */
 class FileinfoAdapterTest extends AbstractConcreteAdapterTest
 {
