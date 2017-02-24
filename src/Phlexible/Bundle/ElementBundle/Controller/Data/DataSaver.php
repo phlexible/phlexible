@@ -26,11 +26,11 @@ use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Component\Util\UuidUtil;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -171,7 +171,7 @@ class DataSaver
                     ->setName($oldElementStructure->getName());
             } else {
                 $elementStructure
-                    ->setDataId(Uuid::generate())
+                    ->setDataId(UuidUtil::generate())
                     ->setDsId($elementtypeStructure->getRootDsId())
                     ->setType('root')
                     ->setName($elementtypeStructure->getRootNode()->getName());
@@ -528,7 +528,7 @@ class DataSaver
                 // new repeatable group
                 $parent = $this->structures[$repeatableIdentifier];
                 $dsId = $match[1];
-                $dataId = Uuid::generate();
+                $dataId = UuidUtil::generate();
                 $node = $elementtypeStructure->getNode($dsId);
                 $map[$identifier] = $dataId;
                 $this->structures[$identifier] = $elementStructure = new ElementStructure();

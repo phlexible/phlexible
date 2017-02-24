@@ -20,7 +20,7 @@ use Phlexible\Bundle\ElementtypeBundle\File\Loader\LoaderInterface;
 use Phlexible\Bundle\ElementtypeBundle\File\Writer\WriterInterface;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeManagerInterface;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Util\UuidUtil;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -112,7 +112,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
                 throw new CreateCancelledException('Create canceled by callback.');
             }
 
-            $elementtype->setId(Uuid::generate());
+            $elementtype->setId(UuidUtil::generate());
 
             $this->validateElementtype($elementtype);
             $this->writer->write($elementtype);

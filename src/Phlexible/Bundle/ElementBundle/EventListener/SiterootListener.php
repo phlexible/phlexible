@@ -15,10 +15,10 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
+use Phlexible\Component\Util\UuidUtil;
 
 /**
  * Siteroot listener.
@@ -84,7 +84,7 @@ class SiterootListener
 
         $root = new ElementtypeStructureNode();
         $root
-            ->setDsId(Uuid::generate())
+            ->setDsId(UuidUtil::generate())
             ->setName('root')
             ->setType('root');
 
@@ -92,7 +92,7 @@ class SiterootListener
         $tab
             ->setParentNode($root)
             ->setParentDsId($root->getDsId())
-            ->setDsId(Uuid::generate())
+            ->setDsId(UuidUtil::generate())
             ->setName('data')
             ->setType('tab')
             ->setLabels(['fieldLabel' => ['de' => 'Daten', 'en' => 'Data']])
@@ -103,7 +103,7 @@ class SiterootListener
         $textfield
             ->setParentNode($tab)
             ->setParentDsId($tab->getDsId())
-            ->setDsId(Uuid::generate())
+            ->setDsId(UuidUtil::generate())
             ->setName('title')
             ->setType('textfield')
             ->setLabels(['fieldLabel' => ['de' => 'Titel', 'en' => 'Title']])

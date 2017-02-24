@@ -16,7 +16,7 @@ use Phlexible\Bundle\ElementtypeBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Util\UuidUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -64,7 +64,7 @@ class TreeSaver
         $rootProperties = $rootData['properties'];
         $rootConfig = $rootProperties['root'];
         $rootMappings = !empty($rootProperties['mappings']) ? $rootProperties['mappings'] : null;
-        $rootDsId = !empty($rootData['ds_id']) ? $rootData['ds_id'] : Uuid::generate();
+        $rootDsId = !empty($rootData['ds_id']) ? $rootData['ds_id'] : UuidUtil::generate();
 
         if (!isset($rootData['type']) || ($rootData['type'] !== 'root' && $rootData['type'] !== 'referenceroot')) {
             throw new InvalidArgumentException('Invalid root node.');
@@ -174,7 +174,7 @@ class TreeSaver
             $parentNode = $elementtypeStructure->getNode($row['parent_ds_id']);
 
             $node
-                ->setDsId(!empty($row['ds_id']) ? $row['ds_id'] : Uuid::generate())
+                ->setDsId(!empty($row['ds_id']) ? $row['ds_id'] : UuidUtil::generate())
                 ->setParentDsId($parentNode->getDsId())
                 ->setParentNode($parentNode)
             //    ->setSort(++$sort)
@@ -183,7 +183,7 @@ class TreeSaver
             if ($row['type'] === 'reference' && isset($row['reference']['new'])) {
                 $firstChild = $row['children'][0];
 
-                $referenceRootDsId = Uuid::generate();
+                $referenceRootDsId = UuidUtil::generate();
                 foreach ($row['children'] as $index => $referenceRow) {
                     $row['children'][$index]['parent_ds_id'] = $referenceRootDsId;
                 }

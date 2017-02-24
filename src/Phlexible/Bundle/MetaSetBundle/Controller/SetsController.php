@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\MetaSetBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Util\UuidUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -102,7 +102,7 @@ class SetsController extends Controller
 
         $metaSet = $metaSetManager->createMetaSet();
         $metaSet
-            ->setId(Uuid::generate())
+            ->setId(UuidUtil::generate())
             ->setName($name)
             ->setCreateUser($this->getUser()->getDisplayName())
             ->setCreatedAt(new \DateTime())
@@ -180,7 +180,7 @@ class SetsController extends Controller
                 unset($fields[$item['id']]);
             } else {
                 $field = $metaSetManager->createMetaSetField()
-                    ->setId(Uuid::generate());
+                    ->setId(UuidUtil::generate());
             }
 
             $field

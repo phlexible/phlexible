@@ -72,14 +72,6 @@ Phlexible.Handles.add('spacer', function() {
     return new Phlexible.gui.menuhandle.handle.SpacerHandle();
 });
 
-Phlexible.Handles.add('bundles', function() {
-    return new Phlexible.gui.menuhandle.handle.XtypeHandle({
-        text: Phlexible.gui.Strings.bundles,
-        iconCls: 'p-gui-manager-icon',
-        component: 'gui-bundles'
-    });
-});
-
 Phlexible.Handles.add('help', function() {
     return new Phlexible.gui.menuhandle.handle.XtypeHandle({
         text: Phlexible.gui.Strings.help,

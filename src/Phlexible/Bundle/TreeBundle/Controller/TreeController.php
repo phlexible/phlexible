@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Controller;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureIterator;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Util\UuidUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -301,12 +301,12 @@ class TreeController extends Controller
 
         $targetStructure = clone $sourceStructure;
         $targetStructure->setId(null);
-        $targetStructure->setDataId(Uuid::generate());
+        $targetStructure->setDataId(UuidUtil::generate());
 
         $rii = new \RecursiveIteratorIterator(new ElementStructureIterator($targetStructure->getStructures()), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $structure) {
             $structure->setId(null);
-            $structure->setDataId(Uuid::generate());
+            $structure->setDataId(UuidUtil::generate());
         }
 
         $targetElementVersion = $elementService->createElementVersion(

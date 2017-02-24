@@ -38,8 +38,3 @@ phpinfo:
 #    parent: debug
 #    handle: properties
 #    roles: [ROLE_DEBUG]
-
-bundles:
-    parent: admin
-    handle: bundles
-    roles: [ROLE_BUNDLES]

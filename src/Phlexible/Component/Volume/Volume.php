@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\Volume;
 
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Util\UuidUtil;
 use Phlexible\Component\Volume\Driver\DriverInterface;
 use Phlexible\Component\Volume\Event\CopyFileEvent;
 use Phlexible\Component\Volume\Event\CopyFolderEvent;
@@ -280,7 +280,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         /* @var $file FileInterface */
         $file
             ->setVolume($this)
-            ->setId(Uuid::generate())
+            ->setId(UuidUtil::generate())
             ->setFolder($targetFolder)
             ->setName($fileSource->getName())
             ->setCreatedAt(new \DateTime())
@@ -403,7 +403,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
     {
         $file = clone $originalFile;
         $file
-            ->setId(Uuid::generate())
+            ->setId(UuidUtil::generate())
             ->setCreatedAt(new \DateTime())
             ->setCreateUserId($userId)
             ->setModifiedAt($file->getCreatedAt())
@@ -536,7 +536,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         /* @var $folder FolderInterface */
         $folder
             ->setVolume($this)
-            ->setId(Uuid::generate())
+            ->setId(UuidUtil::generate())
             ->setName($name)
             ->setParentId($targetFolder ? $targetFolder->getId() : null)
             ->setPath($folderPath)

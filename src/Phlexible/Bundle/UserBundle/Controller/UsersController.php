@@ -14,10 +14,10 @@ namespace Phlexible\Bundle\UserBundle\Controller;
 use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Password\PasswordGenerator;
 use Phlexible\Bundle\UserBundle\UsersMessage;
+use Phlexible\Component\Util\UuidUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -256,7 +256,7 @@ class UsersController extends Controller
 
         $optin = (bool) $request->request->get('optin', false);
         if ($optin) {
-            $user->setConfirmationToken(Uuid::generate());
+            $user->setConfirmationToken(UuidUtil::generate());
 
             $mailer = $this->get('phlexible_user.mailer');
             $mailer->sendNewPasswordEmailMessage($user);
