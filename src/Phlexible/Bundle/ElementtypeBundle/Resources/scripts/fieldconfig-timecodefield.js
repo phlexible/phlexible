@@ -14,7 +14,7 @@ Phlexible.fields.Registry.addFactory('timecodefield', function (parentConfig, it
         regex: (item.validation.regexp ? new RegExp(item.validation.regexp, (item.validation.ignore ? 'i' : '') + (item.validation.multiline ? 'm' : '')) : null),
 
         timecodePattern: '99:99:99.99',
-        plugins: [new Ext.ux.InputTextMask(this.timecodePattern)],
+        plugins: [new Ext.ux.InputTextMask('99:99:99.99')],
 
         supportsPrefix: true,
         supportsSuffix: true,
