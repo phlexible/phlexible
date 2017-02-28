@@ -7,7 +7,6 @@ Ext.require('Phlexible.gui.menuhandle.handle.SpacerHandle');
 Ext.require('Phlexible.gui.menuhandle.handle.SeparatorHandle');
 Ext.require('Phlexible.gui.menuhandle.handle.XtypeHandle');
 Ext.require('Phlexible.gui.menuhandle.handle.WindowHandle');
-Ext.require('Phlexible.gui.BundlesMainPanel');
 Ext.require('Phlexible.gui.PhpInfoWindow');
 Ext.require('Phlexible.gui.Help');
 
