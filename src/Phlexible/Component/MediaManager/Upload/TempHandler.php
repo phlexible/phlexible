@@ -11,6 +11,7 @@
 
 namespace Phlexible\Component\MediaManager\Upload;
 
+use Phlexible\Component\Volume\Model\FileInterface;
 use Phlexible\Component\Volume\VolumeManager;
 
 /**
@@ -74,6 +75,8 @@ class TempHandler
     /**
      * @param string   $action
      * @param TempFile $tempFile
+     *
+     * @return FileInterface
      */
     private function handleTempFile($action, TempFile $tempFile)
     {
@@ -82,7 +85,7 @@ class TempHandler
 
         switch ($action) {
             case self::ACTION_SAVE:
-                $volume->createFile($folder, $tempFile, array(), $tempFile->getUserId());
+                $file = $volume->createFile($folder, $tempFile, array(), $tempFile->getUserId());
                 break;
 
             case self::ACTION_REPLACE:
@@ -92,7 +95,7 @@ class TempHandler
 
             case self::ACTION_KEEP_BOTH:
                 $tempFile->setAlternativeName($this->createAlternateFilename($tempFile));
-                $volume->createFile($folder, $tempFile, array(), $tempFile->getUserId());
+                $file = $volume->createFile($folder, $tempFile, array(), $tempFile->getUserId());
                 break;
 
             case self::ACTION_VERSION:
@@ -121,7 +124,7 @@ class TempHandler
 
         $this->tempStorage->remove($tempFile);
 
-        // TODO: add meta
+        return $file;
     }
 
     /**

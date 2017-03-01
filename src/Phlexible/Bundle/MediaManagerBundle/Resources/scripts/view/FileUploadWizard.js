@@ -115,6 +115,9 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 title: false,
                 region: 'center',
                 layout: 'border',
+                tbar: [{
+                    text: Phlexible.inlineIcon('p-mediamanager-wizard_conflict-icon') + ' <b>A file with this name already exists. Selecting "Keep both files" will save it as:</b>'
+                }],
                 items: [
                     {
                         xtype: 'form',

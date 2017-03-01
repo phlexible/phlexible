@@ -220,7 +220,9 @@ class UploadController extends Controller
         if ($all) {
             $tempHandler->handleAll($action);
         } else {
-            $tempHandler->handle($action, $tempId);
+            $file = $tempHandler->handle($action, $tempId);
+
+            // TODO: meta
         }
 
         return new ResultResponse(true, ($all ? 'All' : 'File').' saved with action '.$action);
