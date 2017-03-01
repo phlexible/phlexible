@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MetaSet\Model;
 
 /**
- * Option resolver
+ * Option resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -45,5 +45,4 @@ class OptionResolver
 
         return null;
     }
-
 }

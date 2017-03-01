@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\DashboardBundle\Portlet;
 
 /**
- * Portlet collection
+ * Portlet collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\GuiBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Gui role provider
+ * Gui role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -25,9 +25,7 @@ class GuiRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
-            'ROLE_BUNDLES',
-        ];
+        return [];
     }
 
     /**

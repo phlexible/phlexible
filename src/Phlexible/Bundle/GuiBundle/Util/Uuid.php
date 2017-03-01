@@ -11,24 +11,21 @@
 
 namespace Phlexible\Bundle\GuiBundle\Util;
 
-use Rhumsaa\Uuid\Uuid as BaseUuid;
+use Phlexible\Component\Util\UuidUtil;
 
 /**
- * Uuid generator wrapper
+ * Uuid generator wrapper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @deprecated
  */
-class Uuid
+class Uuid extends UuidUtil
 {
-    /**
-     * Generate a version 4 (random) UUID
-     *
-     * @return string
-     */
     public static function generate()
     {
-        return BaseUuid::uuid4()->toString();
+        trigger_error(__METHOD__.' is deprecated. Use '.UuidUtil::class.'::generate() instead.', E_USER_DEPRECATED);
+
+        return parent::generate();
     }
 }
-
-

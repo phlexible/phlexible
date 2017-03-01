@@ -19,7 +19,7 @@ use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Upload handler
+ * Upload handler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -56,12 +56,12 @@ class UploadHandler
     private $wizardTypes;
 
     /**
-     * @param VolumeManager  $volumeManager
-     * @param TempStorage    $tempStorage
-     * @param MimeDetector   $mimeDetector
-     * @param MediaTypeManagerInterface   $mediaTypeManager
-     * @param array|null     $wizardCategories
-     * @param array|null     $wizardTypes
+     * @param VolumeManager             $volumeManager
+     * @param TempStorage               $tempStorage
+     * @param MimeDetector              $mimeDetector
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     * @param array|null                $wizardCategories
+     * @param array|null                $wizardTypes
      */
     public function __construct(
         VolumeManager $volumeManager,
@@ -104,7 +104,7 @@ class UploadHandler
     }
 
     /**
-     * Handle upload
+     * Handle upload.
      *
      * @param UploadedFile $uploadedFile
      * @param string       $folderId
@@ -119,7 +119,7 @@ class UploadHandler
 
         $volume = $this->volumeManager->getByFolderId($folderId);
         $folder = $volume->findFolder($folderId);
-        $file = $volume->findFileByPath($folder->getPath() . '/' . $uploadFileSource->getName());
+        $file = $volume->findFileByPath($folder->getPath().'/'.$uploadFileSource->getName());
         $originalFileId = null;
 
         if ($file) {

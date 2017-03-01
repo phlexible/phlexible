@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Links controller
+ * Links controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elements/links")
@@ -61,13 +61,13 @@ class LinksController extends Controller
 
         foreach ($links as $link) {
             $result[] = [
-                'id'      => $link->getId(),
+                'id' => $link->getId(),
                 'iconCls' => 'p-element-component-icon',
-                'type'    => $link->getType(),
-                'title'   => $link->getField(),
+                'type' => $link->getType(),
+                'title' => $link->getField(),
                 'content' => $link->getTarget(),
-                'link'    => [],
-                'raw'     => 'raw'
+                'link' => [],
+                'raw' => 'raw',
             ];
         }
 
@@ -120,10 +120,9 @@ class LinksController extends Controller
             ->from('tree', 't')
             ->join('t', 'element', 'e', 't.type_id = e.eid')
             ->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND e.latest_version = ev.version')
-            ->join('ev', 'element_version_mapped_field', 'evmf', 'evmf.element_version_id = ev.id AND evmf.language = ' . $qb->expr()->literal($language))
+            ->join('ev', 'element_version_mapped_field', 'evmf', 'evmf.element_version_id = ev.id AND evmf.language = '.$qb->expr()->literal($language))
             ->where($qb->expr()->eq('t.id', $qb->expr()->literal($query)))
             ->orderBy('title', 'ASC');
-
 
         if ($or) {
             $qb->andWhere($or);
@@ -141,7 +140,7 @@ class LinksController extends Controller
             ->from('tree', 't')
             ->join('t', 'element', 'e', 't.type_id = e.eid')
             ->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND e.latest_version = ev.version')
-            ->join('ev', 'element_version_mapped_field', 'evmf', 'evmf.element_version_id = ev.id AND evmf.language = ' . $qb->expr()->literal($language))
+            ->join('ev', 'element_version_mapped_field', 'evmf', 'evmf.element_version_id = ev.id AND evmf.language = '.$qb->expr()->literal($language))
             ->where($qb->expr()->like('evmf.backend', $qb->expr()->literal("%$query%")))
             ->orderBy('title', 'ASC');
 
@@ -163,12 +162,12 @@ class LinksController extends Controller
         foreach ($results as $row) {
             $siteroot = $siterootManager->find($row['siteroot_id']);
             $data[] = [
-                'id'    => $row['id'],
-                'type'  => ($siterootId === $row['siteroot_id'] ? 'internal' : 'intrasiteroot'),
-                'tid'   => $row['id'],
-                'eid'   => $row['eid'],
+                'id' => $row['id'],
+                'type' => ($siterootId === $row['siteroot_id'] ? 'internal' : 'intrasiteroot'),
+                'tid' => $row['id'],
+                'eid' => $row['eid'],
                 'title' => $siteroot->getTitle($language)
-                    . ' :: ' . $row['title'] . ' [' . $row['id'] . ']',
+                    .' :: '.$row['title'].' ['.$row['id'].']',
             ];
         }
 

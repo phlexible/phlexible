@@ -17,7 +17,7 @@ use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Meta data value event
+ * Meta data value event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

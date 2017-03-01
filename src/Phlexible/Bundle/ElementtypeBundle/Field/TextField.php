@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field;
 
 /**
- * Text field
+ * Text field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

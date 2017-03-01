@@ -15,7 +15,7 @@ use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * XML dumper
+ * XML dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

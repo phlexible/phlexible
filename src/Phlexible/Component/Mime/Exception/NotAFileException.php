@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Mime\Exception;
 
 /**
- * Mime not a file exception
+ * Mime not a file exception.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
 class NotAFileException extends RuntimeException
 {
-
 }

@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field\Container;
 
 /**
- * Group container
+ * Group container.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

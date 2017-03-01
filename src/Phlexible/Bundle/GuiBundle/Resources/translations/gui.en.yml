@@ -1,9 +1,6 @@
 gui:
     frame: Frame
     administration: Administration
-    bundle: Bundle
-    bundles: Bundles
-    no_bundles: No bundles to display.
     configuration: Configuration
     content: Content
     dialog: Dialog

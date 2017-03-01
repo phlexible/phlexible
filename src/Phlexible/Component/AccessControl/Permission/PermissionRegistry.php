@@ -14,7 +14,7 @@ namespace Phlexible\Component\AccessControl\Permission;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 
 /**
- * Permission registry
+ * Permission registry.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -60,7 +60,7 @@ class PermissionRegistry
     }
 
     /**
-     * Return all permissions
+     * Return all permissions.
      *
      * @return PermissionCollection[]
      */
@@ -70,11 +70,12 @@ class PermissionRegistry
     }
 
     /**
-     * Return permissions for object type
+     * Return permissions for object type.
      *
      * @param string $objectType
      *
      * @throws InvalidArgumentException
+     *
      * @return PermissionCollection
      */
     public function get($objectType)
@@ -88,7 +89,6 @@ class PermissionRegistry
         } while ($objectType !== false);
 
         throw new InvalidArgumentException("No permissions for type $actualObjectType found.");
-
     }
 
     /**

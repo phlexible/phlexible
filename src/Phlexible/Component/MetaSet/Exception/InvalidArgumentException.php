@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MetaSet\Exception;
 
 /**
- * Invalid argument exception for meta set
+ * Invalid argument exception for meta set.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class InvalidArgumentException extends \RuntimeException implements ExceptionInterface
 {
-
 }

@@ -11,10 +11,9 @@
 
 namespace Phlexible\Bundle\TeaserBundle\Configurator;
 
-use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
@@ -25,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Teaser configurator
+ * Teaser configurator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -54,7 +53,7 @@ class TeaserConfigurator implements ConfiguratorInterface
     /**
      * @param EventDispatcherInterface $dispatcher
      * @param LoggerInterface          $logger
-     * @param TeaserManagerInterface  $teaserManager
+     * @param TeaserManagerInterface   $teaserManager
      * @param ElementService           $elementService
      */
     public function __construct(
@@ -88,9 +87,10 @@ class TeaserConfigurator implements ConfiguratorInterface
 
             if (!$version) {
                 $renderConfiguration->setResponse(new Response(''));
+
                 return;
 
-                throw new \Exception("Teaser not published.");
+                throw new \Exception('Teaser not published.');
             }
         }
 

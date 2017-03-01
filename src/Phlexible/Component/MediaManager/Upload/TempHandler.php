@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaManager\Upload;
 use Phlexible\Component\Volume\VolumeManager;
 
 /**
- * Upload temp storage
+ * Upload temp storage.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -135,15 +135,15 @@ class TempHandler
         $folder = $volume->findFolder($tempFile->getFolderId());
 
         $newNameParts = pathinfo($tempFile->getName());
-        $newNameFormat = basename($newNameParts['basename'], '.' . $newNameParts['extension']);
-        $newNameFormat .= '(%s).' . $newNameParts['extension'];
+        $newNameFormat = basename($newNameParts['basename'], '.'.$newNameParts['extension']);
+        $newNameFormat .= '(%s).'.$newNameParts['extension'];
 
         $i = 0;
 
         do {
-            $i++;
+            ++$i;
             $newName = sprintf($newNameFormat, $i);
-            $testFilename = $folder->getPath() . '/' . $newName;
+            $testFilename = $folder->getPath().'/'.$newName;
         } while ($volume->findFileByPath($testFilename));
 
         return $newName;

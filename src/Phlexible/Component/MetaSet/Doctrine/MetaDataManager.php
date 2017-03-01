@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Meta data manager
+ * Meta data manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -111,7 +111,6 @@ abstract class MetaDataManager implements MetaDataManagerInterface
     {
         foreach ($metaData->getLanguages() as $language) {
             foreach ($metaData->getMetaSet()->getFields() as $field) {
-
                 // TODO: löschen?
                 if (!$metaData->get($field->getName(), $language)) {
                     continue;

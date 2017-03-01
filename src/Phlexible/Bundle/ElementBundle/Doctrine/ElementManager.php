@@ -26,7 +26,7 @@ use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Element manager
+ * Element manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

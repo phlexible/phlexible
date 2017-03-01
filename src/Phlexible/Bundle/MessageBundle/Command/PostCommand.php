@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Info command
+ * Info command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -54,12 +54,12 @@ class PostCommand extends ContainerAwareCommand
 
         $subject = $input->getArgument('subject');
         if (!$subject) {
-            $subject = 'message-' . $date;
+            $subject = 'message-'.$date;
         }
 
         $body = $input->getOption('body');
         if (!$body) {
-            $body = 'body-' . $date;
+            $body = 'body-'.$date;
         }
 
         $priority = $input->getOption('priority');
@@ -89,5 +89,4 @@ class PostCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

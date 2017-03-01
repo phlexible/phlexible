@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Preview controller
+ * Preview controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediatemplates/preview")
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PreviewController extends Controller
 {
     /**
-     * List Image Mediatemplates
+     * List Image Mediatemplates.
      *
      * @param Request $request
      *
@@ -128,7 +128,7 @@ class PreviewController extends Controller
     public function getAction(Request $request)
     {
         $filename = $request->get('file');
-        $filename = $this->container->getParameter('phlexible_media_template.previewer.temp_dir') . basename($filename);
+        $filename = $this->container->getParameter('phlexible_media_template.previewer.temp_dir').basename($filename);
 
         $mimeType = $this->get('phlexible_media_tool.mime.detector')->detect($filename, 'string');
 

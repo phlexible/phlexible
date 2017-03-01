@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\QueueBundle\Model;
 use Phlexible\Bundle\QueueBundle\Entity\Job;
 
 /**
- * Job manager interface
+ * Job manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -63,7 +63,7 @@ interface JobManagerInterface
     public function countBy(array $criteria);
 
     /**
-     * Insert a new job into the queue
+     * Insert a new job into the queue.
      *
      * @param Job $job
      */
@@ -71,28 +71,28 @@ interface JobManagerInterface
 
     /**
      * Insert a new job into the queue, only if the same job doesn't exist in status waiting
-     * Job ID and status will be set in the Job object
+     * Job ID and status will be set in the Job object.
      *
      * @param Job $job
      */
     public function addUniqueJob(Job $job);
 
     /**
-     * Suspend a job (without removing it)
+     * Suspend a job (without removing it).
      *
      * @param Job $job
      */
     public function suspendJob(Job $job);
 
     /**
-     * Resume a suspended job
+     * Resume a suspended job.
      *
      * @param Job $job
      */
     public function resumeJob(Job $job);
 
     /**
-     * Requeue job
+     * Requeue job.
      *
      * @param Job $job
      */

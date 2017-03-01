@@ -19,7 +19,7 @@ use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Console listener
+ * Console listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

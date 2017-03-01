@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TeaserBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Teaser bundle
+ * Teaser bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

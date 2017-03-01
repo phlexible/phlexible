@@ -15,7 +15,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * XML dumper
+ * XML dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

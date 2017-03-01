@@ -15,14 +15,14 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Extractor resolver interface
+ * Extractor resolver interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExtractorResolverInterface
 {
     /**
-     * Resolve extractor
+     * Resolve extractor.
      *
      * @param ExtendedFileInterface $file
      * @param MediaType             $mediaType

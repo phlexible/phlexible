@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\ContentTree;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Content tree context
+ * Content tree context.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

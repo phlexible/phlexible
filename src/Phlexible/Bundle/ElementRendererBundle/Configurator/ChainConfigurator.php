@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementRendererBundle\Configurator;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Element render configurator
+ * Element render configurator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -26,7 +26,7 @@ class ChainConfigurator implements ConfiguratorInterface
     private $configurators = [];
 
     /**
-     * @param ConfiguratorInterface[]  $configurators
+     * @param ConfiguratorInterface[] $configurators
      */
     public function __construct(array $configurators = array())
     {

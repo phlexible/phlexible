@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaTemplate\Model;
 use Phlexible\Component\MediaTemplate\Exception\InvalidArgumentException;
 
 /**
- * Abstract template
+ * Abstract template.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -254,6 +254,7 @@ abstract class AbstractTemplate implements TemplateInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws InvalidArgumentException
      */
     public function setParameter($key, $value, $strict = true)
@@ -261,7 +262,7 @@ abstract class AbstractTemplate implements TemplateInterface
         $allowedParameters = $this->getAllowedParameters();
         if (!in_array($key, $allowedParameters)) {
             if ($strict) {
-                throw new InvalidArgumentException("Parameter $key not allowed in " . get_class($this) . ".");
+                throw new InvalidArgumentException("Parameter $key not allowed in ".get_class($this).'.');
             }
 
             return $this;

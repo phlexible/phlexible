@@ -19,7 +19,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Model\WritableTreeInterface;
 
 /**
- * Tree manager
+ * Tree manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -51,7 +51,7 @@ class TreeManager
     }
 
     /**
-     * Return tree by siteroot ID
+     * Return tree by siteroot ID.
      *
      * @param string $siteRootId
      *
@@ -68,11 +68,12 @@ class TreeManager
     }
 
     /**
-     * Get tree by node ID
+     * Get tree by node ID.
      *
      * @param int $nodeId
      *
      * @return TreeInterface|WritableTreeInterface
+     *
      * @throws NodeNotFoundException
      */
     public function getByNodeId($nodeId)
@@ -89,12 +90,13 @@ class TreeManager
     }
 
     /**
-     * Get tree by type ID
+     * Get tree by type ID.
      *
      * @param int    $typeId
      * @param string $type
      *
      * @return TreeInterface[]|WritableTreeInterface[]
+     *
      * @throws NodeNotFoundException
      */
     public function getByTypeId($typeId, $type = null)

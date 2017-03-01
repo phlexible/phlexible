@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Online controller
+ * Online controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

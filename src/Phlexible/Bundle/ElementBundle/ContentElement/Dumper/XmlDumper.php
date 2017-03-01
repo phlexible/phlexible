@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 
 /**
- * XML dumper
+ * XML dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -39,7 +39,7 @@ class XmlDumper implements DumperInterface
      */
     public function dump(ContentElement $contentElement)
     {
-        $filename = $contentElement->getEid() . '_' . $contentElement->getLanguage() . '.xml';
+        $filename = $contentElement->getEid().'_'.$contentElement->getLanguage().'.xml';
 
         $dom = new \DOMDocument();
         $dom->preserveWhiteSpace = false;
@@ -73,7 +73,7 @@ class XmlDumper implements DumperInterface
             mkdir($this->xmlDir, 0777, true);
         }
 
-        $dom->save($this->xmlDir . '/' . $filename);
+        $dom->save($this->xmlDir.'/'.$filename);
     }
 
     /**

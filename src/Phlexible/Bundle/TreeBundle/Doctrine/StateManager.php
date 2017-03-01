@@ -22,7 +22,7 @@ use Phlexible\Bundle\TreeBundle\Tree\NodeHasher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * State manager
+ * State manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -112,7 +112,7 @@ class StateManager implements StateManagerInterface
      */
     public function findOneByTreeNodeAndLanguage(TreeNodeInterface $treeNode, $language)
     {
-        $id = $treeNode->getId() . '_' . $language;
+        $id = $treeNode->getId().'_'.$language;
 
         if (!isset($this->cache[$id])) {
             $this->cache[$id] = $this->getTreeNodeOnlineRepository()->findOneBy(['treeNode' => $treeNode->getId(), 'language' => $language]);

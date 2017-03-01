@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Media cache configuration
+ * Media cache configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

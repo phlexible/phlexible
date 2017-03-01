@@ -12,21 +12,21 @@
 namespace Phlexible\Bundle\ElementtypeBundle\SelectFieldProvider;
 
 /**
- * Select field provider interface
+ * Select field provider interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface SelectFieldProviderInterface
 {
     /**
-     * Return name of this provider
+     * Return name of this provider.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Return title for this provider
+     * Return title for this provider.
      *
      * @param string $language
      *
@@ -35,7 +35,7 @@ interface SelectFieldProviderInterface
     public function getTitle($language);
 
     /**
-     * Return associative data for this provider
+     * Return associative data for this provider.
      *
      * @param string $siterootId
      * @param string $interfaceLanguage

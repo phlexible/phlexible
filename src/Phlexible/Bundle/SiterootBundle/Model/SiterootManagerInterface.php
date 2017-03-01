@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SiterootBundle\Model;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 
 /**
- * Siteroot manager interface
+ * Siteroot manager interface.
  *
  * @author Matthias Harmuth <mharmuth@brainbits.net>
  */

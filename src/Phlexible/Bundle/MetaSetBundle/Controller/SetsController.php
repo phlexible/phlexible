@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\MetaSetBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Util\UuidUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Sets controller
+ * Sets controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/metasets/sets")
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SetsController extends Controller
 {
     /**
-     * List sets
+     * List sets.
      *
      * @return JsonResponse
      * @Route("/list", name="metasets_sets_list")
@@ -42,7 +42,7 @@ class SetsController extends Controller
         $data = [];
         foreach ($metaSet as $set) {
             $data[] = [
-                'id'   => $set->getId(),
+                'id' => $set->getId(),
                 'name' => $set->getName(),
             ];
         }
@@ -51,7 +51,7 @@ class SetsController extends Controller
     }
 
     /**
-     * List fields
+     * List fields.
      *
      * @param Request $request
      *
@@ -69,13 +69,13 @@ class SetsController extends Controller
         $data = [];
         foreach ($fields as $field) {
             $data[] = [
-                'id'           => $field->getId(),
-                'key'          => $field->getName(),
-                'type'         => $field->getType(),
-                'required'     => $field->isRequired(),
+                'id' => $field->getId(),
+                'key' => $field->getName(),
+                'type' => $field->getType(),
+                'required' => $field->isRequired(),
                 'synchronized' => $field->isSynchronized(),
-                'readonly'     => $field->isReadonly(),
-                'options'      => $field->getOptions(),
+                'readonly' => $field->isReadonly(),
+                'options' => $field->getOptions(),
             ];
         }
 
@@ -83,7 +83,7 @@ class SetsController extends Controller
     }
 
     /**
-     * Create set
+     * Create set.
      *
      * @param Request $request
      *
@@ -102,7 +102,7 @@ class SetsController extends Controller
 
         $metaSet = $metaSetManager->createMetaSet();
         $metaSet
-            ->setId(Uuid::generate())
+            ->setId(UuidUtil::generate())
             ->setName($name)
             ->setCreateUser($this->getUser()->getDisplayName())
             ->setCreatedAt(new \DateTime())
@@ -115,7 +115,7 @@ class SetsController extends Controller
     }
 
     /**
-     * Rename set
+     * Rename set.
      *
      * @param Request $request
      *
@@ -143,7 +143,7 @@ class SetsController extends Controller
     }
 
     /**
-     * Save set
+     * Save set.
      *
      * @param Request $request
      *
@@ -180,7 +180,7 @@ class SetsController extends Controller
                 unset($fields[$item['id']]);
             } else {
                 $field = $metaSetManager->createMetaSetField()
-                    ->setId(Uuid::generate());
+                    ->setId(UuidUtil::generate());
             }
 
             $field

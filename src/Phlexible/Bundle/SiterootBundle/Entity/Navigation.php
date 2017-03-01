@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SiterootBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Siteroot navigation
+ * Siteroot navigation.
  *
  * @author Phillip Look <plook@brainbits.net>
  *

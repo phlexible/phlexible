@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Element version mapped field
+ * Element version mapped field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

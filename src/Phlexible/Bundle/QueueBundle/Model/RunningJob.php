@@ -15,7 +15,7 @@ use Phlexible\Bundle\QueueBundle\Entity\Job;
 use Symfony\Component\Process\Process;
 
 /**
- * Running job
+ * Running job.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

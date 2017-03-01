@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MessageBundle\Handler;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
- * Debug handler
+ * Debug handler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -31,16 +31,16 @@ class DebugHandler implements HandlerInterface
     public function handle(Message $message)
     {
         $this->messages[] = [
-            'subject'      => $message->getSubject(),
-            'body'         => $message->getBody(),
-            'type'         => $message->getType(),
-            'typeName'     => $message->getType(),
-            'priority'     => $message->getPriority(),
+            'subject' => $message->getSubject(),
+            'body' => $message->getBody(),
+            'type' => $message->getType(),
+            'typeName' => $message->getType(),
+            'priority' => $message->getPriority(),
             'priorityName' => $message->getPriority(),
-            'channel'      => $message->getChannel(),
-            'role'         => $message->getRole(),
-            'user'         => $message->getUser(),
-            'createdAt'    => $message->getCreatedAt()->format('Y-m-d H:i:s'),
+            'channel' => $message->getChannel(),
+            'role' => $message->getRole(),
+            'user' => $message->getUser(),
+            'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
         ];
     }
 

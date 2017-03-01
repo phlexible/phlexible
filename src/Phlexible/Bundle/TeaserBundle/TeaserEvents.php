@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TeaserBundle;
 
 /**
- * Teaser events
+ * Teaser events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

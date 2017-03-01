@@ -18,7 +18,7 @@ use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootsAccessor;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Twig siteroot extension
+ * Twig siteroot extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -55,8 +55,7 @@ class SiterootExtension extends \Twig_Extension implements \Twig_Extension_Globa
         SiterootRequestMatcher $siterootRequestMatcher,
         SiterootsAccessor $siterootsAccessor,
         RequestStack $requestStack
-    )
-    {
+    ) {
         $this->siterootManager = $siterootManager;
         $this->siterootRequestMatcher = $siterootRequestMatcher;
         $this->siterootsAccessor = $siterootsAccessor;
@@ -80,7 +79,7 @@ class SiterootExtension extends \Twig_Extension implements \Twig_Extension_Globa
     public function getGlobals()
     {
         return array(
-            'siteroots' => $this->siterootsAccessor
+            'siteroots' => $this->siterootsAccessor,
         );
     }
 
@@ -115,7 +114,7 @@ class SiterootExtension extends \Twig_Extension implements \Twig_Extension_Globa
         $siteroot = $this->currentSiteroot();
 
         if (!$siteroot) {
-            throw new \LogicException("Siteroot could not be determined.");
+            throw new \LogicException('Siteroot could not be determined.');
         }
 
         if (!$language) {

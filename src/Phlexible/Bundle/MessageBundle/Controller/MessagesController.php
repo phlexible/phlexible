@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Messages controller
+ * Messages controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/messages/messages")
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 class MessagesController extends Controller
 {
     /**
-     * List messages
+     * List messages.
      *
      * @param Request $request
      *
@@ -61,21 +61,21 @@ class MessagesController extends Controller
 
         $criteria = new Criteria();
         foreach ($filter as $key => $value) {
-            if ($key == 'subject' && !empty($value)) {
+            if ($key === 'subject' && !empty($value)) {
                 $criteria->addRaw(Criteria::CRITERIUM_SUBJECT_LIKE, $value);
-            } elseif ($key == 'text' && !empty($value)) {
+            } elseif ($key === 'text' && !empty($value)) {
                 $criteria->addRaw(Criteria::CRITERIUM_BODY_LIKE, $value);
-            } elseif (substr($key, 0, 9) == 'priority_') {
+            } elseif (substr($key, 0, 9) === 'priority_') {
                 $priorityFilter[] = substr($key, 9);
-            } elseif (substr($key, 0, 5) == 'type_') {
+            } elseif (substr($key, 0, 5) === 'type_') {
                 $typeFilter[] = substr($key, 5);
-            } elseif (substr($key, 0, 8) == 'channel_') {
+            } elseif (substr($key, 0, 8) === 'channel_') {
                 $channelFilter[] = substr($key, 8);
-            } elseif (substr($key, 0, 5) == 'role_') {
+            } elseif (substr($key, 0, 5) === 'role_') {
                 $roleFilter[] = substr($key, 9);
-            } elseif ($key == 'date_after' && !empty($value)) {
+            } elseif ($key === 'date_after' && !empty($value)) {
                 $criteria->addRaw(Criteria::CRITERIUM_START_DATE, $value);
-            } elseif ($key == 'date_before' && !empty($value)) {
+            } elseif ($key === 'date_before' && !empty($value)) {
                 $criteria->addRaw(Criteria::CRITERIUM_END_DATE, $value);
             }
         }
@@ -114,26 +114,26 @@ class MessagesController extends Controller
         $data = [];
         foreach ($messages as $message) {
             $data[] = [
-                'subject'   => $message->getSubject(),
-                'body'      => nl2br($message->getBody()),
-                'priority'  => $priorityList[$message->getPriority()],
-                'type'      => $typeList[$message->getType()],
-                'channel'   => $message->getChannel(),
-                'role'      => $message->getRole(),
-                'user'      => $message->getUser(),
+                'subject' => $message->getSubject(),
+                'body' => nl2br($message->getBody()),
+                'priority' => $priorityList[$message->getPriority()],
+                'type' => $typeList[$message->getType()],
+                'channel' => $message->getChannel(),
+                'role' => $message->getRole(),
+                'user' => $message->getUser(),
                 'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
             ];
         }
 
         return new JsonResponse([
             'totalCount' => $count,
-            'messages'   => $data,
-            'facets'     => $messageManager->getFacetsByCriteria($criteria),
+            'messages' => $data,
+            'facets' => $messageManager->getFacetsByCriteria($criteria),
         ]);
     }
 
     /**
-     * List filter values
+     * List filter values.
      *
      * @return JsonResponse
      * @Route("/facets", name="messages_messages_facets")
@@ -161,20 +161,20 @@ class MessagesController extends Controller
         $channels = [];
         sort($filterSets['channels']);
         foreach ($filterSets['channels'] as $channel) {
-            $channels[] = ['id' => $channel, 'title' => $channel ? : '(no channel)'];
+            $channels[] = ['id' => $channel, 'title' => $channel ?: '(no channel)'];
         }
 
         $roles = [];
         sort($filterSets['roles']);
         foreach ($filterSets['roles'] as $role) {
-            $roles[] = ['id' => $role, 'title' => $role ? : '(no role)'];
+            $roles[] = ['id' => $role, 'title' => $role ?: '(no role)'];
         }
 
         return new JsonResponse([
             'priorities' => $priorities,
-            'types'      => $types,
-            'channels'   => $channels,
-            'roles'      => $roles,
+            'types' => $types,
+            'channels' => $channels,
+            'roles' => $roles,
         ]);
     }
 }

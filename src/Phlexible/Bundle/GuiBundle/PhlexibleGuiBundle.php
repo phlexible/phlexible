@@ -11,14 +11,14 @@
 
 namespace Phlexible\Bundle\GuiBundle;
 
-use Phlexible\Bundle\GuiBundle\DependencyInjection\Compiler\AddHelperAssetsPass;
 use Phlexible\Bundle\GuiBundle\DependencyInjection\Compiler\AddCompressorsPass;
+use Phlexible\Bundle\GuiBundle\DependencyInjection\Compiler\AddHelperAssetsPass;
 use Phlexible\Bundle\GuiBundle\DependencyInjection\Compiler\AddRoleProvidersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Gui bundle
+ * Gui bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

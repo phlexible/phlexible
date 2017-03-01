@@ -12,11 +12,11 @@
 namespace Phlexible\Component\MediaCache\Worker;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaExtractor\Transmutor;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaCache\Storage\StorageManager;
+use Phlexible\Component\MediaExtractor\Transmutor;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Applier\AudioTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Audio cache worker
+ * Audio cache worker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -129,7 +129,7 @@ class AudioWorker extends AbstractWorker
     }
 
     /**
-     * Apply template to filename
+     * Apply template to filename.
      *
      * @param CacheItem             $cacheItem
      * @param AudioTemplate         $template
@@ -144,7 +144,7 @@ class AudioWorker extends AbstractWorker
         $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
-        $tempFilename = $this->tempDir . '/' . $cacheItem->getId() . '.' . $template->getParameter('audio_format');
+        $tempFilename = $this->tempDir.'/'.$cacheItem->getId().'.'.$template->getParameter('audio_format');
 
         $cacheItem
             ->setVolumeId($volume->getId())

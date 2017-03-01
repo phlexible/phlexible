@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 
 /**
- * Filter
+ * Filter.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

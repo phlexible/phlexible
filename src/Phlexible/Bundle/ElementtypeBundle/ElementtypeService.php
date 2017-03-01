@@ -17,7 +17,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Usage\UsageManager;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Util\UuidUtil;
 
 /**
  * Elementtype service.
@@ -274,7 +274,7 @@ class ElementtypeService
 
             $node = clone $sourceNode;
 
-            $dsIdMap[$sourceNode->getDsId()] = $dsId = Uuid::generate();
+            $dsIdMap[$sourceNode->getDsId()] = $dsId = UuidUtil::generate();
 
             $parentDsId = null;
             if (!$sourceNode->isRoot()) {

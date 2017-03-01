@@ -15,7 +15,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Delegate worker
+ * Delegate worker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

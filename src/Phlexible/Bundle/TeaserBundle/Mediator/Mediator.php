@@ -16,7 +16,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 
 /**
- * Teaser mediator
+ * Teaser mediator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -48,6 +48,7 @@ class Mediator implements MediatorInterface
 
         return $this;
     }
+
     /**
      * {@inheritdoc}
      */

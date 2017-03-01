@@ -14,13 +14,16 @@ namespace Phlexible\Bundle\GuiBundle\Tests\Menu;
 use Phlexible\Bundle\GuiBundle\Menu\HierarchicalSorter;
 use Phlexible\Bundle\GuiBundle\Menu\MenuItem;
 use Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Hierarchy builder test
+ * Hierarchy builder test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Bundle\GuiBundle\Menu\HierarchicalSorter
  */
-class HierarchicalSorterTest extends \PHPUnit_Framework_TestCase
+class HierarchicalSorterTest extends TestCase
 {
     public function testSort()
     {

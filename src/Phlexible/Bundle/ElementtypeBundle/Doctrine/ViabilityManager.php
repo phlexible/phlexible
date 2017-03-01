@@ -17,7 +17,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 
 /**
- * Viability manager
+ * Viability manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -61,7 +61,7 @@ class ViabilityManager implements ViabilityManagerInterface
     }
 
     /**
-     * Update viability
+     * Update viability.
      *
      * @param Elementtype $elementtype
      * @param array       $parentIds

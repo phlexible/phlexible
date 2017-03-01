@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Import command
+ * Import command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -62,14 +62,14 @@ class ImportCommand extends ContainerAwareCommand
 
         $targetDir = $input->getArgument('dir');
         if ($targetDir) {
-            if (substr($targetDir, -1) != '/') {
+            if (substr($targetDir, -1) !== '/') {
                 $targetDir .= '/';
             }
 
             try {
                 $targetFolder = $volume->getFolderPeer()->getByPath($targetDir);
             } catch (\Exception $e) {
-                $output->writeln('Folder "' . $targetDir . '" not found.');
+                $output->writeln('Folder "'.$targetDir.'" not found.');
 
                 return 1;
             }
@@ -95,7 +95,7 @@ class ImportCommand extends ContainerAwareCommand
 
             $targetFolder->importFile($sourceFile, $fileName);
 
-            $output = $sourceFile . ' imported';
+            $output = $sourceFile.' imported';
 
             if ($delete) {
                 if (unlink($sourceFile)) {
@@ -105,7 +105,7 @@ class ImportCommand extends ContainerAwareCommand
                 }
             }
         } catch (\Exception $e) {
-            $output = 'Could not import file:' . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+            $output = 'Could not import file:'.PHP_EOL.$e->getMessage().PHP_EOL.$e->getTraceAsString();
         }
 
         return $output;
@@ -134,17 +134,16 @@ class ImportCommand extends ContainerAwareCommand
 
                     $targetFolder->importFile($sourceFile, $fileName);
 
-                    $message = new MediaManagerMessage('File "' . basename($sourceFile) . '" imported.');
+                    $message = new MediaManagerMessage('File "'.basename($sourceFile).'" imported.');
                     $message->post();
                 }
             }
 
-            $output = $sourceDir . ' imported';
+            $output = $sourceDir.' imported';
         } catch (\Exception $e) {
-            $output = 'Could not import directory:' . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+            $output = 'Could not import directory:'.PHP_EOL.$e->getMessage().PHP_EOL.$e->getTraceAsString();
         }
 
         return $output;
     }
-
 }

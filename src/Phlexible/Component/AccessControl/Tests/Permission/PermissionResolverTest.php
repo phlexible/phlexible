@@ -14,24 +14,17 @@ namespace Phlexible\Component\AccessControl\Tests\Permission;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionResolver;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Permission resolver test
+ * Permission resolver test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\AccessControl\Permission\PermissionResolver
  */
-class PermissionResolverTest extends \PHPUnit_Framework_TestCase
+class PermissionResolverTest extends TestCase
 {
-    /**
-     * @var PermissionResolver
-     */
-    private $resolver;
-
-    /**
-     * @var PermissionCollection
-     */
-    private $permissions;
-
     public function createPermissions()
     {
         return new PermissionCollection(
@@ -43,7 +36,6 @@ class PermissionResolverTest extends \PHPUnit_Framework_TestCase
                 new Permission('delete', 8),
             )
         );
-
     }
 
     public function testResolve()

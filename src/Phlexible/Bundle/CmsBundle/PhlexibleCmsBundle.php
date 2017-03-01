@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\CmsBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * CMS bundle
+ * CMS bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -29,7 +29,7 @@ class PhlexibleCmsBundle extends Bundle
     public function __construct()
     {
         if (extension_loaded('suhosin')) {
-            throw new \LogicException("Please deactivate the suhosin extension.");
+            throw new \LogicException('Please deactivate the suhosin extension.');
         }
     }
 }

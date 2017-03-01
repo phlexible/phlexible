@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Volume\FileSource;
 
 /**
- * File source interface
+ * File source interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

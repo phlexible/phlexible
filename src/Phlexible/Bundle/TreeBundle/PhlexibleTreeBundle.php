@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Tree bundle
+ * Tree bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

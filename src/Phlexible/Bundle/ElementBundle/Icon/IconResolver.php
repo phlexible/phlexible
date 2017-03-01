@@ -21,7 +21,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Icon resolver
+ * Icon resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -58,7 +58,7 @@ class IconResolver
     }
 
     /**
-     * Resolve icon
+     * Resolve icon.
      *
      * @param string $icon
      *
@@ -66,11 +66,11 @@ class IconResolver
      */
     public function resolveIcon($icon)
     {
-        return '/bundles/phlexibleelementtype/elementtypes/' . $icon;
+        return '/bundles/phlexibleelementtype/elementtypes/'.$icon;
     }
 
     /**
-     * Resolve element type to icon
+     * Resolve element type to icon.
      *
      * @param Elementtype $elementtype
      *
@@ -84,7 +84,7 @@ class IconResolver
     }
 
     /**
-     * Resolve element to icon
+     * Resolve element to icon.
      *
      * @param Element $element
      *
@@ -98,7 +98,7 @@ class IconResolver
     }
 
     /**
-     * Resolve tree node to icon
+     * Resolve tree node to icon.
      *
      * @param TreeNodeInterface $treeNode
      * @param string            $language
@@ -113,7 +113,7 @@ class IconResolver
             $tree = $treeNode->getTree();
 
             if ($tree->isPublished($treeNode, $language)) {
-                $parameters['status'] = $tree->isAsync($treeNode, $language) ? 'async': 'online';
+                $parameters['status'] = $tree->isAsync($treeNode, $language) ? 'async' : 'online';
             }
 
             if ($tree->isInstance($treeNode)) {
@@ -121,7 +121,7 @@ class IconResolver
             }
 
             if ($treeNode->getSortMode() !== TreeInterface::SORT_MODE_FREE) {
-                $parameters['sort'] = $treeNode->getSortMode() . '_' . $treeNode->getSortDir();
+                $parameters['sort'] = $treeNode->getSortMode().'_'.$treeNode->getSortDir();
             }
         }
 
@@ -139,7 +139,7 @@ class IconResolver
     }
 
     /**
-     * Resolve teaser to icon
+     * Resolve teaser to icon.
      *
      * @param Teaser $teaser
      * @param string $language
@@ -151,7 +151,7 @@ class IconResolver
         $parameters = [];
 
         if ($this->teaserManager->isPublished($teaser, $language)) {
-            $parameters['status'] = $this->teaserManager->isAsync($teaser, $language) ? 'async': 'online';
+            $parameters['status'] = $this->teaserManager->isAsync($teaser, $language) ? 'async' : 'online';
         }
 
         if ($this->teaserManager->isInstance($teaser)) {

@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementBundle\Model;
 
 /**
- * Element structure value
+ * Element structure value.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -299,4 +299,3 @@ class ElementStructureValue
         return $defaultValue;
     }
 }
-

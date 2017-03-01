@@ -16,7 +16,7 @@ use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 
 /**
- * Element lock repository
+ * Element lock repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

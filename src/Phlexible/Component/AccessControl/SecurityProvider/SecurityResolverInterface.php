@@ -12,14 +12,14 @@
 namespace Phlexible\Component\AccessControl\SecurityProvider;
 
 /**
- * Security resolver interface
+ * Security resolver interface.
  *
  * @author Marco Fischer <mf@brainbits.net>
  */
 interface SecurityResolverInterface
 {
     /**
-     * Return object name
+     * Return object name.
      *
      * @param string $securityType
      * @param string $securityId

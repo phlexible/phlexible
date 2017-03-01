@@ -26,7 +26,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Element validator
+ * Element validator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -155,7 +155,6 @@ class ElementValidator
             if ($validator === 'email') {
                 $emailConstraint = new Email();
                 $constraints[] = $emailConstraint;
-
             } elseif ($validator === 'url') {
                 $urlConstraint = new Url();
 

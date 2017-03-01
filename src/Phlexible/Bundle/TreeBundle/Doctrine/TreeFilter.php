@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * Tree filter
+ * Tree filter.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -80,7 +80,7 @@ class TreeFilter implements TreeFilterInterface
         $this->tid = $tid;
         $this->language = $language;
 
-        $key = 'elements_filter_' . $tid . '_' . $language;
+        $key = 'elements_filter_'.$tid.'_'.$language;
         if ($session->has($key)) {
             $this->storage = $session->get($key);
         } else {
@@ -175,13 +175,13 @@ class TreeFilter implements TreeFilterInterface
         $pos = array_search($id, $ids);
 
         $pager = [
-            'first'   => $ids[0],
-            'prev'    => null,
+            'first' => $ids[0],
+            'prev' => null,
             'current' => $id,
-            'next'    => null,
-            'last'    => $ids[count($ids) - 1],
-            'pos'     => $pos + 1,
-            'total'   => count($ids),
+            'next' => null,
+            'last' => $ids[count($ids) - 1],
+            'pos' => $pos + 1,
+            'total' => count($ids),
         ];
 
         if ($pos > 0) {
@@ -360,7 +360,7 @@ class TreeFilter implements TreeFilterInterface
         }
 
         if (!empty($this->filterValues['navigation'])) {
-            if ($this->filterValues['navigation'] == 'in_navigation') {
+            if ($this->filterValues['navigation'] === 'in_navigation') {
                 $qb->andWhere($qb->expr()->eq('t.in_navigation', 1));
             } else {
                 $qb->andWhere($qb->expr()->eq('t.in_navigation', 0));
@@ -368,7 +368,7 @@ class TreeFilter implements TreeFilterInterface
         }
 
         if (0 && !empty($this->filterValues['restricted'])) {
-            if ($this->filterValues['restricted'] == 'is_restricted') {
+            if ($this->filterValues['restricted'] === 'is_restricted') {
                 $qb->andWhere($qb->expr()->eq('tp_1.restricted', 1));
             } else {
                 $qb->andWhere($qb->expr()->eq('tp_1.restricted', 0));
@@ -387,7 +387,7 @@ class TreeFilter implements TreeFilterInterface
                     break;
 
                 case 'publish':
-                    $qb->leftJoin('t', 'tree_online', 'to_2', 'to_2.tree_id = t.id AND to_2.language = ' . $qb->expr()->literal($this->language));
+                    $qb->leftJoin('t', 'tree_online', 'to_2', 'to_2.tree_id = t.id AND to_2.language = '.$qb->expr()->literal($this->language));
                     if (!empty($this->filterValues['date_from'])) {
                         $qb->andWhere($qb->expr()->gte('to_2.published_at', $qb->expr()->literal($this->filterValues['date_from'])));
                     }
@@ -424,7 +424,7 @@ class TreeFilter implements TreeFilterInterface
                 $qb->expr()->eq('esv_1.eid', 'e.eid'),
                 $qb->expr()->eq('esv_1.version', 'e.latest_version'),
                 $qb->expr()->eq('esv_1.language', $qb->expr()->literal($this->language)),
-                $qb->expr()->like('esv_1.content', $qb->expr()->literal('%' . $this->filterValues['search'] . '%'))
+                $qb->expr()->like('esv_1.content', $qb->expr()->literal('%'.$this->filterValues['search'].'%'))
             ));
             $qb->groupBy(['t.id', 'e.latest_version']);
         }

@@ -16,7 +16,7 @@ use Phlexible\Bundle\TeaserBundle\Entity\TeaserOnline;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Teaser manager interface
+ * Teaser manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -138,7 +138,7 @@ interface TeaserManagerInterface
     public function findOneOnlineByTeaserAndLanguage(Teaser $teaser, $language);
 
     /**
-     * Create teaser
+     * Create teaser.
      *
      * @param int    $treeId
      * @param int    $eid
@@ -166,7 +166,7 @@ interface TeaserManagerInterface
         $userId);
 
     /**
-     * Create teaser instance
+     * Create teaser instance.
      *
      * @param TreeNodeInterface $treeNode
      * @param Teaser            $teaser
@@ -185,7 +185,7 @@ interface TeaserManagerInterface
 
     /**
      * @param Teaser[] $teasers
-     * @param bool  $flush
+     * @param bool     $flush
      */
     public function updateTeasers(array $teasers, $flush = true);
 

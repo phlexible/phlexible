@@ -16,7 +16,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 
 /**
- * Extractor service
+ * Extractor service.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,7 +43,7 @@ class Transmutor
     }
 
     /**
-     * Transmute file to target format
+     * Transmute file to target format.
      *
      * @param ExtendedFileInterface $file
      * @param string                $targetFormat
@@ -62,7 +62,7 @@ class Transmutor
     }
 
     /**
-     * Transmute file to image
+     * Transmute file to image.
      *
      * @param ExtendedFileInterface $file
      *
@@ -74,7 +74,7 @@ class Transmutor
     }
 
     /**
-     * Transmute file to audio
+     * Transmute file to audio.
      *
      * @param ExtendedFileInterface $file
      *
@@ -86,7 +86,7 @@ class Transmutor
     }
 
     /**
-     * Transmute file to video
+     * Transmute file to video.
      *
      * @param ExtendedFileInterface $file
      *
@@ -98,7 +98,7 @@ class Transmutor
     }
 
     /**
-     * Transmute file to flash
+     * Transmute file to flash.
      *
      * @param ExtendedFileInterface $file
      *
@@ -110,7 +110,7 @@ class Transmutor
     }
 
     /**
-     * Transmute file to text
+     * Transmute file to text.
      *
      * @param ExtendedFileInterface $file
      *

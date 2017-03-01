@@ -19,7 +19,7 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**
- * Puli media type loader
+ * Puli media type loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -60,8 +60,7 @@ class PuliLoader
         $fileDir,
         $cacheDir,
         $debug
-    )
-    {
+    ) {
         $this->puliDiscovery = $puliDiscovery;
         $this->loader = $loader;
         $this->compiler = $compiler;
@@ -75,7 +74,7 @@ class PuliLoader
      */
     public function getFilename()
     {
-        return $this->cacheDir . '/documenttypes' . ($this->debug ? 'Debug' : '') . '.php';
+        return $this->cacheDir.'/documenttypes'.($this->debug ? 'Debug' : '').'.php';
     }
 
     /**
@@ -92,7 +91,7 @@ class PuliLoader
             $resources[] = new FileResource($r->getFileName());
             $r = new \ReflectionClass($this->compiler);
             $resources[] = new FileResource($r->getFileName());
-            foreach ($this->puliDiscovery->findBindings("phlexible/mediatypes") as $binding) {
+            foreach ($this->puliDiscovery->findBindings('phlexible/mediatypes') as $binding) {
                 foreach ($binding->getResources() as $resource) {
                     /* @var $resource \Puli\Repository\Resource\FileResource */
                     $file = $resource->getFilesystemPath();

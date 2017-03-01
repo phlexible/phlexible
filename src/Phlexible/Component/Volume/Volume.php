@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\Volume;
 
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Util\UuidUtil;
 use Phlexible\Component\Volume\Driver\DriverInterface;
 use Phlexible\Component\Volume\Event\CopyFileEvent;
 use Phlexible\Component\Volume\Event\CopyFolderEvent;
@@ -32,7 +32,7 @@ use Phlexible\Component\Volume\Model\FolderIterator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Volume
+ * Volume.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -280,7 +280,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         /* @var $file FileInterface */
         $file
             ->setVolume($this)
-            ->setId(Uuid::generate())
+            ->setId(UuidUtil::generate())
             ->setFolder($targetFolder)
             ->setName($fileSource->getName())
             ->setCreatedAt(new \DateTime())
@@ -403,7 +403,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
     {
         $file = clone $originalFile;
         $file
-            ->setId(Uuid::generate())
+            ->setId(UuidUtil::generate())
             ->setCreatedAt(new \DateTime())
             ->setCreateUserId($userId)
             ->setModifiedAt($file->getCreatedAt())
@@ -526,7 +526,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         if ($targetFolder) {
             $folderPath = $name;
             if ($targetFolder->getPath()) {
-                $folderPath = rtrim($targetFolder->getPath(), '/') . '/' . $folderPath;
+                $folderPath = rtrim($targetFolder->getPath(), '/').'/'.$folderPath;
             }
         }
 
@@ -536,7 +536,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         /* @var $folder FolderInterface */
         $folder
             ->setVolume($this)
-            ->setId(Uuid::generate())
+            ->setId(UuidUtil::generate())
             ->setName($name)
             ->setParentId($targetFolder ? $targetFolder->getId() : null)
             ->setPath($folderPath)
@@ -570,7 +570,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         $parentFolder = $this->findFolder($folder->getParentId());
         $newPath = $name;
         if ($parentFolder->getPath()) {
-            $newPath = rtrim($parentFolder->getPath(), '/') . '/' . $newPath;
+            $newPath = rtrim($parentFolder->getPath(), '/').'/'.$newPath;
         }
 
         $folder
@@ -610,7 +610,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         $oldPath = $folder->getPath();
         $newPath = $folder->getName();
         if ($targetFolder->getPath()) {
-            $newPath = rtrim($targetFolder->getPath(), '/') . '/' . $newPath;
+            $newPath = rtrim($targetFolder->getPath(), '/').'/'.$newPath;
         }
 
         $folder
@@ -646,7 +646,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             throw new IOException("Move folder {$folder->getName()} cancelled.");
         }
 
-        $copiedFolder = $this->createFolder($targetFolder, $folder->getName() . '_copy_' . uniqid(), $folder->getAttributes(), $userId);
+        $copiedFolder = $this->createFolder($targetFolder, $folder->getName().'_copy_'.uniqid(), $folder->getAttributes(), $userId);
 
         foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
             $this->copyFolder($subFolder, $copiedFolder, $userId);

@@ -12,14 +12,14 @@
 namespace Phlexible\Bundle\ProblemBundle;
 
 /**
- * Problem events
+ * Problem events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class ProblemEvents
 {
     /**
-     * Collect event
+     * Collect event.
      */
     const COLLECT = 'phlexible_problem.collect';
 }

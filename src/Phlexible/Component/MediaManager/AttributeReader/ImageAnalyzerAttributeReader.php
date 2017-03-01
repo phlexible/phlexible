@@ -16,7 +16,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
- * Imagemagick based attribute reader
+ * Imagemagick based attribute reader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

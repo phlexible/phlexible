@@ -14,9 +14,11 @@ namespace Phlexible\Component\Mime\Tests\Adapter;
 use Phlexible\Component\Mime\Adapter\ExtensionAdapter;
 
 /**
- * Extension adapter test
+ * Extension adapter test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\Mime\Adapter\ExtensionAdapter
  */
 class ExtensionAdapterTest extends AbstractConcreteAdapterTest
 {

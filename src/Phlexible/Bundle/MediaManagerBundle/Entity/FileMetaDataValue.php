@@ -16,7 +16,7 @@ use Phlexible\Bundle\MetaSetBundle\Entity\MetaDataValue;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 
 /**
- * File meta
+ * File meta.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
- * Exception listener
+ * Exception listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -61,7 +61,7 @@ class ExceptionListener
      * @param ConfiguratorInterface       $configurator
      * @param ContentTreeManagerInterface $treeManager
      * @param LoggerInterface             $logger
-     * @param boolean                     $debug
+     * @param bool                        $debug
      */
     public function __construct(
         \Twig_Environment $twig,
@@ -89,7 +89,6 @@ class ExceptionListener
         if (true === $handling) {
             return;
         }
-
 
         $handling = true;
 
@@ -126,8 +125,8 @@ class ExceptionListener
         $template = null;
         if ($this->twig->getLoader()->exists("::error/error-$code.html.twig")) {
             $template = "::error/error-$code.html.twig";
-        } elseif ($this->twig->getLoader()->exists("::error/error.html.twig")) {
-            $template = "::error/error.html.twig";
+        } elseif ($this->twig->getLoader()->exists('::error/error.html.twig')) {
+            $template = '::error/error.html.twig';
         }
 
         $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
@@ -171,6 +170,7 @@ class ExceptionListener
         }
 
         $event->setResponse($response);
+
         return;
 
         $configuration = $this->configurator->configure($request);
@@ -207,13 +207,13 @@ class ExceptionListener
     /**
      * Clones the request for the exception.
      *
-     * @param \Exception        $exception The thrown exception.
-     * @param Request           $request   The original request.
+     * @param \Exception        $exception the thrown exception
+     * @param Request           $request   the original request
      * @param int               $tid
      * @param TreeNodeInterface $treeNode
      * @param string            $template
      *
-     * @return Request $request The cloned request.
+     * @return Request $request the cloned request
      */
     protected function duplicateRequest(\Exception $exception, Request $request, $tid, $treeNode, $template)
     {

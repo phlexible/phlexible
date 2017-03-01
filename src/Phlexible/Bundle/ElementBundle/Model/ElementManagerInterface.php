@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Model;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 
 /**
- * Element manager interface
+ * Element manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,7 +33,7 @@ interface ElementManagerInterface
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * Update element
+     * Update element.
      *
      * @param Element $element
      * @param bool    $flush
@@ -43,7 +43,7 @@ interface ElementManagerInterface
     public function updateElement(Element $element, $flush);
 
     /**
-     * Delete element
+     * Delete element.
      *
      * @param Element $element
      *

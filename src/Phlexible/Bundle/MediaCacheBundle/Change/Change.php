@@ -15,7 +15,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Template change
+ * Template change.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

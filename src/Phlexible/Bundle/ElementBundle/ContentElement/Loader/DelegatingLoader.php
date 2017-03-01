@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 use Phlexible\Bundle\ElementBundle\ElementService;
 
 /**
- * Delegating loader
+ * Delegating loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -54,7 +54,7 @@ class DelegatingLoader implements LoaderInterface
 
         $eid = $element->getEid();
         $uniqueId = $element->getUniqueId();
-        $elementtypeId = $elementtype ->getId();
+        $elementtypeId = $elementtype->getId();
         $elementtypeUniqueId = $elementtype->getUniqueId();
         $elementtypeType = $elementtype->getType();
         $elementtypeTemplate = $elementtype->getTemplate();

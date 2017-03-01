@@ -15,7 +15,7 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 
 /**
- * Message manager handler
+ * Message manager handler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

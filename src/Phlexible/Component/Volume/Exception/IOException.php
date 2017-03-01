@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Volume\Exception;
 
 /**
- * IO Exception
+ * IO Exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class IOException extends RuntimeException
 {
-
 }

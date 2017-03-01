@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Form controller
+ * Form controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediatemplates/form")
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 class FormController extends Controller
 {
     /**
-     * List variables
+     * List variables.
      *
      * @param Request $request
      *
@@ -53,7 +53,7 @@ class FormController extends Controller
     }
 
     /**
-     * Save variables
+     * Save variables.
      *
      * @param Request $request
      *
@@ -82,7 +82,7 @@ class FormController extends Controller
 
         $repository->updateTemplate($template);
 
-        return new ResultResponse(true, 'Media template "' . $template->getKey() . '" saved.');
+        return new ResultResponse(true, 'Media template "'.$template->getKey().'" saved.');
     }
 
     /**
@@ -95,19 +95,19 @@ class FormController extends Controller
         $qualityOverride = false;
 
         foreach ($params as $key => $value) {
-            if ($key == 'xmethod') {
+            if ($key === 'xmethod') {
                 $params['method'] = $value;
                 unset($params['xmethod']);
-            } elseif ($key == 'backgroundcolor' && !preg_match('/^\#[0-9A-Za-z]{6}$/', $value)) {
+            } elseif ($key === 'backgroundcolor' && !preg_match('/^\#[0-9A-Za-z]{6}$/', $value)) {
                 $params['backgroundcolor'] = '';
-            } elseif ($key == 'compression') {
+            } elseif ($key === 'compression') {
                 if (!$qualityOverride) {
                     $params['quality'] = 0;
                 }
                 $params['quality'] = $params['quality'] + $value * 10;
                 $qualityOverride = true;
                 unset($params['compression']);
-            } elseif ($key == 'filtertype') {
+            } elseif ($key === 'filtertype') {
                 if (!$qualityOverride) {
                     $params['quality'] = 0;
                 }

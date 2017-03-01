@@ -19,7 +19,7 @@ use Phlexible\Bundle\MessageBundle\Exception\LogicException;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 
 /**
- * Doctrine message manager
+ * Doctrine message manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -49,7 +49,7 @@ class MessageManager implements MessageManagerInterface
     private function getMessageRepository()
     {
         if (null === $this->messageRepository) {
-            $this->messageRepository = $this->entityManager->getRepository('PhlexibleMessageBundle:Message');
+            $this->messageRepository = $this->entityManager->getRepository(Message::class);
         }
 
         return $this->messageRepository;
@@ -147,7 +147,7 @@ class MessageManager implements MessageManagerInterface
                 $user = 'unknown';
             }
 
-            $rc = new \ReflectionClass('Phlexible\Bundle\MessageBundle\Entity\Message');
+            $rc = new \ReflectionClass(Message::class);
             $rp = $rc->getProperty('user');
             $rp->setAccessible(true);
             $rp->setValue($message, $user);

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ProblemBundle;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
- * Problems message
+ * Problems message.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

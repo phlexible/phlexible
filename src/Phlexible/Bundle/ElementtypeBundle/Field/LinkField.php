@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field;
 
 /**
- * Link field
+ * Link field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

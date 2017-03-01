@@ -33,7 +33,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * Database tree
+ * Database tree.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -312,7 +312,7 @@ class Tree implements TreeInterface, WritableTreeInterface
         $actions = $this->historyManager->findBy(
             array(
                 'eid' => $treeNode->getTypeId(),
-                'action' => ElementHistoryManagerInterface::ACTION_CREATE_ELEMENT_VERSION
+                'action' => ElementHistoryManagerInterface::ACTION_CREATE_ELEMENT_VERSION,
             )
         );
 
@@ -443,7 +443,7 @@ class Tree implements TreeInterface, WritableTreeInterface
             ->setType($type)
             ->setTypeId($typeId)
             ->setCreateUserId($userId)
-            ->setCreatedAt(new \DateTime);
+            ->setCreatedAt(new \DateTime());
 
         $event = new NodeEvent($node);
         if ($this->dispatcher->dispatch(TreeEvents::BEFORE_CREATE_NODE, $event)->isPropagationStopped()) {
@@ -511,7 +511,7 @@ class Tree implements TreeInterface, WritableTreeInterface
             ->setInNavigation($navigation)
             ->setNeedAuthentication($needAuthentication)
             ->setCreateUserId($userId)
-            ->setCreatedAt(new \DateTime);
+            ->setCreatedAt(new \DateTime());
 
         $event = new NodeEvent($node);
         if ($this->dispatcher->dispatch(TreeEvents::BEFORE_CREATE_NODE, $event)->isPropagationStopped()) {
@@ -538,9 +538,7 @@ class Tree implements TreeInterface, WritableTreeInterface
         TreeNodeInterface $afterNode = null,
         TreeNodeInterface $sourceNode,
         $userId
-    )
-    {
-
+    ) {
         $sort = 0;
         $sortNodes = [];
         if ($parentNode->getSortMode() === 'free') {
@@ -567,7 +565,7 @@ class Tree implements TreeInterface, WritableTreeInterface
             ->setSortMode($sourceNode->getSortMode())
             ->setSortDir($sourceNode->getSortDir())
             ->setCreateUserId($userId)
-            ->setCreatedAt(new \DateTime);
+            ->setCreatedAt(new \DateTime());
 
         $event = new NodeEvent($node);
         if ($this->dispatcher->dispatch(TreeEvents::BEFORE_CREATE_NODE_INSTANCE, $event)->isPropagationStopped()) {
@@ -587,7 +585,7 @@ class Tree implements TreeInterface, WritableTreeInterface
     }
 
     /**
-     * Reorders node after beforeNode
+     * Reorders node after beforeNode.
      *
      * {@inheritdoc}
      */
@@ -693,7 +691,7 @@ class Tree implements TreeInterface, WritableTreeInterface
         $this->dispatcher->dispatch(TreeEvents::MOVE_NODE, $event);
 
         // history
-        $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_MOVE_NODE, $node->getTypeId(), $userId, $node->getId(), null, null, null, 'Node moved from TID ' . $oldParentId . ' to TID ' . $toNode->getId());
+        $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_MOVE_NODE, $node->getTypeId(), $userId, $node->getId(), null, null, null, 'Node moved from TID '.$oldParentId.' to TID '.$toNode->getId());
     }
 
     /**

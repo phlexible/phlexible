@@ -23,7 +23,7 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 
 /**
- * Elastica message manager
+ * Elastica message manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -84,16 +84,16 @@ class MessageManager implements MessageManagerInterface
         $facets = $resultSet->getFacets();
         $filterSets = [
             'priorities' => array_column($facets['priorities']['terms'], 'term'),
-            'types'      => array_column($facets['types']['terms'], 'term'),
-            'channels'   => array_column($facets['channels']['terms'], 'term'),
-            'roles'      => array_column($facets['roles']['terms'], 'term'),
+            'types' => array_column($facets['types']['terms'], 'term'),
+            'channels' => array_column($facets['channels']['terms'], 'term'),
+            'roles' => array_column($facets['roles']['terms'], 'term'),
         ];
 
         return $filterSets;
     }
 
     /**
-     * Return facets
+     * Return facets.
      *
      * @param Criteria $criteria
      *
@@ -101,7 +101,6 @@ class MessageManager implements MessageManagerInterface
      */
     public function getFacetsByCriteria(Criteria $criteria)
     {
-
         $query = new Query();
         $query->setSize(0);
 
@@ -140,9 +139,9 @@ class MessageManager implements MessageManagerInterface
 
         $filterSets = [
             'priorities' => array_column($facets['priorities']['terms'], 'term'),
-            'types'      => array_column($facets['types']['terms'], 'term'),
-            'channels'   => array_column($facets['channels']['terms'], 'term'),
-            'roles'      => array_column($facets['roles']['terms'], 'term'),
+            'types' => array_column($facets['types']['terms'], 'term'),
+            'channels' => array_column($facets['channels']['terms'], 'term'),
+            'roles' => array_column($facets['roles']['terms'], 'term'),
         ];
 
         return $filterSets;
@@ -196,7 +195,6 @@ class MessageManager implements MessageManagerInterface
     {
         $query = new Query();
         $this->applyCriteriaToQuery($criteria, $query);
-
 
         if ($limit !== null && $offset !== null) {
             $query
@@ -265,7 +263,7 @@ class MessageManager implements MessageManagerInterface
     }
 
     /**
-     * Find message
+     * Find message.
      *
      * @param array $criteria
      * @param null  $orderBy
@@ -309,14 +307,14 @@ class MessageManager implements MessageManagerInterface
         $document = new Document(
             $message->getId(),
             [
-                'id'        => $message->getId(),
-                'subject'   => $message->getSubject(),
-                'body'      => $message->getBody(),
-                'priority'  => $message->getPriority(),
-                'type'      => $message->getType(),
-                'channel'   => $message->getChannel(),
-                'role'      => $message->getRole(),
-                'user'      => $message->getUser(),
+                'id' => $message->getId(),
+                'subject' => $message->getSubject(),
+                'body' => $message->getBody(),
+                'priority' => $message->getPriority(),
+                'type' => $message->getType(),
+                'channel' => $message->getChannel(),
+                'role' => $message->getRole(),
+                'user' => $message->getUser(),
                 'createdAt' => $message->getCreatedAt()->format('U'),
             ]
         );
@@ -371,7 +369,7 @@ class MessageManager implements MessageManagerInterface
     }
 
     /**
-     * Apply criteria to query
+     * Apply criteria to query.
      *
      * @param Criteria $criteria
      * @param Query    $query
@@ -412,22 +410,22 @@ class MessageManager implements MessageManagerInterface
 
             switch ($type) {
                 case Criteria::CRITERIUM_SUBJECT_LIKE:
-                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('subject', '*' . $value . '*')));
+                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('subject', '*'.$value.'*')));
                     break;
 
                 case Criteria::CRITERIUM_SUBJECT_NOT_LIKE:
                     $andFilter->addFilter(
-                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard('subject', '*' . $value . '*')))
+                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard('subject', '*'.$value.'*')))
                     );
                     break;
 
                 case Criteria::CRITERIUM_BODY_LIKE:
-                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('body', '*' . $value . '*')));
+                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('body', '*'.$value.'*')));
                     break;
 
                 case Criteria::CRITERIUM_BODY_NOT_LIKE:
                     $andFilter->addFilter(
-                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard('body', '*' . $value . '*')))
+                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard('body', '*'.$value.'*')))
                     );
                     break;
 
@@ -464,7 +462,7 @@ class MessageManager implements MessageManagerInterface
                     break;
 
                 case Criteria::CRITERIUM_CHANNEL_LIKE:
-                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('channel', '*' . $value . '*')));
+                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('channel', '*'.$value.'*')));
                     break;
 
                 case Criteria::CRITERIUM_CHANNEL_IN:
@@ -507,7 +505,7 @@ class MessageManager implements MessageManagerInterface
                     $andFilter->addFilter(
                         new Filter\Range('createdAt', [
                             'gte' => $value->format('U'),
-                            'lt'  => $value->format('U'),
+                            'lt' => $value->format('U'),
                         ])
                     );
                     break;

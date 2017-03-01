@@ -12,13 +12,16 @@
 namespace Phlexible\Component\Util\Tests;
 
 use Phlexible\Component\Util\StringUtil;
+use PHPUnit\Framework\TestCase;
 
 /**
- * String util Test
+ * String util Test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\Util\StringUtil
  */
-class StringUtilTest extends \PHPUnit_Framework_TestCase
+class StringUtilTest extends TestCase
 {
     /**
      * @var StringUtil
@@ -49,95 +52,95 @@ class StringUtilTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * truncate string preserving tags
+     * truncate string preserving tags.
      */
     public function testTruncatePreservingTagsWithMultibyteCharacters()
     {
-        $str   = 'äüö<strong>1</strong>23456789';
+        $str = 'äüö<strong>1</strong>23456789';
         $match = 'äüö<strong>1</strong>2345';
 
-        $test  = $this->util->truncatePreservingTags($str, 8, '');
+        $test = $this->util->truncatePreservingTags($str, 8, '');
 
         $this->assertEquals($test, $match,
-            'string match failed' . PHP_EOL . 'orig: ' . $str . PHP_EOL . 'return: ' . $test . PHP_EOL . 'match: ' . $match);
+            'string match failed'.PHP_EOL.'orig: '.$str.PHP_EOL.'return: '.$test.PHP_EOL.'match: '.$match);
     }
 
     /**
-     * truncate string preserving tags
+     * truncate string preserving tags.
      */
     public function testTruncatePreservingTagsWithGreaterThanBracket()
     {
-        $str   = '1>2345<strong>67</strong>890';
+        $str = '1>2345<strong>67</strong>890';
         $match = '1>2345<strong>67##</strong>';
 
-        $test  = $this->util->truncatePreservingTags($str, 8, '##');
+        $test = $this->util->truncatePreservingTags($str, 8, '##');
 
         $this->assertEquals($test, $match,
-            'string match failed' . PHP_EOL . 'orig: ' . $str . PHP_EOL . 'return: ' . $test . PHP_EOL . 'match: ' . $match);
+            'string match failed'.PHP_EOL.'orig: '.$str.PHP_EOL.'return: '.$test.PHP_EOL.'match: '.$match);
     }
 
     /**
-     * truncate string preserving tags
+     * truncate string preserving tags.
      */
     public function testTruncatePreservingTagsWithLessThanBracket()
     {
-        $str   = '1<2345<strong>67</strong>890';
+        $str = '1<2345<strong>67</strong>890';
         $match = '1<2345<strong>67##</strong>';
 
-        $test  = $this->util->truncatePreservingTags($str, 8, '##');
+        $test = $this->util->truncatePreservingTags($str, 8, '##');
 
         $this->assertEquals($test, $match,
-            'string match failed' . PHP_EOL . 'orig: ' . $str . PHP_EOL . 'return: ' . $test . PHP_EOL . 'match: ' . $match);
+            'string match failed'.PHP_EOL.'orig: '.$str.PHP_EOL.'return: '.$test.PHP_EOL.'match: '.$match);
     }
 
     /**
-     * truncate string preserving tags
+     * truncate string preserving tags.
      */
     public function testTruncatePreservingTagsWithLessAndBiggerThanBracket()
     {
-        $str   = '1<>2345<strong>67</strong>890';
+        $str = '1<>2345<strong>67</strong>890';
         $match = '1<>2345<strong>6##</strong>';
 
-        $test  = $this->util->truncatePreservingTags($str, 8, '##');
+        $test = $this->util->truncatePreservingTags($str, 8, '##');
 
         $this->assertEquals($test, $match,
-            'string match failed' . PHP_EOL . 'orig: ' . $str . PHP_EOL . 'return: ' . $test . PHP_EOL . 'match: ' . $match);
+            'string match failed'.PHP_EOL.'orig: '.$str.PHP_EOL.'return: '.$test.PHP_EOL.'match: '.$match);
     }
 
     /**
-     * truncate string preserving tags
+     * truncate string preserving tags.
      */
     public function testTruncatePreservingTagsWithUnclosedTag()
     {
-        $str   = '<test>12345<strong>67</strong>890';
+        $str = '<test>12345<strong>67</strong>890';
         $match = '<test>12345<strong>67</strong>8##</test>';
 
-        $test  = $this->util->truncatePreservingTags($str, 8, '##');
+        $test = $this->util->truncatePreservingTags($str, 8, '##');
 
         $this->assertEquals($test, $match,
-            'string match failed' . PHP_EOL . 'orig: ' . $str . PHP_EOL . 'return: ' . $test . PHP_EOL . 'match: ' . $match);
+            'string match failed'.PHP_EOL.'orig: '.$str.PHP_EOL.'return: '.$test.PHP_EOL.'match: '.$match);
     }
 
     /**
-     * truncate string preserving tags
+     * truncate string preserving tags.
      */
     public function testTruncatePreservingTagsWithLongText()
     {
-        $str    = '12345<strong>67</strong>890';
-        $str   .= '12345<strong>67</strong>890';
-        $str   .= '12345<strong>67</strong>890';
-        $str   .= '12345<strong>67</strong>890';
-        $str   .= '12345<strong>67</strong>890';
-        $str   .= '12345<strong>67</strong>890';
+        $str = '12345<strong>67</strong>890';
+        $str .= '12345<strong>67</strong>890';
+        $str .= '12345<strong>67</strong>890';
+        $str .= '12345<strong>67</strong>890';
+        $str .= '12345<strong>67</strong>890';
+        $str .= '12345<strong>67</strong>890';
 
-        $match  = '12345<strong>67</strong>890';
+        $match = '12345<strong>67</strong>890';
         $match .= '12345<strong>67</strong>890';
         $match .= '12345<strong>67</strong>890';
         $match .= '12345<strong>67</strong>89##';
 
-        $test   = $this->util->truncatePreservingTags($str, 39, '##');
+        $test = $this->util->truncatePreservingTags($str, 39, '##');
 
         $this->assertEquals($test, $match,
-            'string match failed' . PHP_EOL . 'orig: ' . $str . PHP_EOL . 'return: ' . $test . PHP_EOL . 'match: ' . $match);
+            'string match failed'.PHP_EOL.'orig: '.$str.PHP_EOL.'return: '.$test.PHP_EOL.'match: '.$match);
     }
 }

@@ -16,7 +16,7 @@ use Phlexible\Component\MediaTemplate\File\Loader\LoaderInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateCollection;
 
 /**
- * Template loader
+ * Template loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

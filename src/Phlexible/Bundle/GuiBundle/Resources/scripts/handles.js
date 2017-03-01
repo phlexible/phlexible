@@ -7,7 +7,6 @@ Ext.require('Phlexible.gui.menuhandle.handle.SpacerHandle');
 Ext.require('Phlexible.gui.menuhandle.handle.SeparatorHandle');
 Ext.require('Phlexible.gui.menuhandle.handle.XtypeHandle');
 Ext.require('Phlexible.gui.menuhandle.handle.WindowHandle');
-Ext.require('Phlexible.gui.BundlesMainPanel');
 Ext.require('Phlexible.gui.PhpInfoWindow');
 Ext.require('Phlexible.gui.Help');
 
@@ -70,14 +69,6 @@ Phlexible.Handles.add('separator', function() {
 
 Phlexible.Handles.add('spacer', function() {
     return new Phlexible.gui.menuhandle.handle.SpacerHandle();
-});
-
-Phlexible.Handles.add('bundles', function() {
-    return new Phlexible.gui.menuhandle.handle.XtypeHandle({
-        text: Phlexible.gui.Strings.bundles,
-        iconCls: 'p-gui-manager-icon',
-        component: 'gui-bundles'
-    });
 });
 
 Phlexible.Handles.add('help', function() {

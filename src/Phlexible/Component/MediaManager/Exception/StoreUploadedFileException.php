@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MediaManager\Exception;
 
 /**
- * Store uploaded files exception
+ * Store uploaded files exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class StoreUploadedFileException extends RuntimeException
 {
-
 }

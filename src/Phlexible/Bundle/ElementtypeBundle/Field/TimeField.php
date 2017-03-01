@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field;
 
 /**
- * Time field
+ * Time field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

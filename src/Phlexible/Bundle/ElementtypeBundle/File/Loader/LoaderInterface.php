@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\File\Loader;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
- * Loader interface
+ * Loader interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -18,7 +18,7 @@ use Phlexible\Bundle\TeaserBundle\TeaserEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Teaser listener
+ * Teaser listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

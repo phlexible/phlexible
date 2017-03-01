@@ -18,7 +18,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
- * Internet media type detector file adapter
+ * Internet media type detector file adapter.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -57,11 +57,11 @@ class FileAdapter implements AdapterInterface
     public function getInternetMediaTypeStringFromFile($filename)
     {
         if (!file_exists($filename)) {
-            throw new FileNotFoundException('File "' . $filename . '" not found.');
+            throw new FileNotFoundException('File "'.$filename.'" not found.');
         }
 
         if (!is_file($filename)) {
-            throw new NotAFileException('File "' . $filename . '" not found.');
+            throw new NotAFileException('File "'.$filename.'" not found.');
         }
 
         $file = preg_replace(['/\(/', '/\)/'], ['(', ')'], $filename);
@@ -76,10 +76,10 @@ class FileAdapter implements AdapterInterface
         $rc = $process->run();
 
         if (!$process->isSuccessful()) {
-            $msg = 'File command ' . $process->getCommandLine() . ' returned unsuccessfully, ' .
-                'rc: ' . $rc . ', ' .
-                'output: ' . $process->getOutput() . ', ' .
-                'error: ' . $process->getErrorOutput();
+            $msg = 'File command '.$process->getCommandLine().' returned unsuccessfully, '.
+                'rc: '.$rc.', '.
+                'output: '.$process->getOutput().', '.
+                'error: '.$process->getErrorOutput();
             throw new DetectionFailedException($msg);
         }
 
@@ -87,7 +87,7 @@ class FileAdapter implements AdapterInterface
     }
 
     /**
-     * Parse output
+     * Parse output.
      *
      * @param Process $process
      *
@@ -110,7 +110,7 @@ class FileAdapter implements AdapterInterface
     }
 
     /**
-     * Create base process builder
+     * Create base process builder.
      *
      * @return ProcessBuilder
      */

@@ -13,11 +13,11 @@ namespace Phlexible\Component\MediaCache\Worker;
 
 use FFMpeg\FFProbe;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaExtractor\Transmutor;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaCache\Storage\StorageManager;
+use Phlexible\Component\MediaExtractor\Transmutor;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Applier\VideoTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Video cache worker
+ * Video cache worker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -138,7 +138,7 @@ class VideoWorker extends AbstractWorker
     }
 
     /**
-     * Apply template to filename
+     * Apply template to filename.
      *
      * @param CacheItem             $cacheItem
      * @param VideoTemplate         $template
@@ -149,11 +149,11 @@ class VideoWorker extends AbstractWorker
      */
     private function work(CacheItem $cacheItem, VideoTemplate $template, ExtendedFileInterface $file, $inputFilename)
     {
-        $volume      = $file->getVolume();
-        $fileId      = $file->getID();
+        $volume = $file->getVolume();
+        $fileId = $file->getID();
         $fileVersion = $file->getVersion();
 
-        $tempFilename = $this->tempDir . '/' . $cacheItem->getId() . '.' . $template->getParameter('video_format', 'flv');
+        $tempFilename = $this->tempDir.'/'.$cacheItem->getId().'.'.$template->getParameter('video_format', 'flv');
 
         $cacheItem
             ->setVolumeId($volume->getId())

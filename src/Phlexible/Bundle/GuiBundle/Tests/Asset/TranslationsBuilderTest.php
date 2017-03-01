@@ -17,13 +17,16 @@ use Phlexible\Component\Bundler\Asset\Asset;
 use Phlexible\Component\Bundler\Compressor\CompressorInterface;
 use Phlexible\Component\Bundler\Translation\TranslationBuilderInterface;
 use Phlexible\Component\Bundler\Translation\TranslationExtractorInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\TranslatorBagInterface;
 
 /**
+ * Translations builder test.
+ *
  * @covers \Phlexible\Bundle\GuiBundle\Asset\TranslationsBuilder
  */
-class TranslationsBuilderTest extends \PHPUnit_Framework_TestCase
+class TranslationsBuilderTest extends TestCase
 {
     public function testBuild()
     {

@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * History controller
+ * History controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elements/history")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 class HistoryController extends Controller
 {
     /**
-     * Return Element History
+     * Return Element History.
      *
      * @param Request $request
      *
@@ -36,15 +36,15 @@ class HistoryController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $eid      = $request->get('filter_eid', null);
-        $treeId   = $request->get('filter_tree_id', null);
+        $eid = $request->get('filter_eid', null);
+        $treeId = $request->get('filter_tree_id', null);
         $teaserId = $request->get('filter_teaser_id', null);
-        $action   = $request->get('filter_action', null);
-        $comment  = $request->get('filter_comment', null);
-        $sort     = $request->get('sort', 'createdAt');
-        $dir      = $request->get('dir', 'DESC');
-        $offset   = $request->get('start', 0);
-        $limit    = $request->get('limit', 25);
+        $action = $request->get('filter_action', null);
+        $comment = $request->get('filter_comment', null);
+        $sort = $request->get('sort', 'createdAt');
+        $dir = $request->get('dir', 'DESC');
+        $offset = $request->get('start', 0);
+        $limit = $request->get('limit', 25);
 
         $criteria = [];
 
@@ -91,21 +91,21 @@ class HistoryController extends Controller
             }
 
             $elementHistory[] = [
-                'eid'         => $entry->getEid(),
-                'type'        => $type,
-                'id'          => $entry->getId(),
-                'tid'         => $entry->getTreeId() ?: $entry->getTeaserId() ?: null,
-                'version'     => $entry->getVersion(),
-                'language'    => $entry->getLanguage(),
-                'comment'     => $entry->getComment(),
-                'action'      => $entry->getAction(),
-                'username'    => $username,
+                'eid' => $entry->getEid(),
+                'type' => $type,
+                'id' => $entry->getId(),
+                'tid' => $entry->getTreeId() ?: $entry->getTeaserId() ?: null,
+                'version' => $entry->getVersion(),
+                'language' => $entry->getLanguage(),
+                'comment' => $entry->getComment(),
+                'action' => $entry->getAction(),
+                'username' => $username,
                 'create_time' => $entry->getCreatedAt()->format('Y-m-d H:i:s'),
             ];
         }
 
         $data = [
-            'total'   => $count,
+            'total' => $count,
             'history' => $elementHistory,
         ];
 

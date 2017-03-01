@@ -12,13 +12,16 @@
 namespace Phlexible\Component\Formatter\Tests;
 
 use Phlexible\Component\Formatter\AgeFormatter;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Age formatter tests
+ * Age formatter tests.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\Formatter\AgeFormatter
  */
-class AgeFormatterTest extends \PHPUnit_Framework_TestCase
+class AgeFormatterTest extends TestCase
 {
     /**
      * @var AgeFormatter

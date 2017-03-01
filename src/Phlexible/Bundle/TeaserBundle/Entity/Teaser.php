@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TeaserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Teaser
+ * Teaser.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -24,7 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Teaser
 {
     /**
-     * Node Type: element
+     * Node Type: element.
      */
     const TYPE_ELEMENT = 'element';
 
@@ -515,7 +515,7 @@ class Teaser
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isHidden()
     {
@@ -523,7 +523,7 @@ class Teaser
     }
 
     /**
-     * @param boolean $hidden
+     * @param bool $hidden
      *
      * @return $this
      */
@@ -535,7 +535,7 @@ class Teaser
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isStopped()
     {
@@ -543,7 +543,7 @@ class Teaser
     }
 
     /**
-     * @param boolean $stopped
+     * @param bool $stopped
      *
      * @return $this
      */

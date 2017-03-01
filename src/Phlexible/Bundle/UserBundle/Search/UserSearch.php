@@ -17,7 +17,7 @@ use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 
 /**
- * User search
+ * User search.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -72,10 +72,10 @@ class UserSearch implements SearchProviderInterface
                 '/bundles/phlexibleuser/icons/user.png',
                 'Users Search',
                 [
-                    'handler'    => 'users',
+                    'handler' => 'users',
                     'parameters' => [
                         'userId' => $user->getId(),
-                        'query'  => $user->getUsername()
+                        'query' => $user->getUsername(),
                     ],
                 ]
             );

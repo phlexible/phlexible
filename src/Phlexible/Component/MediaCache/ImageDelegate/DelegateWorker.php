@@ -23,7 +23,7 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Delegate worker
+ * Delegate worker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -79,16 +79,15 @@ class DelegateWorker
         IconResolver $iconResolver,
         FileLocatorInterface $locator,
         $delegateDir
-    )
-    {
+    ) {
         $this->templateManager = $templateManager;
         $this->mediaTypeManager = $mediaTypeManager;
         $this->applier = $applier;
         $this->iconResolver = $iconResolver;
         $this->locator = $locator;
 
-        $this->delegateDirClean   = $delegateDir . 'clean/';
-        $this->delegateDirWaiting = $delegateDir . 'waiting/';
+        $this->delegateDirClean = $delegateDir.'clean/';
+        $this->delegateDirWaiting = $delegateDir.'waiting/';
     }
 
     /**
@@ -97,7 +96,7 @@ class DelegateWorker
      */
     public function writeAll($force = false, callable $callback = null)
     {
-        $templates  = $this->templateManager->findBy(['type' => 'image']);
+        $templates = $this->templateManager->findBy(['type' => 'image']);
         $mediaTypes = $this->mediaTypeManager->findAll();
 
         $cnt = count($templates) * count($mediaTypes);
@@ -124,7 +123,7 @@ class DelegateWorker
      */
     public function getCleanDir(ImageTemplate $template)
     {
-        return $this->delegateDirClean . $template->getKey() . '/';
+        return $this->delegateDirClean.$template->getKey().'/';
     }
 
     /**
@@ -134,7 +133,7 @@ class DelegateWorker
      */
     public function getWaitingDir(ImageTemplate $template)
     {
-        return $this->delegateDirWaiting . $template->getKey() . '/';
+        return $this->delegateDirWaiting.$template->getKey().'/';
     }
 
     /**
@@ -145,7 +144,7 @@ class DelegateWorker
      */
     public function getCleanFilename(ImageTemplate $template, MediaType $mediaType)
     {
-        return $this->getCleanDir($template) . $mediaType->getName() . '.gif';
+        return $this->getCleanDir($template).$mediaType->getName().'.gif';
     }
 
     /**
@@ -156,7 +155,7 @@ class DelegateWorker
      */
     public function getWaitingFilename(ImageTemplate $template, MediaType $mediaType)
     {
-        return $this->getWaitingDir($template) . $mediaType->getName() . '.gif';
+        return $this->getWaitingDir($template).$mediaType->getName().'.gif';
     }
 
     /**
@@ -166,7 +165,7 @@ class DelegateWorker
      */
     public function getFilename(MediaType $mediaType)
     {
-        return $mediaType->getName() . '.gif';
+        return $mediaType->getName().'.gif';
     }
 
     /**
@@ -190,10 +189,10 @@ class DelegateWorker
             return;
         }
 
-        $filePathClean   = $this->getCleanFilename($template, $mediaType);
+        $filePathClean = $this->getCleanFilename($template, $mediaType);
         $filePathWaiting = $this->getWaitingFilename($template, $mediaType);
 
-        $dirClean   = dirname($filePathClean);
+        $dirClean = dirname($filePathClean);
         $dirWaiting = dirname($filePathWaiting);
 
         $filesystem = new Filesystem();
@@ -211,7 +210,7 @@ class DelegateWorker
             $this->applier->apply($template, new File(), $icon, $filePathClean);
 
             if (!$filesystem->exists($filePathClean)) {
-                throw new CreateDelegateFailedException('"Clean" delegate image not created: ' . $filePathClean);
+                throw new CreateDelegateFailedException('"Clean" delegate image not created: '.$filePathClean);
             }
         }
 
@@ -248,7 +247,7 @@ class DelegateWorker
             imagedestroy($waiting);
 
             if (!$filesystem->exists($filePathWaiting)) {
-                throw new CreateDelegateFailedException('"Waiting" delegate image not created: ' . $filePathWaiting);
+                throw new CreateDelegateFailedException('"Waiting" delegate image not created: '.$filePathWaiting);
             }
         }
     }

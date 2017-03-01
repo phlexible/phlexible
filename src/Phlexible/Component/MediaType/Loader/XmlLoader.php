@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaType\Loader;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * XML media type loader
+ * XML media type loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -81,5 +81,4 @@ class XmlLoader implements LoaderInterface
 
         return $mediaType;
     }
-
 }

@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
- * Element source manager interface
+ * Element source manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

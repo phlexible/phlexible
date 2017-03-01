@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\DependencyInjection;
 
+use Phlexible\Component\MediaManager\Volume\ExtendedVolume;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -20,7 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Media manager extension
+ * Media manager extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -44,14 +45,14 @@ class PhlexibleMediaManagerExtension extends Extension
         foreach ($config['volumes'] as $name => $volumeConfig) {
             $driverId = $volumeConfig['driver'];
 
-            $volumeDefinition = new Definition('Phlexible\Component\MediaManager\Volume\ExtendedVolume', [
+            $volumeDefinition = new Definition(ExtendedVolume::class, [
                 $volumeConfig['id'],
-                rtrim($volumeConfig['root_dir'], '/') . '/',
+                rtrim($volumeConfig['root_dir'], '/').'/',
                 $volumeConfig['quota'],
                 new Reference($driverId, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false),
                 new Reference('event_dispatcher'),
             ]);
-            $id = 'phlexible_media_manager.volume.' . strtolower($name);
+            $id = 'phlexible_media_manager.volume.'.strtolower($name);
             $container->setDefinition($id, $volumeDefinition);
 
             $ids[$name] = new Reference($id);

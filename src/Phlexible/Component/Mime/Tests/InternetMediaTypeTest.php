@@ -12,10 +12,12 @@
 namespace Phlexible\Component\Mime\Tests;
 
 use Phlexible\Component\Mime\InternetMediaType;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Stephan Wentz <swentz@brainbits.net>
+ *
+ * @covers \Phlexible\Component\Mime\InternetMediaType
  */
 class InternetMediaTypeTest extends TestCase
 {

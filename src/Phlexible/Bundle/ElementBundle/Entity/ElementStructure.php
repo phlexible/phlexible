@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Element structure
+ * Element structure.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

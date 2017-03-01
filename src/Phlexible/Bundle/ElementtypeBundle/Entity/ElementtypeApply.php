@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Elementtype apply
+ * Elementtype apply.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

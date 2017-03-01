@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaManager\Slot;
 
 /**
- * Slots interface
+ * Slots interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

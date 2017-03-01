@@ -14,7 +14,7 @@ namespace Phlexible\Component\AccessControl\Domain;
 use Phlexible\Component\AccessControl\Model\EntryInterface;
 
 /**
- * Access control entry
+ * Access control entry.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

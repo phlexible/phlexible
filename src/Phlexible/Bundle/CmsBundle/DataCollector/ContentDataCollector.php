@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 /**
- * Content data collector
+ * Content data collector.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

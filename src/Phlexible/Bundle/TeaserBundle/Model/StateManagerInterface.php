@@ -15,7 +15,7 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Entity\TeaserOnline;
 
 /**
- * State manager interface
+ * State manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -16,7 +16,7 @@ use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Get config listener
+ * Get config listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -67,7 +67,7 @@ class GetConfigListener
             $frontendLanguages[] = [
                 $language,
                 $languageTitle,
-                'p-gui-' . $language . '-icon',
+                'p-gui-'.$language.'-icon',
             ];
         }
 

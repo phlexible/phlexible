@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Data controller
+ * Data controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/queue")
@@ -27,9 +27,10 @@ use Symfony\Component\HttpFoundation\Request;
 class DataController extends Controller
 {
     /**
-     * Job list
+     * Job list.
      *
      * @param Request $request
+     *
      * @return JsonResponse
      * @Route("/list", name="queue_list")
      */
@@ -43,14 +44,14 @@ class DataController extends Controller
         $data = [];
         foreach ($jobManager->findBy([], ['createdAt' => 'DESC'], $limit, $offset) as $queueItem) {
             $data[] = [
-                'id'          => $queueItem->getId(),
-                'command'     => $queueItem->getCommand(),
-                'priority'    => $queueItem->getPriority(),
-                'status'      => $queueItem->getState(),
+                'id' => $queueItem->getId(),
+                'command' => $queueItem->getCommand(),
+                'priority' => $queueItem->getPriority(),
+                'status' => $queueItem->getState(),
                 'create_time' => $queueItem->getCreatedAt()->format('Y-m-d H:i:s'),
-                'start_time'  => $queueItem->getStartedAt() ? $queueItem->getStartedAt()->format('Y-m-d H:i:s') : null,
-                'end_time'    => $queueItem->getFinishedAt() ? $queueItem->getFinishedAt()->format('Y-m-d H:i:s') : null,
-                'output'      => nl2br($queueItem->getOutput()),
+                'start_time' => $queueItem->getStartedAt() ? $queueItem->getStartedAt()->format('Y-m-d H:i:s') : null,
+                'end_time' => $queueItem->getFinishedAt() ? $queueItem->getFinishedAt()->format('Y-m-d H:i:s') : null,
+                'output' => nl2br($queueItem->getOutput()),
             ];
         }
 
@@ -58,5 +59,4 @@ class DataController extends Controller
 
         return new JsonResponse(['data' => $data, 'total' => $total]);
     }
-
 }

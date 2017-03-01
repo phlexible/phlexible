@@ -17,7 +17,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 use Phlexible\Component\Volume\Model\Folder as BaseFolder;
 
 /**
- * Folder
+ * Folder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -81,7 +81,7 @@ class Folder extends BaseFolder implements ExtendedFolderInterface, Hierarchical
     }
 
     /**
-     * Return domain object identifier
+     * Return domain object identifier.
      *
      * @return array
      */
@@ -91,7 +91,7 @@ class Folder extends BaseFolder implements ExtendedFolderInterface, Hierarchical
     }
 
     /**
-     * Return domain object type
+     * Return domain object type.
      *
      * @return array
      */

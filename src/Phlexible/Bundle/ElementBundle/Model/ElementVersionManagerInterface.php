@@ -16,7 +16,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 
 /**
- * Element version manager interface
+ * Element version manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -24,7 +24,7 @@ interface ElementVersionManagerInterface
 {
     /**
      * @param Element $element
-     * @param integer $version
+     * @param int     $version
      *
      * @return ElementVersion
      */
@@ -33,8 +33,8 @@ interface ElementVersionManagerInterface
     /**
      * @param Element $element
      * @param array   $orderBy
-     * @param integer $limit
-     * @param integer $offset
+     * @param int     $limit
+     * @param int     $offset
      *
      * @return ElementVersion[]
      */

@@ -11,19 +11,19 @@
 
 namespace Phlexible\Component\MediaCache\Worker;
 
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Abstract worker
+ * Abstract worker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 abstract class AbstractWorker implements WorkerInterface
 {
     /**
-     * Apply error to cache item
+     * Apply error to cache item.
      *
      * @param CacheItem             $cacheItem
      * @param string                $status

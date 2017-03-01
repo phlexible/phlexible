@@ -15,7 +15,7 @@ use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Siteroot event
+ * Siteroot event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

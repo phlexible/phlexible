@@ -16,7 +16,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Raw image extractor
+ * Raw image extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

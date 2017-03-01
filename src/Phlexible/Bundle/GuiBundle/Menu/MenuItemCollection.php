@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\GuiBundle\Menu;
 
 /**
- * Menu item collection
+ * Menu item collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -87,7 +87,7 @@ class MenuItemCollection implements \Countable
 
         foreach ($this->items as $name => $item) {
             $itemData = array(
-                'name'   => $name,
+                'name' => $name,
                 'handle' => $item->getHandle(),
             );
 

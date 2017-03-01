@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ProblemBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Problem
+ * Problem.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -314,7 +314,7 @@ class Problem
     }
 
     /**
-     * Return array represantation of this problem
+     * Return array represantation of this problem.
      *
      * @return array
      */
@@ -322,10 +322,10 @@ class Problem
     {
         return [
             'severity' => $this->severity,
-            'msg'      => $this->msg,
-            'hint'     => $this->hint,
-            'link'     => !empty($this->link) ? $this->link : null,
-            'iconCls'  => $this->iconClass,
+            'msg' => $this->msg,
+            'hint' => $this->hint,
+            'link' => !empty($this->link) ? $this->link : null,
+            'iconCls' => $this->iconClass,
         ];
     }
 }

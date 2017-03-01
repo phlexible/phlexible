@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Tree iterator
+ * Tree iterator.
  *
  * @author Phillip Look <pl@brainbits.net>
  */
@@ -33,7 +33,7 @@ class TreeIterator implements \Iterator, \RecursiveIterator
      * Create a new tree iterator for a tree or a specific node.
      *
      * @param TreeInterface|\Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $tree TreeInterface: traverse tree from root node
-     *                                              TreeNodeInterface: traverse a subtree
+     *                                                                                 TreeNodeInterface: traverse a subtree
      *
      * @throws \Exception
      */
@@ -49,7 +49,7 @@ class TreeIterator implements \Iterator, \RecursiveIterator
             $tree = $tree->getTree();
             $this->iterator = new \ArrayIterator($tree->getChildren($node));
         } else {
-            throw new InvalidArgumentException('Unsupported type ' . get_class($tree) . '.');
+            throw new InvalidArgumentException('Unsupported type '.get_class($tree).'.');
         }
     }
 
@@ -124,5 +124,4 @@ class TreeIterator implements \Iterator, \RecursiveIterator
 
         return $node->getTree()->hasChildren($node);
     }
-
 }

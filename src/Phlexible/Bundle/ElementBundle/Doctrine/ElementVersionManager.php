@@ -26,7 +26,7 @@ use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Element version manager
+ * Element version manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -86,7 +86,7 @@ class ElementVersionManager implements ElementVersionManagerInterface
      */
     public function find(Element $element, $version)
     {
-        $index = $element->getEid() . '__' . $version;
+        $index = $element->getEid().'__'.$version;
 
         if (!isset($this->elementVersions[$index]) || $this->elementVersions[$index] === null) {
             $elementVersion = $this->getElementVersionRepository()->findOneBy(
@@ -144,7 +144,7 @@ class ElementVersionManager implements ElementVersionManagerInterface
             $this->dispatcher->dispatch(ElementEvents::CREATE_ELEMENT_VERSION, $event);
 
             // post message
-            $message = ElementsMessage::create('Element version "' . $elementVersion->getElement()->getEid() . ' updated.');
+            $message = ElementsMessage::create('Element version "'.$elementVersion->getElement()->getEid().' updated.');
             $this->messagePoster->post($message);
         } else {
             $event = new ElementVersionEvent($elementVersion);
@@ -166,7 +166,7 @@ class ElementVersionManager implements ElementVersionManagerInterface
             $this->dispatcher->dispatch(ElementEvents::UPDATE_ELEMENT_VERSION, $event);
 
             // post message
-            $message = ElementsMessage::create('Element version "' . $elementVersion->getElement()->getEid() . ' updated.');
+            $message = ElementsMessage::create('Element version "'.$elementVersion->getElement()->getEid().' updated.');
             $this->messagePoster->post($message);
         }
     }

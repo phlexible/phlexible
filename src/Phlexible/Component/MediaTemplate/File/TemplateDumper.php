@@ -15,7 +15,7 @@ use Phlexible\Component\MediaTemplate\File\Dumper\DumperInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Template dumper
+ * Template dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,7 +46,7 @@ class TemplateDumper
      */
     public function dumpTemplate(TemplateInterface $template)
     {
-        $filename = strtolower($template->getKey() . '.' . $this->dumper->getExtension());
-        $this->dumper->dump($this->fileDir . $filename, $template);
+        $filename = strtolower($template->getKey().'.'.$this->dumper->getExtension());
+        $this->dumper->dump($this->fileDir.$filename, $template);
     }
 }

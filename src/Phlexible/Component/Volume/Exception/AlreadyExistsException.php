@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Volume\Exception;
 
 /**
- * Already exists exception
+ * Already exists exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class AlreadyExistsException extends RuntimeException
 {
-
 }

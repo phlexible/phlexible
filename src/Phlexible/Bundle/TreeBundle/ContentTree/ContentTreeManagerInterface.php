@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 /**
- * Content tree manager interface
+ * Content tree manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

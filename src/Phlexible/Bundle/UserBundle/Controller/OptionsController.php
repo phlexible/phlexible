@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Options controller
+ * Options controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/users/options")
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 class OptionsController extends Controller
 {
     /**
-     * Save details
+     * Save details.
      *
      * @param Request $request
      *
@@ -45,7 +45,7 @@ class OptionsController extends Controller
     }
 
     /**
-     * Save password
+     * Save password.
      *
      * @param Request $request
      *
@@ -66,7 +66,7 @@ class OptionsController extends Controller
     }
 
     /**
-     * Save preferences
+     * Save preferences.
      *
      * @param Request $request
      *
@@ -84,7 +84,7 @@ class OptionsController extends Controller
     }
 
     /**
-     * Save preferences
+     * Save preferences.
      *
      * @param Request $request
      *

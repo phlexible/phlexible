@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Twig_Environment;
 
 /**
- * DigestMail Mailer
+ * DigestMail Mailer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -62,7 +62,7 @@ class Mailer
     }
 
     /**
-     * Send digest mail
+     * Send digest mail.
      *
      * @param UserInterface $user
      * @param Message[]     $messages
@@ -77,8 +77,8 @@ class Mailer
         $content = $this->templating->render(
             $template,
             [
-                'date'         => date('Y-m-d H:i:s'),
-                'messages'     => $messages
+                'date' => date('Y-m-d H:i:s'),
+                'messages' => $messages,
             ]
         );
 
@@ -108,7 +108,7 @@ class Mailer
 
             $this->mailer->send($mail);
         } catch (\Exception $e) {
-            $this->logger->error(__METHOD__ . ' failed to send mail: ' . $e->getMessage());
+            $this->logger->error(__METHOD__.' failed to send mail: '.$e->getMessage());
 
             return false;
         }

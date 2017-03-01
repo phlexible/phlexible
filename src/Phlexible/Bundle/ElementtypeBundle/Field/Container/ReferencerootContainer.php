@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field\Container;
 
 /**
- * Referenceroot container
+ * Referenceroot container.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

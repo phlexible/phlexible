@@ -13,13 +13,16 @@ namespace Phlexible\Bundle\GuiBundle\Tests\Menu;
 
 use Phlexible\Bundle\GuiBundle\Menu\MenuItem;
 use Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Menu item collection test
+ * Menu item collection test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection
  */
-class MenuItemCollectionTest extends \PHPUnit_Framework_TestCase
+class MenuItemCollectionTest extends TestCase
 {
     public function testMerge()
     {
@@ -33,7 +36,6 @@ class MenuItemCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(2, $items);
         $this->assertSame('mergeFoo', $items->getItems()['foo']->getHandle());
-
     }
 
     public function testToArray()

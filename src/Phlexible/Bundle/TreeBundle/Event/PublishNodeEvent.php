@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Publish node event
+ * Publish node event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

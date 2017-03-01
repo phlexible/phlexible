@@ -22,7 +22,7 @@ use Phlexible\Bundle\TeaserBundle\Teaser\TeaserHasher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * State manager
+ * State manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -112,7 +112,7 @@ class StateManager implements StateManagerInterface
      */
     public function findOneByTeaserAndLanguage(Teaser $teaser, $language)
     {
-        $id = $teaser->getId() . '_' . $language;
+        $id = $teaser->getId().'_'.$language;
 
         if (!isset($this->cache[$id])) {
             $this->cache[$id] = $this->getTeaserOnlineRepository()->findOneBy(['teaser' => $teaser->getId(), 'language' => $language]);

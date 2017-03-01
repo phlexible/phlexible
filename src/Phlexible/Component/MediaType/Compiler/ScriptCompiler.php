@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaType\Compiler;
 use Phlexible\Component\MediaType\Model\MediaTypeCollection;
 
 /**
- * Script compiler
+ * Script compiler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -36,7 +36,7 @@ class ScriptCompiler implements CompilerInterface
         $classMap = [];
         foreach ($mediaTypes->all() as $mediaType) {
             $classMapItem = [
-                'cls' => sprintf('p-documenttype-%s', $mediaType->getName())
+                'cls' => sprintf('p-documenttype-%s', $mediaType->getName()),
             ];
 
             foreach ($mediaType->getTitles() as $key => $title) {

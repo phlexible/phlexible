@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\ContentElement\Dumper;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 
 /**
- * Dumper interface
+ * Dumper interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

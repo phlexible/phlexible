@@ -26,7 +26,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 
 /**
- * Element service
+ * Element service.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -103,7 +103,7 @@ class ElementService
     }
 
     /**
-     * Find element by ID
+     * Find element by ID.
      *
      * @param int $eid
      *

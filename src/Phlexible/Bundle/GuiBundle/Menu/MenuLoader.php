@@ -21,7 +21,7 @@ use Puli\Repository\Resource\FileResource;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Menu loader
+ * Menu loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

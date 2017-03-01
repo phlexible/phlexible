@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MediaManager\Exception;
 
 /**
- * Exception interface for media manager bundle
+ * Exception interface for media manager bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExceptionInterface
 {
-
 }

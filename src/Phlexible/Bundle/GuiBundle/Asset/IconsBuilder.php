@@ -18,7 +18,7 @@ use Phlexible\Component\Bundler\Finder\ResourceFinderInterface;
 use Puli\Repository\Resource\FileResource;
 
 /**
- * Icons builder
+ * Icons builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -58,12 +58,12 @@ class IconsBuilder
     {
         $this->resourceFinder = $resourceFinder;
         $this->compressor = $compressor;
-        $this->cacheDir = rtrim($cacheDir, '/') . '/';
+        $this->cacheDir = rtrim($cacheDir, '/').'/';
         $this->debug = $debug;
     }
 
     /**
-     * Get all Stylesheets for the given section
+     * Get all Stylesheets for the given section.
      *
      * @param string $basePath
      *
@@ -71,7 +71,7 @@ class IconsBuilder
      */
     public function build($basePath)
     {
-        $cache = new PuliResourceCollectionCache($this->cacheDir . 'icons.css', $this->debug);
+        $cache = new PuliResourceCollectionCache($this->cacheDir.'icons.css', $this->debug);
 
         $resources = $this->resourceFinder->findByType('phlexible/icons');
 
@@ -112,30 +112,30 @@ class IconsBuilder
             $name = basename($filesystemPath, ".$extension");
 
             $size = getimagesize($filesystemPath);
-            if ($size[0] != 16 || $size[1] != 16) {
+            if ($size[0] !== 16 || $size[1] !== 16) {
                 continue;
             }
 
             $selector = sprintf('.p-%s-%s-icon', str_replace('phlexible', '', $bundle), $name);
 
             $data[] = [
-                'bundle'    => $bundle,
-                'path'      => $path,
-                'file'      => $file,
-                'name'      => $name,
-                'selector'  => $selector,
+                'bundle' => $bundle,
+                'path' => $path,
+                'file' => $file,
+                'name' => $name,
+                'selector' => $selector,
                 'extension' => $extension,
             ];
         }
 
-        $urlTemplate = $basePath . '/bundles/%s/icons/%s';
+        $urlTemplate = $basePath.'/bundles/%s/icons/%s';
 
-        $icons = '/* Created: ' . date('Y-m-d H:i:s') . ' */' . PHP_EOL;
+        $icons = '/* Created: '.date('Y-m-d H:i:s').' */'.PHP_EOL;
 
         foreach ($data as $row) {
             $url = sprintf($urlTemplate, $row['bundle'], $row['path']);
 
-            $style = $row['selector'] . ' {background-image: url(' . $url . ') !important;}' . PHP_EOL;
+            $style = $row['selector'].' {background-image: url('.$url.') !important;}'.PHP_EOL;
 
             $icons .= $style;
         }

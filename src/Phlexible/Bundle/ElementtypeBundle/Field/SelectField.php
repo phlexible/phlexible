@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field;
 
 /**
- * Select field
+ * Select field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

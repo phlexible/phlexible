@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Element version
+ * Element version.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -26,7 +26,7 @@ class ElementVersion
 {
     /**
      * Current format:
-     * 3 - trigger_language added
+     * 3 - trigger_language added.
      *
      * Prior formats:
      * 2 - element data (language) / data_id changes
@@ -318,7 +318,7 @@ class ElementVersion
     }
 
     /**
-     * Return backend title
+     * Return backend title.
      *
      * @param string $language
      * @param bool   $fallbackLanguage
@@ -331,7 +331,7 @@ class ElementVersion
     }
 
     /**
-     * Return page title
+     * Return page title.
      *
      * @param string $language
      * @param bool   $fallbackLanguage
@@ -344,7 +344,7 @@ class ElementVersion
     }
 
     /**
-     * Return navigation title
+     * Return navigation title.
      *
      * @param string $language
      * @param bool   $fallbackLanguage
@@ -357,7 +357,7 @@ class ElementVersion
     }
 
     /**
-     * Return custom date
+     * Return custom date.
      *
      * @param string $language
      * @param bool   $fallbackLanguage
@@ -372,7 +372,7 @@ class ElementVersion
     }
 
     /**
-     * Return mapped field
+     * Return mapped field.
      *
      * @param string $field
      * @param string $language

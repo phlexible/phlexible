@@ -18,7 +18,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
 use Psr\Log\LoggerInterface;
 
 /**
- * Cache worker interface
+ * Cache worker interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -36,7 +36,7 @@ interface WorkerInterface
     public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType);
 
     /**
-     * Process template and file
+     * Process template and file.
      *
      * @param CacheItem             $cacheItem
      * @param TemplateInterface     $template

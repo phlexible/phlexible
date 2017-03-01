@@ -20,7 +20,7 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Translation\TranslatorBagInterface;
 
 /**
- * Translations builder
+ * Translations builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -78,8 +78,7 @@ class TranslationsBuilder
         $cacheDir,
         $fallbackLocale,
         $debug
-    )
-    {
+    ) {
         $this->translator = $translator;
         $this->extractor = $extractor;
         $this->builder = $builder;
@@ -90,7 +89,7 @@ class TranslationsBuilder
     }
 
     /**
-     * Get all Translations for the given section
+     * Get all Translations for the given section.
      *
      * @param string $locale
      * @param string $domain
@@ -99,7 +98,7 @@ class TranslationsBuilder
      */
     public function build($locale, $domain = 'gui')
     {
-        $cache = new ConfigCache($this->cacheDir . '/translations-' . $locale . '.js', $this->debug);
+        $cache = new ConfigCache($this->cacheDir.'/translations-'.$locale.'.js', $this->debug);
 
         if (!$cache->isFresh()) {
             $content = $this->buildContent($locale, $domain);

@@ -19,7 +19,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class GenerateMappedFieldsCommand extends ContainerAwareCommand
 {
-
     /**
      * {@inheritdoc}
      */
@@ -60,7 +59,7 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
 
             foreach ($elementVersions as $elementVersion) {
                 $style->write(
-                    "."
+                    '.'
                 );
 
                 try {

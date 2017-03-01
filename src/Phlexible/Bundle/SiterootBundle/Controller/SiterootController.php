@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Siteroot controller
+ * Siteroot controller.
  *
  * @author Phillip Look <plook@brainbits.net>
  * @Route("/siteroots/siteroot")
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SiterootController extends Controller
 {
     /**
-     * List siteroots
+     * List siteroots.
      *
      * @return JsonResponse
      * @Route("/list", name="siteroots_siteroot_list")
@@ -41,19 +41,19 @@ class SiterootController extends Controller
         $siteroots = [];
         foreach ($siterootManager->findAll() as $siteroot) {
             $siteroots[] = [
-                'id'    => $siteroot->getId(),
+                'id' => $siteroot->getId(),
                 'title' => $siteroot->getTitle(),
             ];
         }
 
         return new JsonResponse([
             'siteroots' => $siteroots,
-            'count'     => count($siteroots)
+            'count' => count($siteroots),
         ]);
     }
 
     /**
-     * Create siteroot
+     * Create siteroot.
      *
      * @param Request $request
      *
@@ -82,7 +82,7 @@ class SiterootController extends Controller
     }
 
     /**
-     * Delete siteroot
+     * Delete siteroot.
      *
      * @param Request $request
      *
@@ -116,24 +116,24 @@ class SiterootController extends Controller
         $siteroot = $siterootRepository->find($siterootId);
 
         $data = [
-            'titles'          => $siteroot->getTitles(),
-            'navigations'     => [],
-            'properties'      => [],
-            'specialtids'     => [],
-            'urls'            => [],
+            'titles' => $siteroot->getTitles(),
+            'navigations' => [],
+            'properties' => [],
+            'specialtids' => [],
+            'urls' => [],
         ];
 
         // get all siteroot navigations
         foreach ($siteroot->getNavigations() as $navigation) {
             $data['navigations'][] = [
-                'id'         => $navigation->getId(),
-                'title'      => $navigation->getTitle(),
-                'handler'    => $navigation->getHandler(),
-                'start_tid'  => $navigation->getStartTreeId(),
-                'max_depth'  => $navigation->getMaxDepth(),
-                'supports'   => '', //call_user_func(array($navigation->getHandler(), 'getSupportedFlags')),
-                'flags'      => $navigation->getFlags(),
-                'additional' => $navigation->getAdditional()
+                'id' => $navigation->getId(),
+                'title' => $navigation->getTitle(),
+                'handler' => $navigation->getHandler(),
+                'start_tid' => $navigation->getStartTreeId(),
+                'max_depth' => $navigation->getMaxDepth(),
+                'supports' => '', //call_user_func(array($navigation->getHandler(), 'getSupportedFlags')),
+                'flags' => $navigation->getFlags(),
+                'additional' => $navigation->getAdditional(),
             ];
         }
 
@@ -148,20 +148,20 @@ class SiterootController extends Controller
         foreach ($siteroot->getSpecialTids() as $specialTid) {
             $data['specialtids'][] = [
                 'siteroot_id' => $siterootId,
-                'key'         => $specialTid['name'],
-                'language'    => !empty($specialTid['language']) ? $specialTid['language'] : null,
-                'tid'         => $specialTid['treeId'],
+                'key' => $specialTid['name'],
+                'language' => !empty($specialTid['language']) ? $specialTid['language'] : null,
+                'tid' => $specialTid['treeId'],
             ];
         }
 
         foreach ($siteroot->getUrls() as $url) {
             $data['urls'][] = [
-                'id'             => $url->getId(),
+                'id' => $url->getId(),
                 'global_default' => $url->isGlobalDefault(),
-                'default'        => $url->isDefault(),
-                'hostname'       => $url->getHostname(),
-                'language'       => $url->getLanguage(),
-                'target'         => $url->getTarget(),
+                'default' => $url->isDefault(),
+                'hostname' => $url->getHostname(),
+                'language' => $url->getLanguage(),
+                'target' => $url->getTarget(),
             ];
         }
 
@@ -169,7 +169,7 @@ class SiterootController extends Controller
     }
 
     /**
-     * Save siteroot
+     * Save siteroot.
      *
      * @param Request $request
      *

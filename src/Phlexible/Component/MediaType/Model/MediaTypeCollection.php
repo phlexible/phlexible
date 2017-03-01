@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MediaType\Model;
 
 /**
- * Media type collection
+ * Media type collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -29,7 +29,7 @@ class MediaTypeCollection
     private $mimetypeMap = array();
 
     /**
-     * Add media type
+     * Add media type.
      *
      * @param MediaType $mediaType
      *
@@ -47,7 +47,7 @@ class MediaTypeCollection
     }
 
     /**
-     * Merge collection
+     * Merge collection.
      *
      * @param MediaTypeCollection $collection
      *

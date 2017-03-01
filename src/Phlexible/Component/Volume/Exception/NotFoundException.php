@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Volume\Exception;
 
 /**
- * Not found exception
+ * Not found exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class NotFoundException extends RuntimeException
 {
-
 }

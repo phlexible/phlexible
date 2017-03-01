@@ -15,7 +15,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Tree filter event
+ * Tree filter event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

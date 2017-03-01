@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 
 /**
- * Path generator
+ * Path generator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -94,13 +94,13 @@ class DefaultUrlGenerator implements UrlGeneratorInterface
 
             $port = '';
             if ($scheme === 'http' && $this->requestContext->getHttpPort() !== 80) {
-                $port = ':' . $this->requestContext->getHttpPort();
+                $port = ':'.$this->requestContext->getHttpPort();
             }
             if ($scheme === 'https' && $this->requestContext->getHttpsPort() !== 443) {
-                $port = ':' . $this->requestContext->getHttpsPort();
+                $port = ':'.$this->requestContext->getHttpsPort();
             }
 
-            $url .= $scheme . '://' . $hostname . $port;
+            $url .= $scheme.'://'.$hostname.$port;
         }
 
         $basePath = $this->requestContext->getBaseUrl();
@@ -109,13 +109,13 @@ class DefaultUrlGenerator implements UrlGeneratorInterface
             $mergedParams
         );
 
-        $url .= $basePath . $path;
+        $url .= $basePath.$path;
 
         return $encode ? htmlspecialchars($url) : $url;
     }
 
     /**
-     * Generate path
+     * Generate path.
      *
      * @param TreeNodeInterface $node
      * @param array             $parameters
@@ -151,7 +151,7 @@ class DefaultUrlGenerator implements UrlGeneratorInterface
      */
     protected function generatePathPrefix($path, TreeNodeInterface $node, $parameters)
     {
-        return '/' . $parameters['_locale'] . $path;
+        return '/'.$parameters['_locale'].$path;
     }
 
     /**
@@ -163,7 +163,7 @@ class DefaultUrlGenerator implements UrlGeneratorInterface
      */
     protected function generatePathSuffix($path, TreeNodeInterface $node, $parameters)
     {
-        return $path . '.' . $node->getId() . '.html';
+        return $path.'.'.$node->getId().'.html';
     }
 
     /**
@@ -179,7 +179,7 @@ class DefaultUrlGenerator implements UrlGeneratorInterface
         unset($parameters['_preview']);
 
         if (count($parameters)) {
-            $path .= '?' . http_build_query($parameters, '', '&');
+            $path .= '?'.http_build_query($parameters, '', '&');
         }
 
         return $path;
@@ -200,9 +200,9 @@ class DefaultUrlGenerator implements UrlGeneratorInterface
 
         $query = '';
         if (count($parameters)) {
-            $query = '?' . http_build_query($parameters);
+            $query = '?'.http_build_query($parameters);
         }
 
-        return "/admin/preview/{$locale}/{$node->getId()}" . $query;
+        return "/admin/preview/{$locale}/{$node->getId()}".$query;
     }
 }

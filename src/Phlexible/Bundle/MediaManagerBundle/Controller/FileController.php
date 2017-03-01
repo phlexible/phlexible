@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * File controller
+ * File controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/file")
@@ -60,7 +60,7 @@ class FileController extends Controller
     }
 
     /**
-     * List files
+     * List files.
      *
      * @param Request $request
      *
@@ -78,7 +78,7 @@ class FileController extends Controller
         $filter = $request->get('filter');
 
         if (!$folderId) {
-            throw new \RuntimeException("No folder ID");
+            throw new \RuntimeException('No folder ID');
         }
 
         if ($filter) {
@@ -119,7 +119,7 @@ class FileController extends Controller
     }
 
     /**
-     * Build file list
+     * Build file list.
      *
      * @param VolumeInterface         $volume
      * @param ExtendedFileInterface[] $files
@@ -157,13 +157,13 @@ class FileController extends Controller
                 //'attributes'    => array(),
                 //'attributesCnt' => 0,
                 'versions' => $hasVersions,
-                'debug'    => [
-                    'mimeType'      => $file->getMimeType(),
+                'debug' => [
+                    'mimeType' => $file->getMimeType(),
                     'mediaCategory' => strtolower($file->getMediaCategory()),
-                    'mediaType'     => strtolower($file->getMediaType()),
-                    'fileId'        => $file->getID(),
-                    'folderId'      => $file->getFolderId(),
-                ]
+                    'mediaType' => strtolower($file->getMediaType()),
+                    'fileId' => $file->getID(),
+                    'folderId' => $file->getFolderId(),
+                ],
             ];
 
             $meta = [];
@@ -196,14 +196,14 @@ class FileController extends Controller
             foreach ($cacheItems as $cacheItem) {
                 if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
                     $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media', [
-                        'file_id'      => $file->getId(),
+                        'file_id' => $file->getId(),
                         'file_version' => $file->getVersion(),
                         'template_key' => $cacheItem->getTemplateKey(),
                     ]);
                 } else {
                     $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media_delegate', [
                         'mediaTypeName' => $file->getMediaType(),
-                        'templateKey'   => $cacheItem->getTemplateKey(),
+                        'templateKey' => $cacheItem->getTemplateKey(),
                     ]);
                 }
             }
@@ -221,32 +221,32 @@ class FileController extends Controller
 
             $folder = $volume->findFolder($file->getFolderId());
             $data[] = [
-                'id'                => $file->getID(),
-                'name'              => $file->getName(),
-                'site_id'           => $volume->getId(),
-                'folder_id'         => $file->getFolderID(),
-                'folder'            => '/Root/' . $folder->getPath(),
-                'asset_type'        => strtolower($file->getMediaCategory()),
-                'mime_type'         => $file->getMimetype(),
-                'document_type'     => $mediaTypeTitle,
+                'id' => $file->getID(),
+                'name' => $file->getName(),
+                'site_id' => $volume->getId(),
+                'folder_id' => $file->getFolderID(),
+                'folder' => '/Root/'.$folder->getPath(),
+                'asset_type' => strtolower($file->getMediaCategory()),
+                'mime_type' => $file->getMimetype(),
+                'document_type' => $mediaTypeTitle,
                 'document_type_key' => strtolower($file->getMediaType()),
-                'present'           => file_exists($file->getPhysicalPath()),
-                'size'              => $file->getSize(),
-                'hash'              => $file->getHash(),
-                'hidden'            => $file->isHidden() ? 1 : 0,
-                'version'           => $version,
-                'create_user'       => $createUserName,
-                'create_user_id'    => $file->getCreateUserId(),
-                'create_time'       => $file->getCreatedAt()->format('Y-m-d H:i:s'),
-                'modify_user'       => $modifyUserName,
-                'modify_user_id'    => $file->getModifyUserId(),
-                'modify_time'       => $file->getModifiedAt() ? $file->getModifiedAt()->format('Y-m-d H:i:s') : null,
-                'cache'             => $cache,
-                'properties'        => $properties,
-                'used_in'           => $usedIn,
-                'used'              => $usage,
-                'focal'             => $focal,
-                'attributes'        => !empty($attributes['fileattributes']) ? $attributes['fileattributes'] : array(),
+                'present' => file_exists($file->getPhysicalPath()),
+                'size' => $file->getSize(),
+                'hash' => $file->getHash(),
+                'hidden' => $file->isHidden() ? 1 : 0,
+                'version' => $version,
+                'create_user' => $createUserName,
+                'create_user_id' => $file->getCreateUserId(),
+                'create_time' => $file->getCreatedAt()->format('Y-m-d H:i:s'),
+                'modify_user' => $modifyUserName,
+                'modify_user_id' => $file->getModifyUserId(),
+                'modify_time' => $file->getModifiedAt() ? $file->getModifiedAt()->format('Y-m-d H:i:s') : null,
+                'cache' => $cache,
+                'properties' => $properties,
+                'used_in' => $usedIn,
+                'used' => $usage,
+                'focal' => $focal,
+                'attributes' => !empty($attributes['fileattributes']) ? $attributes['fileattributes'] : array(),
             ];
         }
 
@@ -254,7 +254,7 @@ class FileController extends Controller
     }
 
     /**
-     * Delete File
+     * Delete File.
      *
      * @param Request $request
      *
@@ -279,11 +279,11 @@ class FileController extends Controller
             }
         }
 
-        return new ResultResponse(true, count($fileIds) . ' file(s) deleted.');
+        return new ResultResponse(true, count($fileIds).' file(s) deleted.');
     }
 
     /**
-     * Hide File
+     * Hide File.
      *
      * @param Request $request
      *
@@ -305,11 +305,11 @@ class FileController extends Controller
             }
         }
 
-        return new ResultResponse(true, count($fileIds) . ' file(s) hidden.');
+        return new ResultResponse(true, count($fileIds).' file(s) hidden.');
     }
 
     /**
-     * Show file
+     * Show file.
      *
      * @param Request $request
      *
@@ -331,11 +331,11 @@ class FileController extends Controller
             }
         }
 
-        return new ResultResponse(true, count($fileIds) . ' file(s) shown.');
+        return new ResultResponse(true, count($fileIds).' file(s) shown.');
     }
 
     /**
-     * Properties
+     * Properties.
      *
      * @param Request $request
      *
@@ -371,7 +371,7 @@ class FileController extends Controller
         $properties = [];
         $properties['id'] = $fileId;
         $properties['version'] = $fileVersion;
-        $properties['path'] = '/' . $folder->getPath();
+        $properties['path'] = '/'.$folder->getPath();
         $properties['name'] = $file->getName();
         $properties['size'] = $file->getSize();
         $properties['hash'] = $file->getHash();
@@ -390,25 +390,25 @@ class FileController extends Controller
         $properties['keywordsCnt'] = count($properties['keywords']);
 
         $properties['debug'] = [
-            'mimeType'      => $file->getMimeType(),
-            'mediaType'     => strtolower($file->getMediaType()),
+            'mimeType' => $file->getMimeType(),
+            'mediaType' => strtolower($file->getMediaType()),
             'mediaCategory' => strtolower($file->getMediaCategory()),
-            'fileId'        => $fileId,
-            'folderId'      => $folder->getId(),
+            'fileId' => $fileId,
+            'folderId' => $folder->getId(),
         ];
 
         $properties['detail'] = [
-            'id'                => $file->getId(),
-            'folder_id'         => $file->getFolderId(),
-            'name'              => $file->getName(),
-            'size'              => $file->getSize(),
-            'version'           => $file->getVersion(),
-            'document_type'     => $mediaType->getTitle($this->getUser()->getInterfaceLanguage('en')),
+            'id' => $file->getId(),
+            'folder_id' => $file->getFolderId(),
+            'name' => $file->getName(),
+            'size' => $file->getSize(),
+            'version' => $file->getVersion(),
+            'document_type' => $mediaType->getTitle($this->getUser()->getInterfaceLanguage('en')),
             'document_type_key' => strtolower($file->getMediaType()),
-            'asset_type'        => strtolower($file->getMediaCategory()),
-            'create_user'       => $userManager->find($file->getCreateUserId())->getUsername(),
-            'create_user_id'    => $file->getCreateUserId(),
-            'create_time'       => $file->getCreatedAt()->format('Y-m-d H:i:s'),
+            'asset_type' => strtolower($file->getMediaCategory()),
+            'create_user' => $userManager->find($file->getCreateUserId())->getUsername(),
+            'create_user_id' => $file->getCreateUserId(),
+            'create_time' => $file->getCreatedAt()->format('Y-m-d H:i:s'),
         ];
 
         /*
@@ -419,7 +419,7 @@ class FileController extends Controller
         $properties['prev'] = null;
         if (!empty($previousFile)) {
             $properties['prev'] = [
-                'file_id'      => $previousFile->getId(),
+                'file_id' => $previousFile->getId(),
                 'file_version' => $previousFile->getVersion(),
             ];
         }
@@ -427,7 +427,7 @@ class FileController extends Controller
         $properties['next'] = null;
         if (!empty($nextFile)) {
             $properties['next'] = [
-                'file_id'      => $nextFile->getId(),
+                'file_id' => $nextFile->getId(),
                 'file_version' => $nextFile->getVrsion(),
             ];
         }
@@ -451,28 +451,28 @@ class FileController extends Controller
         $detail = [];
         foreach ($volume->findFileVersions($id) as $file) {
             $detail[] = [
-                'id'                => $file->getId(),
-                'folder_id'         => $file->getFolderId(),
-                'name'              => $file->getName(),
-                'size'              => $file->getSize(),
-                'version'           => $file->getVersion(),
+                'id' => $file->getId(),
+                'folder_id' => $file->getFolderId(),
+                'name' => $file->getName(),
+                'size' => $file->getSize(),
+                'version' => $file->getVersion(),
                 'document_type_key' => strtolower($file->getMediaType()),
-                'asset_type'        => strtolower($file->getMediaCategory()),
-                'create_user_id'    => $file->getCreateUserId(),
-                'create_user'       => $userManager->find($file->getCreateUserId())->getUsername(),
-                'create_time'       => $file->getCreatedAt()->format('Y-m-d H:i:s'),
+                'asset_type' => strtolower($file->getMediaCategory()),
+                'create_user_id' => $file->getCreateUserId(),
+                'create_user' => $userManager->find($file->getCreateUserId())->getUsername(),
+                'create_time' => $file->getCreatedAt()->format('Y-m-d H:i:s'),
             ];
         }
 
         return new JsonResponse(
             [
-                'detail' => $detail
+                'detail' => $detail,
             ]
         );
     }
 
     /**
-     * Copy file
+     * Copy file.
      *
      * @param Request $request
      *
@@ -496,7 +496,7 @@ class FileController extends Controller
     }
 
     /**
-     * Move file
+     * Move file.
      *
      * @param Request $request
      *
@@ -526,7 +526,7 @@ class FileController extends Controller
     }
 
     /**
-     * Rename file
+     * Rename file.
      *
      * @param Request $request
      *

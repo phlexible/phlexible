@@ -12,7 +12,7 @@
 namespace Phlexible\Component\MetaSet\Model;
 
 /**
- * Meta data
+ * Meta data.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Controller managing the resetting of the password
+ * Controller managing the resetting of the password.
  *
  * @author Thibault Duplessis <thibault.duplessis@gmail.com>
  * @author Christophe Coevoet <stof@notk.org>
@@ -35,7 +35,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ResettingController extends BaseResettingController
 {
     /**
-     * Request reset user password: show form
+     * Request reset user password: show form.
      *
      * @return Response
      * @Route("/resetting/request", name="fos_user_resetting_request")
@@ -46,7 +46,7 @@ class ResettingController extends BaseResettingController
     }
 
     /**
-     * Request reset user password: submit form and send email
+     * Request reset user password: submit form and send email.
      *
      * @param Request $request
      *
@@ -78,14 +78,13 @@ class ResettingController extends BaseResettingController
         $user->setPasswordRequestedAt(new \DateTime());
         $this->get('fos_user.user_manager')->updateUser($user);
 
-
         return new RedirectResponse($this->generateUrl('fos_user_resetting_check_email',
             array('email' => $this->getObfuscatedEmail($user))
         ));
     }
 
     /**
-     * Tell the user to check his email provider
+     * Tell the user to check his email provider.
      *
      * @param Request $request
      *
@@ -107,7 +106,7 @@ class ResettingController extends BaseResettingController
     }
 
     /**
-     * Reset user password
+     * Reset user password.
      *
      * @param Request $request
      * @param string  $token

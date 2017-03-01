@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Render controller
+ * Render controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/_teaser/render")
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 class RenderController extends Controller
 {
     /**
-     * Render action
+     * Render action.
      *
      * @param Request $request
      * @param int     $teaserId

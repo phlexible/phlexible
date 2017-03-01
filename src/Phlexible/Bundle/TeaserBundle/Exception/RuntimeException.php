@@ -12,11 +12,10 @@
 namespace Phlexible\Bundle\TeaserBundle\Exception;
 
 /**
- * Runtime exception for teaser bundle
+ * Runtime exception for teaser bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
-
 }

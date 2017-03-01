@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ProblemBundle\ProblemChecker;
 
 /**
- * Problem checker collection
+ * Problem checker collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

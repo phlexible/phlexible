@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Doctrine;
 
 /**
- * Tree filter storage
+ * Tree filter storage.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

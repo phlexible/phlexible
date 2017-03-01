@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 /**
- * Messages data collector
+ * Messages data collector.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -112,8 +112,8 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
     {
         $count = [
             'error_count' => 0,
-            'priorities'  => [],
-            'types'       => [],
+            'priorities' => [],
+            'types' => [],
         ];
 
         foreach ($this->debugHandler->getMessages() as $message) {
@@ -122,7 +122,7 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
             } else {
                 $count['priorities'][$message['priority']] = [
                     'count' => 1,
-                    'name'  => $message['priorityName'],
+                    'name' => $message['priorityName'],
                 ];
             }
 
@@ -131,11 +131,11 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
             } else {
                 $count['types'][$message['type']] = [
                     'count' => 1,
-                    'name'  => $message['typeName'],
+                    'name' => $message['typeName'],
                 ];
             }
             if ($message['type'] === 'error') {
-                $count['error_count']++;
+                ++$count['error_count'];
             }
         }
 

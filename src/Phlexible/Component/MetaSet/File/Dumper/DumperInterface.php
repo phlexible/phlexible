@@ -14,14 +14,14 @@ namespace Phlexible\Component\MetaSet\File\Dumper;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
- * Dumper interface
+ * Dumper interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface DumperInterface
 {
     /**
-     * Return supported extension
+     * Return supported extension.
      *
      * @return string
      */

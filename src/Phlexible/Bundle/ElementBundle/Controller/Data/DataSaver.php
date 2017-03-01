@@ -26,17 +26,17 @@ use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Component\Util\UuidUtil;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Data saver
+ * Data saver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -118,7 +118,7 @@ class DataSaver
     }
 
     /**
-     * Save element data
+     * Save element data.
      *
      * @param Request       $request
      * @param UserInterface $user
@@ -171,7 +171,7 @@ class DataSaver
                     ->setName($oldElementStructure->getName());
             } else {
                 $elementStructure
-                    ->setDataId(Uuid::generate())
+                    ->setDataId(UuidUtil::generate())
                     ->setDsId($elementtypeStructure->getRootDsId())
                     ->setType('root')
                     ->setName($elementtypeStructure->getRootNode()->getName());
@@ -528,7 +528,7 @@ class DataSaver
                 // new repeatable group
                 $parent = $this->structures[$repeatableIdentifier];
                 $dsId = $match[1];
-                $dataId = Uuid::generate();
+                $dataId = UuidUtil::generate();
                 $node = $elementtypeStructure->getNode($dsId);
                 $map[$identifier] = $dataId;
                 $this->structures[$identifier] = $elementStructure = new ElementStructure();
@@ -585,6 +585,7 @@ class DataSaver
      * @param bool                 $masterLanguage
      *
      * @throws InvalidArgumentException
+     *
      * @return ElementStructure
      */
     private function applyValues(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values, $language, array $map = null, $masterLanguage = false)
@@ -676,7 +677,7 @@ class DataSaver
             }
             $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);
             if (!$elementStructure) {
-                throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: " . print_r($map, true));
+                throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: ".print_r($map, true));
             }
             if ($masterLanguage && ($node->getConfigurationValue('synchronized') === 'synchronized' || $node->getConfigurationValue('synchronized') === 'synchronized_unlink')) {
                 if ($node->getConfigurationValue('synchronized') === 'synchronized') {

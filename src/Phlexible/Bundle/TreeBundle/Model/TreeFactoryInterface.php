@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Model;
 
 /**
- * Database tree
+ * Database tree.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

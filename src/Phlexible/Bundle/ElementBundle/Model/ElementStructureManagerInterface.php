@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Model;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 
 /**
- * Element structure manager interface
+ * Element structure manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

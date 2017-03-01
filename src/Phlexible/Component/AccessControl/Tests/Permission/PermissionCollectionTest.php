@@ -13,13 +13,16 @@ namespace Phlexible\Component\AccessControl\Tests\Permission;
 
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Permission collection test
+ * Permission collection test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\AccessControl\Permission\PermissionCollection
  */
-class PermissionCollectionTest extends \PHPUnit_Framework_TestCase
+class PermissionCollectionTest extends TestCase
 {
     public function testAddPermission()
     {

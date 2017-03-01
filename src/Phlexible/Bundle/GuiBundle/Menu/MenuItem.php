@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\GuiBundle\Menu;
 
 /**
- * Menu item
+ * Menu item.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

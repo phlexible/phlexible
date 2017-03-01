@@ -15,7 +15,7 @@ use FluentDOM\Document;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
- * Dumper interface
+ * Dumper interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

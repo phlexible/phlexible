@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaTypeBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Media type bundle
+ * Media type bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

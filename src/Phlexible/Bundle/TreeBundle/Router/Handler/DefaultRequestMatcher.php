@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 /**
- * Default request matcher
+ * Default request matcher.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -161,7 +161,6 @@ class DefaultRequestMatcher implements RequestMatcherInterface
             $tree = $this->contentTreeManager->findByTreeId($defaults['tid']);
 
             $siterootUrl = $tree->getSiteroot()->getDefaultUrl();
-
         } else {
             $siterootUrl = $this->matchSiterootUrl($request);
 
@@ -210,10 +209,10 @@ class DefaultRequestMatcher implements RequestMatcherInterface
             array_unshift($this->languages, $this->defaultLanguage);
 
             $language = http_negotiate_language($this->languages);
-            $this->logger->debug('Using negotiated language: ' . $language);
+            $this->logger->debug('Using negotiated language: '.$language);
         } else {
             $language = $this->defaultLanguage;
-            $this->logger->debug('Using default language: ' . $language);
+            $this->logger->debug('Using default language: '.$language);
         }
 
         return $language;
@@ -233,7 +232,7 @@ class DefaultRequestMatcher implements RequestMatcherInterface
         return array(
             '_preview' => true,
             'language' => $match[1],
-            'tid' => $match[2]
+            'tid' => $match[2],
         );
     }
 
@@ -263,12 +262,12 @@ class DefaultRequestMatcher implements RequestMatcherInterface
         if (!strlen($path) || $path === '/') {
             return array(
                 'language' => $siterootUrl->getLanguage(),
-                'tid' => $siterootUrl->getTarget()
+                'tid' => $siterootUrl->getTarget(),
             );
         } elseif (preg_match('#^/(\w\w)/.+\.(\d+)\.html#', $path, $match)) {
             return array(
                 'language' => $match[1],
-                'tid' => $match[2]
+                'tid' => $match[2],
             );
         }
 

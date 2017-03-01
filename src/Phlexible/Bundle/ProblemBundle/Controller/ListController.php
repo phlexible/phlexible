@@ -19,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * List controller
+ * List controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/problems")
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ListController extends Controller
 {
     /**
-     * List problems
+     * List problems.
      *
      * @return JsonResponse
      * @Route("/list", name="problems_list")
@@ -44,15 +44,15 @@ class ListController extends Controller
         $data = [];
         foreach ($problemFetcher->fetch() as $problem) {
             $data[] = [
-                'id'            => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
-                'iconCls'       => $problem->getIconClass(),
-                'severity'      => $problem->getSeverity(),
-                'msg'           => $problem->getMessage(),
-                'hint'          => $problem->getHint(),
-                'link'          => $problem->getLink(),
-                'createdAt'     => $problem->getCreatedAt()->format('Y-m-d H:i:s'),
+                'id' => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
+                'iconCls' => $problem->getIconClass(),
+                'severity' => $problem->getSeverity(),
+                'msg' => $problem->getMessage(),
+                'hint' => $problem->getHint(),
+                'link' => $problem->getLink(),
+                'createdAt' => $problem->getCreatedAt()->format('Y-m-d H:i:s'),
                 'lastCheckedAt' => $problem->getLastCheckedAt()->format('Y-m-d H:i:s'),
-                'source'        => $problem->isLive() ? 'live' : 'cached',
+                'source' => $problem->isLive() ? 'live' : 'cached',
             ];
         }
 

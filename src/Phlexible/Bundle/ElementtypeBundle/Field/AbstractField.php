@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field;
 
 /**
- * Abstract field
+ * Abstract field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,7 +43,7 @@ abstract class AbstractField extends Field
     }
 
     /**
-     * From submitted value to object
+     * From submitted value to object.
      *
      * @param string $value
      *
@@ -71,7 +71,7 @@ abstract class AbstractField extends Field
     }
 
     /**
-     * From object to database
+     * From object to database.
      *
      * @param mixed $value
      *
@@ -91,7 +91,7 @@ abstract class AbstractField extends Field
     }
 
     /**
-     * From database to object
+     * From database to object.
      *
      * @param string $value
      *

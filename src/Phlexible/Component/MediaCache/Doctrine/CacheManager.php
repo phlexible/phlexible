@@ -18,7 +18,7 @@ use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Doctrine cache manager
+ * Doctrine cache manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Job statistics command
+ * Job statistics command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -86,7 +86,7 @@ class StatsCommand extends ContainerAwareCommand
                 if (!isset($commands[$job->getCommand()])) {
                     $commands[$job->getCommand()] = 0;
                 }
-                $commands[$job->getCommand()]++;
+                ++$commands[$job->getCommand()];
             }
 
             foreach ($commands as $command => $count) {
@@ -94,7 +94,7 @@ class StatsCommand extends ContainerAwareCommand
                     [
                         $command,
                         $count,
-                        number_format($count * 100 / $total, 1) . ' %'
+                        number_format($count * 100 / $total, 1).' %',
                     ]
                 );
             }
@@ -104,7 +104,7 @@ class StatsCommand extends ContainerAwareCommand
                     [
                         'Total',
                         $total,
-                        ''
+                        '',
                     ]
                 );
             }
@@ -120,11 +120,11 @@ class StatsCommand extends ContainerAwareCommand
         $jobManager = $this->getContainer()->get('phlexible_queue.job_manager');
 
         $colors = [
-            Job::STATE_PENDING   => 'comment',
-            Job::STATE_RUNNING   => null,
-            Job::STATE_FINISHED  => 'info',
-            Job::STATE_FAILED    => 'error',
-            Job::STATE_ABORTED   => null,
+            Job::STATE_PENDING => 'comment',
+            Job::STATE_RUNNING => null,
+            Job::STATE_FINISHED => 'info',
+            Job::STATE_FAILED => 'error',
+            Job::STATE_ABORTED => null,
             Job::STATE_SUSPENDED => null,
         ];
 
@@ -134,14 +134,14 @@ class StatsCommand extends ContainerAwareCommand
 
             if ($cnt) {
                 $output->writeln(
-                    ($cnt ? ($color ? '<' . $color . '>' : '') . $cnt : 'No') . ' ' . $state . ' jobs.' . ($cnt && $color ? '</' . $color . '>' : '')
+                    ($cnt ? ($color ? '<'.$color.'>' : '').$cnt : 'No').' '.$state.' jobs.'.($cnt && $color ? '</'.$color.'>' : '')
                 );
             }
         }
 
         if ($sum) {
             $output->writeln('------------------------------------------');
-            $output->writeln('Total ' . $sum . ' job(s) in queue.');
+            $output->writeln('Total '.$sum.' job(s) in queue.');
         } else {
             $output->writeln('No jobs in queue.');
         }

@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\MessageBundle\Criteria;
 
 /**
- * Message criterium
+ * Message criterium.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -60,8 +60,8 @@ class Criterium
     public function toArray()
     {
         return array(
-            'type'  => $this->getType(),
-            'value' => $this->getValue()
+            'type' => $this->getType(),
+            'value' => $this->getValue(),
         );
     }
 }

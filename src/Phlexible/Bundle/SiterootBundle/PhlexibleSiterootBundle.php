@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SiterootBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Siteroot bundle
+ * Siteroot bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

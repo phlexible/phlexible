@@ -16,14 +16,14 @@ use Phlexible\Bundle\UserBundle\Model\GroupManagerInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 
 /**
- * Apply successor listener
+ * Apply successor listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class ApplySuccessorListener
 {
     /**
-     * @var UserManagerInterface $userManager
+     * @var UserManagerInterface
      */
     private $userManager;
 

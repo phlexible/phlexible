@@ -29,7 +29,7 @@ use Phlexible\Component\Volume\VolumeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Media site listener
+ * Media site listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -89,17 +89,16 @@ class MediaSiteListener implements EventSubscriberInterface
         $this->metaSetMapper = $metaSetMapper;
     }
 
-
     /**
      * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
         return [
-            VolumeEvents::BEFORE_CREATE_FILE   => ['onBeforeCreateFile', 500],
+            VolumeEvents::BEFORE_CREATE_FILE => ['onBeforeCreateFile', 500],
             VolumeEvents::BEFORE_CREATE_FOLDER => ['onBeforeCreateFolder', 500],
-            VolumeEvents::BEFORE_REPLACE_FILE  => ['onBeforeReplaceFile', 500],
-            VolumeEvents::BEFORE_DELETE_FILE   => 'onBeforeDeleteFile',
+            VolumeEvents::BEFORE_REPLACE_FILE => ['onBeforeReplaceFile', 500],
+            VolumeEvents::BEFORE_DELETE_FILE => 'onBeforeDeleteFile',
             VolumeEvents::BEFORE_DELETE_FOLDER => 'onBeforeDeleteFolder',
         ];
     }

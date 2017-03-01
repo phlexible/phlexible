@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Twig tree extension
+ * Twig tree extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -66,8 +66,7 @@ class TreeExtension extends \Twig_Extension
         RequestStack $requestStack,
         AuthorizationCheckerInterface $authorizationChecker,
         TokenStorageInterface $tokenStorage
-    )
-    {
+    ) {
         $this->contentTreeManager = $contentTreeManager;
         $this->patternResolver = $patternResolver;
         $this->requestStack = $requestStack;
@@ -193,8 +192,7 @@ class TreeExtension extends \Twig_Extension
         $language = null,
         TreeNodeInterface $treeNode = null,
         Siteroot $siteroot = null
-    )
-    {
+    ) {
         $request = $this->requestStack->getCurrentRequest();
 
         if ($siteroot === null) {

@@ -16,12 +16,12 @@ use Phlexible\Bundle\ElementtypeBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Util\UuidUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Tree saver
+ * Tree saver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -41,12 +41,13 @@ class TreeSaver
     }
 
     /**
-     * Save an Element Type data tree
+     * Save an Element Type data tree.
      *
      * @param Request       $request
      * @param UserInterface $user
      *
      * @throws InvalidArgumentException
+     *
      * @return Elementtype
      */
     public function save(Request $request, UserInterface $user)
@@ -63,9 +64,9 @@ class TreeSaver
         $rootProperties = $rootData['properties'];
         $rootConfig = $rootProperties['root'];
         $rootMappings = !empty($rootProperties['mappings']) ? $rootProperties['mappings'] : null;
-        $rootDsId = !empty($rootData['ds_id']) ? $rootData['ds_id'] : Uuid::generate();
+        $rootDsId = !empty($rootData['ds_id']) ? $rootData['ds_id'] : UuidUtil::generate();
 
-        if (!isset($rootData['type']) || ($rootData['type'] != 'root' && $rootData['type'] != 'referenceroot')) {
+        if (!isset($rootData['type']) || ($rootData['type'] !== 'root' && $rootData['type'] !== 'referenceroot')) {
             throw new InvalidArgumentException('Invalid root node.');
         }
 
@@ -173,16 +174,16 @@ class TreeSaver
             $parentNode = $elementtypeStructure->getNode($row['parent_ds_id']);
 
             $node
-                ->setDsId(!empty($row['ds_id']) ? $row['ds_id'] : Uuid::generate())
+                ->setDsId(!empty($row['ds_id']) ? $row['ds_id'] : UuidUtil::generate())
                 ->setParentDsId($parentNode->getDsId())
                 ->setParentNode($parentNode)
             //    ->setSort(++$sort)
             ;
 
-            if ($row['type'] == 'reference' && isset($row['reference']['new'])) {
+            if ($row['type'] === 'reference' && isset($row['reference']['new'])) {
                 $firstChild = $row['children'][0];
 
-                $referenceRootDsId = Uuid::generate();
+                $referenceRootDsId = UuidUtil::generate();
                 foreach ($row['children'] as $index => $referenceRow) {
                     $row['children'][$index]['parent_ds_id'] = $referenceRootDsId;
                 }
@@ -195,8 +196,8 @@ class TreeSaver
 
                 $referenceElementtype = $this->elementtypeService->createElementtype(
                     'reference',
-                    'reference_' . $firstChild['properties']['field']['working_title'] . '_' . uniqid(),
-                    'Reference ' . $firstChild['properties']['field']['working_title'],
+                    'reference_'.$firstChild['properties']['field']['working_title'].'_'.uniqid(),
+                    'Reference '.$firstChild['properties']['field']['working_title'],
                     '_fallback.gif',
                     $referenceElementtypeStructure,
                     array(),
@@ -206,18 +207,18 @@ class TreeSaver
 
                 $node
                     ->setType('reference')
-                    ->setName('reference_' . $referenceElementtype->getUniqueId())
+                    ->setName('reference_'.$referenceElementtype->getUniqueId())
                     ->setReferenceElementtypeId($referenceElementtype->getId())
                     //->setReferenceVersion($referenceElementtypeVersion->getVersion())
                 ;
 
                 $elementtypeStructure->addNode($node);
-            } elseif ($row['type'] == 'reference') {
+            } elseif ($row['type'] === 'reference') {
                 $referenceElementtype = $this->elementtypeService->findElementtype($row['reference']['refID']);
 
                 $node
                     ->setType('reference')
-                    ->setName('reference_' . $referenceElementtype->getUniqueId())
+                    ->setName('reference_'.$referenceElementtype->getUniqueId())
                     ->setReferenceElementtypeId($referenceElementtype->getId())
                 //    ->setReferenceVersion($row['reference']['refVersion'])
                 ;

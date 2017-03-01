@@ -14,7 +14,7 @@ namespace Phlexible\Component\MetaSet\Model;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaDataValue;
 
 /**
- * Meta data manager interface
+ * Meta data manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

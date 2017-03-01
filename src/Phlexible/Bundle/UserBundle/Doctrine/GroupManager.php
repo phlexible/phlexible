@@ -20,7 +20,7 @@ use Phlexible\Bundle\UserBundle\UserEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Group manager
+ * Group manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

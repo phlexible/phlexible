@@ -16,7 +16,7 @@ use Phlexible\Component\Mime\Exception\FileNotFoundException;
 use Phlexible\Component\Mime\Exception\NotAFileException;
 
 /**
- * Internet media type detector fileinfo adapter
+ * Internet media type detector fileinfo adapter.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -41,7 +41,7 @@ class FileinfoAdapter implements AdapterInterface
     {
         if (null !== $magicFile) {
             if (!file_exists($magicFile)) {
-                throw new FileNotFoundException('Magic file "' . $magicFile . '" not found.');
+                throw new FileNotFoundException('Magic file "'.$magicFile.'" not found.');
             }
 
             $this->magicFile = $magicFile;
@@ -74,11 +74,11 @@ class FileinfoAdapter implements AdapterInterface
         }
 
         if (!file_exists($filename)) {
-            throw new FileNotFoundException('File "' . $filename . '" not found.');
+            throw new FileNotFoundException('File "'.$filename.'" not found.');
         }
 
         if (!is_file($filename)) {
-            throw new NotAFileException('File "' . $filename . '" not found.');
+            throw new NotAFileException('File "'.$filename.'" not found.');
         }
 
         $fileinfo = $this->getFileinfo();
@@ -89,9 +89,10 @@ class FileinfoAdapter implements AdapterInterface
     }
 
     /**
-     * Return fileinfo resource
+     * Return fileinfo resource.
      *
      * @return resource
+     *
      * @throws DetectionFailedException
      */
     private function getFileinfo()

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Path generator
+ * Path generator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -55,7 +55,7 @@ class PathGenerator implements PathGeneratorInterface
             }
         }
 
-        $path = '/' . implode('/', array_reverse($parts));
+        $path = '/'.implode('/', array_reverse($parts));
 
         return $path;
     }

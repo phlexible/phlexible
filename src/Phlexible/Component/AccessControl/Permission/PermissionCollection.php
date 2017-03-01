@@ -14,7 +14,7 @@ namespace Phlexible\Component\AccessControl\Permission;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 
 /**
- * Permission collection
+ * Permission collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -64,7 +64,7 @@ class PermissionCollection
     public function addCollection(PermissionCollection $permissions)
     {
         if ($permissions->getObjectType() !== $this->getObjectType()) {
-            throw new InvalidArgumentException("Mismating object types.");
+            throw new InvalidArgumentException('Mismating object types.');
         }
 
         foreach ($permissions->all() as $permission) {
@@ -78,6 +78,7 @@ class PermissionCollection
      * @param Permission $permission
      *
      * @throws InvalidArgumentException
+     *
      * @return $this
      */
     public function add(Permission $permission)
@@ -101,7 +102,7 @@ class PermissionCollection
     }
 
     /**
-     * Return all permissions
+     * Return all permissions.
      *
      * @return Permission[]
      */
@@ -111,11 +112,12 @@ class PermissionCollection
     }
 
     /**
-     * Return permissions
+     * Return permissions.
      *
      * @param string $name
      *
      * @throws InvalidArgumentException
+     *
      * @return Permission
      */
     public function get($name)

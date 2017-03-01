@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Mime;
 
 /**
- * Internet media type aware SPL file info
+ * Internet media type aware SPL file info.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -29,7 +29,7 @@ class SplFileInfo extends \SplFileInfo
     private $mimeType;
 
     /**
-     * Set internet media type
+     * Set internet media type.
      *
      * @param InternetMediaType $internetMediaType
      *
@@ -43,7 +43,7 @@ class SplFileInfo extends \SplFileInfo
     }
 
     /**
-     * Return internet media type
+     * Return internet media type.
      *
      * @return InternetMediaType
      */
@@ -53,7 +53,7 @@ class SplFileInfo extends \SplFileInfo
     }
 
     /**
-     * Set mime type
+     * Set mime type.
      *
      * @param string $mimeType
      *
@@ -67,7 +67,7 @@ class SplFileInfo extends \SplFileInfo
     }
 
     /**
-     * Return mime type
+     * Return mime type.
      *
      * @return string
      */

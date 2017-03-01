@@ -27,7 +27,7 @@ use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Element source manager
+ * Element source manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -59,16 +59,15 @@ class ElementSourceManager implements ElementSourceManagerInterface
     private $elementSourceRepository;
 
     /**
-     * @param EntityManager $entityManager
+     * @param EntityManager            $entityManager
      * @param EventDispatcherInterface $dispatcher
-     * @param MessagePoster $messagePoster
+     * @param MessagePoster            $messagePoster
      */
     public function __construct(
         EntityManager $entityManager,
         EventDispatcherInterface $dispatcher,
         MessagePoster $messagePoster
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->parser = new XmlParser();
         $this->dispatcher = $dispatcher;
@@ -217,8 +216,8 @@ class ElementSourceManager implements ElementSourceManagerInterface
     {
         return $this->getElementSourceRepository()->findOneBy(
             [
-                'elementtypeId'       => $elementtype->getId(),
-                'elementtypeRevision' => $elementtype->getRevision()
+                'elementtypeId' => $elementtype->getId(),
+                'elementtypeRevision' => $elementtype->getRevision(),
             ]
         );
     }
@@ -244,7 +243,7 @@ class ElementSourceManager implements ElementSourceManagerInterface
             $this->dispatcher->dispatch(ElementEvents::CREATE_ELEMENT_SOURCE, $event);
 
             // post message
-            $message = ElementsMessage::create('Element source "' . $elementSource->getId() . ' created.');
+            $message = ElementsMessage::create('Element source "'.$elementSource->getId().' created.');
             $this->messagePoster->post($message);
         } else {
             $event = new ElementSourceEvent($elementSource);
@@ -260,7 +259,7 @@ class ElementSourceManager implements ElementSourceManagerInterface
             $this->dispatcher->dispatch(ElementEvents::UPDATE_ELEMENT_SOURCE, $event);
 
             // post message
-            $message = ElementsMessage::create('Element source "' . $elementSource->getId() . ' updated.');
+            $message = ElementsMessage::create('Element source "'.$elementSource->getId().' updated.');
             $this->messagePoster->post($message);
         }
     }

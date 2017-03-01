@@ -12,8 +12,8 @@
 namespace Phlexible\Bundle\TreeBundle\Configurator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * TreeNode configurator
+ * TreeNode configurator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -87,7 +87,7 @@ class TreeNodeConfigurator implements ConfiguratorInterface
             $version = $tree->getPublishedVersion($treeNode, $request->getLocale());
 
             if (!$version) {
-                throw new NotFoundHttpException("TreeNode not published.");
+                throw new NotFoundHttpException('TreeNode not published.');
             }
         }
 

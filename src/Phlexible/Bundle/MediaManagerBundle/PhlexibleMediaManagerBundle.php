@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Media manager bundle
+ * Media manager bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

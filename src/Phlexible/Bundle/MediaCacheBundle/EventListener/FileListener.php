@@ -22,7 +22,7 @@ use Phlexible\Component\Volume\VolumeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * File listener
+ * File listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

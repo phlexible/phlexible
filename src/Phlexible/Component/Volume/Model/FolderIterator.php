@@ -15,7 +15,7 @@ use Phlexible\Component\Volume\Exception\RuntimeException;
 use Phlexible\Component\Volume\VolumeInterface;
 
 /**
- * Folder iterator
+ * Folder iterator.
  *
  * @author Phillip Look <pl@brainbits.net>
  */
@@ -91,7 +91,7 @@ class FolderIterator implements \Iterator, \RecursiveIterator
      */
     public function getChildren()
     {
-        return new FolderIterator($this->current()->getVolume()->findFoldersByParentFolder($this->current()));
+        return new self($this->current()->getVolume()->findFoldersByParentFolder($this->current()));
     }
 
     /**
@@ -103,5 +103,4 @@ class FolderIterator implements \Iterator, \RecursiveIterator
     {
         return $this->current()->getVolume()->countFoldersByParentFolder($this->current());
     }
-
 }

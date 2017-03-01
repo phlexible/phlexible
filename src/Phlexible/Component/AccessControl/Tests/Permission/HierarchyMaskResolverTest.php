@@ -14,13 +14,16 @@ namespace Phlexible\Component\AccessControl\Tests\Permission;
 use Phlexible\Component\AccessControl\Domain\AccessControlList;
 use Phlexible\Component\AccessControl\Domain\Entry;
 use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Hierarchy mask resolver test
+ * Hierarchy mask resolver test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver
  */
-class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
+class HierarchyMaskResolverTest extends TestCase
 {
     const READ = 1;
     const WRITE = 2;

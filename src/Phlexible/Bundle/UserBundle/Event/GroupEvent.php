@@ -15,7 +15,7 @@ use Phlexible\Bundle\UserBundle\Entity\Group;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Group event
+ * Group event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -20,7 +20,7 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Phlexible\Component\Volume\VolumeManager;
 
 /**
- * File usage updater
+ * File usage updater.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

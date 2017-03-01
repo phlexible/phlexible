@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 
 /**
- * Link extractor
+ * Link extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

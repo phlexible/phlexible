@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Meta command
+ * Meta command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -42,14 +42,13 @@ class MetaCommand extends ContainerAwareCommand
     {
         $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
         foreach ($volumeManager->all() as $volume) {
-
             $rii = new \RecursiveIteratorIterator(new FolderIterator($volume), \RecursiveIteratorIterator::SELF_FIRST);
             foreach ($rii as $folder) {
-                $output->writeln('+ ' . $folder->getName());
+                $output->writeln('+ '.$folder->getName());
                 foreach ($volume->findFilesByFolder($folder) as $file) {
-                    $output->write('  - ' . $file->getName() . ': ');
+                    $output->write('  - '.$file->getName().': ');
                     $this->applyDefaults($output, $volume, $file);
-                    $output->writeln('  - ' . json_encode($file->getMetaSets()));
+                    $output->writeln('  - '.json_encode($file->getMetaSets()));
                 }
             }
         }

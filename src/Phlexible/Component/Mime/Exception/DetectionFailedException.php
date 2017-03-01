@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Mime\Exception;
 
 /**
- * Mime detection failed exception
+ * Mime detection failed exception.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
 class DetectionFailedException extends RuntimeException
 {
-
 }

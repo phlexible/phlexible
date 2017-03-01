@@ -18,7 +18,7 @@ use Phlexible\Bundle\ProblemBundle\ProblemEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Problems aggregator
+ * Problems aggregator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

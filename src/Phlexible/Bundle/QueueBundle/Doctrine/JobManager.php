@@ -17,7 +17,7 @@ use Phlexible\Bundle\QueueBundle\Entity\Repository\JobRepository;
 use Phlexible\Bundle\QueueBundle\Model\JobManagerInterface;
 
 /**
- * Job manager
+ * Job manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -15,7 +15,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
- * Zip extension attribute reader
+ * Zip extension attribute reader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -26,7 +26,7 @@ class ZipExtensionAttributeReader implements AttributeReaderInterface
      */
     public function isAvailable()
     {
-       return extension_loaded('zip');
+        return extension_loaded('zip');
     }
 
     /**

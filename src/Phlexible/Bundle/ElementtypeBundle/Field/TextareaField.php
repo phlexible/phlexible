@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Field;
 
 /**
- * Textarea field
+ * Textarea field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MetaSet\Exception;
 
 /**
- * Runtime exception for meta set bundle
+ * Runtime exception for meta set bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
-
 }

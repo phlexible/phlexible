@@ -16,7 +16,7 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Siteroot request matcher
+ * Siteroot request matcher.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

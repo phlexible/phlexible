@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\NodeUrlGenerator;
 use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
 
 /**
- * Node url generator interface
+ * Node url generator interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

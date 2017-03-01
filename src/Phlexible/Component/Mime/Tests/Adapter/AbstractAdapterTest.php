@@ -12,10 +12,10 @@
 namespace Phlexible\Component\Mime\Tests\Adapter;
 
 use Phlexible\Component\Mime\Adapter\AdapterInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Abstract adapter test
+ * Abstract adapter test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -71,22 +71,11 @@ abstract class AbstractAdapterTest extends TestCase
      */
     protected function getFile($name = '')
     {
-        return dirname(__DIR__) . '/fixture/' . $name;
+        return dirname(__DIR__).'/fixture/'.$name;
     }
 
     /**
      * @return AdapterInterface
      */
     abstract protected function createAdapter();
-
-    /**
-     * @return AdapterInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function createAdapterMock()
-    {
-        $adapterMock = $this->getMockBuilder(AdapterInterface::class)
-            ->getMock();
-
-        return $adapterMock;
-    }
 }

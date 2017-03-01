@@ -15,7 +15,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
- * Chain attribute reader
+ * Chain attribute reader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

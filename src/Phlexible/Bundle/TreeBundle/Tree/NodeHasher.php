@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Element\ElementHasher;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Node hasher
+ * Node hasher.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

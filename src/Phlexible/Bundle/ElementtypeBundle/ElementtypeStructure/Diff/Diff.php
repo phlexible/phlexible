@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Diff;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
- * Diff
+ * Diff.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,11 +14,10 @@ namespace Phlexible\Bundle\MediaCacheBundle\Exception;
 use Phlexible\Component\MediaCache\Exception\RuntimeException;
 
 /**
- * Already running exception for media cache
+ * Already running exception for media cache.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class AlreadyRunningException extends RuntimeException
 {
-
 }

@@ -17,7 +17,7 @@ use Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcher;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Problems portlet
+ * Problems portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Phillip Look <pl@brainbits.net>
@@ -46,7 +46,7 @@ class ProblemsPortlet extends Portlet
     }
 
     /**
-     * Return Portlet data
+     * Return Portlet data.
      *
      * @return array
      */
@@ -67,12 +67,12 @@ class ProblemsPortlet extends Portlet
             }
 
             $data[] = [
-                'id'       => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
-                'iconCls'  => $problem->getIconClass(),
+                'id' => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
+                'iconCls' => $problem->getIconClass(),
                 'severity' => $problem->getSeverity(),
-                'msg'      => $problem->getMessage(),
-                'hint'     => $problem->getHint(),
-                'link'     => $problem->getLink(),
+                'msg' => $problem->getMessage(),
+                'hint' => $problem->getHint(),
+                'link' => $problem->getLink(),
             ];
         }
 

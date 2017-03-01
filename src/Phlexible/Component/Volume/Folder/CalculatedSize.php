@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Volume\Folder;
 
 /**
- * Calculated size
+ * Calculated size.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

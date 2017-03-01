@@ -17,7 +17,7 @@ use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Tree listener
+ * Tree listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

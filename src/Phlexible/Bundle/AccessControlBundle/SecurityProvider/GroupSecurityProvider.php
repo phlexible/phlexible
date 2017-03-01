@@ -11,12 +11,13 @@
 
 namespace Phlexible\Bundle\AccessControlBundle\SecurityProvider;
 
+use Phlexible\Bundle\UserBundle\Entity\Group;
 use Phlexible\Bundle\UserBundle\Model\GroupManagerInterface;
 use Phlexible\Component\AccessControl\SecurityProvider\SecurityProviderInterface;
 use Phlexible\Component\AccessControl\SecurityProvider\SecurityResolverInterface;
 
 /**
- * Group security provider
+ * Group security provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -40,7 +41,7 @@ class GroupSecurityProvider implements SecurityProviderInterface, SecurityResolv
      */
     public function resolveName($securityType, $securityId)
     {
-        if ($securityType !== 'Phlexible\Bundle\UserBundle\Entity\Group') {
+        if ($securityType !== Group::class) {
             return null;
         }
 
@@ -58,14 +59,14 @@ class GroupSecurityProvider implements SecurityProviderInterface, SecurityResolv
         foreach ($groups as $group) {
             $data[] = array(
                 'securityType' => get_class($group),
-                'securityId'   => $group->getId(),
+                'securityId' => $group->getId(),
                 'securityName' => $group->getName(),
             );
         }
 
         return array(
             'count' => count($data), // TODO: countBy()
-            'data'  => $data,
+            'data' => $data,
         );
     }
 }

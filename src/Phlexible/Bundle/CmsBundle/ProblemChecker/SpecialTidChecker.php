@@ -16,7 +16,7 @@ use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Phlexible\Bundle\ProblemBundle\ProblemChecker\ProblemCheckerInterface;
 
 /**
- * Special TID problem checker
+ * Special TID problem checker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,7 +46,7 @@ class SpecialTidChecker implements ProblemCheckerInterface
             if (!$siteroot->getSpecialTid(null, 'error_404')) {
                 $problem = new Problem();
                 $problem
-                    ->setId('siteroot_' . $siteroot->getId() . '_error_404_missing')
+                    ->setId('siteroot_'.$siteroot->getId().'_error_404_missing')
                     ->setCheckClass(__CLASS__)
                     ->setIconClass('p-frontend-component-icon')
                     ->setSeverity(Problem::SEVERITY_CRITICAL)
@@ -59,7 +59,7 @@ class SpecialTidChecker implements ProblemCheckerInterface
             if (!$siteroot->getSpecialTid(null, 'error_500')) {
                 $problem = new Problem();
                 $problem
-                    ->setId('siteroot_' . $siteroot->getId() . '_error_500_missing')
+                    ->setId('siteroot_'.$siteroot->getId().'_error_500_missing')
                     ->setCheckClass(__CLASS__)
                     ->setIconClass('p-frontend-component-icon')
                     ->setSeverity(Problem::SEVERITY_CRITICAL)

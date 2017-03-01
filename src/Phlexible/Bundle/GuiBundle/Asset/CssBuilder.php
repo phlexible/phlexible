@@ -15,7 +15,7 @@ use Phlexible\Component\Bundler\Builder\ResolvingBuilder;
 use Phlexible\Component\Bundler\ResourceResolver\ResolvedResources;
 
 /**
- * CSS builder
+ * CSS builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -45,7 +45,7 @@ class CssBuilder extends ResolvingBuilder
     protected function sanitizePath($path)
     {
         return preg_match('#^/phlexible/([a-z0-9\-_.]+)/styles/([/A-Za-z0-9\-_.]+\.css)$#', $path, $match)
-            ? $match[1] . '/' . $match[2]
+            ? $match[1].'/'.$match[2]
             : $path;
     }
 
@@ -56,7 +56,7 @@ class CssBuilder extends ResolvingBuilder
      */
     protected function prefixContent(ResolvedResources $resources)
     {
-        $prefix = '/* CSS created on: ' . date('Y-m-d H:i:s') . ' */' . PHP_EOL;
+        $prefix = '/* CSS created on: '.date('Y-m-d H:i:s').' */'.PHP_EOL;
 
         return $prefix;
     }

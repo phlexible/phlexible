@@ -12,11 +12,10 @@
 namespace Phlexible\Bundle\TreeBundle\Exception;
 
 /**
- * Invalid node move exception
+ * Invalid node move exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class InvalidNodeMoveException extends RuntimeException
 {
-
 }

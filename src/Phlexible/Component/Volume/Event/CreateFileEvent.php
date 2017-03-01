@@ -15,7 +15,7 @@ use Phlexible\Component\Volume\FileSource\FileSourceInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
 
 /**
- * Create file event
+ * Create file event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

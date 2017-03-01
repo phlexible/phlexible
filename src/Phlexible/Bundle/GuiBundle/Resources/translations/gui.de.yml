@@ -1,9 +1,6 @@
 gui:
     frame: Rahmen
     administration: Administration
-    bundle: Bundle
-    bundles: Bundles
-    no_bundles: Keine Bundles gefunden.
     configuration: Konfiguration
     content: Inhalt
     dialog: Dialog

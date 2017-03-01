@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Model;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 
 /**
- * Element structure
+ * Element structure.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -96,7 +96,7 @@ class ElementStructure implements \IteratorAggregate
     private $attributes = [];
 
     /**
-     * Clone
+     * Clone.
      */
     public function __clone()
     {
@@ -430,7 +430,6 @@ class ElementStructure implements \IteratorAggregate
         }
 
         return false;
-
     }
 
     /**
@@ -564,10 +563,10 @@ class ElementStructure implements \IteratorAggregate
      */
     public function dump($withValues = true, $language = null, $depth = 0)
     {
-        $dump = str_repeat(' ', $depth * 2) . '+'
-            . " <fg=green>{$this->getName()}</fg=green>"
-            . " " . ($this->getParentName() ? "parentName:<fg=yellow>{$this->getParentName()}</fg=yellow>," : "<fg=yellow>root</fg=yellow>")
-            . " id:<fg=yellow>{$this->getDataId()}</fg=yellow>";
+        $dump = str_repeat(' ', $depth * 2).'+'
+            ." <fg=green>{$this->getName()}</fg=green>"
+            .' '.($this->getParentName() ? "parentName:<fg=yellow>{$this->getParentName()}</fg=yellow>," : '<fg=yellow>root</fg=yellow>')
+            ." id:<fg=yellow>{$this->getDataId()}</fg=yellow>";
         if ($this->hasAttribute('diff')) {
             $dump .= " <fg=red>{$this->getAttribute('diff')}</fg=red>";
         }
@@ -580,14 +579,14 @@ class ElementStructure implements \IteratorAggregate
                         continue;
                     }
                     $dump .= str_repeat(' ', $depth * 2 + 2)
-                        . '='
-                        . " <fg=cyan>{$value->getName()}</fg=cyan>"
-                        . " language:<fg=magenta>{$value->getLanguage()}</fg=magenta>,"
+                        .'='
+                        ." <fg=cyan>{$value->getName()}</fg=cyan>"
+                        ." language:<fg=magenta>{$value->getLanguage()}</fg=magenta>,"
                         //. " id:<fg=magenta>{$value->getId()}</fg=magenta>,"
-                        . " content:<fg=magenta>" . (is_array($value->getValue())
+                        .' content:<fg=magenta>'.(is_array($value->getValue())
                             ? json_encode($value->getValue())
                             : $value->getValue())
-                        . "</fg=magenta>";
+                        .'</fg=magenta>';
                     if ($value->hasAttribute('diff')) {
                         $dump .= ", <fg=red>{$value->getAttribute('diff')}</fg=red>, was:{$value->getAttribute('oldValue')}</fg=red>";
                     }
@@ -648,4 +647,3 @@ class ElementStructure implements \IteratorAggregate
         return $defaultValue;
     }
 }
-

@@ -15,7 +15,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Extractor resolver
+ * Extractor resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

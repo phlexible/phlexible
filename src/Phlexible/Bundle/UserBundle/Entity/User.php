@@ -13,11 +13,11 @@ namespace Phlexible\Bundle\UserBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Model\GroupInterface;
+use FOS\UserBundle\Model\User as BaseUser;
 
 /**
- * User
+ * User.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -120,7 +120,7 @@ class User extends BaseUser
     public function getDisplayName()
     {
         if ($this->firstname && $this->lastname) {
-            return $this->firstname . ' ' . $this->lastname;
+            return $this->firstname.' '.$this->lastname;
         }
 
         return $this->username;
@@ -287,7 +287,7 @@ class User extends BaseUser
     }
 
     /**
-     * Set properties
+     * Set properties.
      *
      * @param array $properties
      *
@@ -301,7 +301,7 @@ class User extends BaseUser
     }
 
     /**
-     * Add properties
+     * Add properties.
      *
      * @param array $properties
      *
@@ -398,4 +398,3 @@ class User extends BaseUser
         return $this->setProperty('contentLanguage', $contentLanguage);
     }
 }
-

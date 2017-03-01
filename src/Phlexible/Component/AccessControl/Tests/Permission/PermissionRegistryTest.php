@@ -14,6 +14,7 @@ namespace Phlexible\Component\AccessControl\Tests\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionProviderInterface;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
+use PHPUnit\Framework\TestCase;
 
 class TestPermissionProvider implements PermissionProviderInterface
 {
@@ -26,11 +27,13 @@ class TestPermissionProvider implements PermissionProviderInterface
     }
 }
 /**
- * Permission registry test
+ * Permission registry test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\AccessControl\Permission\PermissionRegistry
  */
-class PermissionRegistryTest extends \PHPUnit_Framework_TestCase
+class PermissionRegistryTest extends TestCase
 {
     public function testAddStoresPermissionCollections()
     {

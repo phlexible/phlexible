@@ -16,7 +16,7 @@ use Phlexible\Component\Volume\FileSource\UploadedFileSource;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * Upload temp storage
+ * Upload temp storage.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -141,7 +141,7 @@ class TempStorage
     }
 
     /**
-     * Store upload
+     * Store upload.
      *
      * @param UploadedFileSource $file
      * @param string             $folderId
@@ -150,13 +150,14 @@ class TempStorage
      * @param bool               $useWizard
      *
      * @return TempFile
+     *
      * @throws \Exception
      */
     public function store(UploadedFileSource $file, $folderId, $userId, $originalFileId, $useWizard)
     {
         $tempId = uniqid();
-        $tempDir = $this->tempDir . '/' . $tempId . '/';
-        $tempName = $tempDir . basename($file->getPath());
+        $tempDir = $this->tempDir.'/'.$tempId.'/';
+        $tempName = $tempDir.basename($file->getPath());
 
         if (!file_exists($tempDir) && !mkdir($tempDir, 0777, true)) {
             throw new StoreUploadedFileException('Error occured while creating temp upload folder.');

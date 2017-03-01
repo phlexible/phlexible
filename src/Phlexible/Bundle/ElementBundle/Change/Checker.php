@@ -16,7 +16,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 
 /**
- * Elementtype change checker
+ * Elementtype change checker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -105,8 +105,8 @@ class Checker
                         $needImport = true;
                         $outdatedElementSources[] = $oldElementSource;
                         $reason = 'Higher revision';
-                    #} else {
-                    #    throw new \Exception("Version mismatch, to-be-commited version is lower than existing version.");
+                    //} else {
+                    //    throw new \Exception("Version mismatch, to-be-commited version is lower than existing version.");
                     }
                 }
 

@@ -20,7 +20,7 @@ use PHPExiftool\Reader;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * GetId3 image extractor
+ * GetId3 image extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -75,7 +75,7 @@ class ExiftoolImageExtractor implements ExtractorInterface
 
         $metadatas = $this->reader->files($filename)->first();
 
-        $imageFilename = $this->tempDir . '/' . uniqid() . '.jpg';
+        $imageFilename = $this->tempDir.'/'.uniqid().'.jpg';
 
         foreach ($metadatas as $metadata) {
             /* @var $metadata Metadata */

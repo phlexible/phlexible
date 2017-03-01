@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Publish controller
+ * Publish controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elements/publish")
@@ -39,11 +39,11 @@ class PublishController extends Controller
      */
     public function publishAction(Request $request)
     {
-        $tid      = $request->get('tid');
+        $tid = $request->get('tid');
         $teaserId = $request->get('teaser_id', null);
-        $version  = $request->get('version', null);
+        $version = $request->get('version', null);
         $language = $request->get('language');
-        $comment  = $request->get('comment', '');
+        $comment = $request->get('comment', '');
 
         //$fileUsage = new Makeweb_Elements_Element_FileUsage(MWF_Registry::getContainer()->dbPool);
 
@@ -62,7 +62,7 @@ class PublishController extends Controller
             $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
             $elementVersion = $elementVersionManager->get($node->getEid(), $version);
 
-            $iconStatus   = $node->isAsync($language) ? 'async' : ($node->isPublished($language) ? 'online' : null);
+            $iconStatus = $node->isAsync($language) ? 'async' : ($node->isPublished($language) ? 'online' : null);
             $iconInstance = ($node->isInstance() ? ($node->isInstanceMaster() ? 'master' : 'slave') : false);
 
             $data['icon'] = $elementVersion->getIconUrl($node->getIconParams($language));
@@ -102,18 +102,18 @@ class PublishController extends Controller
      */
     public function previewAction(Request $request)
     {
-        $tid                     = $request->get('tid');
-        $teaserId                = $request->get('teaser_id', null);
-        $language                = $request->get('language');
-        $languages               = $request->get('languages');
-        $version                 = $request->get('version', null);
-        $includeElements         = (bool) $request->get('include_elements', false);
+        $tid = $request->get('tid');
+        $teaserId = $request->get('teaser_id', null);
+        $language = $request->get('language');
+        $languages = $request->get('languages');
+        $version = $request->get('version', null);
+        $includeElements = (bool) $request->get('include_elements', false);
         $includeElementInstances = (bool) $request->get('include_element_instances', false);
-        $includeTeasers          = (bool) $request->get('include_teasers', false);
-        $includeTeaserInstances  = (bool) $request->get('include_teaser_instances', false);
-        $recursive               = (bool) $request->get('recursive', false);
-        $onlyOffline             = (bool) $request->get('only_offline', false);
-        $onlyAsync               = (bool) $request->get('only_async', false);
+        $includeTeasers = (bool) $request->get('include_teasers', false);
+        $includeTeaserInstances = (bool) $request->get('include_teaser_instances', false);
+        $recursive = (bool) $request->get('recursive', false);
+        $onlyOffline = (bool) $request->get('only_offline', false);
+        $onlyAsync = (bool) $request->get('only_async', false);
 
         if ($languages) {
             $languages = explode(',', $languages);
@@ -152,17 +152,17 @@ class PublishController extends Controller
             }
 
             $result[] = [
-                'type'      => $selectionItem->getTarget() instanceof TreeNodeInterface ? 'full_element' : 'part_element',
-                'instance'  => $selectionItem->isInstance(),
-                'depth'     => $selectionItem->getDepth(),
-                'path'      => $selectionItem->getPath(),
-                'id'        => $id,
-                'eid'       => $selectionItem->getTarget()->getTypeId(),
-                'version'   => $selectionItem->getVersion(),
-                'language'  => $selectionItem->getLanguage(),
-                'title'     => $selectionItem->getTitle(),
-                'icon'      => $icon,
-                'action'    => true,
+                'type' => $selectionItem->getTarget() instanceof TreeNodeInterface ? 'full_element' : 'part_element',
+                'instance' => $selectionItem->isInstance(),
+                'depth' => $selectionItem->getDepth(),
+                'path' => $selectionItem->getPath(),
+                'id' => $id,
+                'eid' => $selectionItem->getTarget()->getTypeId(),
+                'version' => $selectionItem->getVersion(),
+                'language' => $selectionItem->getLanguage(),
+                'title' => $selectionItem->getTitle(),
+                'icon' => $icon,
+                'action' => true,
             ];
         }
 
@@ -173,17 +173,18 @@ class PublishController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
+     *
      * @throws RuntimeException
      * @Route("/advanced", name="elements_publish_advanced")
      */
     public function advancedPublishAction(Request $request)
     {
-        $tid      = $request->get('tid');
-        $version  = $request->get('version');
+        $tid = $request->get('tid');
+        $version = $request->get('version');
         $language = $request->get('language');
-        $comment  = $request->get('comment');
-        $data     = $request->get('data');
-        $data     = json_decode($data, true);
+        $comment = $request->get('comment');
+        $data = $request->get('data');
+        $data = json_decode($data, true);
 
         $lock = new LockHandler('elements_publish_lock', $this->container->getParameter('app.lock_dir'));
         if (!$lock->lock()) {
@@ -241,10 +242,10 @@ class PublishController extends Controller
      */
     public function setOfflineAction(Request $request)
     {
-        $tid      = $request->get('tid');
+        $tid = $request->get('tid');
         $teaserId = $request->get('teaser_id', null);
         $language = $request->get('language');
-        $comment  = $request->get('comment', null);
+        $comment = $request->get('comment', null);
 
         //$fileUsage = new Makeweb_Elements_Element_FileUsage(MWF_Registry::getContainer()->dbPool);
 
@@ -294,10 +295,10 @@ class PublishController extends Controller
      */
     public function setofflinerecursiveAction(Request $request)
     {
-        $tid      = $request->get('tid');
+        $tid = $request->get('tid');
         $teaserId = $request->get('teaser_id', null);
         $language = $request->get('language');
-        $comment  = $request->get('comment', '');
+        $comment = $request->get('comment', '');
 
         if ($teaserId === null) {
             $manager = Makeweb_Elements_Tree_Manager::getInstance();
@@ -306,7 +307,6 @@ class PublishController extends Controller
 
             $tree->setNodeOffline($node, $language, true, $comment);
         } else {
-
         }
 
         return new ResultResponse(true, 'TID "'.$tid.'" set offline recursively.');

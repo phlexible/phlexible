@@ -14,7 +14,7 @@ namespace Phlexible\Component\AccessControl\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Access control role provider
+ * Access control role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

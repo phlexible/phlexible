@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 
 /**
- * Lock manager interface
+ * Lock manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Phillip Look <pl@brainbits.net>

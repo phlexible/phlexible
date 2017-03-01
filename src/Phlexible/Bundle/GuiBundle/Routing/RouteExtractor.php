@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Route extractor
+ * Route extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -57,9 +57,9 @@ class RouteExtractor implements RouteExtractorInterface
 
             try {
                 $routes[$id] = [
-                    'path'      => $baseUrl . $route->getPath(),
+                    'path' => $baseUrl.$route->getPath(),
                     'variables' => array_values($variables),
-                    'defaults'  => $defaults,
+                    'defaults' => $defaults,
                 ];
             } catch (\Exception $e) {
             }

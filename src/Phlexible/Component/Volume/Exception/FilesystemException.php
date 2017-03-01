@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Volume\Exception;
 
 /**
- * Filesystem exception
+ * Filesystem exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class FilesystemException extends RuntimeException
 {
-
 }

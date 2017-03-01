@@ -14,14 +14,14 @@ namespace Phlexible\Bundle\TreeBundle\Mediator;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Viewable voter interface
+ * Viewable voter interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ViewableVoterInterface
 {
     /**
-     * Disable publish check
+     * Disable publish check.
      */
     public function disablePublishCheck();
 

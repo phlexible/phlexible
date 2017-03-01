@@ -12,11 +12,10 @@
 namespace Phlexible\Component\MetaSet\Exception;
 
 /**
- * Exception interface for meta set
+ * Exception interface for meta set.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExceptionInterface
 {
-
 }

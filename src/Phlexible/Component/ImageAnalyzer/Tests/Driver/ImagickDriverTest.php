@@ -12,13 +12,16 @@
 namespace Phlexible\Component\ImageAnalyzer\Tests\Driver;
 
 use Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Imagick driver test
+ * Imagick driver test.
  *
  * @author Stephan Wentz <stephan@wentz.it>
+ *
+ * @covers \Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver
  */
-class ImagickDriverTest extends \PHPUnit_Framework_TestCase
+class ImagickDriverTest extends TestCase
 {
     public function setUp()
     {
@@ -30,90 +33,90 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
     public function imageProvider()
     {
         return array(
-            array(__DIR__ . '/../files/test.tif', array(
-                'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
-                'colorspace'  => 'SRGB',
+            array(__DIR__.'/../files/test.tif', array(
+                'analyzer' => ImagickDriver::class,
+                'colorspace' => 'SRGB',
                 'compression' => 'None',
-                'depth'       => '8',
-                'format'      => 'TIFF',
-                'height'      => '350',
-                'profiles'    => array(),
-                'quality'     => '0',
-                'ratioX'      => '1.3314285714285714',
-                'ratioY'      => '0.75107296137339052',
+                'depth' => '8',
+                'format' => 'TIFF',
+                'height' => '350',
+                'profiles' => array(),
+                'quality' => '0',
+                'ratioX' => '1.3314285714285714',
+                'ratioY' => '0.75107296137339052',
                 'resolutionX' => '0.0',
                 'resolutionY' => '0.0',
-                'type'        => 'TRUECOLOR',
-                'units'       => 'PixelsPerInch',
-                'width'       => '466',
+                'type' => 'TRUECOLOR',
+                'units' => 'PixelsPerInch',
+                'width' => '466',
             )),
-            array(__DIR__ . '/../files/test.jpg', array(
-                'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
-                'colorspace'  => 'SRGB',
+            array(__DIR__.'/../files/test.jpg', array(
+                'analyzer' => ImagickDriver::class,
+                'colorspace' => 'SRGB',
                 'compression' => 'JPEG',
-                'depth'       => '8',
-                'format'      => 'JPEG',
-                'height'      => '350',
-                'profiles'    => array(),
-                'quality'     => '91',
-                'ratioX'      => '1.3314285714285714',
-                'ratioY'      => '0.75107296137339052',
+                'depth' => '8',
+                'format' => 'JPEG',
+                'height' => '350',
+                'profiles' => array(),
+                'quality' => '91',
+                'ratioX' => '1.3314285714285714',
+                'ratioY' => '0.75107296137339052',
                 'resolutionX' => '0.0',
                 'resolutionY' => '0.0',
-                'type'        => 'TRUECOLOR',
-                'units'       => null,
-                'width'       => '466',
+                'type' => 'TRUECOLOR',
+                'units' => null,
+                'width' => '466',
             )),
-            array(__DIR__ . '/../files/test_cmyk.jpg', array(
-                'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
-                'colorspace'  => 'CMYK',
+            array(__DIR__.'/../files/test_cmyk.jpg', array(
+                'analyzer' => ImagickDriver::class,
+                'colorspace' => 'CMYK',
                 'compression' => 'JPEG',
-                'depth'       => '8',
-                'format'      => 'JPEG',
-                'height'      => '350',
-                'profiles'    => array(),
-                'quality'     => '91',
-                'ratioX'      => '1.3314285714285714',
-                'ratioY'      => '0.75107296137339052',
+                'depth' => '8',
+                'format' => 'JPEG',
+                'height' => '350',
+                'profiles' => array(),
+                'quality' => '91',
+                'ratioX' => '1.3314285714285714',
+                'ratioY' => '0.75107296137339052',
                 'resolutionX' => '0.0',
                 'resolutionY' => '0.0',
-                'type'        => 'COLORSEPARATION',
-                'units'       => null,
-                'width'       => '466',
+                'type' => 'COLORSEPARATION',
+                'units' => null,
+                'width' => '466',
             )),
-            array(__DIR__ . '/../files/test.gif', array(
-                'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
-                'colorspace'  => 'SRGB',
+            array(__DIR__.'/../files/test.gif', array(
+                'analyzer' => ImagickDriver::class,
+                'colorspace' => 'SRGB',
                 'compression' => 'LZW',
-                'depth'       => '8',
-                'format'      => 'GIF',
-                'height'      => '350',
-                'profiles'    => array(),
-                'quality'     => '0',
-                'ratioX'      => '1.3314285714285714',
-                'ratioY'      => '0.75107296137339052',
+                'depth' => '8',
+                'format' => 'GIF',
+                'height' => '350',
+                'profiles' => array(),
+                'quality' => '0',
+                'ratioX' => '1.3314285714285714',
+                'ratioY' => '0.75107296137339052',
                 'resolutionX' => '0',
                 'resolutionY' => '0',
-                'type'        => 'PALETTE',
-                'units'       => null,
-                'width'       => '466',
+                'type' => 'PALETTE',
+                'units' => null,
+                'width' => '466',
             )),
-            array(__DIR__ . '/../files/test.png', array(
-                'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
-                'colorspace'  => 'SRGB',
+            array(__DIR__.'/../files/test.png', array(
+                'analyzer' => ImagickDriver::class,
+                'colorspace' => 'SRGB',
                 'compression' => 'Zip',
-                'depth'       => '8',
-                'format'      => 'PNG',
-                'height'      => '350',
-                'profiles'    => array(),
-                'quality'     => '0',
-                'ratioX'      => '1.3314285714285714',
-                'ratioY'      => '0.75107296137339052',
+                'depth' => '8',
+                'format' => 'PNG',
+                'height' => '350',
+                'profiles' => array(),
+                'quality' => '0',
+                'ratioX' => '1.3314285714285714',
+                'ratioY' => '0.75107296137339052',
                 'resolutionX' => '0.0',
                 'resolutionY' => '0.0',
-                'type'        => 'TRUECOLOR',
-                'units'       => null,
-                'width'       => '466',
+                'type' => 'TRUECOLOR',
+                'units' => null,
+                'width' => '466',
             )),
         );
     }

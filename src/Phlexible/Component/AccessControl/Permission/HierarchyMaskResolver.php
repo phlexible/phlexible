@@ -14,7 +14,7 @@ namespace Phlexible\Component\AccessControl\Permission;
 use Phlexible\Component\AccessControl\Domain\Entry;
 
 /**
- * Class HierarchyMaskResolver
+ * Class HierarchyMaskResolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -55,7 +55,7 @@ class HierarchyMaskResolver
                 $parentStopMask = $stopMask;
                 $parentNoInheritMask = $noInheritMask;
 
-                if ($effectiveMask  && $parentNoInheritMask !== null) {
+                if ($effectiveMask && $parentNoInheritMask !== null) {
                     // apply no inherit mask
                     $effectiveMask = $effectiveMask ^ (int) $parentNoInheritMask;
                 }

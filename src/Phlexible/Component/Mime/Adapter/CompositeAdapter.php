@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Mime\Adapter;
 
 /**
- * Internet media type detector composite adapter
+ * Internet media type detector composite adapter.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -32,7 +32,7 @@ class CompositeAdapter implements AdapterInterface
     }
 
     /**
-     * Set adapters
+     * Set adapters.
      *
      * @param AdapterInterface[] $adapters
      *
@@ -49,7 +49,7 @@ class CompositeAdapter implements AdapterInterface
     }
 
     /**
-     * Add adapter
+     * Add adapter.
      *
      * @param AdapterInterface $adapter
      *

@@ -12,11 +12,10 @@
 namespace Phlexible\Bundle\TreeBundle\Exception;
 
 /**
- * Runtime exception for tree bundle
+ * Runtime exception for tree bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
-
 }

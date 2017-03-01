@@ -12,13 +12,16 @@
 namespace Phlexible\Component\Util\Tests;
 
 use Phlexible\Component\Util\ArrayUtil;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Array util Test
+ * Array util Test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\Util\ArrayUtil
  */
-class ArrayTest extends \PHPUnit_Framework_TestCase
+class ArrayUtilTest extends TestCase
 {
     /**
      * @var ArrayUtil
@@ -130,7 +133,6 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($this->util->get($src, 'xxx'));
     }
-
 
     public function testGroupByEmpty()
     {

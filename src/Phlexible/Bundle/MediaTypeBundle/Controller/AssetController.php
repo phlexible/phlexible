@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Asset controller
+ * Asset controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediatypes/asset")
@@ -62,7 +62,7 @@ class AssetController extends Controller
         $css = $compiler->compile($mediaTypeManager->getCollection());
         $css = str_replace(
             ['/BASE_PATH/', '/BASE_URL/', '/BUNDLES_PATH/'],
-            [$basePath, $baseUrl, $basePath . 'bundles/'],
+            [$basePath, $baseUrl, $basePath.'bundles/'],
             $css
         );
 

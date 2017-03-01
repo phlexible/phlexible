@@ -11,188 +11,126 @@
 
 namespace Phlexible\Component\Mime\Tests\Adapter;
 
+use Phlexible\Component\Mime\Adapter\AdapterInterface;
 use Phlexible\Component\Mime\Adapter\FallbackAdapter;
 
 /**
- * Fallback adapter test
+ * Fallback adapter test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @covers \Phlexible\Component\Mime\Adapter\FallbackAdapter
  */
 class FallbackAdapterTest extends AbstractAdapterTest
 {
     public function testCheckAvailability()
     {
-        $adapterMock = $this->createAdapterMock();
-        $adapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(true));
+        $adapterMock = $this->prophesize(AdapterInterface::class);
+        $adapterMock->isAvailable('testFile')->willReturn(true);
 
-        $fallbackAdapterMock = $this->createAdapterMock();
-        $fallbackAdapterMock
-            ->expects($this->never())
-            ->method('isAvailable');
+        $fallbackAdapterMock = $this->prophesize(AdapterInterface::class);
+        $fallbackAdapterMock->isAvailable('testFile')->shouldNotBeCalled();
 
-        $adapter = $this->createAdapter($adapterMock, $fallbackAdapterMock);
+        $adapter = $this->createAdapter($adapterMock->reveal(), $fallbackAdapterMock->reveal());
 
         $this->assertTrue($adapter->isAvailable('testFile'));
     }
 
     public function testIsAvailableReturnsFalseOnNoneAvailable()
     {
-        $adapterMock = $this->createAdapterMock();
-        $adapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(false));
+        $adapterMock = $this->prophesize(AdapterInterface::class);
+        $adapterMock->isAvailable('testFile')->willReturn(false);
 
-        $fallbackAdapterMock = $this->createAdapterMock();
-        $fallbackAdapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(false));
+        $fallbackAdapterMock = $this->prophesize(AdapterInterface::class);
+        $fallbackAdapterMock->isAvailable('testFile')->willReturn(false);
 
-        $adapter = $this->createAdapter($adapterMock, $fallbackAdapterMock);
+        $adapter = $this->createAdapter($adapterMock->reveal(), $fallbackAdapterMock->reveal());
 
         $this->assertFalse($adapter->isAvailable('testFile'));
     }
 
     public function testIsAvailableReturnsTrueOnFallbackAdapterAvailable()
     {
-        $adapterMock = $this->createAdapterMock();
-        $adapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(false));
+        $adapterMock = $this->prophesize(AdapterInterface::class);
+        $adapterMock->isAvailable('testFile')->willReturn(false);
 
-        $fallbackAdapterMock = $this->createAdapterMock();
-        $fallbackAdapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(true));
+        $fallbackAdapterMock = $this->prophesize(AdapterInterface::class);
+        $fallbackAdapterMock->isAvailable('testFile')->willReturn(true);
 
-        $adapter = $this->createAdapter($adapterMock, $fallbackAdapterMock);
+        $adapter = $this->createAdapter($adapterMock->reveal(), $fallbackAdapterMock->reveal());
 
         $this->assertTrue($adapter->isAvailable('testFile'));
     }
 
     public function testIsAvailableReturnsFalseOnFallbackAdapterNotAvailable()
     {
-        $adapterMock = $this->createAdapterMock();
-        $adapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(false));
+        $adapterMock = $this->prophesize(AdapterInterface::class);
+        $adapterMock->isAvailable('testFile')->willReturn(false);
 
-        $fallbackAdapterMock = $this->createAdapterMock();
-        $fallbackAdapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(false));
+        $fallbackAdapterMock = $this->prophesize(AdapterInterface::class);
+        $fallbackAdapterMock->isAvailable('testFile')->willReturn(false);
 
-        $adapter = $this->createAdapter($adapterMock, $fallbackAdapterMock);
+        $adapter = $this->createAdapter($adapterMock->reveal(), $fallbackAdapterMock->reveal());
 
         $this->assertFalse($adapter->isAvailable('testFile'));
     }
 
     public function testGetMimetypeDoesNotUseFallbackAdapterOnValidAdapterResult()
     {
-        $adapterMock = $this->createAdapterMock();
-        $adapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(true));
-        $adapterMock
-            ->expects($this->at(1))
-            ->method('getInternetMediaTypeStringFromFile')
-            ->will($this->returnValue('image/jpg'));
+        $adapterMock = $this->prophesize(AdapterInterface::class);
+        $adapterMock->isAvailable('test')->willReturn(true);
+        $adapterMock->getInternetMediaTypeStringFromFile('test')->willReturn('image/jpg');
 
-        $fallbackAdapterMock = $this->createAdapterMock();
-        $fallbackAdapterMock
-            ->expects($this->never())
-            ->method('isAvailable');
-        $fallbackAdapterMock
-            ->expects($this->never())
-            ->method('getInternetMediaTypeStringFromFile');
+        $fallbackAdapterMock = $this->prophesize(AdapterInterface::class);
+        $fallbackAdapterMock->isAvailable('test')->shouldNotBeCalled();
+        $fallbackAdapterMock->getInternetMediaTypeStringFromFile('test')->shouldNotBeCalled();
 
-        $adapter = $this->createAdapter($adapterMock, $fallbackAdapterMock);
+        $adapter = $this->createAdapter($adapterMock->reveal(), $fallbackAdapterMock->reveal());
 
         $this->assertEquals('image/jpg', $adapter->getInternetMediaTypeStringFromFile('test'));
     }
 
     public function testGetMimetypeUsesFallbackAdapterOnEmptyAdapterResult()
     {
-        $adapterMock = $this->createAdapterMock();
-        $adapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(true));
-        $adapterMock
-            ->expects($this->at(1))
-            ->method('getInternetMediaTypeStringFromFile')
-            ->will($this->returnValue(true));
+        $adapterMock = $this->prophesize(AdapterInterface::class);
+        $adapterMock->isAvailable('test')->willReturn(true);
+        $adapterMock->getInternetMediaTypeStringFromFile('test')->willReturn(true);
 
-        $fallbackAdapterMock = $this->createAdapterMock();
-        $fallbackAdapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(true));
-        $fallbackAdapterMock
-            ->expects($this->at(1))
-            ->method('getInternetMediaTypeStringFromFile')
-            ->will($this->returnValue('result'));
+        $fallbackAdapterMock = $this->prophesize(AdapterInterface::class);
+        $fallbackAdapterMock->isAvailable('test')->willReturn(true);
+        $fallbackAdapterMock->getInternetMediaTypeStringFromFile('test')->willReturn('result');
 
-        $adapter = $this->createAdapter($adapterMock, $fallbackAdapterMock);
+        $adapter = $this->createAdapter($adapterMock->reveal(), $fallbackAdapterMock->reveal());
 
         $this->assertEquals('result', $adapter->getInternetMediaTypeStringFromFile('test'));
     }
 
     public function testGetMimetypeUsesFallbackAdapterOnFallbackResult()
     {
-        $adapterMock = $this->createAdapterMock();
-        $adapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(true));
-        $adapterMock
-            ->expects($this->at(1))
-            ->method('getInternetMediaTypeStringFromFile')
-            ->will($this->returnValue('application/octet-stream'));
+        $adapterMock = $this->prophesize(AdapterInterface::class);
+        $adapterMock->isAvailable('test')->willReturn(true);
+        $adapterMock->getInternetMediaTypeStringFromFile('test')->willReturn('application/octet-stream');
 
-        $fallbackAdapterMock = $this->createAdapterMock();
-        $fallbackAdapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(true));
-        $fallbackAdapterMock
-            ->expects($this->at(1))
-            ->method('getInternetMediaTypeStringFromFile')
-            ->will($this->returnValue('result'));
+        $fallbackAdapterMock = $this->prophesize(AdapterInterface::class);
+        $fallbackAdapterMock->isAvailable('test')->willReturn(true);
+        $fallbackAdapterMock->getInternetMediaTypeStringFromFile('test')->willReturn('result');
 
-        $adapter = $this->createAdapter($adapterMock, $fallbackAdapterMock);
+        $adapter = $this->createAdapter($adapterMock->reveal(), $fallbackAdapterMock->reveal());
 
         $this->assertEquals('result', $adapter->getInternetMediaTypeStringFromFile('test'));
     }
 
     public function testGetMimetypeDoesNotUseFallbackAdapterOnUnavailableFallbackAdapter()
     {
-        $adapterMock = $this->createAdapterMock();
-        $adapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(true));
-        $adapterMock
-            ->expects($this->at(1))
-            ->method('getInternetMediaTypeStringFromFile')
-            ->will($this->returnValue('application/octet-stream'));
+        $adapterMock = $this->prophesize(AdapterInterface::class);
+        $adapterMock->isAvailable('test')->willReturn(true);
+        $adapterMock->getInternetMediaTypeStringFromFile('test')->willReturn('application/octet-stream');
 
-        $fallbackAdapterMock = $this->createAdapterMock();
-        $fallbackAdapterMock
-            ->expects($this->at(0))
-            ->method('isAvailable')
-            ->will($this->returnValue(false));
+        $fallbackAdapterMock = $this->prophesize(AdapterInterface::class);
+        $fallbackAdapterMock->isAvailable('test')->willReturn(false);
+        $fallbackAdapterMock->getInternetMediaTypeStringFromFile('test')->shouldNotBeCalled();
 
-        $adapter = $this->createAdapter($adapterMock, $fallbackAdapterMock);
+        $adapter = $this->createAdapter($adapterMock->reveal(), $fallbackAdapterMock->reveal());
 
         $this->assertEquals('application/octet-stream', $adapter->getInternetMediaTypeStringFromFile('test'));
     }

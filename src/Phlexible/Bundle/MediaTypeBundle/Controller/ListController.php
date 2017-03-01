@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * List controller
+ * List controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediatypes")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ListController extends Controller
 {
     /**
-     * List media types
+     * List media types.
      *
      * @param Request $request
      *
@@ -42,23 +42,23 @@ class ListController extends Controller
         $mediaTypes = [];
         foreach ($mediaTypeManager->findAll() as $mediaType) {
             $mediaTypes[] = [
-                'id'        => $mediaType->getName(),
-                'key'       => $mediaType->getName(),
-                'upperkey'  => strtoupper($mediaType->getName()),
-                'type'      => $mediaType->getCategory(),
-                'de'        => $mediaType->getTitle('de'),
-                'en'        => $mediaType->getTitle('en'),
+                'id' => $mediaType->getName(),
+                'key' => $mediaType->getName(),
+                'upperkey' => strtoupper($mediaType->getName()),
+                'type' => $mediaType->getCategory(),
+                'de' => $mediaType->getTitle('de'),
+                'en' => $mediaType->getTitle('en'),
                 'mimetypes' => $mediaType->getMimetypes(),
-                'icon16'    => (bool) $iconResolver->resolve($mediaType, 16),
-                'icon32'    => (bool) $iconResolver->resolve($mediaType, 32),
-                'icon48'    => (bool) $iconResolver->resolve($mediaType, 48),
-                'icon256'   => (bool) $iconResolver->resolve($mediaType, 256),
+                'icon16' => (bool) $iconResolver->resolve($mediaType, 16),
+                'icon32' => (bool) $iconResolver->resolve($mediaType, 32),
+                'icon48' => (bool) $iconResolver->resolve($mediaType, 48),
+                'icon256' => (bool) $iconResolver->resolve($mediaType, 256),
             ];
         }
 
         return new JsonResponse([
             'totalCount' => count($mediaTypes),
-            'mediatypes' => $mediaTypes
+            'mediatypes' => $mediaTypes,
         ]);
     }
 }

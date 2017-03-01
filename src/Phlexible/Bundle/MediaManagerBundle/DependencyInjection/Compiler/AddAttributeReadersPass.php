@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add attribute readers pass
+ * Add attribute readers pass.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -16,7 +16,7 @@ use Phlexible\Component\MetaSet\File\Loader\LoaderInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetCollection;
 
 /**
- * Meta set loader
+ * Meta set loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

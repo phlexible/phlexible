@@ -12,13 +12,16 @@
 namespace Phlexible\Component\ImageAnalyzer\Tests\Driver;
 
 use Phlexible\Component\ImageAnalyzer\Driver\GdDriver;
+use PHPUnit\Framework\TestCase;
 
 /**
- * GD driver test
+ * GD driver test.
  *
  * @author Stephan Wentz <stephan@wentz.it>
+ *
+ * @covers \Phlexible\Component\ImageAnalyzer\Driver\GdDriver
  */
-class GdDriverTest extends \PHPUnit_Framework_TestCase
+class GdDriverTest extends TestCase
 {
     public function setUp()
     {
@@ -30,73 +33,73 @@ class GdDriverTest extends \PHPUnit_Framework_TestCase
     public function imageProvider()
     {
         return array(
-            array(__DIR__ . '/../files/test.jpg', array(
-                'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\GdDriver',
-                'colorspace'  => 'RGB',
+            array(__DIR__.'/../files/test.jpg', array(
+                'analyzer' => GdDriver::class,
+                'colorspace' => 'RGB',
                 'compression' => null,
-                'depth'       => '8',
-                'format'      => 'JPEG',
-                'height'      => '350',
-                'profiles'    => null,
-                'quality'     => null,
-                'ratioX'      => '1.3314285714285714',
-                'ratioY'      => '0.75107296137339052',
+                'depth' => '8',
+                'format' => 'JPEG',
+                'height' => '350',
+                'profiles' => null,
+                'quality' => null,
+                'ratioX' => '1.3314285714285714',
+                'ratioY' => '0.75107296137339052',
                 'resolutionX' => null,
                 'resolutionY' => null,
-                'type'        => 'TRUECOLOR',
-                'units'       => null,
-                'width'       => '466',
+                'type' => 'TRUECOLOR',
+                'units' => null,
+                'width' => '466',
             )),
-            array(__DIR__ . '/../files/test_cmyk.jpg', array(
-                'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\GdDriver',
-                'colorspace'  => 'CMYK',
+            array(__DIR__.'/../files/test_cmyk.jpg', array(
+                'analyzer' => GdDriver::class,
+                'colorspace' => 'CMYK',
                 'compression' => null,
-                'depth'       => '8',
-                'format'      => 'JPEG',
-                'height'      => '350',
-                'profiles'    => null,
-                'quality'     => null,
-                'ratioX'      => '1.3314285714285714',
-                'ratioY'      => '0.75107296137339052',
+                'depth' => '8',
+                'format' => 'JPEG',
+                'height' => '350',
+                'profiles' => null,
+                'quality' => null,
+                'ratioX' => '1.3314285714285714',
+                'ratioY' => '0.75107296137339052',
                 'resolutionX' => null,
                 'resolutionY' => null,
-                'type'        => 'TRUECOLOR',
-                'units'       => null,
-                'width'       => '466',
+                'type' => 'TRUECOLOR',
+                'units' => null,
+                'width' => '466',
             )),
-            array(__DIR__ . '/../files/test.gif', array(
-                'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\GdDriver',
-                'colorspace'  => 'RGB',
+            array(__DIR__.'/../files/test.gif', array(
+                'analyzer' => GdDriver::class,
+                'colorspace' => 'RGB',
                 'compression' => null,
-                'depth'       => '8',
-                'format'      => 'GIF',
-                'height'      => '350',
-                'profiles'    => null,
-                'quality'     => null,
-                'ratioX'      => '1.3314285714285714',
-                'ratioY'      => '0.75107296137339052',
+                'depth' => '8',
+                'format' => 'GIF',
+                'height' => '350',
+                'profiles' => null,
+                'quality' => null,
+                'ratioX' => '1.3314285714285714',
+                'ratioY' => '0.75107296137339052',
                 'resolutionX' => null,
                 'resolutionY' => null,
-                'type'        => 'PALETTE',
-                'units'       => null,
-                'width'       => '466',
+                'type' => 'PALETTE',
+                'units' => null,
+                'width' => '466',
             )),
-            array(__DIR__ . '/../files/test.png', array(
-                'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\GdDriver',
-                'colorspace'  => 'RGB',
+            array(__DIR__.'/../files/test.png', array(
+                'analyzer' => GdDriver::class,
+                'colorspace' => 'RGB',
                 'compression' => null,
-                'depth'       => '8',
-                'format'      => 'PNG',
-                'height'      => '350',
-                'profiles'    => null,
-                'quality'     => null,
-                'ratioX'      => '1.3314285714285714',
-                'ratioY'      => '0.75107296137339052',
+                'depth' => '8',
+                'format' => 'PNG',
+                'height' => '350',
+                'profiles' => null,
+                'quality' => null,
+                'ratioX' => '1.3314285714285714',
+                'ratioY' => '0.75107296137339052',
                 'resolutionX' => null,
                 'resolutionY' => null,
-                'type'        => 'TRUECOLOR',
-                'units'       => null,
-                'width'       => '466',
+                'type' => 'TRUECOLOR',
+                'units' => null,
+                'width' => '466',
             )),
         );
     }

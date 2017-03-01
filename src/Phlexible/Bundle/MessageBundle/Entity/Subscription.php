@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MessageBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Subscription
+ * Subscription.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -75,6 +75,7 @@ class Subscription
 
         return $this;
     }
+
     /**
      * @return string
      */

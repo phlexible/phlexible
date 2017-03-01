@@ -12,6 +12,8 @@
 namespace Phlexible\Bundle\AccessControlBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\MediaManagerBundle\Entity\Folder;
+use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
 use Phlexible\Component\AccessControl\Domain\Entry;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
@@ -22,7 +24,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Access controller
+ * Access controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/accesscontrol")
@@ -38,8 +40,8 @@ class AccessController extends Controller
      */
     public function usersAction(Request $request)
     {
-        $query  = $request->get('query');
-        $limit  = $request->get('limit', 20);
+        $query = $request->get('query');
+        $limit = $request->get('limit', 20);
         $offset = $request->get('start', 0);
 
         $userProvider = $this->get('phlexible_access_control.user_security_provider');
@@ -57,8 +59,8 @@ class AccessController extends Controller
      */
     public function groupsAction(Request $request)
     {
-        $query  = $request->get('query');
-        $limit  = $request->get('limit', 20);
+        $query = $request->get('query');
+        $limit = $request->get('limit', 20);
         $offset = $request->get('start', 0);
 
         $userProvider = $this->get('phlexible_access_control.group_security_provider');
@@ -82,8 +84,8 @@ class AccessController extends Controller
         $permissions = array();
         foreach ($permissionRegistry->get($objectType)->all() as $permission) {
             $permissions[] = array(
-                'name'    => $permission->getName(),
-                'bit'     => $permission->getBit(),
+                'name' => $permission->getName(),
+                'bit' => $permission->getBit(),
                 'iconCls' => 'null',
             );
         }
@@ -95,14 +97,15 @@ class AccessController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
+     *
      * @throws \Exception
      * @Route("/save", name="accesscontrol_save")
      */
     public function saveAction(Request $request)
     {
         $objectType = $request->get('objectType');
-        $objectId   = $request->get('objectId');
-        $data       = $request->get('identities');
+        $objectId = $request->get('objectId');
+        $data = $request->get('identities');
 
         if (!$data) {
             throw new InvalidArgumentException('No save data.');
@@ -112,11 +115,11 @@ class AccessController extends Controller
 
         if ($objectType === 'teaser') {
             $path = array($objectId);
-        } elseif ($objectType === 'Phlexible\Bundle\TreeBundle\Entity\TreeNode') {
+        } elseif ($objectType === TreeNode::class) {
             $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($objectId);
             $node = $tree->get($objectId);
             $objectIdentity = HierarchicalObjectIdentity::fromDomainObject($node);
-        } elseif ($objectType === 'Phlexible\Bundle\MediaManagerBundle\Entity\Folder') {
+        } elseif ($objectType === Folder::clas) {
             $volume = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($objectId);
             $folder = $volume->findFolder($objectId);
             $objectIdentity = HierarchicalObjectIdentity::fromDomainObject($folder);

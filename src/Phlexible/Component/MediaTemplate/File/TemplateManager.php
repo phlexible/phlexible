@@ -17,7 +17,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 
 /**
- * Media template manager
+ * Media template manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -61,11 +61,12 @@ class TemplateManager implements TemplateManagerInterface
     }
 
     /**
-     * Find template
+     * Find template.
      *
      * @param string $key
      *
      * @return TemplateInterface
+     *
      * @throws NotFoundException
      */
     public function find($key)
@@ -89,7 +90,7 @@ class TemplateManager implements TemplateManagerInterface
         $found = [];
         foreach ($this->getCollection()->all() as $template) {
             foreach ($criteria as $criterium => $value) {
-                $method = 'get' . ucfirst(strtolower($criterium));
+                $method = 'get'.ucfirst(strtolower($criterium));
                 if (!method_exists($template, $method)) {
                     continue;
                 }
@@ -103,8 +104,9 @@ class TemplateManager implements TemplateManagerInterface
 
         return $found;
     }
+
     /**
-     * Return all templates
+     * Return all templates.
      *
      * @return TemplateInterface[]
      */
@@ -114,7 +116,7 @@ class TemplateManager implements TemplateManagerInterface
     }
 
     /**
-     * Update template
+     * Update template.
      *
      * @param TemplateInterface $template
      */

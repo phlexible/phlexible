@@ -19,7 +19,7 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Latest elements portlet
+ * Latest elements portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -81,7 +81,7 @@ class LatestElementsPortlet extends Portlet
     }
 
     /**
-     * Return Portlet data
+     * Return Portlet data.
      *
      * @return array
      */
@@ -111,11 +111,11 @@ class LatestElementsPortlet extends Portlet
 
             $first = true;
             foreach ($baseTitleArr as $chunk) {
-                $title .= ($first ? '<wbr />' : '') . $chunk;
+                $title .= ($first ? '<wbr />' : '').$chunk;
                 $first = false;
             }
 
-            $title .= ' [' . $row['id'] . ']';
+            $title .= ' ['.$row['id'].']';
             /*
                 $i = 0;
                 do
@@ -143,15 +143,15 @@ class LatestElementsPortlet extends Portlet
             $menu = [];
 
             $data[] = [
-                'ident'    => $row['eid'] . '_' . $row['language'] . '_' . $row['version'],
-                'eid'      => $row['eid'],
+                'ident' => $row['eid'].'_'.$row['language'].'_'.$row['version'],
+                'eid' => $row['eid'],
                 'language' => $row['language'],
-                'version'  => $row['version'],
-                'title'    => strip_tags($title),
-                'icon'     => $this->iconResolver->resolveTreeNode($node, $row['language']),
-                'time'     => strtotime($elementVersion->getCreatedAt()->format('Y-m-d H:i:s')),
-                'author'   => $elementVersion->getCreateUserId(),
-                'menu'     => $menu
+                'version' => $row['version'],
+                'title' => strip_tags($title),
+                'icon' => $this->iconResolver->resolveTreeNode($node, $row['language']),
+                'time' => strtotime($elementVersion->getCreatedAt()->format('Y-m-d H:i:s')),
+                'author' => $elementVersion->getCreateUserId(),
+                'menu' => $menu,
             ];
         }
 

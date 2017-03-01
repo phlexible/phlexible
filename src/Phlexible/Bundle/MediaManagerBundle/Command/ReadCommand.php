@@ -24,7 +24,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Read command
+ * Read command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -87,7 +87,7 @@ class ReadCommand extends ContainerAwareCommand
 
         $rii = new \RecursiveIteratorIterator(new FolderIterator($target), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $folder) {
-            $output->writeln('+ ' . $folder->getName());
+            $output->writeln('+ '.$folder->getName());
             foreach ($volume->findFilesByFolder($folder) as $file) {
                 $this->readFile($output, $volume, $file);
             }
@@ -96,7 +96,7 @@ class ReadCommand extends ContainerAwareCommand
 
     private function readFile(OutputInterface $output, ExtendedVolumeInterface $volume, ExtendedFileInterface $file)
     {
-        $output->writeln('  * ' . $file->getId() . ' ' . $file->getPhysicalPath() . ': ');
+        $output->writeln('  * '.$file->getId().' '.$file->getPhysicalPath().': ');
         $output->write('    > ');
 
         $mimeDetector = $this->getContainer()->get('phlexible_media_tool.mime.detector');
@@ -104,7 +104,7 @@ class ReadCommand extends ContainerAwareCommand
         $attributeReader = $this->getContainer()->get('phlexible_media_manager.attribute_reader');
 
         if (!file_exists($file->getPhysicalPath())) {
-            $output->writeln("<error>File not found</error>");
+            $output->writeln('<error>File not found</error>');
 
             return;
         }
@@ -112,7 +112,7 @@ class ReadCommand extends ContainerAwareCommand
         $mimetype = $mimeDetector->detect($file->getPhysicalPath(), MimeDetector::RETURN_STRING);
 
         if (!$mimetype) {
-            $output->write("<error>No mimetype</error> ");
+            $output->write('<error>No mimetype</error> ');
             $mimetype = 'application/octet-stream';
             $mediaTypeName = 'binary';
         } else {
@@ -128,9 +128,8 @@ class ReadCommand extends ContainerAwareCommand
                     $attributes['fileattributes'] = $attributeBag->all();
                     $volume->setFileAttributes($file, $attributes, null);
                 }
-
             } else {
-                $output->write("<error>No media type found</error> ");
+                $output->write('<error>No media type found</error> ');
                 $mediaTypeName = 'binary';
             }
         }
@@ -138,6 +137,6 @@ class ReadCommand extends ContainerAwareCommand
         $volume->setFileMediaType($file, $mediaTypeName, null);
         //$volume->setFileMimetype($file, $mimetype, null);
 
-        $output->writeln("$mimetype, $mediaTypeName, " . json_encode($attributes));
+        $output->writeln("$mimetype, $mediaTypeName, ".json_encode($attributes));
     }
 }

@@ -16,7 +16,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Element mediator
+ * Element mediator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

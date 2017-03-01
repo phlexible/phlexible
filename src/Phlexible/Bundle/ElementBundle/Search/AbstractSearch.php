@@ -22,7 +22,7 @@ use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Abstract element search
+ * Abstract element search.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -123,7 +123,7 @@ abstract class AbstractSearch implements SearchProviderInterface
     }
 
     /**
-     * Perform search
+     * Perform search.
      *
      * @param array  $rows
      * @param string $title
@@ -155,8 +155,8 @@ abstract class AbstractSearch implements SearchProviderInterface
                     'id' => $node->getId(),
                     'siteroot_id' => $node->getTree()->getSiterootId(),
                     'title' => $siteroot->getTitle($language),
-                    'start_tid_path' => '/' . implode('/', $node->getTree()->getIdPath($node)),
-                )
+                    'start_tid_path' => '/'.implode('/', $node->getTree()->getIdPath($node)),
+                ),
             );
 
             try {
@@ -169,7 +169,7 @@ abstract class AbstractSearch implements SearchProviderInterface
 
             $results[] = new SearchResult(
                 $node->getId(),
-                $siteroot->getTitle($language) . ' :: ' . $elementVersion->getBackendTitle($language) . ' (' . $language . ', ' . $node->getId() . ')',
+                $siteroot->getTitle($language).' :: '.$elementVersion->getBackendTitle($language).' ('.$language.', '.$node->getId().')',
                 $createUser->getDisplayName(),
                 $elementVersion->getCreatedAt(),
                 $icon,

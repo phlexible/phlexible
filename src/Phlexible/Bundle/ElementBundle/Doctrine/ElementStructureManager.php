@@ -26,7 +26,7 @@ use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Element structure manager
+ * Element structure manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

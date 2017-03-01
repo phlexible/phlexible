@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add workers pass
+ * Add workers pass.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -30,7 +30,7 @@ class AddWorkersPass implements CompilerPassInterface
         $priorityIds = [];
         foreach ($container->findTaggedServiceIds('phlexible_media_cache.worker') as $id => $definition) {
             if (!isset($definition[0]['priority'])) {
-                throw new \InvalidArgumentException("Cache Worker priority not set.");
+                throw new \InvalidArgumentException('Cache Worker priority not set.');
             }
             $priority = $definition[0]['priority'];
             $priorityIds[$priority][] = new Reference($id);

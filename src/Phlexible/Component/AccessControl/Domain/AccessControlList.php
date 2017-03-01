@@ -11,6 +11,9 @@
 
 namespace Phlexible\Component\AccessControl\Domain;
 
+use Countable;
+use Phlexible\Bundle\UserBundle\Entity\Group;
+use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\SecurityIdentityInterface;
@@ -21,11 +24,11 @@ use Phlexible\Component\AccessControl\Permission\PermissionResolver;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * Access control list
+ * Access control list.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class AccessControlList implements \Countable
+class AccessControlList implements Countable
 {
     /**
      * @var PermissionCollection
@@ -51,8 +54,7 @@ class AccessControlList implements \Countable
         PermissionCollection $permissions,
         ObjectIdentityInterface $objectIdentity,
         array $accessControlEntries = array()
-    )
-    {
+    ) {
         $this->permissions = $permissions;
         $this->objectIdentity = $objectIdentity;
         $this->entries = $accessControlEntries;
@@ -122,14 +124,14 @@ class AccessControlList implements \Countable
         $user = $token->getUser();
 
         $masks = $this->getEffectiveMasks();
-        if (isset($masks['Phlexible\Bundle\UserBundle\Entity\User'][$user->getId()])) {
-            if ($masks['Phlexible\Bundle\UserBundle\Entity\User'][$user->getId()] & $permission->getBit()) {
+        if (isset($masks[User::class][$user->getId()])) {
+            if ($masks[User::class][$user->getId()] & $permission->getBit()) {
                 return true;
             }
         }
         foreach ($user->getGroups() as $group) {
-            if (isset($masks['Phlexible\Bundle\UserBundle\Entity\Group'][$group->getId()])) {
-                if ($masks['Phlexible\Bundle\UserBundle\Entity\Group'][$group->getId()] & $permission->getBit()) {
+            if (isset($masks[Group::class][$group->getId()])) {
+                if ($masks[Group::class][$group->getId()] & $permission->getBit()) {
                     return true;
                 }
             }
@@ -150,12 +152,12 @@ class AccessControlList implements \Countable
 
         $mask = 0;
         $masks = $this->getEffectiveMasks();
-        if (isset($masks['Phlexible\Bundle\UserBundle\Entity\User'][$user->getId()])) {
-            $mask |= $masks['Phlexible\Bundle\UserBundle\Entity\User'][$user->getId()];
+        if (isset($masks[User::class][$user->getId()])) {
+            $mask |= $masks[User::class][$user->getId()];
         }
         foreach ($user->getGroups() as $group) {
-            if (isset($masks['Phlexible\Bundle\UserBundle\Entity\Group'][$group->getId()])) {
-                $mask |= $masks['Phlexible\Bundle\UserBundle\Entity\Group'][$group->getId()];
+            if (isset($masks[Group::class][$group->getId()])) {
+                $mask |= $masks[Group::class][$group->getId()];
             }
         }
 
@@ -182,7 +184,7 @@ class AccessControlList implements \Countable
                 $map = array();
                 foreach ($oi->getHierarchicalIdentifiers() as $identifier) {
                     foreach ($this->getEntries() as $entry) {
-                        if ($entry->getObjectIdentifier() == $identifier) {
+                        if ($entry->getObjectIdentifier() === $identifier) {
                             $map[$entry->getSecurityType()][$entry->getSecurityIdentifier()][$entry->getObjectIdentifier()] = $entry;
                         }
                     }
@@ -223,15 +225,14 @@ class AccessControlList implements \Countable
         $noInheritMask,
         $stopMask,
         $contentLanguage = null
-    )
-    {
+    ) {
         if ($contentLanguage === '_all_') {
             $contentLanguage = null;
         }
 
         $ace = null;
         foreach ($this->entries as $entry) {
-            if ($entry->getSecurityIdentifier() === $securityIdentity->getIdentifier() && $entry->getSecurityType() == $securityIdentity->getType()) {
+            if ($entry->getSecurityIdentifier() === $securityIdentity->getIdentifier() && $entry->getSecurityType() === $securityIdentity->getType()) {
                 $ace = $entry;
                 break;
             }
@@ -265,7 +266,7 @@ class AccessControlList implements \Countable
     {
         $aces = null;
         foreach ($this->entries as $index => $entry) {
-            if ($entry->getSecurityIdentifier() === $securityIdentity->getIdentifier() && $entry->getSecurityType() == $securityIdentity->getType()) {
+            if ($entry->getSecurityIdentifier() === $securityIdentity->getIdentifier() && $entry->getSecurityType() === $securityIdentity->getType()) {
                 unset($this->entries[$index]);
             }
         }

@@ -15,7 +15,7 @@ use Phlexible\Component\MediaManager\Slot\Slots;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Get slots event
+ * Get slots event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

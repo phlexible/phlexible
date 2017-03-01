@@ -19,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Roles controller
+ * Roles controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/users/roles")
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class RolesController extends Controller
 {
     /**
-     * List roles
+     * List roles.
      *
      * @return JsonResponse
      * @Route("", name="users_roles_list")

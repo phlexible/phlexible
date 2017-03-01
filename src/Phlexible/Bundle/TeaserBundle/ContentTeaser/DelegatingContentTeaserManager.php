@@ -19,7 +19,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 // TODO: interface
 
 /**
- * Teaser manager
+ * Teaser manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -241,5 +241,4 @@ class DelegatingContentTeaserManager
 
         return $this->contentTeasers[$teaser->getId()];
     }
-
 }

@@ -17,7 +17,7 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Message\MessageChecker;
 
 /**
- * Filter repository
+ * Filter repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -32,7 +32,7 @@ class FilterRepository extends EntityRepository
     }
 
     /**
-     * Return one filter for a user by title
+     * Return one filter for a user by title.
      *
      * @param string $userId
      * @param string $title
@@ -45,7 +45,7 @@ class FilterRepository extends EntityRepository
     }
 
     /**
-     * Return all filters applicable for a message
+     * Return all filters applicable for a message.
      *
      * @param Message $message
      * @param string  $handler

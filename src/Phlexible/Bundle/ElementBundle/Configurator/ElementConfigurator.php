@@ -13,19 +13,17 @@ namespace Phlexible\Bundle\ElementBundle\Configurator;
 
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader;
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Element configurator
+ * Element configurator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -55,7 +53,6 @@ class ElementConfigurator implements ConfiguratorInterface
      * @var ContentElementLoader
      */
     private $loader;
-
 
     /**
      * @param EventDispatcherInterface      $dispatcher
@@ -108,12 +105,16 @@ class ElementConfigurator implements ConfiguratorInterface
         }
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $forwardField = $contentElement->getMappedField()->getForward();
-        if ($forwardField) {
-            $forward = json_decode($forwardField);
-            $renderConfiguration->addFeature('forward')->setVariable('forward', $forward);
+        $mappedField = $contentElement->getMappedField();
+        if ($mappedField) {
+            $forwardField = $mappedField->getForward();
 
-            return;
+            if ($forwardField) {
+                $forward = json_decode($forwardField);
+                $renderConfiguration->addFeature('forward')->setVariable('forward', $forward);
+
+                return;
+            }
         }
 
         $renderConfiguration
@@ -125,7 +126,7 @@ class ElementConfigurator implements ConfiguratorInterface
             if ($contentElement->getElementtypeTemplate()) {
                 $template = $contentElement->getElementtypeTemplate();
             } else {
-                $template = '::' . $contentElement->getElementtypeUniqueId() . '.html.twig';
+                $template = '::'.$contentElement->getElementtypeUniqueId().'.html.twig';
             }
 
             $renderConfiguration

@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Media controller
+ * Media controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/media")
@@ -29,7 +29,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class MediaController extends Controller
 {
     /**
-     * Deliver a media asset
+     * Deliver a media asset.
      *
      * @param string $fileId
      * @param string $template
@@ -58,7 +58,7 @@ class MediaController extends Controller
             $extension = $template->getParameter('format');
         }
 
-        $filePath = $this->container->getParameter('app.web_dir') . '/media/thumbnail/' . $fileId . '/' . $templateKey . '_' . $template->getRevision() . '.' . $extension;
+        $filePath = $this->container->getParameter('app.web_dir').'/media/thumbnail/'.$fileId.'/'.$templateKey.'_'.$template->getRevision().'.'.$extension;
         $mimeType = 'image/jpeg';
         if (!file_exists($filePath) || filemtime($filePath) < $file->getModifiedAt()->format('U')) {
             if (file_exists($file->getPhysicalPath())) {
@@ -82,7 +82,7 @@ class MediaController extends Controller
         }
 
         if (!file_exists($filePath)) {
-            throw $this->createNotFoundException("File not found.");
+            throw $this->createNotFoundException('File not found.');
         }
 
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
@@ -94,7 +94,7 @@ class MediaController extends Controller
     }
 
     /**
-     * Download a media file
+     * Download a media file.
      *
      * @param string $fileId
      *
@@ -116,7 +116,7 @@ class MediaController extends Controller
         $filePath = $file->getPhysicalPath();
 
         if (!file_exists($filePath)) {
-            throw $this->createNotFoundException("File not found.");
+            throw $this->createNotFoundException('File not found.');
         }
 
         $mimeType = $file->getMimeType();
@@ -128,7 +128,7 @@ class MediaController extends Controller
     }
 
     /**
-     * Deliver a media asset
+     * Deliver a media asset.
      *
      * @param string $fileId
      *
@@ -150,7 +150,7 @@ class MediaController extends Controller
         $filePath = $file->getPhysicalPath();
 
         if (!file_exists($filePath)) {
-            throw $this->createNotFoundException("File not found.");
+            throw $this->createNotFoundException('File not found.');
         }
 
         $mimeType = $file->getMimeType();

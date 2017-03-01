@@ -12,14 +12,14 @@
 namespace Phlexible\Component\AccessControl\SecurityProvider;
 
 /**
- * Security provider interface
+ * Security provider interface.
  *
  * @author Marco Fischer <mf@brainbits.net>
  */
 interface SecurityProviderInterface
 {
     /**
-     * Return users
+     * Return users.
      *
      * @param string $query
      * @param int    $limit

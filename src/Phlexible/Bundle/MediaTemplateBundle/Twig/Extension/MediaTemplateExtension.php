@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaTemplateBundle\Twig\Extension;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 
 /**
- * Twig media template extension
+ * Twig media template extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
