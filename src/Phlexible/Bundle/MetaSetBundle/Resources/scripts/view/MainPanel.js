@@ -1,5 +1,6 @@
 Ext.provide('Phlexible.metasets.MainPanel');
 
+Ext.require('Phlexible.metasets.model.Metaset');
 Ext.require('Phlexible.metasets.util.Fields');
 Ext.require('Phlexible.metasets.MetaSetsWindow');
 Ext.require('Phlexible.metasets.SelectConfigurationWindow');
@@ -60,7 +61,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                 store: new Ext.data.JsonStore({
                     url: Phlexible.Router.generate('metasets_sets_list'),
                     root: 'sets',
-                    fields: ['id', 'name'],
+                    fields: Phlexible.metasets.model.Metaset,
                     autoLoad: true,
                     sortInfo: {
                         field: 'name',

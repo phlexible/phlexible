@@ -207,10 +207,9 @@ class UploadController extends Controller
     public function saveAction(Request $request)
     {
         $all = $request->get('all');
-        $action = $request->get('do');
+        $action = $request->get('action');
         $tempId = $request->get('temp_id');
 
-        $metaSetId = $request->get('metaset', null);
         $metaData = $request->get('meta', null);
         if ($metaData) {
             $metaData = json_decode($metaData, true);
@@ -260,37 +259,41 @@ class UploadController extends Controller
      */
     public function metasetAction(Request $request)
     {
-        $metaSetId = $request->get('set_id');
+        $metaSetIds = explode(',', $request->get('ids'));
 
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
-        $metaSet = $metaSetManager->find($metaSetId);
+        $meta = array();
 
-        $fieldDatas = [];
+        foreach ($metaSetIds as $metaSetId) {
+            $metaSet = $metaSetManager->find($metaSetId);
 
-        foreach ($metaSet->getFields() as $field) {
-            $options = $optionResolver->resolve($field);
+            $fieldDatas = [];
 
-            $fieldData = [
-                'key'          => $field->getName(),
-                'type'         => $field->getType(),
-                'options'      => $options,
-                'readonly'     => $field->isReadonly(),
-                'required'     => $field->isRequired(),
-                'synchronized' => $field->isSynchronized(),
+            foreach ($metaSet->getFields() as $field) {
+                $options = $optionResolver->resolve($field);
+
+                $fieldData = [
+                    'key'          => $field->getName(),
+                    'type'         => $field->getType(),
+                    'options'      => $options,
+                    'readonly'     => $field->isReadonly(),
+                    'required'     => $field->isRequired(),
+                    'synchronized' => $field->isSynchronized(),
+                ];
+
+                $fieldDatas[] = $fieldData;
+            }
+
+            $meta[] = [
+                'set_id' => $metaSet->getId(),
+                'title'  => $metaSet->getName(),
+                'fields' => $fieldDatas
             ];
-
-            $fieldDatas[] = $fieldData;
         }
 
-        $meta = [
-            'set_id' => $metaSet->getId(),
-            'title'  => $metaSet->getName(),
-            'fields' => $fieldDatas
-        ];
-
-        return new JsonResponse(['metaset' => $meta]);
+        return new JsonResponse(['meta' => $meta]);
     }
 
     /**

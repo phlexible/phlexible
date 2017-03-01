@@ -88,12 +88,15 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
             success: function (response) {
                 var data = Ext.decode(response.responseText);
 
-                if (data.success && action === 'discard' && action === 'discard_all') {
-                    this.getFilesGrid().getStore().reload();
+                if (data.success) {
+                    this.fireEvent('reload');
                 }
 
-                if (callback && scope) {
-                    callback.call(this);
+                if (callback) {
+                    if (!scope) {
+                        scope = this;
+                    }
+                    callback.call(scope);
                 }
             },
             scope: this
@@ -145,36 +148,7 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
             }
             if (!this.replace) {
                 this.replace = new Phlexible.mediamanager.FileReplaceWindow({
-                    uploadChecker: this,
-                    listeners: {
-                        save: function(action, all) {
-                            var file = this.getCurrentFile(),
-                                params = {
-                                    all: all ? 1 : 0,
-                                    temp_key: file.get('temp_key'),
-                                    temp_id: file.get('temp_id'),
-                                    'do': action
-                                };
-
-                            var request = {
-                                url: Phlexible.Router.generate('mediamanager_upload_save'),
-                                params: params,
-                                success: function (response) {
-                                    this.fireEvent('reload');
-                                    this.next();
-                                },
-                                failure: function (response) {
-                                    var result = Ext.decode(response.responseText);
-
-                                    Ext.MessageBox.alert('Failure', result.msg);
-                                },
-                                scope: this
-                            };
-
-                            Ext.Ajax.request(request);
-                        },
-                        scope: this
-                    }
+                    uploadChecker: this
                 });
             }
             this.replace.show();

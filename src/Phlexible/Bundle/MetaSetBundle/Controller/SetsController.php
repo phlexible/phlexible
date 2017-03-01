@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\MetaSetBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 use Phlexible\Component\Util\UuidUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -41,9 +42,16 @@ class SetsController extends Controller
 
         $data = [];
         foreach ($metaSet as $set) {
+            /* @var $set MetaSetInterface */
+
             $data[] = [
                 'id' => $set->getId(),
                 'name' => $set->getName(),
+                'createdAt' => $set->getCreatedAt() ? $set->getCreatedAt()->format('Y-m-d H:i:s') : null,
+                'createUser' => $set->getCreateUser(),
+                'modifiedAt' => $set->getModifiedAt() ? $set->getModifiedAt()->format('Y-m-d H:i:s') : null,
+                'modifyUser' => $set->getModifyUser(),
+                'revision' => $set->getRevision(),
             ];
         }
 

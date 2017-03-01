@@ -142,9 +142,30 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
 
     saveFile: function (view, index) {
         var all = this.getComponent(3).getValue() ? true : false,
-            r = this.getDataView().getStore().getAt(index),
-            action = r.get('action');
+            record = this.getDataView().getStore().getAt(index),
+            action = record.get('action'),
+            params = {};
 
-        this.fireEvent('save', action, all);
+        if (all) {
+            params.all = true;
+        }
+
+        switch (action) {
+            case 'discard':
+                this.uploadChecker.discardFile(params, this.uploadChecker.next, this.uploadChecker);
+                break;
+
+            case 'save':
+                this.uploadChecker.saveFile(params, this.uploadChecker.next, this.uploadChecker);
+                break;
+
+            case 'replace':
+                this.uploadChecker.replaceFile(params, this.uploadChecker.next, this.uploadChecker);
+                break;
+
+            case 'add_version':
+                this.uploadChecker.saveFileVersion(params, this.uploadChecker.next, this.uploadChecker);
+                break;
+        }
     }
 });

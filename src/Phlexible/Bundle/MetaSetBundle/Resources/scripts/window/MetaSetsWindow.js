@@ -155,7 +155,7 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
 
         if (typeof this.urls.save === 'function') {
             this.urls.save(params, this);
-            this.fireEvent('updatesets');
+            this.fireEvent('updatesets', params);
             this.close();
             return;
         }

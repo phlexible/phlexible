@@ -92,7 +92,21 @@ Phlexible.mediamanager.Meta = Ext.extend(Ext.Panel, {
 
     loadMeta: function (params) {
         if (typeof this.urls.load === 'function') {
-            this.urls.load(params, this);
+            this.urls.load(params, function(data) {
+                this.removeAll();
+                if (data.meta && data.meta.length) {
+                    Ext.each(data.meta, function (meta) {
+                        this.add(this.createMetaGridConfig(meta.set_id, meta.title, meta.fields, this.small));
+                    }, this);
+                } else {
+                    this.add({
+                        border: false,
+                        html: '<div class="x-grid-empty">' + this.strings.no_meta_values + '</div>'
+                    });
+                }
+
+                this.doLayout();
+            }, this);
             return;
         }
 
@@ -170,10 +184,7 @@ Phlexible.mediamanager.Meta = Ext.extend(Ext.Panel, {
             return;
         }
 
-        var sources = {};
-        this.items.each(function(p) {
-            sources[p.setId] = p.getData();
-        });
+        var sources = this.getData();
         var params = this.params;
         params.data = Ext.encode(sources);
 
@@ -197,23 +208,12 @@ Phlexible.mediamanager.Meta = Ext.extend(Ext.Panel, {
     },
 
     getData: function () {
-        var data = {},
-            records = this.store.getRange(),
-            i, j, key, values;
-
-        for (i = 0; i < records.length; i++) {
-            key = records[i].data.key;
-            values = records[i].data;
-            if (values.type == 'date') {
-                for (j in values) {
-                    if (j.substr(0, 6) === 'value_') {
-                        values[j] = this.formatDate(values[j]);
-                    }
-                }
-            }
-            data[key] = values;
+        var sources = {};
+        if (this.items) {
+            this.items.each(function (p) {
+                sources[p.setId] = p.getData();
+            });
         }
-
-        return data;
+        return sources;
     }
 });
