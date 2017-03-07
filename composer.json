@@ -59,7 +59,7 @@
         "phlexible/siteroot-bundle": "self.version",
         "phlexible/tree-bundle": "self.version",
         "phlexible/user-bundle": "self.version",
-        "phlexible/util": "self.version"
+        "phlexible/util": "self.version",
         "phlexible/volume": "self.version"
     },
     "require-dev": {
