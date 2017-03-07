@@ -50,6 +50,7 @@
         "phlexible/element-bundle": "self.version",
         "phlexible/element-renderer-bundle": "self.version",
         "phlexible/elementtype-bundle": "self.version",
+        "phlexible/formatter": "self.version",
         "phlexible/gui-bundle": "self.version",
         "phlexible/message-bundle": "self.version",
         "phlexible/problem-bundle": "self.version",
@@ -58,6 +59,7 @@
         "phlexible/siteroot-bundle": "self.version",
         "phlexible/tree-bundle": "self.version",
         "phlexible/user-bundle": "self.version",
+        "phlexible/util": "self.version"
         "phlexible/volume": "self.version"
     },
     "require-dev": {
