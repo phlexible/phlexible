@@ -53,6 +53,7 @@
         "phlexible/formatter": "self.version",
         "phlexible/gui-bundle": "self.version",
         "phlexible/message-bundle": "self.version",
+        "phlexible/metaset": "self.version",
         "phlexible/problem-bundle": "self.version",
         "phlexible/queue-bundle": "self.version",
         "phlexible/search-bundle": "self.version",
