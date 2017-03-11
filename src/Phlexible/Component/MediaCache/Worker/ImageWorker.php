@@ -207,9 +207,7 @@ class ImageWorker extends AbstractWorker
             if (!$filesystem->exists($this->tempDir)) {
                 $filesystem->mkdir($this->tempDir, 0777);
             }
-            if (!$filesystem->exists($tempFilename)) {
-                $filesystem->remove($tempFilename);
-            }
+            $filesystem->remove($tempFilename);
 
             try {
                 $image = $this->applier->apply($template, $file, $inputFilename, $tempFilename);

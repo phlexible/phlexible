@@ -95,7 +95,7 @@ class MediaController extends Controller
             $batchResolver = $this->get('phlexible_media_cache.batch_resolver');
             $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
 
-            $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
+            $file = $volumeManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
             $batch = $batchBuilder->createForTemplateAndFile($template, $file);
             $queue = $batchResolver->resolve($batch);
 
