@@ -42,6 +42,6 @@ class AddWorkersPass implements CompilerPassInterface
                 $sortedIds[] = $id;
             }
         }
-        $container->findDefinition('phlexible_media_cache.worker.resolver')->replaceArgument(0, $sortedIds);
+        $container->findDefinition('phlexible_media_cache.worker_resolver')->replaceArgument(0, $sortedIds);
     }
 }

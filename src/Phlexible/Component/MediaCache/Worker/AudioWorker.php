@@ -105,7 +105,7 @@ class AudioWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function getLogger()
+    protected function getLogger()
     {
         return $this->logger;
     }
@@ -135,8 +135,6 @@ class AudioWorker extends AbstractWorker
      * @param AudioTemplate         $template
      * @param ExtendedFileInterface $file
      * @param string                $inputFilename
-     *
-     * @return CacheItem
      */
     private function work(CacheItem $cacheItem, AudioTemplate $template, ExtendedFileInterface $file, $inputFilename)
     {
@@ -201,6 +199,8 @@ class AudioWorker extends AbstractWorker
                     ->setFilesize(filesize($tempFilename))
                     ->setFinishedAt(new \DateTime());
             } catch (\Exception $e) {
+                $this->logger->error('Audio worker error', array('exception' => $e, 'template' => $template->getId(), 'file' => $file->getId()));
+
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_ERROR)
                     ->setQueueStatus(CacheItem::QUEUE_ERROR)
@@ -215,7 +215,5 @@ class AudioWorker extends AbstractWorker
         }
 
         $this->cacheManager->updateCacheItem($cacheItem);
-
-        return $cacheItem;
     }
 }

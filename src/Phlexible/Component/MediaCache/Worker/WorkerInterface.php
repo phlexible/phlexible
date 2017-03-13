@@ -44,9 +44,4 @@ interface WorkerInterface
      * @param MediaType             $mediaType
      */
     public function process(CacheItem $cacheItem, TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType);
-
-    /**
-     * @return LoggerInterface
-     */
-    public function getLogger();
 }

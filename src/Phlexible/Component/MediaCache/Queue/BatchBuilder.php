@@ -13,8 +13,6 @@ namespace Phlexible\Component\MediaCache\Queue;
 
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
-use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
-use Phlexible\Component\Volume\VolumeManager;
 
 /**
  * Queue batch.
@@ -24,24 +22,19 @@ use Phlexible\Component\Volume\VolumeManager;
 class BatchBuilder
 {
     /**
-     * @var VolumeManager
+     * @var TemplateInterface[]
      */
-    private $volumeManager;
+    private $templates = array();
 
     /**
-     * @var TemplateManagerInterface
+     * @var ExtendedFileInterface[]
      */
-    private $templateManager;
+    private $files = array();
 
     /**
-     * @param VolumeManager            $volumeManager
-     * @param TemplateManagerInterface $templateManager
+     * @var array
      */
-    public function __construct(VolumeManager $volumeManager, TemplateManagerInterface $templateManager)
-    {
-        $this->volumeManager = $volumeManager;
-        $this->templateManager = $templateManager;
-    }
+    private $flags = array();
 
     /**
      * Create an empty batch.
@@ -54,104 +47,67 @@ class BatchBuilder
     }
 
     /**
-     * Create a new batch with given template and file.
+     * @param TemplateInterface[] $templates
      *
-     * @param TemplateInterface     $template
-     * @param ExtendedFileInterface $file
-     *
-     * @return Batch
+     * @return self
      */
-    public function createForTemplateAndFile(TemplateInterface $template, ExtendedFileInterface $file)
+    public function templates(array $templates)
     {
-        $batch = $this->create();
-
-        if ($template->getCache()) {
-            $batch
-                ->addFile($file)
-                ->addTemplate($template);
-        }
-
-        return $batch;
-    }
-
-    /**
-     * Create a new batch with all templates.
-     *
-     * @return Batch
-     */
-    public function createWithAllTemplates()
-    {
-        $batch = $this->create();
-
-        $this->addAllTemplates($batch);
-
-        return $batch;
-    }
-
-    /**
-     * Create a new batch with all files.
-     *
-     * @return Batch
-     */
-    public function createWithAllFiles()
-    {
-        $batch = $this->create();
-
-        $this->addAllFiles($batch);
-
-        return $batch;
-    }
-
-    /**
-     * Create a new batch with all templates and all files.
-     *
-     * @return Batch
-     */
-    public function createWithAllTemplatesAndFiles()
-    {
-        $batch = $this->create();
-
-        $this
-            ->addAllFiles($batch)
-            ->addAllTemplates($batch);
-
-        return $batch;
-    }
-
-    /**
-     * @param Batch $batch
-     *
-     * @return $this
-     */
-    private function addAllTemplates(Batch $batch)
-    {
-        foreach ($this->templateManager->findAll() as $template) {
-            if ($template->getCache()) {
-                echo $template->getKey().PHP_EOL;
-                $batch->addTemplate($template);
-            }
-        }
+        $this->templates = $templates;
 
         return $this;
     }
 
     /**
-     * @param Batch $batch
+     * @param ExtendedFileInterface[] $files
      *
-     * @return $this
+     * @return self
      */
-    private function addAllFiles(Batch $batch)
+    public function files(array $files)
     {
-        foreach ($this->volumeManager->all() as $volume) {
-            $rii = new \RecursiveIteratorIterator($volume->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
-
-            foreach ($rii as $folder) {
-                foreach ($volume->findFilesByFolder($folder) as $file) {
-                    $batch->addFile($file);
-                }
-            }
-        }
+        $this->files = $files;
 
         return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function filterError()
+    {
+        $this->flags[] = Batch::FILTER_ERROR;
+        $this->flags = array_unique($this->flags);
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function filterMissing()
+    {
+        $this->flags[] = Batch::FILTER_MISSING;
+        $this->flags = array_unique($this->flags);
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function filterUncached()
+    {
+        $this->flags[] = Batch::FILTER_UNCACHED;
+        $this->flags = array_unique($this->flags);
+
+        return $this;
+    }
+
+    /**
+     * @return Batch
+     */
+    public function getBatch()
+    {
+        return new Batch($this->files, $this->templates, $this->flags);
     }
 }

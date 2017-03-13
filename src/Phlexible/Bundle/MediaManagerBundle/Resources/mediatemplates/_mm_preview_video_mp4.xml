@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mediaTemplate key="_mm_preview_video_mp4" type="video" class="Phlexible\Component\MediaTemplate\Model\VideoTemplate"
-               cache="1" system="1" revision="1">
+               cache="1" system="1" managed="1" revision="1">
     <parameter key="format">mp4</parameter>
     <parameter key="video_width">256</parameter>
     <parameter key="video_height">224</parameter>

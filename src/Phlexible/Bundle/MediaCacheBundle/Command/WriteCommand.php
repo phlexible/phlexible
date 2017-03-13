@@ -12,11 +12,14 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaCache\Queue\Instruction;
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
+use Phlexible\Component\Volume\Model\FileInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\LockHandler;
 
 /**
  * Write command.
@@ -32,8 +35,7 @@ class WriteCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-cache:write')
-            ->setDescription('Write queued cache files')
-            ->addOption('break-on-error', 'b', InputOption::VALUE_NONE, 'Break on error');
+            ->setDescription('Write queued cache files');
     }
 
     /**
@@ -41,89 +43,54 @@ class WriteCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $breakOnError = $input->getOption('break-on-error');
+        $fileLock = new LockHandler('media-cache-write');
+        if (!$fileLock->lock(false)) {
+            $output->writeln('<error>Another write process is running</error>');
+
+            return 1;
+        }
 
         $cacheManager = $this->getContainer()->get('phlexible_media_cache.cache_manager');
-        $queueProcessor = $this->getContainer()->get('phlexible_media_cache.queue_processor');
+        $instructionProcessor = $this->getContainer()->get('phlexible_media_cache.instruction_processor');
 
-        $total = $cacheManager->countBy(array('queueStatus' => CacheItem::QUEUE_WAITING));
-
-        if (!$total) {
-            return 0;
-        }
-
-        $progress = null;
-        if ($output->getVerbosity() === OutputInterface::VERBOSITY_NORMAL) {
-            $progress = new ProgressBar($output, $total);
-            $progress->start();
-        }
-
-        $current = 0;
-        foreach ($cacheManager->findBy(array('queueStatus' => CacheItem::QUEUE_WAITING)) as $cacheItem) {
-            ++$current;
-            if ($progress) {
-                $progress->advance();
-            }
-
-            $queueProcessor->processItem(
-                $cacheItem,
-                function ($status, $worker, CacheItem $cacheItem = null) use ($output, $breakOnError, $current, $total) {
-                    if (!$cacheItem) {
-                        $output->writeln('No cache item');
-
-                        return;
-                    }
-                    $worker = ($worker ? get_class($worker) : '-');
-                    $fileId = $cacheItem->getFileId();
-                    $templateKey = $cacheItem->getTemplateKey();
-                    if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
-                        if ($status === 'no_worker' || $status === 'no_cacheitem') {
-                            $output->writeln(
-                                "$current / $total ".
-                                "<fg=red>[$status]</fg=red> ".
-                                "worker:$worker ".
-                                "fileId:$fileId ".
-                                "templateKey:$templateKey"
-                            );
-                        } elseif ($status === 'processing') {
-                            $output->writeln(
-                                "$current / $total ".
-                                "<info>[$status]</info> ".
-                                "worker:$worker ".
-                                "fileId:$fileId ".
-                                "templateKey:$templateKey"
-                            );
-                        } else {
-                            $mimeType = $cacheItem->getMimeType();
-                            $size = $cacheItem->getFileSize();
-                            $color = ($status === 'ok' ? 'green' : ($status === 'error' ? 'red' : 'yellow'));
-                            $output->writeln(
-                                "$current / $total ".
-                                '<comment>[result]</comment> '.
-                                "<fg=$color>status:$status</fg=$color> ".
-                                "worker:$worker ".
-                                "fileId:$fileId ".
-                                "templateKey:$templateKey ".
-                                "mimeType:$mimeType ".
-                                "size: $size"
-                            );
-                        }
-                    }
-                    if ($status === 'error' && $cacheItem && $cacheItem->getCacheStatus() === CacheItem::STATUS_ERROR) {
-                        $output->writeln("<error>{$cacheItem->getError()}<error>");
-                        if ($breakOnError) {
-                            return 1;
-                        }
-                    }
-                }
+        while ($cacheItem = $cacheManager->findOneBy(array('queueStatus' => CacheItem::QUEUE_WAITING))) {
+            $instruction = new Instruction(
+                $this->getFile($cacheItem->getFileId()),
+                $this->getTemplate($cacheItem->getTemplateKey()),
+                $cacheItem
             );
+
+            $instructionProcessor->processInstruction($instruction);
         }
 
-        if ($progress) {
-            $progress->finish();
-            $output->writeln('');
-        }
+        $fileLock->release();
 
         return 0;
+    }
+
+    /**
+     * @param string $templateKey
+     *
+     * @return TemplateInterface
+     */
+    private function getTemplate($templateKey)
+    {
+        $templateManager = $this->getContainer()->get('phlexible_media_template.template_manager');
+
+        return $templateManager->getCollection()->get($templateKey);
+    }
+
+    /**
+     * @param string $fileId
+     *
+     * @return FileInterface
+     */
+    private function getFile($fileId)
+    {
+        $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId);
+
+        return $file;
     }
 }

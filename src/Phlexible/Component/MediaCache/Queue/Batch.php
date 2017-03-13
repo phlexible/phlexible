@@ -11,7 +11,6 @@
 
 namespace Phlexible\Component\MediaCache\Queue;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
@@ -23,147 +22,35 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
  */
 class Batch
 {
+    const FILTER_ERROR = 'error';
+    const FILTER_MISSING = 'missing';
+    const FILTER_UNCACHED = 'uncached';
+
     /**
-     * @var ExtendedFileInterface[]|ArrayCollection
+     * @var ExtendedFileInterface[]
      */
     private $files;
 
     /**
-     * @var TemplateInterface[]|ArrayCollection
+     * @var TemplateInterface[]
      */
     private $templates;
 
     /**
-     * Constructor.
+     * @var array
      */
-    public function __construct()
-    {
-        $this->files = new ArrayCollection();
-        $this->templates = new ArrayCollection();
-    }
+    private $flags;
 
     /**
-     * Add file.
-     *
-     * @param ExtendedFileInterface $file
-     *
-     * @return $this
-     */
-    public function addFile(ExtendedFileInterface $file)
-    {
-        if (!$this->files->contains($file)) {
-            $this->files->add($file);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add files.
-     *
      * @param ExtendedFileInterface[] $files
-     *
-     * @return $this
+     * @param TemplateInterface[]     $templates
+     * @param array                   $flags
      */
-    public function addFiles(array $files)
+    public function __construct(array $files = array(), array $templates = array(), array $flags = array())
     {
-        foreach ($files as $file) {
-            $this->addFile($file);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove file.
-     *
-     * @param ExtendedFileInterface $file
-     *
-     * @return $this
-     */
-    public function removeFile(ExtendedFileInterface $file)
-    {
-        if ($this->files->contains($file)) {
-            $this->files->removeElement($file);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove files.
-     *
-     * @param ExtendedFileInterface[] $files
-     *
-     * @return $this
-     */
-    public function removeFiles(array $files)
-    {
-        foreach ($files as $file) {
-            $this->removeFile($file);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add template.
-     *
-     * @param TemplateInterface $template
-     *
-     * @return $this
-     */
-    public function addTemplate(TemplateInterface $template)
-    {
-        if (!$this->templates->contains($template)) {
-            $this->templates->add($template);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add templates.
-     *
-     * @param TemplateInterface[] $templates
-     *
-     * @return $this
-     */
-    public function addTemplates(array $templates)
-    {
-        foreach ($templates as $template) {
-            $this->addTemplate($template);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param TemplateInterface $template
-     *
-     * @return $this
-     */
-    public function removeTemplate(TemplateInterface $template)
-    {
-        if ($this->templates->contains($template)) {
-            $this->templates->removeElement($template);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param TemplateInterface[] $templates
-     *
-     * @return $this
-     */
-    public function removeTemplates(array $templates)
-    {
-        foreach ($templates as $template) {
-            $this->removeTemplate($template);
-        }
-
-        return $this;
+        $this->files = $files;
+        $this->templates = $templates;
+        $this->flags = $flags;
     }
 
     /**
@@ -180,5 +67,13 @@ class Batch
     public function getTemplates()
     {
         return $this->templates;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFlags()
+    {
+        return $this->flags;
     }
 }

@@ -114,7 +114,7 @@ class VideoWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function getLogger()
+    protected function getLogger()
     {
         return $this->logger;
     }
@@ -134,7 +134,7 @@ class VideoWorker extends AbstractWorker
     {
         $videoFile = $this->transmutor->transmuteToVideo($file);
 
-        return $this->work($cacheItem, $template, $file, $videoFile);
+        $this->work($cacheItem, $template, $file, $videoFile);
     }
 
     /**
@@ -144,8 +144,6 @@ class VideoWorker extends AbstractWorker
      * @param VideoTemplate         $template
      * @param ExtendedFileInterface $file
      * @param string                $inputFilename
-     *
-     * @return CacheItem
      */
     private function work(CacheItem $cacheItem, VideoTemplate $template, ExtendedFileInterface $file, $inputFilename)
     {
@@ -207,6 +205,8 @@ class VideoWorker extends AbstractWorker
                     ->setHeight($height)
                     ->setFinishedAt(new \DateTime());
             } catch (\Exception $e) {
+                $this->logger->error('Video worker error', array('exception' => $e, 'template' => $template->getId(), 'file' => $file->getId()));
+
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_ERROR)
                     ->setQueueStatus(CacheItem::QUEUE_ERROR)
@@ -221,7 +221,5 @@ class VideoWorker extends AbstractWorker
         }
 
         $this->cacheManager->updateCacheItem($cacheItem);
-
-        return $cacheItem;
     }
 }

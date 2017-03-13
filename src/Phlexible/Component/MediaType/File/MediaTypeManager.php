@@ -14,6 +14,7 @@ namespace Phlexible\Component\MediaType\File;
 use Phlexible\Component\MediaType\Model\MediaTypeCollection;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Mime\MimeDetector;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Media type manager.
@@ -104,7 +105,8 @@ class MediaTypeManager implements MediaTypeManagerInterface
      */
     public function findByFilename($filename)
     {
-        $mimetype = $this->mimeDetector->detect($filename, MimeDetector::RETURN_STRING);
+        $file = new File($filename);
+        $mimetype = $file->getMimeType();//$this->mimeDetector->detect($filename, MimeDetector::RETURN_STRING);
 
         return $this->findByMimetype($mimetype);
     }
