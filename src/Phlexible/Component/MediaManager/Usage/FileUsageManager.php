@@ -51,8 +51,8 @@ class FileUsageManager
     public function getStatus(ExtendedFileInterface $file)
     {
         $status = 0;
-        foreach ($this->findStatusByFile($file) as $status) {
-            $status &= $status;
+        foreach ($this->findStatusByFile($file) as $fileStatus) {
+            $status |= (int) $fileStatus;
         }
 
         return $status;
