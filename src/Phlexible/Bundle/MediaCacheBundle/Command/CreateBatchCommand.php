@@ -128,7 +128,7 @@ class CreateBatchCommand extends ContainerAwareCommand
                     $instruction->getTemplate()->getKey(),
                     $instruction->getFile()->getName()
                 ));
-                $cnt++;
+                ++$cnt;
             }
 
             $output->writeln("$cnt items.");
@@ -141,7 +141,7 @@ class CreateBatchCommand extends ContainerAwareCommand
             foreach ($batchProcessor->process($batch) as $instruction) {
                 $instruction->getCacheItem()->setQueueStatus(CacheItem::QUEUE_WAITING);
                 $cacheManager->updateCacheItem($instruction->getCacheItem());
-                $cnt++;
+                ++$cnt;
             }
 
             $output->writeln("$cnt items queued.");
@@ -169,9 +169,9 @@ class CreateBatchCommand extends ContainerAwareCommand
                     $process->run();
 
                     $ts2 = microtime(true);
-                    $time = number_format($ts2-$ts1, 2);
+                    $time = number_format($ts2 - $ts1, 2);
 
-                    $cnt++;
+                    ++$cnt;
 
                     if ($process->getExitCode()) {
                         $output->writeln(sprintf(

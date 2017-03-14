@@ -69,6 +69,7 @@ class InstructionProcessor
                 $this->worker->process($cacheItem, $template, $file, $mediaType);
             } catch (\Exception $e) {
                 $this->logger->info("Worker failed for file {$file->getId()} / mimetype {$file->getMimeType()} / template {$template->getKey()}: ".$e->getMessage());
+
                 return;
             }
             if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK || $cacheItem->getCacheStatus() === CacheItem::STATUS_DELEGATE) {

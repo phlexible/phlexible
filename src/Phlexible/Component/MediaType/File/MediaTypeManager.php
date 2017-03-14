@@ -106,7 +106,7 @@ class MediaTypeManager implements MediaTypeManagerInterface
     public function findByFilename($filename)
     {
         $file = new File($filename);
-        $mimetype = $file->getMimeType();//$this->mimeDetector->detect($filename, MimeDetector::RETURN_STRING);
+        $mimetype = $file->getMimeType(); //$this->mimeDetector->detect($filename, MimeDetector::RETURN_STRING);
 
         return $this->findByMimetype($mimetype);
     }

@@ -71,16 +71,19 @@ class InstructionCreator
 
         if (in_array(Batch::FILTER_ERROR, $flags) && $cacheItem && !$this->isError($cacheItem)) {
             $this->logger->info('Skipping non-error item');
+
             return null;
         }
 
         if (in_array(Batch::FILTER_MISSING, $flags) && $cacheItem && !$this->isMissing($cacheItem)) {
             $this->logger->info('Skipping non-missing item');
+
             return null;
         }
 
         if (in_array(Batch::FILTER_UNCACHED, $flags) && $cacheItem && $this->isCached($cacheItem)) {
             $this->logger->info('Skipping cached item');
+
             return null;
         }
 

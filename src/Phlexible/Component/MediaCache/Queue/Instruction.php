@@ -11,11 +11,9 @@
 
 namespace Phlexible\Component\MediaCache\Queue;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
-use Phlexible\Component\Volume\Model\FileInterface;
 
 /**
  * A batch represents a file/template cross combination.

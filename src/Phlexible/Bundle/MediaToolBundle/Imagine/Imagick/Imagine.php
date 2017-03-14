@@ -11,21 +11,21 @@
 
 namespace Phlexible\Bundle\MediaToolBundle\Imagine\Imagick;
 
+use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\NotSupportedException;
+use Imagine\Exception\RuntimeException;
 use Imagine\Image\AbstractImagine;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\Metadata\MetadataBag;
 use Imagine\Image\Palette\Color\ColorInterface;
-use Imagine\Exception\InvalidArgumentException;
-use Imagine\Exception\RuntimeException;
 use Imagine\Image\Palette\CMYK;
-use Imagine\Image\Palette\RGB;
 use Imagine\Image\Palette\Grayscale;
+use Imagine\Image\Palette\RGB;
 use Imagine\Imagick\Font;
 use Imagine\Imagick\Image;
 
 /**
- * Imagine implementation using the Imagick PHP extension
+ * Imagine implementation using the Imagick PHP extension.
  */
 final class Imagine extends AbstractImagine
 {
@@ -65,14 +65,14 @@ final class Imagine extends AbstractImagine
      */
     public function create(BoxInterface $size, ColorInterface $color = null)
     {
-        $width  = $size->getWidth();
+        $width = $size->getWidth();
         $height = $size->getHeight();
 
         $palette = null !== $color ? $color->getPalette() : new RGB();
         $color = null !== $color ? $color : $palette->color('fff');
 
         try {
-            $pixel = new \ImagickPixel((string) $color);
+            $pixel = new \ImagickPixel((string)$color);
             $pixel->setColorValue(\Imagick::COLOR_ALPHA, $color->getAlpha() / 100);
 
             $imagick = new \Imagick();
@@ -151,7 +151,7 @@ final class Imagine extends AbstractImagine
     {
         // provide compatibility with objects such as \SplFileInfo
         if (is_object($path) && method_exists($path, '__toString')) {
-            $path = (string) $path;
+            $path = (string)$path;
         }
 
         $handle = @fopen($path, 'r');
@@ -162,11 +162,11 @@ final class Imagine extends AbstractImagine
 
         fclose($handle);
 
-        return $path.'[0]';
+        return $path . '[0]';
     }
 
     /**
-     * Returns the palette corresponding to an \Imagick resource colorspace
+     * Returns the palette corresponding to an \Imagick resource colorspace.
      *
      * @param \Imagick $imagick
      *
@@ -190,7 +190,7 @@ final class Imagine extends AbstractImagine
     }
 
     /**
-     * Returns ImageMagick version
+     * Returns ImageMagick version.
      *
      * @param \Imagick $imagick
      *
