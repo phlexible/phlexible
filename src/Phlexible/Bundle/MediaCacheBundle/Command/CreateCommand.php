@@ -147,12 +147,12 @@ class CreateCommand extends ContainerAwareCommand
             // create immediately
 
             $cnt = 0;
-            $memoryLimit = $this->returnBytes(ini_get('memory_limit'));
+            $memoryLimit = $this->returnMegaBytes(ini_get('memory_limit'));
             foreach ($batchProcessor->process($batch) as $instruction) {
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $output->writeln(
                         'Memory usage is '.number_format(memory_get_usage()/1024/1024, 2)
-                        .' MB of '.number_format($memoryLimit/1024/1024, 0).' MB, processed '.$cnt.' items.'
+                        .' MB of '.$memoryLimit.' MB, processed '.$cnt.' items.'
                     );
                 }
                 $instructionProcessor->processInstruction($instruction);
@@ -171,8 +171,11 @@ class CreateCommand extends ContainerAwareCommand
         return 0;
     }
 
-    private function returnBytes($val)
+    private function returnMegaBytes($val)
     {
+        if ($val == '-1') {
+            return "unlimited";
+        }
         $val = trim($val);
         $last = strtolower($val[strlen($val)-1]);
         $val = (int) $val;
@@ -186,7 +189,7 @@ class CreateCommand extends ContainerAwareCommand
                 $val *= 1024;
         }
 
-        return $val;
+        return round($val/1024/1024);
     }
 
     /**
