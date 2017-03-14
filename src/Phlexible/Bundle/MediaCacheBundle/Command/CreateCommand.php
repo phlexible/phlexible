@@ -152,7 +152,7 @@ class CreateCommand extends ContainerAwareCommand
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $output->writeln(
                         'Memory usage is '.number_format(memory_get_usage()/1024/1024, 2)
-                        .' MB of '.number_format($memoryLimit/1024/1024, 0).' MB'
+                        .' MB of '.number_format($memoryLimit/1024/1024, 0).' MB, processed '.$cnt.' items.'
                     );
                 }
                 $instructionProcessor->processInstruction($instruction);
