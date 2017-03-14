@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\Formatter\FilesizeFormatter;
 use Phlexible\Component\MediaCache\Queue\BatchBuilder;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
@@ -147,27 +148,58 @@ class CreateBatchCommand extends ContainerAwareCommand
         } else {
             // create immediately
 
+            $formatter = new FilesizeFormatter();
+
             $cnt = 0;
             foreach ($batchProcessor->process($batch) as $instruction) {
+                $ts1 = microtime(true);
+
                 $processBuilder = new ProcessBuilder();
                 $processBuilder
                     ->add($_SERVER['PHP_SELF'])
                     ->add('media-cache:create')
                     ->add($instruction->getTemplate()->getKey())
-                    ->add($instruction->getFile()->getId());
+                    ->add($instruction->getFile()->getId())
+                    ->setTimeout(3600);
 
-                $ts1 = microtime(true);
-                $process = $processBuilder->getProcess();
-                $process->run();
+                $process = $processBuilder->getProcess()
+                    ->setIdleTimeout(60);
+
+                try {
+                    $process->run();
+                } catch (\Exception $e) {
+
+                }
+
                 $ts2 = microtime(true);
                 $time = number_format($ts2-$ts1, 2);
 
                 $cnt++;
 
                 if ($process->getExitCode()) {
-                    $output->writeln("<error>Error processing item $cnt </error> - $time ms / File <fg=yellow>{$instruction->getFile()->getId()}</> / Mimetype <fg=yellow>{$instruction->getFile()->getMimetype()}</> / Size <fg=yellow>{$instruction->getFile()->getSize()}</> / Template <fg=yellow>{$instruction->getTemplate()->getKey()}</>");
+                    $output->writeln(sprintf(
+                        '[%s] %s | Runtime %s | File %s | Template %s | Mimetype %s | Size %s',
+                        date('Y-m-d H:i:s'),
+                        "<error>Error processing item $cnt</>",
+                        $this->formatTime($time),
+                        "<fg=yellow>{$instruction->getFile()->getId()}</>",
+                        "<fg=yellow>{$instruction->getTemplate()->getKey()}</>",
+                        "<fg=yellow>{$instruction->getFile()->getMimetype()}</>",
+                        "<fg=yellow>{$formatter->formatFilesize($instruction->getFile()->getSize())}</>"
+                    ));
+                    $output->writeln($process->getOutput());
+                    $output->writeln($process->getErrorOutput());
                 } else {
-                    $output->writeln("<info>Successfully processed item $cnt</info> - $time ms / File <fg=yellow>{$instruction->getFile()->getId()}</> / Mimetype <fg=yellow>{$instruction->getFile()->getMimetype()}</> / Size <fg=yellow>{$instruction->getFile()->getSize()}</> / Template <fg=yellow>{$instruction->getTemplate()->getKey()}</>");
+                    $output->writeln(sprintf(
+                        '[%s] %s | Runtime %s | File %s | Template %s | Mimetype %s | Size %s',
+                        date('Y-m-d H:i:s'),
+                        "<info>Successfully processed item $cnt</>",
+                        $this->formatTime($time),
+                        "<fg=yellow>{$instruction->getFile()->getId()}</>",
+                        "<fg=yellow>{$instruction->getTemplate()->getKey()}</>",
+                        "<fg=yellow>{$instruction->getFile()->getMimetype()}</>",
+                        "<fg=yellow>{$formatter->formatFilesize($instruction->getFile()->getSize())}</>"
+                    ));
                 }
             }
 
@@ -177,6 +209,19 @@ class CreateBatchCommand extends ContainerAwareCommand
         $properties->set('mediacache', 'last_run', date('Y-m-d H:i:s'));
 
         return 0;
+    }
+
+    private function formatTime($time)
+    {
+        if ($time < 5) {
+            return "<info>$time</> s";
+        }
+
+        if ($time > 30) {
+            return "<error>$time</> s";
+        }
+
+        return "<fg=yellow>$time</> s";
     }
 
     /**
