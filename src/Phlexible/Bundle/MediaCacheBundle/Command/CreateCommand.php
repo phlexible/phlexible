@@ -147,9 +147,13 @@ class CreateCommand extends ContainerAwareCommand
             // create immediately
 
             $cnt = 0;
+            $memoryLimit = $this->returnBytes(ini_get('memory_limit'));
             foreach ($batchProcessor->process($batch) as $instruction) {
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
-                    $output->writeln('memory usage: '.number_format(memory_get_usage()/1024/1024, 2));
+                    $output->writeln(
+                        'Memory usage is '.number_format(memory_get_usage()/1024/1024, 2)
+                        .' MB of '.number_format($memoryLimit/1024/1024, 0).' MB'
+                    );
                 }
                 $instructionProcessor->processInstruction($instruction);
                 $cnt++;
@@ -165,6 +169,24 @@ class CreateCommand extends ContainerAwareCommand
         $properties->set('mediacache', 'last_run', date('Y-m-d H:i:s'));
 
         return 0;
+    }
+
+    private function returnBytes($val)
+    {
+        $val = trim($val);
+        $last = strtolower($val[strlen($val)-1]);
+        $val = (int) $val;
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        return $val;
     }
 
     /**
