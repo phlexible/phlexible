@@ -65,7 +65,12 @@ class InstructionProcessor
         $mediaType = $this->mediaTypeManager->find($file->getMediaType());
 
         if ($this->worker->accept($template, $file, $mediaType)) {
-            $this->worker->process($cacheItem, $template, $file, $mediaType);
+            try {
+                $this->worker->process($cacheItem, $template, $file, $mediaType);
+            } catch (\Exception $e) {
+                $this->logger->info("Worker failed for file {$file->getId()} / mimetype {$file->getMimeType()} / template {$template->getKey()}: ".$e->getMessage());
+                return;
+            }
             if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK || $cacheItem->getCacheStatus() === CacheItem::STATUS_DELEGATE) {
                 $this->logger->info("Status {$cacheItem->getQueueStatus()}/{$cacheItem->getCacheStatus()} for file {$file->getId()} / mimetype {$file->getMimeType()} / template {$template->getKey()}");
             } else {
