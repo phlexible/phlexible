@@ -151,11 +151,7 @@ class CreateCommand extends ContainerAwareCommand
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                     $output->writeln('memory usage: '.number_format(memory_get_usage()/1024/1024, 2));
                 }
-                try {
-                    $instructionProcessor->processInstruction($instruction);
-                } catch (\Exception $e) {
-                    continue;
-                }
+                $instructionProcessor->processInstruction($instruction);
                 $cnt++;
                 if ($cnt % 50 === 0) {
                     gc_collect_cycles();
