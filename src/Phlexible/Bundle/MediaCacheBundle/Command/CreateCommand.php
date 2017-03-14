@@ -149,17 +149,17 @@ class CreateCommand extends ContainerAwareCommand
             $cnt = 0;
             $memoryLimit = $this->returnMegaBytes(ini_get('memory_limit'));
             foreach ($batchProcessor->process($batch) as $instruction) {
-                if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
-                    $output->writeln(
-                        'Memory usage is '.number_format(memory_get_usage()/1024/1024, 2)
-                        .' MB of '.$memoryLimit.' MB, processed '.$cnt.' items.'
-                    );
-                }
                 $instructionProcessor->processInstruction($instruction);
                 $cnt++;
                 if ($cnt % 50 === 0) {
                     gc_collect_cycles();
                     $em->clear();
+                }
+                if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
+                    $output->writeln(
+                        'Memory usage is '.number_format(memory_get_usage()/1024/1024, 2)
+                        .' MB of '.$memoryLimit.' MB, processed '.$cnt.' items.'
+                    );
                 }
             }
 
