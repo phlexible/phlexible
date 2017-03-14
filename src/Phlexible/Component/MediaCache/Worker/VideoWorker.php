@@ -176,7 +176,9 @@ class VideoWorker extends AbstractWorker
             if (!$filesystem->exists($this->tempDir)) {
                 $filesystem->mkdir($this->tempDir, 0777);
             }
-            $filesystem->remove($tempFilename);
+            if ($filesystem->exists($tempFilename)) {
+                $filesystem->remove($tempFilename);
+            }
 
             try {
                 $matchFormat = $template->hasParameter('match_format') ? $template->getParameter('match_format') : false;
