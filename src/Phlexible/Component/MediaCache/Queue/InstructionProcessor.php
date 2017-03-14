@@ -11,7 +11,6 @@
 
 namespace Phlexible\Component\MediaCache\Queue;
 
-use Phlexible\Bundle\GuiBundle\Properties\Properties;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaCache\Worker\WorkerInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
