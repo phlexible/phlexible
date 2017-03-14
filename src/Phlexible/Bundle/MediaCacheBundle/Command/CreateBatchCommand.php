@@ -167,39 +167,38 @@ class CreateBatchCommand extends ContainerAwareCommand
 
                 try {
                     $process->run();
+
+                    $ts2 = microtime(true);
+                    $time = number_format($ts2-$ts1, 2);
+
+                    $cnt++;
+
+                    if ($process->getExitCode()) {
+                        $output->writeln(sprintf(
+                            '[%s] %s | Runtime %s | File %s | Template %s | Mimetype %s | Size %s',
+                            date('Y-m-d H:i:s'),
+                            "<error>Error processing item $cnt</>",
+                            $this->formatTime($time),
+                            "<fg=yellow>{$instruction->getFile()->getId()}</>",
+                            "<fg=yellow>{$instruction->getTemplate()->getKey()}</>",
+                            "<fg=yellow>{$instruction->getFile()->getMimetype()}</>",
+                            "<fg=yellow>{$formatter->formatFilesize($instruction->getFile()->getSize())}</>"
+                        ));
+                    } else {
+                        $output->writeln(sprintf(
+                            '[%s] %s | Runtime %s | File %s | Template %s | Mimetype %s | Size %s',
+                            date('Y-m-d H:i:s'),
+                            "<info>Successfully processed item $cnt</>",
+                            $this->formatTime($time),
+                            "<fg=yellow>{$instruction->getFile()->getId()}</>",
+                            "<fg=yellow>{$instruction->getTemplate()->getKey()}</>",
+                            "<fg=yellow>{$instruction->getFile()->getMimetype()}</>",
+                            "<fg=yellow>{$formatter->formatFilesize($instruction->getFile()->getSize())}</>"
+                        ));
+                    }
                 } catch (\Exception $e) {
-
-                }
-
-                $ts2 = microtime(true);
-                $time = number_format($ts2-$ts1, 2);
-
-                $cnt++;
-
-                if ($process->getExitCode()) {
-                    $output->writeln(sprintf(
-                        '[%s] %s | Runtime %s | File %s | Template %s | Mimetype %s | Size %s',
-                        date('Y-m-d H:i:s'),
-                        "<error>Error processing item $cnt</>",
-                        $this->formatTime($time),
-                        "<fg=yellow>{$instruction->getFile()->getId()}</>",
-                        "<fg=yellow>{$instruction->getTemplate()->getKey()}</>",
-                        "<fg=yellow>{$instruction->getFile()->getMimetype()}</>",
-                        "<fg=yellow>{$formatter->formatFilesize($instruction->getFile()->getSize())}</>"
-                    ));
-                    $output->writeln($process->getOutput());
-                    $output->writeln($process->getErrorOutput());
-                } else {
-                    $output->writeln(sprintf(
-                        '[%s] %s | Runtime %s | File %s | Template %s | Mimetype %s | Size %s',
-                        date('Y-m-d H:i:s'),
-                        "<info>Successfully processed item $cnt</>",
-                        $this->formatTime($time),
-                        "<fg=yellow>{$instruction->getFile()->getId()}</>",
-                        "<fg=yellow>{$instruction->getTemplate()->getKey()}</>",
-                        "<fg=yellow>{$instruction->getFile()->getMimetype()}</>",
-                        "<fg=yellow>{$formatter->formatFilesize($instruction->getFile()->getSize())}</>"
-                    ));
+                    $output->writeln('Output: '.$process->getOutput());
+                    $output->writeln('Error output: '.$process->getErrorOutput());
                 }
             }
 
