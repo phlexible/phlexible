@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\ElementBundle\Model;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue;
 
 /**
  * Element structure manager interface.
@@ -27,6 +28,14 @@ interface ElementStructureManagerInterface
      * @return ElementStructure
      */
     public function find(ElementVersion $elementVersion, $defaultLanguage = null);
+
+    /**
+     * @param string $dsId
+     * @param string $defaultLanguage
+     *
+     * @return ElementStructureValue[]
+     */
+    public function findValues($dsId, $defaultLanguage = null);
 
     /**
      * @param ElementStructure $elementStructure

@@ -14,6 +14,7 @@ namespace Phlexible\Bundle\ElementBundle;
 use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
+use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
@@ -195,6 +196,19 @@ class ElementService
     public function findElementStructure(ElementVersion $elementVersion, $defaultLanguage = null)
     {
         $elementVersionData = $this->elementStructureManager->find($elementVersion, $defaultLanguage);
+
+        return $elementVersionData;
+    }
+
+    /**
+     * @param string $dsId
+     * @param string $defaultLanguage
+     *
+     * @return ElementStructureValue[]
+     */
+    public function findElementStructureValues($dsId, $defaultLanguage = null)
+    {
+        $elementVersionData = $this->elementStructureManager->findValues($dsId, $defaultLanguage);
 
         return $elementVersionData;
     }

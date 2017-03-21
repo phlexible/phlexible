@@ -16,8 +16,8 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkExtractor;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
-use Phlexible\Bundle\ElementBundle\Entity\ElementStructure as StructureEntity;
-use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue as ValueEntity;
+use Phlexible\Bundle\ElementBundle\Entity\ElementStructure as ElementStructureEntity;
+use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue as ElementStructureValueEntity;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Event\ElementStructureEvent;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
@@ -90,6 +90,17 @@ class ElementStructureManager implements ElementStructureManagerInterface
     }
 
     /**
+     * @param string $dsId
+     * @param string $defaultLanguage
+     *
+     * @return ElementStructureValueEntity[]
+     */
+    public function findValues($dsId, $defaultLanguage = null)
+    {
+        return $this->elementStructureLoader->loadValues($dsId, $defaultLanguage);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function updateElementStructure(ElementStructure $elementStructure, $flush = true)
@@ -134,7 +145,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
      */
     private function insertStructure(ElementStructure $elementStructure, Connection $conn, $isRoot = false, array $entities = [])
     {
-        $structureRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructure');
+        $structureRepository = $this->entityManager->getRepository(ElementStructureEntity::class);
 
         /*
         $structureEntity = $structureRepository->findOneBy(
@@ -149,7 +160,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
             $structureEntity = $structureRepository->find($elementStructure->getId());
         }
         if (!$structureEntity) {
-            $structureEntity = new StructureEntity();
+            $structureEntity = new ElementStructureEntity();
         }
         $parentStructureEntity = $elementStructure->getParentStructure() ? $entities[spl_object_hash($elementStructure->getParentStructure())] : null;
         $structureEntity
@@ -166,7 +177,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
 
         $entities[spl_object_hash($elementStructure)] = $structureEntity;
 
-        $valueRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructureValue');
+        $valueRepository = $this->entityManager->getRepository(ElementStructureValueEntity::class);
 
         foreach ($elementStructure->getLanguages() as $language) {
             $valueEntities = $valueRepository->findBy(
@@ -186,7 +197,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
                     $field = $this->fieldRegistry->getField($elementStructureValue->getType());
                     $value = $field->serialize($value);
 
-                    $valueEntity = new ValueEntity();
+                    $valueEntity = new ElementStructureValueEntity();
                     $valueEntity
                         ->setElement($elementStructure->getElementVersion()->getElement())
                         ->setVersion($elementStructure->getElementVersion()->getVersion())
