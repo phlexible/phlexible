@@ -63,25 +63,6 @@ class ElementStructureLoader
     private $map = [];
 
     /**
-     * @param string $dsId
-     * @param string $defaultLanguage
-     *
-     * @return ElementStructureValueEntity[]
-     */
-    public function loadValues($dsId, $defaultLanguage = null)
-    {
-        $repository = $this->entityManager->getRepository(ElementStructureValueEntity::class);
-
-        $criteria = array('dsId' => $dsId);
-
-        if ($defaultLanguage) {
-            $criteria['language'] = $defaultLanguage;
-        }
-
-        return $repository->findBy($criteria);
-    }
-
-    /**
      * Load data.
      *
      * @param ElementVersion $elementVersion

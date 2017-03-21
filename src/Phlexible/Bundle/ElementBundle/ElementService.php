@@ -201,19 +201,6 @@ class ElementService
     }
 
     /**
-     * @param string $dsId
-     * @param string $defaultLanguage
-     *
-     * @return ElementStructureValue[]
-     */
-    public function findElementStructureValues($dsId, $defaultLanguage = null)
-    {
-        $elementVersionData = $this->elementStructureManager->findValues($dsId, $defaultLanguage);
-
-        return $elementVersionData;
-    }
-
-    /**
      * @param Element $element
      *
      * @return Elementtype

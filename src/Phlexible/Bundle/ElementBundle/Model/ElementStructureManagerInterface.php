@@ -30,14 +30,6 @@ interface ElementStructureManagerInterface
     public function find(ElementVersion $elementVersion, $defaultLanguage = null);
 
     /**
-     * @param string $dsId
-     * @param string $defaultLanguage
-     *
-     * @return ElementStructureValue[]
-     */
-    public function findValues($dsId, $defaultLanguage = null);
-
-    /**
      * @param ElementStructure $elementStructure
      * @param bool             $flush
      */

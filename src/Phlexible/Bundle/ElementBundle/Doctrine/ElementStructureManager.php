@@ -90,17 +90,6 @@ class ElementStructureManager implements ElementStructureManagerInterface
     }
 
     /**
-     * @param string $dsId
-     * @param string $defaultLanguage
-     *
-     * @return ElementStructureValueEntity[]
-     */
-    public function findValues($dsId, $defaultLanguage = null)
-    {
-        return $this->elementStructureLoader->loadValues($dsId, $defaultLanguage);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function updateElementStructure(ElementStructure $elementStructure, $flush = true)
