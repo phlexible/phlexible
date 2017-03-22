@@ -42,24 +42,35 @@ class UpdateUsageCommand extends ContainerAwareCommand
         $usageUpdater = $this->getContainer()->get('phlexible_frontend_media.usage_updater');
         $elementManager = $this->getContainer()->get('phlexible_element.element_manager');
 
+        $em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
+        $em->getConnection()->getConfiguration()->setSQLLogger(null);
+
         $eid = $input->getArgument('eid');
         if ($eid) {
             $element = $elementManager->find($eid);
             if (!$element) {
-                $output->write('Removing usage of Element '.$eid.' ... ');
+                $output->writeln(sprintf(
+                    "[<fg=green>%s</>] Removing usage of Element <fg=cyan>%d</> | Memory <fg=cyan>%.2f</> MB",
+                    date('Y-m-d H:i:s'),
+                    $eid,
+                    memory_get_usage(true)/1024/1024
+                ));
                 try {
                     $usageUpdater->removeUsage($eid);
-                    $output->writeln('<info>done</info>');
                 } catch (\Exception $e) {
                     $output->writeln('<error>'.$e->getMessage().'</error>');
                 }
 
                 return 0;
             }
-            $output->write('Updating Element '.$element->getEid().' ... ');
+            $output->writeln(sprintf(
+                "[<fg=green>%s</>] Updating Element <fg=cyan>%d</> | Memory <fg=cyan>%.2f</> MB",
+                date('Y-m-d H:i:s'),
+                $element->getEid(),
+                memory_get_usage(true)/1024/1024
+            ));
             try {
                 $usageUpdater->updateUsage($element);
-                $output->writeln('<info>done</info>');
             } catch (\Exception $e) {
                 $output->writeln('<error>'.$e->getMessage().'</error>');
             }
@@ -70,15 +81,20 @@ class UpdateUsageCommand extends ContainerAwareCommand
             $elements = $elementManager->findBy(array(), null, $limit, $offset);
             do {
                 foreach ($elements as $element) {
-                    $output->write('Updating Element '.$element->getEid().' ... ');
+                    $output->writeln(sprintf(
+                        "[<fg=green>%s</>] Updating Element <fg=cyan>%d</> | Memory <fg=cyan>%.2f</> MB",
+                        date('Y-m-d H:i:s'),
+                        $element->getEid(),
+                        memory_get_usage(true)/1024/1024
+                    ));
                     try {
                         $usageUpdater->updateUsage($element);
-                        $output->writeln('<info>done</info>');
                     } catch (\Exception $e) {
                         $output->writeln('<error>'.$e->getMessage().'</error>');
                     }
                 }
                 $offset += $limit;
+                $em->clear();
                 $elements = $elementManager->findBy(array(), null, $limit, $offset);
             } while (count($elements));
         }
