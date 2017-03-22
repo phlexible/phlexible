@@ -6,12 +6,13 @@ Phlexible.fields.Registry.addFactory('checkbox', function (parentConfig, item, v
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId),
         boxLabel = item.labels.boxLabel || {};
 
+
     Ext.apply(config, {
         xtype: 'xcheckbox',
         boxLabel: (boxLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
         checked: config.value,
 
-        submitOffValue: '',
+        submitOffValue: '0',
         submitOnValue: '1',
 
         supportsPrefix: true,

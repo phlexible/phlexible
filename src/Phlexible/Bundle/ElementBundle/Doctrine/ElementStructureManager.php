@@ -181,7 +181,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
 
         foreach ($elementStructure->getLanguages() as $language) {
             foreach ($elementStructure->getValues($language) as $elementStructureValue) {
-                if ($elementStructureValue->getValue()) {
+                if (strlen($elementStructureValue->getValue())) {
                     $value = $elementStructureValue->getValue();
                     $field = $this->fieldRegistry->getField($elementStructureValue->getType());
                     $value = $field->serialize($value);
