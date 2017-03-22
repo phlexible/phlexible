@@ -33,4 +33,3 @@ services:
             - "@phlexible_media_manager.doctrine.file_meta_data_manager"
         tags:
             - {name: twig.extension}
-
