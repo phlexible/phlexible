@@ -59,9 +59,9 @@ class ElementListener implements EventSubscriberInterface
      */
     public function __construct(UsageUpdater $usageUpdater, ElementService $elementService, JobManagerInterface $jobManager)
     {
-        $this->usageUpdater   = $usageUpdater;
+        $this->usageUpdater = $usageUpdater;
         $this->elementService = $elementService;
-        $this->jobManager     = $jobManager;
+        $this->jobManager = $jobManager;
     }
 
     /**
@@ -72,10 +72,10 @@ class ElementListener implements EventSubscriberInterface
         return [
             ElementEvents::CREATE_ELEMENT_VERSION => 'onCreateElementVersion',
             ElementEvents::UPDATE_ELEMENT_VERSION => 'onUpdateElementVersion',
-            ElementEvents::DELETE_ELEMENT         => 'onDeleteElement',
-            ElementEvents::COMMIT_CHANGES         => 'onCommitChanges',
-            TreeEvents::PUBLISH_NODE              => 'onPublishNode',
-            TeaserEvents::PUBLISH_TEASER          => 'onPublishTeaser',
+            ElementEvents::DELETE_ELEMENT => 'onDeleteElement',
+            ElementEvents::COMMIT_CHANGES => 'onCommitChanges',
+            TreeEvents::PUBLISH_NODE => 'onPublishNode',
+            TeaserEvents::PUBLISH_TEASER => 'onPublishTeaser',
         ];
     }
 
@@ -130,4 +130,3 @@ class ElementListener implements EventSubscriberInterface
         }
     }
 }
-
