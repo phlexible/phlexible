@@ -14,6 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Doctrine;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue as ElementStructureValueEntity;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
@@ -204,7 +205,7 @@ class ElementStructureLoader
     {
         $field = $this->fieldRegistry->getField($dataRow['type']);
 
-        $value = $field->unserialize($dataRow['value']);
+        $content = $field->unserialize($dataRow['content']);
 
         return new ElementStructureValue(
             $dataRow['id'],
@@ -213,7 +214,7 @@ class ElementStructureLoader
             $dataRow['type'],
             $field->getDataType(),
             $dataRow['name'],
-            $value,
+            $content,
             $dataRow['options'] ? json_decode($dataRow['options'], true) : null
         );
     }
@@ -272,7 +273,7 @@ class ElementStructureLoader
                     'esv.structure_ds_id',
                     'esv.name',
                     'esv.type',
-                    'esv.content AS value',
+                    'esv.content',
                     'esv.options',
                 ]
             )

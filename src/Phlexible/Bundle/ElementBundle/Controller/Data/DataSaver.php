@@ -603,7 +603,7 @@ class DataSaver
             }
             $identifier = rtrim($identifier, '[]');
 
-            if (!$value && (preg_match('/^unlink_field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match) || preg_match('/^unlink_field-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match))) {
+            if (!strlen($value) && (preg_match('/^unlink_field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match) || preg_match('/^unlink_field-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match))) {
                 // existing value
                 $dsId = $match[1];
                 $node = $elementtypeStructure->getNode($dsId);

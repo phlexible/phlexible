@@ -28,10 +28,12 @@ class CacheItem
     const STATUS_DELEGATE = 'delegate';
     const STATUS_ERROR = 'error';
     const STATUS_MISSING = 'missing';
+    const STATUS_DELETED = 'deleted';
 
     const QUEUE_WAITING = 'waiting';
     const QUEUE_ERROR = 'error';
     const QUEUE_DONE = 'done';
+    const QUEUE_NOT_APPLICABLE = 'not_applicable';
 
     /**
      * @var string

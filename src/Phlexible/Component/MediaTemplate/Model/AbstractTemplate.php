@@ -46,6 +46,11 @@ abstract class AbstractTemplate implements TemplateInterface
     private $system = false;
 
     /**
+     * @var bool
+     */
+    private $managed = false;
+
+    /**
      * @var string
      */
     private $storage = 'default';
@@ -156,6 +161,24 @@ abstract class AbstractTemplate implements TemplateInterface
     public function setSystem($system = true)
     {
         $this->system = (bool) $system;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getManaged()
+    {
+        return $this->managed;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setManaged($managed = true)
+    {
+        $this->managed = (bool) $managed;
 
         return $this;
     }

@@ -105,7 +105,7 @@ class ImageWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function getLogger()
+    protected function getLogger()
     {
         return $this->logger;
     }
@@ -127,15 +127,13 @@ class ImageWorker extends AbstractWorker
 
         if ($imageFile !== null && file_exists($imageFile)) {
             // we have a preview image from the asset
-            return $this->work($cacheItem, $template, $file, $imageFile);
+            $this->work($cacheItem, $template, $file, $imageFile);
         } elseif (!file_exists($file->getPhysicalPath())) {
             // file is completely missing
-            return $this->work($cacheItem, $template, $file, $file->getPhysicalPath(), true);
+            $this->work($cacheItem, $template, $file, $file->getPhysicalPath(), true);
         } elseif ($imageFile === null) {
-            return $this->work($cacheItem, $template, $file);
+            $this->work($cacheItem, $template, $file);
         }
-
-        return null;
     }
 
     /**
@@ -146,8 +144,6 @@ class ImageWorker extends AbstractWorker
      * @param ExtendedFileInterface $file
      * @param string                $inputFilename
      * @param bool                  $missing
-     *
-     * @return CacheItem
      */
     private function work(CacheItem $cacheItem, ImageTemplate $template, ExtendedFileInterface $file, $inputFilename = null, $missing = false)
     {
@@ -207,7 +203,7 @@ class ImageWorker extends AbstractWorker
             if (!$filesystem->exists($this->tempDir)) {
                 $filesystem->mkdir($this->tempDir, 0777);
             }
-            if (!$filesystem->exists($tempFilename)) {
+            if ($filesystem->exists($tempFilename)) {
                 $filesystem->remove($tempFilename);
             }
 
@@ -229,6 +225,8 @@ class ImageWorker extends AbstractWorker
                     ->setHeight($image->getSize()->getHeight())
                     ->setFinishedAt(new \DateTime());
             } catch (\Exception $e) {
+                $this->logger->error('Image worker error', array('exception' => $e, 'template' => $template->getId(), 'file' => $file->getId()));
+
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_ERROR)
                     ->setQueueStatus(CacheItem::QUEUE_ERROR)
@@ -243,7 +241,5 @@ class ImageWorker extends AbstractWorker
         }
 
         $this->cacheManager->updateCacheItem($cacheItem);
-
-        return $cacheItem;
     }
 }

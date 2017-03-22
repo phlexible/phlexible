@@ -60,7 +60,7 @@ abstract class AbstractField extends Field
         } elseif ($type === 'list') {
             $value = explode(',', $value);
         } elseif ($type === 'boolean') {
-            $value = (bool) $value;
+            $value = $value ? '1' : '0';
         } elseif ($type === 'integer') {
             $value = (int) $value;
         } elseif ($type === 'float') {

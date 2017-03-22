@@ -12,9 +12,9 @@
 namespace Phlexible\Bundle\MediaCacheBundle\EventListener;
 
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
-use Phlexible\Component\MediaCache\Queue\Batch;
-use Phlexible\Component\MediaCache\Queue\BatchResolver;
-use Phlexible\Component\MediaCache\Queue\QueueProcessor;
+use Phlexible\Component\MediaCache\Queue\BatchBuilder;
+use Phlexible\Component\MediaCache\Queue\BatchProcessor;
+use Phlexible\Component\MediaCache\Queue\InstructionProcessor;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\Event\FileEvent;
@@ -34,14 +34,14 @@ class FileListener implements EventSubscriberInterface
     private $templateManager;
 
     /**
-     * @var QueueProcessor
+     * @var BatchProcessor
      */
-    private $queueProcessor;
+    private $batchProcessor;
 
     /**
-     * @var BatchResolver
+     * @var InstructionProcessor
      */
-    private $batchResolver;
+    private $instructionProcessor;
 
     /**
      * @var CacheManagerInterface
@@ -55,20 +55,21 @@ class FileListener implements EventSubscriberInterface
 
     /**
      * @param TemplateManagerInterface $templateManager
-     * @param QueueProcessor           $queueProcessor
-     * @param BatchResolver            $batchResolver
+     * @param BatchProcessor           $batchProcessor
+     * @param InstructionProcessor     $instructionProcessor
      * @param CacheManagerInterface    $cacheManager
      * @param bool                     $immediatelyCacheSystemTemplates
      */
-    public function __construct(TemplateManagerInterface $templateManager,
-                                QueueProcessor $queueProcessor,
-                                BatchResolver $batchResolver,
-                                CacheManagerInterface $cacheManager,
-                                $immediatelyCacheSystemTemplates)
-    {
+    public function __construct(
+        TemplateManagerInterface $templateManager,
+        BatchProcessor $batchProcessor,
+        InstructionProcessor $instructionProcessor,
+        CacheManagerInterface $cacheManager,
+        $immediatelyCacheSystemTemplates
+    ) {
         $this->templateManager = $templateManager;
-        $this->queueProcessor = $queueProcessor;
-        $this->batchResolver = $batchResolver;
+        $this->batchProcessor = $batchProcessor;
+        $this->instructionProcessor = $instructionProcessor;
         $this->cacheManager = $cacheManager;
         $this->immediatelyCacheSystemTemplates = $immediatelyCacheSystemTemplates;
     }
@@ -118,8 +119,8 @@ class FileListener implements EventSubscriberInterface
      */
     private function processFile(ExtendedFileInterface $file)
     {
-        $systemTemplates = $this->templateManager->findBy(['system' => true, 'cache' => true]);
-        $otherTemplates = $this->templateManager->findBy(['system' => false, 'cache' => true]);
+        $systemTemplates = $this->templateManager->findBy(['system' => true, 'cache' => true, 'managed' => true]);
+        $otherTemplates = $this->templateManager->findBy(['system' => false, 'cache' => true, 'managed' => true]);
         foreach ($systemTemplates as $index => $systemTemplate) {
             if ($systemTemplate->getType() !== 'image') {
                 $otherTemplates[] = $systemTemplate;
@@ -127,26 +128,30 @@ class FileListener implements EventSubscriberInterface
             }
         }
 
-        $batch = new Batch();
-
         if ($this->immediatelyCacheSystemTemplates) {
-            $batch
-                ->addFile($file)
-                ->addTemplates($systemTemplates);
+            $batchBuilder = new BatchBuilder();
 
-            $queue = $this->batchResolver->resolve($batch);
+            $batchBuilder
+                ->files([$file])
+                ->templates($systemTemplates);
 
-            $this->queueProcessor->processQueue($queue);
+            $batch = $batchBuilder->getBatch();
+
+            foreach ($this->batchProcessor->process($batch) as $instruction) {
+                $this->instructionProcessor->processInstruction($instruction);
+            }
         }
 
-        $batch
-            ->addFile($file)
-            ->addTemplates($otherTemplates);
+        $batchBuilder = new BatchBuilder();
 
-        $queue = $this->batchResolver->resolve($batch);
+        $batchBuilder
+            ->files([$file])
+            ->templates($otherTemplates);
 
-        foreach ($queue->all() as $cacheItem) {
-            $this->cacheManager->updateCacheItem($cacheItem);
+        $batch = $batchBuilder->getBatch();
+
+        foreach ($this->batchProcessor->process($batch) as $instruction) {
+            $this->cacheManager->updateCacheItem($instruction->getCacheItem());
         }
     }
 }

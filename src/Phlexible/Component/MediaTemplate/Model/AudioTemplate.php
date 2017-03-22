@@ -31,6 +31,14 @@ class AudioTemplate extends AbstractTemplate
     /**
      * {@inheritdoc}
      */
+    public function getManaged()
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDefaultParameters()
     {
         return array(

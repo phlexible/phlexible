@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\ElementBundle\Model;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue;
 
 /**
  * Element structure manager interface.
