@@ -4,6 +4,7 @@ services:
         class: Phlexible\Bundle\FrontendMediaBundle\EventListener\ElementListener
         arguments:
             - "@phlexible_frontend_media.usage_updater"
+            - "@phlexible_element.element_service"
             - "@phlexible_queue.job_manager"
         tags:
             - {name: kernel.event_subscriber}
@@ -32,3 +33,4 @@ services:
             - "@phlexible_media_manager.doctrine.file_meta_data_manager"
         tags:
             - {name: twig.extension}
+
