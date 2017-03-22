@@ -12,11 +12,17 @@
 namespace Phlexible\Bundle\FrontendMediaBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ElementEvents;
+use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Event\DeleteElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
 use Phlexible\Bundle\FrontendMediaBundle\Usage\UsageUpdater;
 use Phlexible\Bundle\QueueBundle\Entity\Job;
 use Phlexible\Bundle\QueueBundle\Model\JobManagerInterface;
+use Phlexible\Bundle\TeaserBundle\Event\PublishTeaserEvent;
+use Phlexible\Bundle\TeaserBundle\TeaserEvents;
+use Phlexible\Bundle\TreeBundle\Event\PublishNodeEvent;
+use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -32,6 +38,11 @@ class ElementListener implements EventSubscriberInterface
     private $usageUpdater;
 
     /**
+     * @var ElementService
+     */
+    private $elementService;
+
+    /**
      * @var JobManagerInterface
      */
     private $jobManager;
@@ -43,11 +54,13 @@ class ElementListener implements EventSubscriberInterface
 
     /**
      * @param UsageUpdater        $usageUpdater
+     * @param ElementService      $elementService
      * @param JobManagerInterface $jobManager
      */
-    public function __construct(UsageUpdater $usageUpdater, JobManagerInterface $jobManager)
+    public function __construct(UsageUpdater $usageUpdater, ElementService $elementService, JobManagerInterface $jobManager)
     {
         $this->usageUpdater = $usageUpdater;
+        $this->elementService = $elementService;
         $this->jobManager = $jobManager;
     }
 
@@ -61,6 +74,8 @@ class ElementListener implements EventSubscriberInterface
             ElementEvents::UPDATE_ELEMENT_VERSION => 'onUpdateElementVersion',
             ElementEvents::DELETE_ELEMENT => 'onDeleteElement',
             ElementEvents::COMMIT_CHANGES => 'onCommitChanges',
+            TreeEvents::PUBLISH_NODE => 'onPublishNode',
+            TeaserEvents::PUBLISH_TEASER => 'onPublishTeaser',
         ];
     }
 
@@ -69,17 +84,24 @@ class ElementListener implements EventSubscriberInterface
         $this->useJobs = true;
     }
 
+    public function onPublishNode(PublishNodeEvent $event)
+    {
+        $element = $this->elementService->findElement($event->getNode()->getTypeId());
+        $this->updateUsage($element);
+    }
+
+    public function onPublishTeaser(PublishTeaserEvent $event)
+    {
+        $element = $this->elementService->findElement($event->getTeaser()->getTypeId());
+        $this->updateUsage($element);
+    }
+
     /**
      * @param ElementVersionEvent $event
      */
     public function onCreateElementVersion(ElementVersionEvent $event)
     {
-        if (!$this->useJobs) {
-            $this->usageUpdater->updateUsage($event->getElementVersion()->getElement());
-        } else {
-            $job = new Job('frontend-media:update-usage', array($event->getElementVersion()->getElement()->getEid()));
-            $this->jobManager->updateJob($job);
-        }
+        $this->updateUsage($event->getElementVersion()->getElement());
     }
 
     /**
@@ -87,12 +109,7 @@ class ElementListener implements EventSubscriberInterface
      */
     public function onUpdateElementVersion(ElementVersionEvent $event)
     {
-        if (!$this->useJobs) {
-            $this->usageUpdater->updateUsage($event->getElementVersion()->getElement());
-        } else {
-            $job = new Job('frontend-media:update-usage', array($event->getElementVersion()->getElement()->getEid()));
-            $this->jobManager->updateJob($job);
-        }
+        $this->updateUsage($event->getElementVersion()->getElement());
     }
 
     /**
@@ -101,5 +118,15 @@ class ElementListener implements EventSubscriberInterface
     public function onDeleteElement(DeleteElementEvent $event)
     {
         $this->usageUpdater->removeUsage($event->getEid());
+    }
+
+    private function updateUsage(Element $element)
+    {
+        if (!$this->useJobs) {
+            $this->usageUpdater->updateUsage($element);
+        } else {
+            $job = new Job('frontend-media:update-usage', [$element->getEid()]);
+            $this->jobManager->updateJob($job);
+        }
     }
 }
