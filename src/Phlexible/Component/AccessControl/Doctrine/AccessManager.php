@@ -49,15 +49,29 @@ class AccessManager implements AccessManagerInterface
     private $objectIds = array();
 
     /**
+     * @var string
+     */
+    private $userClass;
+
+    /**
+     * @var string
+     */
+    private $groupClass;
+
+    /**
      * @param PermissionRegistry       $permissionRegistry
      * @param EntityManager            $entityManager
      * @param EventDispatcherInterface $dispatcher
+     * @param string                   $userClass
+     * @param string                   $groupClass
      */
-    public function __construct(PermissionRegistry $permissionRegistry, EntityManager $entityManager, EventDispatcherInterface $dispatcher)
+    public function __construct(PermissionRegistry $permissionRegistry, EntityManager $entityManager, EventDispatcherInterface $dispatcher, $userClass, $groupClass)
     {
         $this->permissionRegistry = $permissionRegistry;
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
+        $this->userClass = $userClass;
+        $this->groupClass = $groupClass;
 
         $this->objectIds = new \SplObjectStorage();
     }
@@ -152,7 +166,7 @@ class AccessManager implements AccessManagerInterface
             //array_multisort($entries, $objectIdentity->getIdentifier());
         }
 
-        $acl = new AccessControlList($this->permissionRegistry->get($objectIdentity->getType()), $objectIdentity);
+        $acl = new AccessControlList($this->permissionRegistry->get($objectIdentity->getType()), $objectIdentity, $this->userClass, $this->groupClass);
 
         foreach ($entries as $entry) {
             $acl->addEntry(

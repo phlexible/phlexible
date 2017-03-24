@@ -12,8 +12,6 @@
 namespace Phlexible\Component\AccessControl\Domain;
 
 use Countable;
-use Phlexible\Bundle\UserBundle\Entity\Group;
-use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\SecurityIdentityInterface;
@@ -46,18 +44,34 @@ class AccessControlList implements Countable
     private $entries;
 
     /**
+     * @var string
+     */
+    private $userClass;
+
+    /**
+     * @var string
+     */
+    private $groupClass;
+
+    /**
      * @param PermissionCollection    $permissions
      * @param ObjectIdentityInterface $objectIdentity
      * @param Entry[]                 $accessControlEntries
+     * @param string                  $userClass
+     * @param string                  $groupClass
      */
     public function __construct(
         PermissionCollection $permissions,
         ObjectIdentityInterface $objectIdentity,
-        array $accessControlEntries = array()
+        array $accessControlEntries = array(),
+        $userClass,
+        $groupClass
     ) {
         $this->permissions = $permissions;
         $this->objectIdentity = $objectIdentity;
         $this->entries = $accessControlEntries;
+        $this->userClass = $userClass;
+        $this->groupClass = $groupClass;
     }
 
     /**
@@ -124,14 +138,14 @@ class AccessControlList implements Countable
         $user = $token->getUser();
 
         $masks = $this->getEffectiveMasks();
-        if (isset($masks[User::class][$user->getId()])) {
-            if ($masks[User::class][$user->getId()] & $permission->getBit()) {
+        if (isset($masks[$this->userClass][$user->getId()])) {
+            if ($masks[$this->userClass][$user->getId()] & $permission->getBit()) {
                 return true;
             }
         }
         foreach ($user->getGroups() as $group) {
-            if (isset($masks[Group::class][$group->getId()])) {
-                if ($masks[Group::class][$group->getId()] & $permission->getBit()) {
+            if (isset($masks[$this->groupClass][$group->getId()])) {
+                if ($masks[$this->groupClass][$group->getId()] & $permission->getBit()) {
                     return true;
                 }
             }
@@ -152,12 +166,12 @@ class AccessControlList implements Countable
 
         $mask = 0;
         $masks = $this->getEffectiveMasks();
-        if (isset($masks[User::class][$user->getId()])) {
-            $mask |= $masks[User::class][$user->getId()];
+        if (isset($masks[$this->userClass][$user->getId()])) {
+            $mask |= $masks[$this->userClass][$user->getId()];
         }
         foreach ($user->getGroups() as $group) {
-            if (isset($masks[Group::class][$group->getId()])) {
-                $mask |= $masks[Group::class][$group->getId()];
+            if (isset($masks[$this->groupClass][$group->getId()])) {
+                $mask |= $masks[$this->groupClass][$group->getId()];
             }
         }
 
