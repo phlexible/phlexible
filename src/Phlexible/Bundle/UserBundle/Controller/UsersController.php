@@ -271,8 +271,8 @@ class UsersController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param UserInterface    $user
+     * @param Request       $request
+     * @param UserInterface $user
      */
     private function requestToUser(Request $request, UserInterface $user)
     {
