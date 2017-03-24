@@ -50,8 +50,9 @@ class CreateCommand extends ContainerAwareCommand
         $password = $input->getArgument('password');
         $email = $input->getArgument('email');
 
+        $userClass = $this->getContainer()->get('phlexible_user.user.class');
         /* @var UserInterface $user */
-        $user = new ($this->getContainer()->get('phlexible_user.user.class'));
+        $user = new $userClass;
         $user
             ->setUsername($username)
             ->setPlainPassword($password)

@@ -59,8 +59,9 @@ class UserSearch implements SearchProviderInterface
     {
         $users = $this->userManager->search(array('term' => $query));
 
-        /* @var UserInterface $user */
-        $createUser = new ($this->getContainer()->get('phlexible_user.user.class'));
+        $userClass = $this->getContainer()->get('phlexible_user.user.class');
+        /* @var UserInterface $createUser */
+        $createUser = new $userClass;
         $createUser->setUsername('(unknown)');
 
         $results = [];
