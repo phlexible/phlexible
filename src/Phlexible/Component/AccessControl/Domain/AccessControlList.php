@@ -56,22 +56,22 @@ class AccessControlList implements Countable
     /**
      * @param PermissionCollection    $permissions
      * @param ObjectIdentityInterface $objectIdentity
-     * @param Entry[]                 $accessControlEntries
      * @param string                  $userClass
      * @param string                  $groupClass
+     * @param Entry[]                 $accessControlEntries
      */
     public function __construct(
         PermissionCollection $permissions,
         ObjectIdentityInterface $objectIdentity,
-        array $accessControlEntries = array(),
         $userClass,
-        $groupClass
+        $groupClass,
+        array $accessControlEntries = array()
     ) {
         $this->permissions = $permissions;
         $this->objectIdentity = $objectIdentity;
-        $this->entries = $accessControlEntries;
         $this->userClass = $userClass;
         $this->groupClass = $groupClass;
+        $this->entries = $accessControlEntries;
     }
 
     /**
