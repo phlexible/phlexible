@@ -14,7 +14,6 @@ namespace Phlexible\Bundle\UserBundle\Controller;
 use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Password\PasswordGenerator;
 use Phlexible\Bundle\UserBundle\UsersMessage;
 use Phlexible\Component\Util\UuidUtil;
@@ -238,7 +237,7 @@ class UsersController extends Controller
         $userManager = $this->get('phlexible_user.user_manager');
 
         $user = $userManager->find($userId);
-        /* @var $user User */
+        /* @var $user UserInterface */
 
         if ($request->get('username') && $request->get('username') !== $user->getUsername()
                 && $userManager->checkUsername($request->get('username'))) {
@@ -272,10 +271,10 @@ class UsersController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param User    $user
+     * @param Request       $request
+     * @param UserInterface $user
      */
-    private function requestToUser(Request $request, User $user)
+    private function requestToUser(Request $request, UserInterface $user)
     {
         if ($request->request->get('firstname')) {
             $user->setFirstname($request->get('firstname'));

@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\UserBundle\Event;
 
-use Phlexible\Bundle\UserBundle\Entity\Group;
+use FOS\UserBundle\Model\GroupInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -22,20 +22,20 @@ use Symfony\Component\EventDispatcher\Event;
 class GroupEvent extends Event
 {
     /**
-     * @var Group
+     * @var GroupInterface
      */
     private $group;
 
     /**
-     * @param Group $group
+     * @param GroupInterface $group
      */
-    public function __construct(Group $group)
+    public function __construct(GroupInterface $group)
     {
         $this->group = $group;
     }
 
     /**
-     * @return Group
+     * @return GroupInterface
      */
     public function getGroup()
     {

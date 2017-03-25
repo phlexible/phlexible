@@ -11,8 +11,8 @@
 
 namespace Phlexible\Bundle\UserBundle\Successor;
 
+use FOS\UserBundle\Model\UserInterface;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
-use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
 use Phlexible\Bundle\UserBundle\UserEvents;
 use Phlexible\Bundle\UserBundle\UsersMessage;
@@ -48,10 +48,10 @@ class SuccessorService
     /**
      * Set successor.
      *
-     * @param User $fromUser
-     * @param User $toUser
+     * @param UserInterface $fromUser
+     * @param UserInterface $toUser
      */
-    public function set(User $fromUser, User $toUser)
+    public function set(UserInterface $fromUser, UserInterface $toUser)
     {
         $event = new ApplySuccessorEvent($fromUser, $toUser);
         $this->dispatcher->dispatch(UserEvents::APPLY_SUCCESSOR, $event);

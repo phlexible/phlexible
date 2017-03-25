@@ -11,9 +11,9 @@
 
 namespace Phlexible\Bundle\UserBundle\Search;
 
+use FOS\UserBundle\Model\UserInterface;
 use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
-use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 
 /**
@@ -59,7 +59,9 @@ class UserSearch implements SearchProviderInterface
     {
         $users = $this->userManager->search(array('term' => $query));
 
-        $createUser = new User();
+        $userClass = $this->getContainer()->get('phlexible_user.user.class');
+        /* @var UserInterface $createUser */
+        $createUser = new $userClass;
         $createUser->setUsername('(unknown)');
 
         $results = [];
