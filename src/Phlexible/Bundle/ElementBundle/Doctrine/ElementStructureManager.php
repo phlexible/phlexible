@@ -128,6 +128,19 @@ class ElementStructureManager implements ElementStructureManagerInterface
     }
 
     /**
+     * @param mixed $value
+     * @return bool
+     */
+    private function isEmpty($value)
+    {
+        if (is_scalar($value)) {
+            return mb_strlen($value) < 1;
+        }
+
+        return !$value;
+    }
+
+    /**
      * @param ElementStructure $elementStructure
      * @param Connection       $conn
      * @param bool             $isRoot
@@ -181,7 +194,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
 
         foreach ($elementStructure->getLanguages() as $language) {
             foreach ($elementStructure->getValues($language) as $elementStructureValue) {
-                if (strlen($elementStructureValue->getValue())) {
+                if (!$this->isEmpty($elementStructureValue->getValue())) {
                     $value = $elementStructureValue->getValue();
                     $field = $this->fieldRegistry->getField($elementStructureValue->getType());
                     $value = $field->serialize($value);
