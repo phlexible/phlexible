@@ -68,5 +68,6 @@ services:
         public: false
         arguments:
             - "@phlexible_user.user_manager"
+            - "%phlexible_user.user.class%"
         tags:
             - {name: phlexible_search.provider}
