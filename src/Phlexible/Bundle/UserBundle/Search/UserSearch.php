@@ -29,11 +29,18 @@ class UserSearch implements SearchProviderInterface
     private $userManager;
 
     /**
-     * @param UserManagerInterface $userManager
+     * @var string
      */
-    public function __construct(UserManagerInterface $userManager)
+    private $userClass;
+
+    /**
+     * @param UserManagerInterface $userManager
+     * @param string               $userClass
+     */
+    public function __construct(UserManagerInterface $userManager, $userClass)
     {
         $this->userManager = $userManager;
+        $this->userClass = $userClass;
     }
 
     /**
@@ -59,7 +66,7 @@ class UserSearch implements SearchProviderInterface
     {
         $users = $this->userManager->search(array('term' => $query));
 
-        $userClass = $this->getContainer()->get('phlexible_user.user.class');
+        $userClass = $this->userClass;
         /* @var UserInterface $createUser */
         $createUser = new $userClass;
         $createUser->setUsername('(unknown)');
