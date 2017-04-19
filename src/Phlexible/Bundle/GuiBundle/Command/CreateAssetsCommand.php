@@ -46,19 +46,22 @@ class CreateAssetsCommand extends ContainerAwareCommand
         $scriptsBuilder = $this->getContainer()->get('phlexible_gui.asset.scripts_builder');
         $scriptAsset = $scriptsBuilder->build();
 
-        $output->writeln(basename($scriptAsset->getFile()).': '.$formatter->formatFilesize(filesize($scriptAsset->getFile())));
+        $output->writeln($scriptAsset->getBasename().': '.$formatter->formatFilesize($scriptAsset->getSize()));
+        $output->writeln($scriptAsset->getPathname());
 
         $cssBuilder = $this->getContainer()->get('phlexible_gui.asset.css_builder');
         $cssAsset = $cssBuilder->build();
 
-        $output->writeln(basename($cssAsset->getFile()).': '.$formatter->formatFilesize(filesize($cssAsset->getFile())));
+        $output->writeln($cssAsset->getBasename().': '.$formatter->formatFilesize($cssAsset->getSize()));
+        $output->writeln($cssAsset->getPathname());
 
-        $basePath = $input->getOption('base-path') ?? '';
+        $basePath = $input->getOption('base-path') ?: '';
 
         $iconsBuilder = $this->getContainer()->get('phlexible_gui.asset.icons_builder');
         $iconsAsset = $iconsBuilder->build($basePath);
 
-        $output->writeln(basename($iconsAsset->getFile()).': '.$formatter->formatFilesize(filesize($iconsAsset->getFile())));
+        $output->writeln($iconsAsset->getBasename().': '.$formatter->formatFilesize($iconsAsset->getSize()));
+        $output->writeln($iconsAsset->getPathname());
 
         $languages = $input->getOption('language');
 
@@ -67,7 +70,8 @@ class CreateAssetsCommand extends ContainerAwareCommand
                 $translationBuilder = $this->getContainer()->get('phlexible_gui.asset.translations_builder');
                 $translationAsset = $translationBuilder->build($language);
 
-                $output->writeln(basename($translationAsset->getFile()).': '.$formatter->formatFilesize(filesize($translationAsset->getFile())));
+                $output->writeln($translationAsset->getBasename().': '.$formatter->formatFilesize($translationAsset->getSize()));
+                $output->writeln($translationAsset->getPathname());
             }
         }
     }

@@ -111,7 +111,7 @@ class AssetController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("/icons", name="asset_icons")
+     * @Route("/gui-icons.css", name="asset_icons")
      */
     public function iconsAction(Request $request)
     {
@@ -128,7 +128,7 @@ class AssetController extends Controller
      * @param string  $language
      *
      * @return Response
-     * @Route("/translations/{language}", name="asset_translations")
+     * @Route("/translations-{language}.js", name="asset_translations")
      */
     public function translationsAction(Request $request, $language)
     {
