@@ -24,7 +24,7 @@ class Uuid extends UuidUtil
 {
     public static function generate()
     {
-        trigger_error(__METHOD__.' is deprecated. Use '.UuidUtil::class.'::generate() instead.', E_USER_DEPRECATED);
+        @trigger_error(__METHOD__.' is deprecated. Use '.UuidUtil::class.'::generate() instead.', E_USER_DEPRECATED);
 
         return parent::generate();
     }

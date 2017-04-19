@@ -27,9 +27,6 @@ interface ElementManagerInterface
      */
     public function find($id);
 
-    /**
-     * {@inheritdoc}
-     */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
 
     /**

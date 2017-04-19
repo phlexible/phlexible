@@ -52,7 +52,7 @@ class CreateCommand extends ContainerAwareCommand
 
         $userClass = $this->getContainer()->get('phlexible_user.user.class');
         /* @var UserInterface $user */
-        $user = new $userClass;
+        $user = new $userClass();
         $user
             ->setUsername($username)
             ->setPlainPassword($password)

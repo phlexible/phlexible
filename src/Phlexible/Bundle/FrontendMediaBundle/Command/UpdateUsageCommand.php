@@ -50,10 +50,10 @@ class UpdateUsageCommand extends ContainerAwareCommand
             $element = $elementManager->find($eid);
             if (!$element) {
                 $output->writeln(sprintf(
-                    "[<fg=green>%s</>] Removing usage of Element <fg=cyan>%d</> | Memory <fg=cyan>%.2f</> MB",
+                    '[<fg=green>%s</>] Removing usage of Element <fg=cyan>%d</> | Memory <fg=cyan>%.2f</> MB',
                     date('Y-m-d H:i:s'),
                     $eid,
-                    memory_get_usage(true)/1024/1024
+                    memory_get_usage(true) / 1024 / 1024
                 ));
                 try {
                     $usageUpdater->removeUsage($eid);
@@ -64,10 +64,10 @@ class UpdateUsageCommand extends ContainerAwareCommand
                 return 0;
             }
             $output->writeln(sprintf(
-                "[<fg=green>%s</>] Updating Element <fg=cyan>%d</> | Memory <fg=cyan>%.2f</> MB",
+                '[<fg=green>%s</>] Updating Element <fg=cyan>%d</> | Memory <fg=cyan>%.2f</> MB',
                 date('Y-m-d H:i:s'),
                 $element->getEid(),
-                memory_get_usage(true)/1024/1024
+                memory_get_usage(true) / 1024 / 1024
             ));
             try {
                 $usageUpdater->updateUsage($element);
@@ -82,10 +82,10 @@ class UpdateUsageCommand extends ContainerAwareCommand
             do {
                 foreach ($elements as $element) {
                     $output->writeln(sprintf(
-                        "[<fg=green>%s</>] Updating Element <fg=cyan>%d</> | Memory <fg=cyan>%.2f</> MB",
+                        '[<fg=green>%s</>] Updating Element <fg=cyan>%d</> | Memory <fg=cyan>%.2f</> MB',
                         date('Y-m-d H:i:s'),
                         $element->getEid(),
-                        memory_get_usage(true)/1024/1024
+                        memory_get_usage(true) / 1024 / 1024
                     ));
                     try {
                         $usageUpdater->updateUsage($element);

@@ -578,6 +578,7 @@ class DataSaver
 
     /**
      * @param mixed $value
+     *
      * @return bool
      */
     private function isEmpty($value)

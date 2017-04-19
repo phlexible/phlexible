@@ -17,8 +17,8 @@ use Imagine\Exception\RuntimeException;
 use Imagine\Image\AbstractImagine;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\Metadata\MetadataBag;
-use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Palette\CMYK;
+use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Palette\Grayscale;
 use Imagine\Image\Palette\RGB;
 use Imagine\Imagick\Font;
@@ -72,7 +72,7 @@ final class Imagine extends AbstractImagine
         $color = null !== $color ? $color : $palette->color('fff');
 
         try {
-            $pixel = new \ImagickPixel((string)$color);
+            $pixel = new \ImagickPixel((string) $color);
             $pixel->setColorValue(\Imagick::COLOR_ALPHA, $color->getAlpha() / 100);
 
             $imagick = new \Imagick();
@@ -145,13 +145,13 @@ final class Imagine extends AbstractImagine
      *
      * @return string
      *
-     * @throws InvalidArgumentException In case the given path is invalid.
+     * @throws InvalidArgumentException in case the given path is invalid
      */
     protected function checkPath($path)
     {
         // provide compatibility with objects such as \SplFileInfo
         if (is_object($path) && method_exists($path, '__toString')) {
-            $path = (string)$path;
+            $path = (string) $path;
         }
 
         $handle = @fopen($path, 'r');
@@ -162,7 +162,7 @@ final class Imagine extends AbstractImagine
 
         fclose($handle);
 
-        return $path . '[0]';
+        return $path.'[0]';
     }
 
     /**

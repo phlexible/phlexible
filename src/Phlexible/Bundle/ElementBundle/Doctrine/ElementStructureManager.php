@@ -129,6 +129,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
 
     /**
      * @param mixed $value
+     *
      * @return bool
      */
     private function isEmpty($value)
