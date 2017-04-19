@@ -68,7 +68,7 @@ class UserSearch implements SearchProviderInterface
 
         $userClass = $this->userClass;
         /* @var UserInterface $createUser */
-        $createUser = new $userClass;
+        $createUser = new $userClass();
         $createUser->setUsername('(unknown)');
 
         $results = [];

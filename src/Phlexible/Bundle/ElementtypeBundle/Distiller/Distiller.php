@@ -44,9 +44,6 @@ class Distiller
         $this->fieldRegistry = $fieldRegistry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function distill(Elementtype $elementtype)
     {
         $elementtypeStructure = $elementtype->getStructure();

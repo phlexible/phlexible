@@ -14,7 +14,6 @@ namespace Phlexible\Bundle\ElementBundle\Doctrine;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue as ElementStructureValueEntity;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;

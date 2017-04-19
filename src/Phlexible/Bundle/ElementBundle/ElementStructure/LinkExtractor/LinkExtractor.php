@@ -56,9 +56,6 @@ class LinkExtractor
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract(ElementStructureValue $value)
     {
         $field = $this->fieldRegistry->getField($value->getType());

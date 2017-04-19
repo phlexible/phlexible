@@ -51,9 +51,6 @@ class ContentElementBuilder
         $this->elementService = $elementService;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function build($eid, $version, $language)
     {
         $element = $this->elementService->findElement($eid);

@@ -14,7 +14,6 @@ namespace Phlexible\Bundle\ElementBundle;
 use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
-use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
