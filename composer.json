@@ -32,7 +32,7 @@
         "nelmio/api-doc-bundle": "^2.5",
         "phlexible/bundler": "~1.0.0,>=1.0.0-alpha3",
         "php-ffmpeg/extras": "^0.3",
-        "php-ffmpeg/php-ffmpeg": "^0.6",
+        "php-ffmpeg/php-ffmpeg": "^0.9.3",
         "php-poppler/php-poppler": "^1.0",
         "puli/cli": "^1.0",
         "puli/twig-extension": "^1.0",
