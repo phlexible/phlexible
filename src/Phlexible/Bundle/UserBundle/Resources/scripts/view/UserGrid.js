@@ -15,6 +15,17 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
     },
 
     initComponent: function () {
+        this.initMyStore();
+        this.initMyTbar();
+        this.initMyColumns();
+        this.initMySelModel();
+        this.initMyBbar();
+        this.initMyListeners();
+
+        Phlexible.users.UserGrid.superclass.initComponent.call(this);
+    },
+
+    initMyStore: function() {
         this.store = new Ext.data.JsonStore({
             root: 'users',
             baseParams: {
@@ -22,7 +33,7 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
             },
             id: 'uid',
             totalProperty: 'count',
-            fields: Phlexible.users.model.User,
+            fields: Phlexible.users.UserModel,
             url: Phlexible.Router.generate('users_users_list'),
             listeners: {
                 load: function () {
@@ -36,7 +47,9 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
                 direction: "ASC"
             }
         });
+    },
 
+    initMyTbar: function() {
         this.tbar = [
             {
                 id: 'addBtn',
@@ -77,7 +90,9 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
                 disabled: true
             });
         }
+    },
 
+    initMyColumns: function() {
         this.columns = [
             {
                 header: this.strings.uid,
@@ -145,7 +160,9 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
                 width: 100
             }
         ];
+    },
 
+    initMySelModel: function() {
         this.selModel = new Ext.grid.RowSelectionModel({
             singleSelect: true,
             listeners: {
@@ -175,7 +192,9 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
                 scope: this
             }
         });
+    },
 
+    initMyBbar: function() {
         this.bbar = new Ext.PagingToolbar({
             pageSize: 20,
             store: this.store,
@@ -183,7 +202,9 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
             displayMsg: this.strings.display_msg,
             emptyMsg: this.strings.empty_msg
         });
+    },
 
+    initMyListeners: function() {
         this.addListener({
             rowdblclick: function (grid, rowIndex) {
                 var record = grid.store.getAt(rowIndex);
@@ -198,18 +219,17 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
                 w.show(record);
             }
         });
-
-        Phlexible.users.UserGrid.superclass.initComponent.call(this);
     },
 
     addUser: function () {
         var defaults = Phlexible.Config.get('defaults'),
-            record = new Phlexible.users.model.User({
+            record = new Phlexible.users.UserModel({
                 uid: '',
                 username: '',
                 firstname: '',
                 lastname: '',
                 email: '',
+                enabled: true,
                 options: {
                     interfaceLanguage: defaults.language,
                     theme: defaults.theme

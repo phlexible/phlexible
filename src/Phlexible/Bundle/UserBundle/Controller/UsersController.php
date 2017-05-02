@@ -15,6 +15,7 @@ use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\UserBundle\Password\PasswordGenerator;
+use Phlexible\Bundle\UserBundle\Serializer\IqwigUserSerializer;
 use Phlexible\Bundle\UserBundle\UsersMessage;
 use Phlexible\Component\Util\UuidUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -95,6 +96,8 @@ class UsersController extends Controller
 
         $users = array();
 
+        $transformer = $this->get('phlexible_user.user_to_array_transformer');
+
         foreach ($userManager->search($criteria, array($sort => $dir), $limit, $start) as $user) {
             /* @var $user UserInterface */
 
@@ -106,29 +109,7 @@ class UsersController extends Controller
                 continue;
             }
 
-            $groups = [];
-            foreach ($user->getGroups() as $group) {
-                $groups[] = $group->getId();
-            }
-
-            $dummy = [
-                'uid' => $user->getId(),
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-                'firstname' => $user->getFirstname(),
-                'lastname' => $user->getLastname(),
-                'comment' => $user->getComment(),
-                'enabled' => $user->isEnabled(),
-                'roles' => $user->getRoles(),
-                'groups' => $groups,
-                'createDate' => $user->getCreatedAt()->format('Y-m-d H:i:s'),
-                'createUser' => '',
-                'modifyDate' => $user->getModifiedAt()->format('Y-m-d H:i:s'),
-                'modifyUser' => '',
-                'properties' => $user->getProperties(),
-            ];
-
-            $users[] = $dummy;
+            $users[] = $transformer->serialize($user);
         }
 
         return new JsonResponse(
@@ -182,7 +163,8 @@ class UsersController extends Controller
 
         $user = $userManager->createUser();
 
-        $this->requestToUser($request, $user);
+        $applier = $this->get('phlexible_user.user_request_applier');
+        $applier->apply($request, $user);
 
         $user
             ->setCreatedAt(new \DateTime())
@@ -248,7 +230,8 @@ class UsersController extends Controller
             throw new \Exception('Email "'.$request->get('email').'" already exists.');
         }
 
-        $this->requestToUser($request, $user);
+        $applier = $this->get('phlexible_user.user_request_applier');
+        $applier->apply($request, $user);
 
         $user
             ->setModifiedAt(new \DateTime());
@@ -268,73 +251,6 @@ class UsersController extends Controller
             ->post(UsersMessage::create('User "'.$user->getUsername().'" updated.'));
 
         return new ResultResponse(true, "User {$user->getUsername()} updated.");
-    }
-
-    /**
-     * @param Request       $request
-     * @param UserInterface $user
-     */
-    private function requestToUser(Request $request, UserInterface $user)
-    {
-        if ($request->request->get('firstname')) {
-            $user->setFirstname($request->get('firstname'));
-        }
-        if ($request->request->get('lastname')) {
-            $user->setLastname($request->get('lastname'));
-        }
-        if ($request->request->get('email')) {
-            $user->setEmail($request->get('email'));
-        }
-        if ($request->request->get('username')) {
-            $user->setUsername($request->get('username'));
-        }
-        if ($request->request->has('comment')) {
-            $user->setComment($request->get('comment'));
-        }
-
-        // password
-        if ($request->request->get('password')) {
-            $user->setPlainPassword($request->request->get('password'));
-        }
-
-        // enabled
-        if ($request->request->get('enabled')) {
-            $user->setEnabled(true);
-        } else {
-            $user->setEnabled(false);
-        }
-
-        // properties
-        $properties = [];
-        foreach ($request->request->all() as $key => $value) {
-            if (substr($key, 0, 9) === 'property_') {
-                $key = substr($key, 9);
-                $properties[$key] = $value;
-            }
-        }
-        if (count($properties)) {
-            $user->setProperties($properties);
-        } else {
-            $user->setProperties([]);
-        }
-
-        // roles
-        $roles = $request->request->get('roles');
-        if ($roles) {
-            $user->setRoles(explode(',', $roles));
-        } else {
-            $user->setRoles([]);
-        }
-
-        // groups
-        $groups = $request->request->get('groups');
-        if ($groups) {
-            $groupManager = $this->get('phlexible_user.group_manager');
-            foreach (explode(',', $groups) as $groupId) {
-                $group = $groupManager->find($groupId);
-                $user->addGroup($group);
-            }
-        }
     }
 
     /**
