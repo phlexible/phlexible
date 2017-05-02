@@ -53,9 +53,26 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
                 if (!this.allowed.tid && !this.allowed.intrasiteroot) {
                     return false;
                 }
-                if (e.query.match(/^http[s]{0,1}:/) || e.query.match(/^mailto:/)) {
-                    e.combo.setValue(e.combo.getRawValue());
-                    this.hiddenValue = e.combo.getRawValue();
+                if (e.query.match(/^http[s]{0,1}:/)) {
+                    if (this.allowed.external) {
+                        // http://www.phlexible.net
+                        this.setHiddenValue({
+                            type: 'external',
+                            url: e.combo.getRawValue()
+                        });
+                        e.combo.setValue(e.combo.getRawValue());
+                    }
+                    return false;
+                }
+                if (e.query.match(/^mailto:/)) {
+                    if (this.allowed.mailto) {
+                        // mailto:info@phlexible.net
+                        this.setHiddenValue({
+                            type: 'mailto',
+                            recipient: e.combo.getRawValue().substr(7)
+                        });
+                        e.combo.setValue(e.combo.getRawValue());
+                    }
                     return false;
                 }
             },
