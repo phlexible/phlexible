@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.elements.tab.Links');
 
+Ext.require('Phlexible.elements.model.ElementLink');
+
 Phlexible.elements.tab.Links = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.elements.Strings.links,
     strings: Phlexible.elements.Strings,
@@ -20,7 +22,7 @@ Phlexible.elements.tab.Links = Ext.extend(Ext.grid.GridPanel, {
             root: 'links',
             totalProperty: 'total',
             id: 'id',
-            fields: ['id', 'iconCls', 'type', 'title', 'content', 'link', 'raw']
+            fields: Phlexible.elements.model.ElementLink
         });
 
         // create the column model
@@ -38,8 +40,13 @@ Phlexible.elements.tab.Links = Ext.extend(Ext.grid.GridPanel, {
                 }
             },
             {
+                header: this.strings.language,
+                width: 50,
+                dataIndex: 'language'
+            },
+            {
                 header: this.strings.field,
-                width: 250,
+                width: 150,
                 dataIndex: 'title'
             },
             {
@@ -49,7 +56,7 @@ Phlexible.elements.tab.Links = Ext.extend(Ext.grid.GridPanel, {
             },
             {
                 header: this.strings.raw,
-                width: 200,
+                width: 250,
                 hidden: true,
                 dataIndex: 'raw'
             }
