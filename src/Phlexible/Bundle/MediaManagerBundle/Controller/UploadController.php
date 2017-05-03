@@ -152,7 +152,6 @@ class UploadController extends Controller
                         'id' => $metaset->getId(),
                         'name' => $metaset->getName(),
                     );
-
                 }
             }
 
@@ -214,7 +213,6 @@ class UploadController extends Controller
         return new ResultResponse(true);
     }
 
-
     /**
      * @param Request $request
      *
@@ -247,7 +245,11 @@ class UploadController extends Controller
         return new ResultResponse(true, ($all ? 'All' : 'File').' saved with action '.$action);
     }
 
-    private function saveMeta(FileInterface $file, $metaData)
+    /**
+     * @param FileInterface $file
+     * @param array         $metaData
+     */
+    private function saveMeta(FileInterface $file, array $metaData)
     {
         $metaLanguages = explode(',', $this->container->getParameter('phlexible_meta_set.languages.available'));
 
@@ -315,6 +317,7 @@ class UploadController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      * @Route("/metaset", name="mediamanager_upload_metaset")
      */
@@ -353,7 +356,7 @@ class UploadController extends Controller
 
             $meta[] = [
                 'set_id' => $metaSet->getId(),
-                'title'  => $metaSet->getName(),
+                'title' => $metaSet->getName(),
                 'fields' => $fieldDatas,
             ];
         }
