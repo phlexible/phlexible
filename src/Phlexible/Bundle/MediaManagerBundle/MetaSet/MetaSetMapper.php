@@ -28,18 +28,18 @@ class MetaSetMapper
     private $metaSetManager;
 
     /**
-     * @var array
+     * @var MediaTypeMetasetMatcher
      */
-    private $metasetMapping;
+    private $matcher;
 
     /**
      * @param MetaSetManagerInterface $metaSetManager
-     * @param array                   $metasetMapping
+     * @param MediaTypeMetasetMatcher $matcher
      */
-    public function __construct(MetaSetManagerInterface $metaSetManager, array $metasetMapping)
+    public function __construct(MetaSetManagerInterface $metaSetManager, MediaTypeMetasetMatcher $matcher)
     {
         $this->metaSetManager = $metaSetManager;
-        $this->metasetMapping = $metasetMapping;
+        $this->matcher = $matcher;
     }
 
     /**
@@ -48,36 +48,11 @@ class MetaSetMapper
      */
     public function map(ExtendedFileInterface $file, MediaType $mediaType)
     {
-        foreach ($this->metasetMapping as $metasetName => $mapping) {
-            if ($this->matches($mediaType, $mapping)) {
-                $metaSet = $this->metaSetManager->findOneByName($metasetName);
-                if ($metaSet) {
-                    $file->addMetaSet($metaSet->getId());
-                }
+        foreach ($this->matcher->match($mediaType) as $metasetName) {
+            $metaSet = $this->metaSetManager->findOneByName($metasetName);
+            if ($metaSet) {
+                $file->addMetaSet($metaSet->getId());
             }
         }
-    }
-
-    /**
-     * @param MediaType $mediaType
-     * @param array     $mapping
-     *
-     * @return bool
-     */
-    private function matches(MediaType $mediaType, array $mapping)
-    {
-        if (empty($mapping)) {
-            return true;
-        }
-
-        $match = false;
-        if (!empty($mapping['name'])) {
-            $match = $mediaType->getName() === $mapping['name'];
-        }
-        if (!empty($mapping['category'])) {
-            $match = $mediaType->getCategory() === $mapping['category'];
-        }
-
-        return $match;
     }
 }

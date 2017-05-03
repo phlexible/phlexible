@@ -62,26 +62,32 @@ Ext.reg('mediamanager-fileuploadwizard-metagrid', Phlexible.FileUploadWizardMeta
 
 Phlexible.mediamanager.FileUploadWizardTemplate = new Ext.XTemplate(
     '<tpl for=".">',
-        '<div class="p-filereplace-wrap">',
-            '<div style="padding-left: 20px;">',
+        '<div class="p-filereplace-wrap p-filewizard-wrap">',
+            '<div>',
+                '<div><b>{source}</b></div>',
                 '<div>',
                     '<div class="p-filereplace-img">',
-                        '<img src="{src}" width="48" height="48">',
+                        '<img src="{src}" width="48" height="48" />',
                     '</div>',
                     '<div class="p-filereplace-desc">',
                         '<div class="p-filereplace-name" style="font-weight: bold">{[values.name.shorten(50)]}</div>',
                         '<div class="p-filereplace-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.type)]}</div>',
-                        '<div class="p-filereplace-size">' + Phlexible.mediamanager.Strings.size + ': {[Phlexible.Format.size(values.size)]}</div>',
+                        '<div class="p-filereplace-size">{[Phlexible.Format.size(values.size)]}</div>',
                     '</div>',
                 '</div>',
             '</div>',
         '</div>',
+    '</tpl>',
+    '<div class="x-clear"></div>',
+    '<tpl if="values[1] && values[0].hash===values[1].hash">',
+        '<div class="p-filewizard-identical">'+Phlexible.inlineIcon('p-mediamanager-wizard_conflict-icon')+' '+Phlexible.mediamanager.Strings.wizard.identical+'</div>',
     '</tpl>'
 );
 
 Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
-    title: 'Wizard',
-    iconCls: 'p-mediamanager-wizard-icon',
+    title: Phlexible.mediamanager.Strings.add_file,
+    strings: Phlexible.mediamanager.Strings,
+    iconCls: 'p-mediamanager-file_add-icon',
     width: 800,
     minWidth: 800,
     height: 500,
@@ -93,21 +99,23 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
     meta: [],
 
     initComponent: function () {
+        /*
         this.metaStore = new Ext.data.SimpleStore({
             fields: ['set_id', 'key', 'tkey', 'value_de', 'value_en', 'type', 'required', 'synchronized', 'options']
         });
+        */
 
         this.items = [
             {
                 xtype: 'dataview',
                 region: 'north',
-                height: 70,
+                height: 100,
                 itemSelector: 'div.p-fileuploadwizard-wrap',
                 overClass: 'p-fileuploadwizard-wrap-over',
                 style: 'overflow:auto',
                 singleSelect: true,
                 store: new Ext.data.JsonStore({
-                    fields: ['action', 'header', 'text', 'id', 'name', 'type', 'size', 'src']
+                    fields: ['action', 'header', 'text', 'id', 'name', 'type', 'size', 'src', 'source', 'hash']
                 }),
                 tpl: Phlexible.mediamanager.FileUploadWizardTemplate
             },
@@ -115,32 +123,8 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 title: false,
                 region: 'center',
                 layout: 'border',
-                tbar: [{
-                    text: Phlexible.inlineIcon('p-mediamanager-wizard_conflict-icon') + ' <b>A file with this name already exists. Selecting "Keep both files" will save it as:</b>'
-                }],
+                border: false,
                 items: [
-                    {
-                        xtype: 'form',
-                        region: 'north',
-                        height: 80,
-                        bodyStyle: 'padding: 5px',
-                        labelWidth: 80,
-                        border: false,
-                        items: [
-                            {
-                                border: false,
-                                html: Phlexible.inlineIcon('p-mediamanager-wizard_conflict-icon') + ' <b>A file with this name already exists. Selecting "Keep both files" will save it as:</b>'
-                            },
-                            {
-                                xtype: 'displayfield',
-                                hideLabel: true,
-                                name: 'altname',
-                                anchor: '-10',
-                                allowBlank: false,
-                                style: 'padding-bottom: 10px;'
-                            }
-                        ]
-                    },
                     {
                         xtype: 'mediamanager-fileuploadwizard-meta',
                         region: 'center'
@@ -264,7 +248,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
 
         this.bbar = [
             {
-                text: 'Discard all remaining files',
+                text: this.strings.wizard.discard_all,
                 iconCls: 'p-mediamanager-wizard_discard-icon',
                 all: true,
                 handler: function() {
@@ -274,7 +258,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
             },
             '->',
             {
-                text: 'Discard file',
+                text: this.strings.wizard.discard,
                 iconCls: 'p-mediamanager-wizard_discard-icon',
                 'do': 'replace',
                 handler: function() {
@@ -284,7 +268,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
             },
             '-',
             {
-                text: 'Keep both files',
+                text: this.strings.wizard.keep_both,
                 iconCls: 'p-mediamanager-wizard_save-icon',
                 'do': 'keep',
                 handler: function() {
@@ -293,7 +277,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 scope: this
             },
             {
-                text: 'Replace file',
+                text: this.strings.wizard.replace,
                 iconCls: 'p-mediamanager-wizard_save-icon',
                 'do': 'replace',
                 handler: function() {
@@ -302,7 +286,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 scope: this
             },
             {
-                text: 'Save as new version',
+                text: this.strings.wizard.save_version,
                 iconCls: 'p-mediamanager-wizard_save-icon',
                 'do': 'version',
                 handler: function() {
@@ -311,7 +295,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 scope: this
             },
             {
-                text: 'Save file',
+                text: this.strings.wizard.save,
                 iconCls: 'p-mediamanager-wizard_save-icon',
                 'do': 'save',
                 handler: function() {
@@ -332,20 +316,8 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         return this.getComponent(1);
     },
 
-    getFileForm: function() {
-        return this.getFileWrap().getComponent(0);
-    },
-
     getMetaGrid: function() {
-        return this.getFileWrap().getComponent(1);
-    },
-
-    getConflictPanel: function() {
-        return this.getFileForm().getComponent(0);
-    },
-
-    getAltNameField: function() {
-        return this.getFileForm().getComponent(1);
+        return this.getFileWrap().getComponent(0);
     },
 
     loadFile: function () {
@@ -362,10 +334,40 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
             name: file.get('new_name'),
             type: file.get('new_type'),
             size: file.get('new_size'),
-            src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.get('temp_key'), id: file.get('temp_id'), template: '_mm_medium'})
+            hash: file.get('new_hash'),
+            src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.get('temp_key'), id: file.get('temp_id'), template: '_mm_medium'}),
+            source: this.strings.wizard.new_file
         });
 
+        if (file.get('old_id')) {
+            data.push({
+                id: file.get('old_id'),
+                name: file.get('old_name'),
+                type: file.get('old_type'),
+                size: file.get('old_size'),
+                hash: file.get('old_hash'),
+                src: Phlexible.Router.generate('mediamanager_media', {file_id: file.get('old_id'), file_version: file.get('old_version') || 1, template_key: '_mm_medium'}),
+                source: this.strings.wizard.old_file
+            });
+        }
+
         this.getFileView().getStore().loadData(data);
+
+        if (file.get('new_metasets')) {
+            var ids = [];
+            Ext.each(file.get('new_metasets'), function(set) {
+                ids.push(set.id);
+            });
+
+            this.getMetaGrid().metasetUrls.list = function() {
+                return file.get('new_metasets');
+            };
+            this.getMetaGrid().loadMeta({
+                ids: ids
+            });
+        } else {
+            this.getMetaGrid().empty();
+        }
 
         this.meta = {};
         if (file.get('parsed')) {
@@ -374,9 +376,8 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
 
         var bbar = this.getBottomToolbar();
         if (file.get('old_id')) {
-            this.getConflictPanel().show();
-            this.getAltNameField().show();
             bbar.items.items[4].show();
+            bbar.items.items[4].setText(String.format(this.strings.wizard.save_as, file.get('alternative_name')));
             if (file.get('versions')) {
                 bbar.items.items[5].hide();
                 bbar.items.items[6].show();
@@ -387,8 +388,6 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
             }
             bbar.items.items[7].hide();
         } else {
-            this.getConflictPanel().hide();
-            this.getAltNameField().hide();
             bbar.items.items[4].hide();
             bbar.items.items[5].hide();
             if (file.get('versions') && file.get('file_id')) {
@@ -401,16 +400,9 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
             }
         }
 
-        var form = this.getFileForm(),
-            values = {
-                altname: file.get('alternative_name') || ''
-            };
-
         if (file.get('parsed') && file.get('parsed').metaset) {
             values.metaset = file.get('parsed').metaset;
         }
-
-        form.getForm().setValues(values);
 
         if (file.get('parsed') && file.get('parsed').metaset) {
             this.buildMeta(file.get('parsed').metaset);
@@ -453,8 +445,10 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
     },
 
     getValues: function () {
-        var values = this.getFileForm().getForm().getValues(),
+        var values = {},
             meta = this.getMetaGrid().getData();
+
+        values.filename = 'xx';//this.uploadChecker.getCurrentFile().get
 
         if (meta) {
             values.meta = Ext.encode(meta);

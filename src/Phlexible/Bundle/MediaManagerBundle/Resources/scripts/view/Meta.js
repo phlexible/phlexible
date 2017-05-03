@@ -8,6 +8,8 @@ Phlexible.mediamanager.Meta = Ext.extend(Ext.Panel, {
     cls: 'p-mediamanager-meta',
     iconCls: 'p-metaset-component-icon',
 
+    autoScroll: true,
+
     small: false,
     right: null,
     key: 'key',
@@ -107,6 +109,7 @@ Phlexible.mediamanager.Meta = Ext.extend(Ext.Panel, {
 
                 this.doLayout();
             }, this);
+
             return;
         }
 

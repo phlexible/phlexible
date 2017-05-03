@@ -82,6 +82,7 @@ class TempHandler
     {
         $volume = $this->volumeManager->getByFolderId($tempFile->getFolderId());
         $folder = $volume->findFolder($tempFile->getFolderId());
+        $file = null;
 
         switch ($action) {
             case self::ACTION_SAVE:

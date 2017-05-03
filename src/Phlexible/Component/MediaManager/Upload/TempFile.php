@@ -48,6 +48,11 @@ class TempFile implements PathSourceInterface
     /**
      * @var string
      */
+    private $hash;
+
+    /**
+     * @var string
+     */
     private $fileId;
 
     /**
@@ -71,18 +76,20 @@ class TempFile implements PathSourceInterface
      * @param string $path
      * @param string $mimeType
      * @param int    $size
+     * @param string $hash
      * @param string $fileId
      * @param string $folderId
      * @param string $userId
      * @param bool   $useWizard
      */
-    public function __construct($id, $name, $path, $mimeType, $size, $fileId, $folderId, $userId, $useWizard = false)
+    public function __construct($id, $name, $path, $mimeType, $size, $hash, $fileId, $folderId, $userId, $useWizard = false)
     {
         $this->id = $id;
         $this->name = $name;
         $this->path = $path;
         $this->mimeType = $mimeType;
         $this->size = $size;
+        $this->hash = $hash;
         $this->fileId = $fileId;
         $this->folderId = $folderId;
         $this->userId = $userId;
@@ -135,6 +142,14 @@ class TempFile implements PathSourceInterface
     public function getSize()
     {
         return $this->size;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHash()
+    {
+        return $this->hash;
     }
 
     /**

@@ -125,7 +125,8 @@ class UploadController extends Controller
         $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
-        $mimeDetector = $this->get('phlexible_media_tool.mime.detector');
+        $mediaTypeMetasetMatcher = $this->get('phlexible_media_manager.media_type_metaset_matcher');
+        $metasetManager = $this->get('phlexible_meta_set.meta_set_manager');
 
         $data = [];
 
@@ -134,13 +135,25 @@ class UploadController extends Controller
             $volume = $volumeManager->getByFolderId($tempFile->getFolderId());
             $supportsVersions = $volume->hasFeature('versions');
             $newName = basename($tempFile->getName());
-            $mimetype = $mimeDetector->detect($tempFile->getPath(), MimeDetector::RETURN_STRING);
+            $mimetype = $tempFile->getMimeType();
             $newType = null;
             if (trim($mimetype)) {
                 $newType = $mediaTypeManager->findByMimetype($mimetype);
             }
             if (!$newType) {
                 $newType = $mediaTypeManager->find('binary');
+            }
+
+            $metasets = array();
+            foreach ($mediaTypeMetasetMatcher->match($newType) as $metasetName) {
+                $metaset = $metasetManager->findOneByName($metasetName);
+                if ($metaset) {
+                    $metasets[] = array(
+                        'id' => $metaset->getId(),
+                        'name' => $metaset->getName()
+                    );
+
+                }
             }
 
             $data = [
@@ -151,6 +164,8 @@ class UploadController extends Controller
                 'new_name' => $newName,
                 'new_type' => $newType->getName(),
                 'new_size' => $tempFile->getSize(),
+                'new_hash' => $tempFile->getHash(),
+                'new_metasets' => $metasets,
                 'wizard' => false,
                 'total' => $tempStorage->count(),
             ];
@@ -164,6 +179,7 @@ class UploadController extends Controller
                 $data['old_id'] = $tempFile->getFileId();
                 $data['old_type'] = $oldFile->getMediaType();
                 $data['old_size'] = $oldFile->getSize();
+                $data['old_hash'] = $oldFile->getHash();
                 $data['alternative_name'] = $alternativeName;
             }
 
@@ -195,6 +211,18 @@ class UploadController extends Controller
         $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
         $tempStorage->removeAll();
 
+        return new ResultResponse(true);
+    }
+
+    /**
+     * @return JsonResponse
+     * @Route("/debug", name="mediamanager_upload_debug")
+     */
+    public function debugAction()
+    {
+        $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
+
+        dump($tempStorage->all());die;
         return new ResultResponse(true);
     }
 

@@ -159,29 +159,6 @@ class MediaSiteListener implements EventSubscriberInterface
     }
 
     /**
-     * @param MediaType $mediaType
-     * @param array     $mapping
-     *
-     * @return bool
-     */
-    private function matches(MediaType $mediaType, array $mapping)
-    {
-        if (empty($mapping)) {
-            return true;
-        }
-
-        $match = false;
-        if (!empty($mapping['name'])) {
-            $match = $mediaType->getName() === $mapping['name'];
-        }
-        if (!empty($mapping['category'])) {
-            $match = $mediaType->getCategory() === $mapping['category'];
-        }
-
-        return $match;
-    }
-
-    /**
      * @param FolderEvent $event
      */
     public function onBeforeCreateFolder(FolderEvent $event)

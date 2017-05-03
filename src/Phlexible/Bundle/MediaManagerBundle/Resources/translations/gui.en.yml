@@ -1,5 +1,6 @@
 mediamanager:
     media: Media
+    add_file: 'Add file'
     delete_files_warning: 'Do you really want to delete these files?'
     delete_file_warning: 'Do you really want to delete this file?'
     hide_files_warning: 'Do you really want to hide these files?'
@@ -184,3 +185,14 @@ mediamanager:
     disable_flash_uploader_help: 'The result of changing this value will be visible after a restart of phlexible.'
     enable_upload_sort: 'Automatically sort by create time after an upload'
     enable_upload_sort_help: 'The result of changing this value will be visible after a restart of phlexible.'
+    wizard:
+        discard_all: 'Discard all remaining files'
+        discard: 'Discard file'
+        keep_both: 'Keep both files'
+        replace: 'Replace file'
+        save_version: 'Save as new version'
+        save: 'Save file'
+        save_as: 'Save file as "{0}"'
+        new_file: 'New file:'
+        old_file: 'Existing file:'
+        identical: 'File are identical.'
