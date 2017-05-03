@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
+use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,11 +40,9 @@ class LinksController extends Controller
         $version = $request->get('version');
         $incoming = $request->get('incoming', false);
 
-        $displayLanguage = $language;
-
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $linkRepository = $this->getDoctrine()->getRepository('PhlexibleElementBundle:ElementLink');
+        $linkFetcher = $this->get('phlexible_element.link_fetcher');
 
         $tree = $treeManager->getByNodeId($tid);
         $node = $tree->get($tid);
@@ -51,66 +50,7 @@ class LinksController extends Controller
         $element = $elementService->findElement($node->getTypeId());
         $elementVersion = $elementService->findElementVersion($element, $version);
 
-        $result = [];
-
-        $links = $linkRepository->findBy(['elementVersion' => $elementVersion, 'language' => $language]);
-        if ($incoming) {
-            $links = array_merge($links, $linkRepository->findBy(['type' => 'link-internal', 'target' => $node->getId()]));
-        }
-
-        foreach ($links as $link) {
-            $iconCls = 'p-element-component-icon';
-            $content = $link->getTarget();
-            switch ($link->getType()) {
-                case 'link-internal':
-                    $tree = $this->get('phlexible_tree.content_tree_manager')->findByTreeId($link->getTarget());
-                    if ($tree) {
-                        $node = $tree->get($link->getTarget());
-                        if ($node) {
-                            $content = sprintf(
-                                '%s [%s]',
-                                $node->getTitle($language),
-                                $link->getTarget()
-                            );
-                        }
-                    }
-                    break;
-                case 'file':
-                    $iconCls = 'p-mediamanager-file-icon';
-                    list($fileId, $fileVersion) = explode(';', $link->getTarget());
-                    $volume = $this->get('phlexible_media_manager.volume_manager')->findByFileId($fileId);
-                    if ($volume) {
-                        $file = $volume->findFile($fileId, $fileVersion);
-                        if ($file) {
-                            $content = $file->getName();
-                        }
-                    }
-                    break;
-                case 'folder':
-                    $iconCls = 'p-mediamanager-folder-icon';
-                    $folderId = $link->getTarget();
-                    $volume = $this->get('phlexible_media_manager.volume_manager')->findByFolderId($folderId);
-                    if ($volume) {
-                        $folder = $volume->findFolder($folderId);
-                        if ($folder) {
-                            $content = $folder->getName();
-                        }
-                    }
-                    break;
-            }
-            $result[] = [
-                'id' => $link->getId(),
-                'iconCls' => $iconCls,
-                'language' => $link->getLanguage(),
-                'type' => $link->getElementVersion() === $elementVersion ? $link->getType() : 'link-incoming',
-                'title' => $link->getField(),
-                'content' => $content,
-                'link' => [],
-                'raw' => $link->getTarget(),
-            ];
-        }
-
-        return new JsonResponse(['links' => $result]);
+        return new JsonResponse(['links' => $linkFetcher->fetch($elementVersion, $language, $incoming ? $node : null)]);
     }
 
     /**

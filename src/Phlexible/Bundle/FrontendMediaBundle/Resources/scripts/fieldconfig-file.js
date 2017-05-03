@@ -7,17 +7,34 @@ Phlexible.fields.Registry.addFactory('file', function (parentConfig, item, value
 
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
-    // TODO: wie?
-    item.media = item.media || {};
+    var media = {};
+    if (config.value && element.data.links) {
+        var foundLink = null;
+        Ext.each(element.data.links, function(link) {
+            if (link.type === 'file' && link.raw === config.value) {
+                foundLink = link;
+                return false;
+            }
+        });
+
+        if (foundLink) {
+            media = {
+                file_id: foundLink.payload.fileId,
+                folder_id: foundLink.payload.folderId,
+                folder_path: '/'+foundLink.payload.folderPath.join('/'),
+                name: foundLink.payload.name
+            };
+        }
+    }
 
     Ext.apply(config, {
         xtype: 'filefield',
         data_id: item.data_id,
 
-        file_id: item.media.file_id || false,
-        folder_id: item.media.folder_id || false,
-        folder_path: item.media.folder_path || false,
-        fileTitle: item.media.name,
+        file_id: media.file_id || false,
+        folder_id: media.folder_id || false,
+        folder_path: media.folder_path || false,
+        fileTitle: media.name,
 
         mediaCategory: item.configuration.mediaCategory || '',
         mediaTypes: item.configuration.mediaTypes || '',

@@ -6,11 +6,28 @@ Ext.require('Phlexible.fields.FieldHelper');
 Phlexible.fields.Registry.addFactory('link', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
+    var media = {};
+    if (config.value && config.value.tid && element.data.links) {
+        var foundLink = null;
+        Ext.each(element.data.links, function(link) {
+            if (link.type === 'link-internal' && link.payload.nodeId === config.value.tid) {
+                foundLink = link;
+                return false;
+            }
+        });
+
+        if (foundLink) {
+            media = {
+                name: foundLink.payload.name
+            };
+        }
+    }
+
     Ext.apply(config, {
         xtype: 'linkfield',
         hiddenName: config.name,
 
-        //value: item.displayContent,
+        value: media.name || null,
         hiddenValue: config.value,
         width: (parseInt(item.configuration.width, 10) || 200),
 
@@ -31,14 +48,13 @@ Phlexible.fields.Registry.addFactory('link', function (parentConfig, item, value
         supportsRepeatable: true
     });
 
-    if (config.value) {
-        config.hiddenValue = config.value;
-        if (config.value.type === 'external') {
-            config.value = config.value.url;
-        } else if (config.value.type === 'mailto') {
-            config.value = config.value.recipient;
+    if (!config.value && config.hiddenValue && config.hiddenValue.type) {
+        if (config.hiddenValue.type === 'external') {
+            config.value = config.hiddenValue.url;
+        } else if (config.hiddenValue.type === 'mailto') {
+            config.value = config.hiddenValue.recipient;
         } else {
-            config.value = config.value.tid;
+            config.value = config.hiddenValue.tid;
         }
     }
 

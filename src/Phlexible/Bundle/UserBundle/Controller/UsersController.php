@@ -15,7 +15,6 @@ use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\UserBundle\Password\PasswordGenerator;
-use Phlexible\Bundle\UserBundle\Serializer\IqwigUserSerializer;
 use Phlexible\Bundle\UserBundle\UsersMessage;
 use Phlexible\Component\Util\UuidUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;

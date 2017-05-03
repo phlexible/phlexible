@@ -7,8 +7,24 @@ Phlexible.fields.Registry.addFactory('folder', function (parentConfig, item, val
 
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
-    // TODO: wie?
-    item.media = item.media || {};
+    var media = {};
+    if (config.value && element.data.links) {
+        var foundLink = null;
+        Ext.each(element.data.links, function(link) {
+            if (link.type === 'folder' && link.raw === config.value) {
+                foundLink = link;
+                return false;
+            }
+        });
+
+        if (foundLink) {
+            media = {
+                folder_id: foundLink.payload.folderId,
+                folder_path: '/'+foundLink.payload.folderPath.join('/'),
+                name: foundLink.payload.name
+            };
+        }
+    }
 
     Ext.apply(config, {
         xtype: 'folderfield',
@@ -17,9 +33,9 @@ Phlexible.fields.Registry.addFactory('folder', function (parentConfig, item, val
 
         width: (parseInt(item.configuration.width, 10) || 200),
 
-        folder_id: item.media.folder_id || false,
-        folder_path: item.media.folder_path || false,
-        fileTitle: item.media.name,
+        folder_id: media.folder_id || false,
+        folder_path: media.folder_path || false,
+        fileTitle: media.name,
         menuConfig: {
             minWidth: 300
         },

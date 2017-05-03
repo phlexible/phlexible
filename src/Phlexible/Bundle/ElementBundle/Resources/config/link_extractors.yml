@@ -1,25 +1,69 @@
 services:
-    phlexible_element.link_extractor:
-        class: Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkExtractor
+    phlexible_element.link_fetcher:
+        class: Phlexible\Bundle\ElementBundle\ElementLink\ElementLinkFetcher
         arguments:
+            - "@phlexible_element.link_transformer"
+            - "@phlexible_element.element_link_manager"
+
+    phlexible_element.link_updater:
+        class: Phlexible\Bundle\ElementBundle\ElementLink\ElementLinkUpdater
+        arguments:
+            - "@phlexible_element.link_extractor"
+            - "@phlexible_element.element_link_manager"
             - "@phlexible_elementtype.field.registry"
+
+    phlexible_element.link_extractor:
+        class: Phlexible\Bundle\ElementBundle\ElementLink\LinkExtractor\DelegatingLinkExtractor
+        arguments:
             -
                 - "@phlexible_element.link_extractor.link_field"
                 - "@phlexible_element.link_extractor.media"
                 - "@phlexible_element.link_extractor.text"
 
+    phlexible_element.link_transformer:
+        class: Phlexible\Bundle\ElementBundle\ElementLink\LinkTransformer\DelegatingLinkTransformer
+        arguments:
+            -
+                - "@phlexible_element.link_transformer.media"
+                - "@phlexible_element.link_transformer.node"
+                - "@phlexible_element.link_transformer.incoming"
+
     # link extractor
+
     phlexible_element.link_extractor.link_field:
-        class: Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkFieldLinkExtractor
+        class: Phlexible\Bundle\ElementBundle\ElementLink\LinkExtractor\LinkFieldLinkExtractor
         tags:
             - {name: phlexible_element.link_extractor}
 
     phlexible_element.link_extractor.media:
-            class: Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\MediaLinkExtractor
+            class: Phlexible\Bundle\ElementBundle\ElementLink\LinkExtractor\MediaLinkExtractor
             tags:
                 - {name: phlexible_element.link_extractor}
 
     phlexible_element.link_extractor.text:
-            class: Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\TextLinkExtractor
+            class: Phlexible\Bundle\ElementBundle\ElementLink\LinkExtractor\TextLinkExtractor
             tags:
                 - {name: phlexible_element.link_extractor}
+
+    # link transformer
+
+    phlexible_element.link_transformer.media:
+        class: Phlexible\Bundle\ElementBundle\ElementLink\LinkTransformer\MediaLinkTransformer
+        arguments:
+            - "@phlexible_media_manager.volume_manager"
+        tags:
+            - {name: phlexible_element.link_transformer}
+
+    phlexible_element.link_transformer.node:
+        class: Phlexible\Bundle\ElementBundle\ElementLink\LinkTransformer\NodeLinkTransformer
+        arguments:
+            - "@phlexible_tree.content_tree_manager"
+        tags:
+            - {name: phlexible_element.link_transformer}
+
+    phlexible_element.link_transformer.incoming:
+        class: Phlexible\Bundle\ElementBundle\ElementLink\LinkTransformer\IncomingLinkTransformer
+        arguments:
+            - "@phlexible_tree.content_tree_manager"
+        tags:
+            - {name: phlexible_element.link_transformer}

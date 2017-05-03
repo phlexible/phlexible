@@ -11,19 +11,19 @@
 
 namespace Phlexible\Bundle\ElementBundle\Model;
 
-use Phlexible\Bundle\ElementBundle\Entity\Element;
+use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 
 /**
- * Element manager interface.
+ * Element link manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface ElementManagerInterface
+interface ElementLinkManagerInterface
 {
     /**
      * @param string $id
      *
-     * @return Element
+     * @return ElementLink
      */
     public function find($id);
 
@@ -33,26 +33,30 @@ interface ElementManagerInterface
      * @param int|null   $limit
      * @param int|null   $offset
      *
-     * @return Element[]
+     * @return ElementLink[]
      */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * Update element.
+     * Update element link.
      *
-     * @param Element $element
-     * @param bool    $flush
-     *
-     * @return $this
+     * @param ElementLink $elementLink
+     * @param bool        $flush
      */
-    public function updateElement(Element $element, $flush);
+    public function updateElementLink(ElementLink $elementLink, $flush = true);
 
     /**
-     * Delete element.
+     * Update element links.
      *
-     * @param Element $element
-     *
-     * @return $this
+     * @param ElementLink[] $elementLinks
+     * @param bool          $flush
      */
-    public function deleteElement(Element $element);
+    public function updateElementLinks(array $elementLinks, $flush = true);
+
+    /**
+     * Delete element link.
+     *
+     * @param ElementLink $elementLink
+     */
+    public function deleteElementLink(ElementLink $elementLink);
 }

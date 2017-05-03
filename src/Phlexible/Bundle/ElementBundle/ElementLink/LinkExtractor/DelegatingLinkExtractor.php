@@ -9,36 +9,28 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor;
+namespace Phlexible\Bundle\ElementBundle\ElementLink\LinkExtractor;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
-use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
+use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
 
 /**
  * Link extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LinkExtractor
+class DelegatingLinkExtractor implements LinkExtractorInterface
 {
-    /**
-     * @var FieldRegistry
-     */
-    private $fieldRegistry;
-
     /**
      * @var LinkExtractorInterface[]
      */
     private $extractors = [];
 
     /**
-     * @param FieldRegistry            $fieldRegistry
      * @param LinkExtractorInterface[] $extractors
      */
-    public function __construct(FieldRegistry $fieldRegistry, array $extractors = [])
+    public function __construct(array $extractors = [])
     {
-        $this->fieldRegistry = $fieldRegistry;
-
         foreach ($extractors as $extractor) {
             $this->addExtractor($extractor);
         }
@@ -46,20 +38,31 @@ class LinkExtractor
 
     /**
      * @param LinkExtractorInterface $extractor
-     *
-     * @return $this
      */
-    public function addExtractor(LinkExtractorInterface $extractor)
+    private function addExtractor(LinkExtractorInterface $extractor)
     {
         $this->extractors[] = $extractor;
-
-        return $this;
     }
 
-    public function extract(ElementStructureValue $value)
+    /**
+     * @param ElementStructureValue $value
+     * @param AbstractField         $field
+     *
+     * @return bool
+     */
+    public function supports(ElementStructureValue $value, AbstractField $field)
     {
-        $field = $this->fieldRegistry->getField($value->getType());
+        foreach ($this->extractors as $extractor) {
+            if ($extractor->supports($value, $field)) {
+                return true;
+            }
+        }
 
+        return false;
+    }
+
+    public function extract(ElementStructureValue $value, AbstractField $field)
+    {
         $links = [];
         foreach ($this->extractors as $extractor) {
             if ($extractor->supports($value, $field)) {

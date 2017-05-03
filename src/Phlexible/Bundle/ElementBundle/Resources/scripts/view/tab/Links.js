@@ -6,7 +6,7 @@ Phlexible.elements.tab.Links = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.elements.Strings.links,
     strings: Phlexible.elements.Strings,
     iconCls: 'p-element-tab_link-icon',
-    autoExpandColumn: 2,
+    autoExpandColumn: 3,
     viewConfig: {
         emptyText: Phlexible.elements.Strings.no_links_found
     },
@@ -81,7 +81,7 @@ Phlexible.elements.tab.Links = Ext.extend(Ext.grid.GridPanel, {
         this.tbar = [
             {
                 text: this.strings.include_incoming_links,
-                iconCls: 'p-fields-field_link-icon',
+                iconCls: 'p-element-back-icon',
                 enableToggle: true,
                 pressed: this.includeIncoming,
                 toggleHandler: function (btn, state) {
@@ -96,33 +96,28 @@ Phlexible.elements.tab.Links = Ext.extend(Ext.grid.GridPanel, {
         ];
 
         this.on({
-            show: {
-                fn: function () {
-                    if (this.store.baseParams.tid != this.element.tid ||
-                        this.store.baseParams.version != this.element.version ||
-                        this.store.baseParams.language != this.element.language) {
-                        this.onRealLoad(this.element.tid, this.element.version, this.element.language);
-                    }
-                },
-                scope: this
+            show: function () {
+                if (this.store.baseParams.tid != this.element.tid ||
+                    this.store.baseParams.version != this.element.version ||
+                    this.store.baseParams.language != this.element.language) {
+                    this.onRealLoad(this.element.tid, this.element.version, this.element.language);
+                }
             },
-            rowdblclick: {
-                fn: function (grid, rowIndex) {
-                    var record = grid.store.getAt(rowIndex);
-                    if (record) {
-                        var link = record.get('link');
+            rowdblclick: function (grid, rowIndex) {
+                var record = grid.store.getAt(rowIndex);
+                if (record) {
+                    var link = record.get('link');
 
-                        if (link && link.handler) {
-                            var handler = link.handler;
-                            if (typeof handler == 'string') {
-                                handler = Phlexible.evalClassString(handler);
-                            }
-                            handler(link);
+                    if (link && link.handler) {
+                        var handler = link.handler;
+                        if (typeof handler === 'string') {
+                            handler = Phlexible.evalClassString(handler);
                         }
+                        handler(link);
                     }
-                },
-                scope: this
-            }
+                }
+            },
+            scope: this
         });
 
         Phlexible.elements.tab.Links.superclass.initComponent.call(this);
