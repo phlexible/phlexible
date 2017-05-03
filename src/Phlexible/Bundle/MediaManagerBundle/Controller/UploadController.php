@@ -342,6 +342,10 @@ class UploadController extends Controller
         foreach ($metaSetIds as $metaSetId) {
             $metaSet = $metaSetManager->find($metaSetId);
 
+            if (!$metaSet) {
+                continue;
+            }
+
             $fieldDatas = [];
 
             foreach ($metaSet->getFields() as $field) {
