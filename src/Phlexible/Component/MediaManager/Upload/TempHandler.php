@@ -50,26 +50,36 @@ class TempHandler
     /**
      * @param string $action
      * @param string $id
+     *
+     * @return FileInterface|null
      */
     public function handle($action, $id)
     {
         $tempFile = $this->tempStorage->get($id);
 
         if (!$tempFile) {
-            return;
+            return null;
         }
 
-        $this->handleTempFile($action, $tempFile);
+        return $this->handleTempFile($action, $tempFile);
     }
 
     /**
      * @param string $action
+     *
+     * @return FileInterface[]
      */
     public function handleAll($action)
     {
+        $files = array();
         foreach ($this->tempStorage->all() as $tempFile) {
-            $this->handleTempFile($action, $tempFile);
+            $file = $this->handleTempFile($action, $tempFile);
+            if ($file) {
+                $files[] = $file;
+            }
         }
+
+        return $files;
     }
 
     /**

@@ -15,6 +15,7 @@ use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
 use Phlexible\Component\Mime\MimeDetector;
+use Phlexible\Component\Volume\Model\FileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -85,7 +86,7 @@ class UploadController extends Controller
 
                     $body = 'Filename: '.$uploadedFile->getClientOriginalName().PHP_EOL
                         .'Folder:   '.$folder->getName().PHP_EOL
-                        .'Filesize: '.$uploadedFile->getSize().PHP_EOL
+                        .'Filesize: '.$file->getSize().PHP_EOL
                         .'Filetype: '.$file->getMimeType().PHP_EOL;
 
                     $message = MediaManagerMessage::create('File "'.$file->getName().'" uploaded.', $body);
@@ -250,10 +251,52 @@ class UploadController extends Controller
         } else {
             $file = $tempHandler->handle($action, $tempId);
 
-            // TODO: meta
+            if ($file && $metaData) {
+                $this->saveMeta($file, $metaData);
+            }
         }
 
         return new ResultResponse(true, ($all ? 'All' : 'File').' saved with action '.$action);
+    }
+
+    private function saveMeta(FileInterface $file, $metaData)
+    {
+        $metaLanguages = explode(',', $this->container->getParameter('phlexible_meta_set.languages.available'));
+
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
+
+        foreach ($metaData as $metaSetId => $fields) {
+            $metaSet = $metaSetManager->find($metaSetId);
+            $metaData = $fileMetaDataManager->findByMetaSetAndFile($metaSet, $file);
+
+            if (!$metaData) {
+                $metaData = $fileMetaDataManager->createMetaData($metaSet);
+            }
+
+            foreach ($fields as $fieldname => $row) {
+                foreach ($metaLanguages as $language) {
+                    if (!isset($row["value_$language"])) {
+                        continue;
+                    }
+
+                    if (!$metaSet->hasField($fieldname)) {
+                        continue;
+                    }
+
+                    // TODO: löschen?
+                    if (empty($row["value_$language"])) {
+                        continue;
+                    }
+
+                    $value = $row["value_$language"];
+
+                    $metaData->set($fieldname, $value, $language);
+                }
+            }
+
+            $fileMetaDataManager->updateMetaData($file, $metaData);
+        }
     }
 
     /**
