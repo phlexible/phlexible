@@ -60,11 +60,19 @@ abstract class AbstractField extends Field
         } elseif ($type === 'list') {
             $value = explode(',', $value);
         } elseif ($type === 'boolean') {
-            $value = (bool) $value;
+            $value = $value ? '1' : '0';
         } elseif ($type === 'integer') {
-            $value = (int) $value;
+            if (strlen($value)) {
+                $value = (int) $value;
+            } else {
+                $value = null;
+            }
         } elseif ($type === 'float') {
-            $value = (float) $value;
+            if (strlen($value)) {
+                $value = (float) $value;
+            } else {
+                $value = null;
+            }
         }
 
         return $value;
@@ -110,9 +118,17 @@ abstract class AbstractField extends Field
         } elseif ($type === 'boolean') {
             $value = (bool) $value;
         } elseif ($type === 'integer') {
-            $value = (int) $value;
+            if (strlen($value)) {
+                $value = (int) $value;
+            } else {
+                $value = null;
+            }
         } elseif ($type === 'float') {
-            $value = (float) $value;
+            if (strlen($value)) {
+                $value = (float) $value;
+            } else {
+                $value = null;
+            }
         }
 
         return $value;

@@ -11,15 +11,16 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
+use Phlexible\Component\MediaCache\Queue\BatchBuilder;
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
+use Phlexible\Component\Volume\Model\FileInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Queue command.
+ * Create command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -34,17 +35,11 @@ class CreateCommand extends ContainerAwareCommand
             ->setName('media-cache:create')
             ->setDefinition(
                 [
-                    new InputOption('all', null, InputOption::VALUE_NONE, 'Create all cachable templates and files.'),
-                    new InputOption('template', null, InputOption::VALUE_REQUIRED, 'Create cache items by template key.'),
-                    new InputOption('file', null, InputOption::VALUE_REQUIRED, 'Create cache items by File ID.'),
-                    new InputOption('notCached', null, InputOption::VALUE_NONE, 'Only create items that are not yet cached.'),
-                    new InputOption('missing', null, InputOption::VALUE_NONE, 'Only create items that are marked as status missing.'),
-                    new InputOption('error', null, InputOption::VALUE_NONE, 'Only create items that are marked as status error.'),
-                    new InputOption('queue', null, InputOption::VALUE_NONE, 'Use queue instead of immediate creation.'),
-                    new InputOption('show', null, InputOption::VALUE_NONE, 'Show matches.'),
+                    new InputArgument('template', InputArgument::REQUIRED, 'Template key.'),
+                    new InputArgument('file', InputArgument::REQUIRED, 'File ID.'),
                 ]
             )
-            ->setDescription('Create chache items.');
+            ->setDescription('Create chache item.');
     }
 
     /**
@@ -52,116 +47,66 @@ class CreateCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$input->getOption('all')
-            && !$input->getOption('template')
-            && !$input->getOption('file')
-            && !$input->getOption('missing')
-            && !$input->getOption('error')
-            && !$input->getOption('notCached')
-        ) {
-            $output->writeln(
-                'Please provide either --all or --template and/or --file and/or --error and/or --missing and/or --error'
-            );
+        $batchProcessor = $this->getContainer()->get('phlexible_media_cache.batch_processor');
+        $instructionProcessor = $this->getContainer()->get('phlexible_media_cache.instruction_processor');
+        $properties = $this->getContainer()->get('properties');
+
+        $batchBuilder = new BatchBuilder();
+
+        $template = $this->getTemplate($input->getArgument('template'));
+        $file = $this->getFile($input->getArgument('file'));
+
+        if (!$template && !$file) {
+            $output->writeln('Neither file nor template found.');
 
             return 1;
         }
 
-        if ($input->getOption('all') && ($input->getOption('template') || $input->getOption('file'))) {
-            $output->writeln('Please provide either --all or --template and/or --file');
-
-            return 1;
+        if ($template) {
+            $batchBuilder = $batchBuilder->templates([$template]);
+        }
+        if ($file) {
+            $batchBuilder = $batchBuilder->files([$file]);
         }
 
-        $batchBuilder = $this->getContainer()->get('phlexible_media_cache.batch_builder');
+        $batch = $batchBuilder->getBatch();
 
-        $all = $input->getOption('all');
-        if ($all) {
-            $batch = $batchBuilder->createWithAllTemplatesAndFiles();
-        } else {
-            $templateManager = $this->getContainer()->get('phlexible_media_template.template_manager');
-            $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
+        // create immediately
 
-            $template = $input->getOption('template');
-            if ($template) {
-                $template = $templateManager->find($template);
-            }
+        foreach ($batchProcessor->process($batch) as $instruction) {
+            $instructionProcessor->processInstruction($instruction);
 
-            $file = $input->getOption('file');
-            if ($file) {
-                $file = $volumeManager->getByFileId($file)->findFile($file);
-            }
-
-            if ($template && $file) {
-                $batch = $batchBuilder->createForTemplateAndFile($template, $file);
-            } elseif ($template) {
-                $batch = $batchBuilder->createWithAllFiles()->addTemplate($template);
-            } elseif ($file) {
-                $batch = $batchBuilder->createWithAllTemplates()->addFile($file);
-            } else {
-                $batch = $batchBuilder->create();
-            }
+            $output->writeln("File {$instruction->getFile()->getId()} / Template {$instruction->getTemplate()->getKey()} processed.");
         }
 
-        $flags = [];
-        if ($input->getOption('error')) {
-            $flags[] = 'error';
-        }
-        if ($input->getOption('notCached')) {
-            $flags[] = 'uncached';
-        }
-        if ($input->getOption('missing')) {
-            $flags[] = 'missing';
-        }
-
-        $batchResolver = $this->getContainer()->get('phlexible_media_cache.batch_resolver');
-        $queue = $batchResolver->resolve($batch, $flags);
-
-        if ($input->getOption('show')) {
-            // only show
-
-            $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
-            $table = new Table($output);
-            $table->setHeaders(['Idx', 'Template', 'Path', 'File ID']);
-            foreach ($queue->all() as $idx => $cacheItem) {
-                $volume = $volumeManager->getByFileId($cacheItem->getFileId());
-                $file = $volume->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
-                $folder = $volume->findFolder($file->getFolderId());
-                $table->addRow(
-                    [
-                        $idx,
-                        $cacheItem->getTemplateKey(),
-                        $folder->getPath().$file->getName(),
-                        $cacheItem->getFileId(),
-                    ]
-                );
-            }
-            $table->render();
-            $output->writeln(count($queue).' total.');
-        } elseif ($input->getOption('queue')) {
-            // via queue
-
-            $cacheManager = $this->getContainer()->get('phlexible_media_cache.cache_manager');
-
-            foreach ($queue->all() as $cacheItem) {
-                $cacheManager->updateCacheItem($cacheItem);
-            }
-
-            $output->writeln(count($queue).' items queued.');
-        } else {
-            // create immediately
-
-            $queueProcessor = $this->getContainer()->get('phlexible_media_cache.queue_processor');
-            $progress = new ProgressBar($output, count($queue));
-            $progress->start();
-            $queueProcessor->processQueue($queue, function() use ($progress) {
-                $progress->advance();
-            });
-            $progress->finish();
-
-            $output->writeln('');
-            $output->writeln(count($queue).' items processed.');
-        }
+        $properties->set('mediacache', 'last_run', date('Y-m-d H:i:s'));
 
         return 0;
+    }
+
+    /**
+     * @param string $templateKey
+     *
+     * @return TemplateInterface|null
+     */
+    private function getTemplate($templateKey)
+    {
+        $templateManager = $this->getContainer()->get('phlexible_media_template.template_manager');
+
+        return $templateManager->getCollection()->get($templateKey);
+    }
+
+    /**
+     * @param string $fileId
+     *
+     * @return FileInterface|null
+     */
+    private function getFile($fileId)
+    {
+        $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId);
+
+        return $file;
     }
 }

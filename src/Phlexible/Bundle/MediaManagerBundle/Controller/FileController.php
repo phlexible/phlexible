@@ -136,21 +136,23 @@ class FileController extends Controller
 
         foreach ($files as $file) {
             try {
-                $createUser = $userManager->find($file->getCreateUserId());
-                $createUserName = $createUser->getDisplayName();
-            } catch (\Exception $e) {
                 $createUserName = 'Unknown';
+                $createUser = $userManager->find($file->getCreateUserId());
+                if ($createUser) {
+                    $createUserName = $createUser->getDisplayName();
+                }
+            } catch (\Exception $e) {
             }
 
             try {
+                $modifyUserName = 'Unknown';
                 if ($file->getModifyUserId()) {
                     $modifyUser = $userManager->find($file->getModifyUserId());
-                    $modifyUserName = $modifyUser->getDisplayName();
-                } else {
-                    $modifyUserName = 'Unknown';
+                    if ($modifyUser) {
+                        $modifyUserName = $modifyUser->getDisplayName();
+                    }
                 }
             } catch (\Exception $e) {
-                $modifyUserName = 'Unknown';
             }
 
             $properties = [

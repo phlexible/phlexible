@@ -27,7 +27,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@phlexible_element.doctrine.element_structure_loader"
             - "@phlexible_elementtype.field.registry"
-            - "@phlexible_element.link_extractor"
+            - "@phlexible_element.link_updater"
             - "@event_dispatcher"
 
     phlexible_element.doctrine.element_structure_loader:
@@ -48,3 +48,10 @@ services:
         public: false
         arguments:
             - "@doctrine.orm.entity_manager"
+
+    phlexible_element.doctrine.element_link_manager:
+        class: Phlexible\Bundle\ElementBundle\Doctrine\ElementLinkManager
+        public: false
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@event_dispatcher"

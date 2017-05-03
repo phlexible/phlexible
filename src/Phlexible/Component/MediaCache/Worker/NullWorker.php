@@ -79,10 +79,8 @@ class NullWorker extends AbstractWorker
     {
         if ($cacheItem->getCacheStatus() !== CacheItem::STATUS_OK && $cacheItem->getCacheStatus() !== CacheItem::STATUS_DELEGATE) {
             $this->cacheManager->deleteCacheItem($cacheItem);
-
-            return null;
+            $cacheItem->setCacheStatus(CacheItem::STATUS_DELETED);
         }
-
-        return $cacheItem;
+        $cacheItem->setQueueStatus(CacheItem::QUEUE_NOT_APPLICABLE);
     }
 }

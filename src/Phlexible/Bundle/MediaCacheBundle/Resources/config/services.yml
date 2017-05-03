@@ -36,8 +36,8 @@ services:
         class: Phlexible\Bundle\MediaCacheBundle\EventListener\FileListener
         arguments:
             - "@phlexible_media_template.template_manager"
-            - "@phlexible_media_cache.queue_processor"
-            - "@phlexible_media_cache.batch_resolver"
+            - "@phlexible_media_cache.batch_processor"
+            - "@phlexible_media_cache.instruction_processor"
             - "@phlexible_media_cache.cache_manager"
             - "%phlexible_media_cache.immediately_cache_system_templates%"
         tags:

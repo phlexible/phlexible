@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor;
+namespace Phlexible\Bundle\ElementBundle\ElementLink\LinkExtractor;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;

@@ -51,8 +51,8 @@ class FolderUsageManager
     public function getStatus(ExtendedFolderInterface $folder)
     {
         $status = 0;
-        foreach ($this->findStatusByFolder($folder) as $status) {
-            $status &= $status;
+        foreach ($this->findStatusByFolder($folder) as $folderStatus) {
+            $status |= (int) $folderStatus;
         }
 
         return $status;

@@ -79,6 +79,18 @@ interface TemplateInterface
     public function setSystem($system = true);
 
     /**
+     * @return bool
+     */
+    public function getManaged();
+
+    /**
+     * @param bool $managed
+     *
+     * @return $this
+     */
+    public function setManaged($managed = true);
+
+    /**
      * @return string
      */
     public function getStorage();

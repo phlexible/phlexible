@@ -396,7 +396,24 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate
      */
     public function getByTypeId($typeId, $type = null)
     {
-        return $this->tree->getByTypeId($typeId, $type);
+        $contentNodes = array();
+
+        foreach ($this->tree->getByTypeId($typeId, $type) as $node) {
+            $id = $node->getId();
+
+            if (!isset($this->contentNodes[$id])) {
+                $treeNode = $this->tree->get($id);
+                $contentNode = null;
+                if ($treeNode) {
+                    $contentNode = $this->createContentTreeNodeFromTreeNode($treeNode);
+                }
+
+                $this->contentNodes[$id] = $contentNode;
+            }
+            $contentNodes[] = $this->contentNodes[$id];
+        }
+
+        return $contentNodes;
     }
 
     /**

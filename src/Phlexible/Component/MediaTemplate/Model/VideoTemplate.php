@@ -31,6 +31,14 @@ class VideoTemplate extends AbstractTemplate
     /**
      * {@inheritdoc}
      */
+    public function getManaged()
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDefaultParameters()
     {
         return [

@@ -240,17 +240,11 @@ class Teaser
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAttributes()
     {
         return $this->attributes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setAttributes(array $attributes)
     {
         $this->attributes = $attributes;
@@ -258,9 +252,6 @@ class Teaser
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAttribute($key, $default = null)
     {
         if (isset($this->attributes[$key])) {
@@ -270,9 +261,6 @@ class Teaser
         return $default;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setAttribute($key, $value)
     {
         $this->attributes[$key] = $value;
@@ -280,9 +268,6 @@ class Teaser
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeAttribute($key)
     {
         if (isset($this->attributes[$key])) {
@@ -462,17 +447,11 @@ class Teaser
         return in_array($hideId, $hideIds);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCache()
     {
         return $this->getAttribute('cache', []);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCache($cache)
     {
         return $this->setAttribute('cache', $cache);

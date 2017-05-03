@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="element_structure_value", uniqueConstraints={@ORM\UniqueConstraint(columns={"eid", "version", "language", "name", "structure_id"})})
+ * @ORM\Table(name="element_structure_value", uniqueConstraints={@ORM\UniqueConstraint(columns={"eid", "version", "language", "name", "structure_id"})}, indexes={@ORM\Index(columns={"ds_id", "version", "language"})})
  */
 class ElementStructureValue
 {

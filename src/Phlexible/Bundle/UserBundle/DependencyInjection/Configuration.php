@@ -31,6 +31,8 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('user_to_array_transformer')->defaultValue('phlexible.user.phlexible_user_to_array_transformer')->end()
+                ->scalarNode('user_request_applier')->defaultValue('phlexible_user.phlexible_user_request_applier')->end()
                 ->scalarNode('system_user_id')->defaultValue('be0803d2-e580-11e2-b137-19a2e180dfdd')->end()
                 ->scalarNode('everyone_group_id')->defaultValue('48fdb07b-b164-4d07-83be-5bf7c0a8005b')->end()
                 ->arrayNode('password')

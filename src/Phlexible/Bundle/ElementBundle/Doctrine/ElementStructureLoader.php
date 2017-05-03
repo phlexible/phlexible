@@ -204,7 +204,7 @@ class ElementStructureLoader
     {
         $field = $this->fieldRegistry->getField($dataRow['type']);
 
-        $value = $field->unserialize($dataRow['value']);
+        $content = $field->unserialize($dataRow['content']);
 
         return new ElementStructureValue(
             $dataRow['id'],
@@ -213,7 +213,7 @@ class ElementStructureLoader
             $dataRow['type'],
             $field->getDataType(),
             $dataRow['name'],
-            $value,
+            $content,
             $dataRow['options'] ? json_decode($dataRow['options'], true) : null
         );
     }
@@ -272,7 +272,7 @@ class ElementStructureLoader
                     'esv.structure_ds_id',
                     'esv.name',
                     'esv.type',
-                    'esv.content AS value',
+                    'esv.content',
                     'esv.options',
                 ]
             )

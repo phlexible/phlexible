@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Phlexible\Bundle\ElementBundle\Entity\Repository\ElementLinkRepository")
  * @ORM\Table(name="element_link")
  */
 class ElementLink

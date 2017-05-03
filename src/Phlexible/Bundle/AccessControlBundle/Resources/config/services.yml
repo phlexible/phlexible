@@ -18,11 +18,13 @@ services:
         class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\UserSecurityProvider
         arguments:
             - "@phlexible_user.user_manager"
+            - "%phlexible_user.user.class%"
 
     phlexible_access_control.group_security_provider:
         class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\GroupSecurityProvider
         arguments:
             - "@phlexible_user.group_manager"
+            - "%phlexible_user.group.class%"
 
     phlexible_access_control.role_security_provider:
         class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\RoleSecurityProvider

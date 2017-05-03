@@ -1,5 +1,11 @@
 services:
-    phlexible_media_cache.worker.resolver:
+    phlexible_media_cache.worker:
+        class: Phlexible\Component\MediaCache\Worker\DelegatingWorker
+        public: false
+        arguments:
+            - "@phlexible_media_cache.worker_resolver"
+
+    phlexible_media_cache.worker_resolver:
         class: Phlexible\Component\MediaCache\Worker\WorkerResolver
         public: false
         arguments: [[]]
@@ -19,7 +25,7 @@ services:
             - "%phlexible_media_cache.temp_dir%"
         tags:
             - {name: phlexible_media_cache.worker, priority: 100}
-            - {name: monolog.logger, channel:media_cache}
+            - {name: monolog.logger, channel: media_cache}
 
     phlexible_media_cache.worker.image:
         class: Phlexible\Component\MediaCache\Worker\ImageWorker
@@ -35,7 +41,7 @@ services:
             - "%phlexible_media_cache.temp_dir%"
         tags:
             - {name: phlexible_media_cache.worker, priority: 100}
-            - {name: monolog.logger, channel:media_cache}
+            - {name: monolog.logger, channel: media_cache}
 
     phlexible_media_cache.worker.video:
         class: Phlexible\Component\MediaCache\Worker\VideoWorker
@@ -52,7 +58,7 @@ services:
             - "%phlexible_media_cache.temp_dir%"
         tags:
             - {name: phlexible_media_cache.worker, priority: 100}
-            - {name: monolog.logger, channel:media_cache}
+            - {name: monolog.logger, channel: media_cache}
 
     phlexible_media_cache.worker.null:
         class: Phlexible\Component\MediaCache\Worker\NullWorker
@@ -63,4 +69,4 @@ services:
             - "@logger"
         tags:
             - {name: phlexible_media_cache.worker, priority: -900}
-            - {name: monolog.logger, channel:media_cache}
+            - {name: monolog.logger, channel: media_cache}

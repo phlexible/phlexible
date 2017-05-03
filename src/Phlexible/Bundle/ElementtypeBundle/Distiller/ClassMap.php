@@ -20,9 +20,6 @@ class ClassMap
 {
     private $containers = array();
 
-    /**
-     * {@inheritdoc}
-     */
     public function add($name, $value)
     {
         $this->containers[$name] = $value;

@@ -71,17 +71,11 @@ class DelegatingContentTeaserManager
         return $this->contentTeasers;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function xfind($id)
     {
         return $this->createContentTeaserFromTeaser($this->teaserManager->find($id));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function xfindBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         $teasers = array();
@@ -92,105 +86,66 @@ class DelegatingContentTeaserManager
         return $teasers;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function xfindOneBy(array $criteria)
     {
         return $this->createContentTeaserFromTeaser($this->teaserManager->findOneBy($criteria));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath, $includeLocalHidden = true)
     {
         return $this->createContentTeasersFromTeasers($this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath, $includeLocalHidden));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findForLayoutAreaAndTreeNode($layoutarea, TreeNodeInterface $treeNode)
     {
         return $this->createContentTeasersFromTeasers($this->teaserManager->findForLayoutAreaAndTreeNode($layoutarea, $treeNode));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isInstance(ContentTeaser $teaser)
     {
         return $this->teaserManager->isInstance($teaser);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isInstanceMaster(ContentTeaser $teaser)
     {
         return $this->teaserManager->isInstanceMaster($teaser);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getInstances(ContentTeaser $teaser)
     {
         return $this->teaserManager->getInstances($teaser);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isPublished(ContentTeaser $teaser, $language)
     {
         return $this->teaserManager->isPublished($teaser, $language);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPublishedLanguages(ContentTeaser $teaser)
     {
         return $this->teaserManager->getPublishedLanguages($teaser);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPublishedVersion(ContentTeaser $teaser, $language)
     {
         return $this->teaserManager->getPublishedVersion($teaser, $language);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPublishedVersions(ContentTeaser $teaser)
     {
         return $this->teaserManager->getPublishedVersions($teaser);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isAsync(Teaser $teaser, $language)
     {
         return $this->teaserManager->isAsync($teaser, $language);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findOnlineByTeaser(ContentTeaser $teaser)
     {
         return $this->teaserManager->findOnlineByTeaser($teaser);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function findOneOnlineByTeaserAndLanguage(ContentTeaser $teaser, $language)
     {
         return $this->teaserManager->findOneOnlineByTeaserAndLanguage($teaser, $language);

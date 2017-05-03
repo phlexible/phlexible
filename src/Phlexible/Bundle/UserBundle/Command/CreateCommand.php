@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\UserBundle\Command;
 
-use Phlexible\Bundle\UserBundle\Entity\User;
+use FOS\UserBundle\Model\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -50,7 +50,9 @@ class CreateCommand extends ContainerAwareCommand
         $password = $input->getArgument('password');
         $email = $input->getArgument('email');
 
-        $user = new User();
+        $userClass = $this->getContainer()->get('phlexible_user.user.class');
+        /* @var UserInterface $user */
+        $user = new $userClass();
         $user
             ->setUsername($username)
             ->setPlainPassword($password)

@@ -5,3 +5,5 @@ services:
             - "@phlexible_access_control.permission_registry"
             - "@doctrine.orm.entity_manager"
             - "@event_dispatcher"
+            - "%phlexible_user.user.class%"
+            - "%phlexible_user.group.class%"

@@ -14,6 +14,7 @@ namespace Phlexible\Component\MediaCache\Worker;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Abstract worker.
@@ -22,6 +23,11 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
  */
 abstract class AbstractWorker implements WorkerInterface
 {
+    /**
+     * @return LoggerInterface
+     */
+    abstract protected function getLogger();
+
     /**
      * Apply error to cache item.
      *

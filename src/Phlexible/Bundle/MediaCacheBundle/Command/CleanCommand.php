@@ -56,9 +56,12 @@ class CleanCommand extends ContainerAwareCommand
             throw new AlreadyRunningException('Another media cache process is running.');
         }
 
+        $pretend = $input->getOption('pretend');
+
         $cacheManager = $container->get('phlexible_media_cache.cache_manager');
         $storageManager = $this->getContainer()->get('phlexible_media_cache.storage_manager');
         $templateManager = $this->getContainer()->get('phlexible_media_template.template_manager');
+        $em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
 
         $files = [];
         foreach ($storageManager->all() as $storage) {
@@ -71,24 +74,35 @@ class CleanCommand extends ContainerAwareCommand
             }
         }
 
-        foreach ($cacheManager->findAll() as $cacheItem) {
-            /* @var $cacheItem CacheItem */
-            $template = $templateManager->find($cacheItem->getTemplateKey());
-            $storage = $storageManager->get($template->getStorage());
-            $path = $storage->getLocalPath($cacheItem);
-            if (isset($files[$path])) {
-                unset($files[$path]);
+        $offset = 0;
+        $limit = 50;
+        while ($cacheItems = $cacheManager->findBy(array(), null, $limit, $offset)) {
+            foreach ($cacheItems as $cacheItem) {
+                /* @var $cacheItem CacheItem */
+                $template = $templateManager->find($cacheItem->getTemplateKey());
+                $storage = $storageManager->get($template->getStorage());
+                $path = $storage->getLocalPath($cacheItem);
+                if (isset($files[$path])) {
+                    unset($files[$path]);
+                }
+                if (!$template->getManaged()) {
+                    if (!$pretend) {
+                        $cacheManager->deleteCacheItem($cacheItem);
+                    } else {
+                        $output->writeln("Delete unmanaged cache item {$cacheItem->getId()} / file {$cacheItem->getFileId()} / template {$template->getKey()}");
+                    }
+                }
             }
+            $offset += $limit;
+            $em->clear();
         }
-
-        $pretend = $input->getOption('pretend');
 
         if (count($files)) {
             $filesystem = new Filesystem();
 
             foreach (array_keys($files) as $file) {
                 if ($pretend || $output->getVerbosity() !== OutputInterface::VERBOSITY_QUIET) {
-                    $output->writeln('delete: '.$file);
+                    $output->writeln('Delete file: '.$file);
                 }
 
                 if (!$pretend) {
