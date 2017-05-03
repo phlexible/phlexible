@@ -18,7 +18,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class MediaTypeMetasetMatcher
+class MediaTypeMatcher
 {
     /**
      * @var array

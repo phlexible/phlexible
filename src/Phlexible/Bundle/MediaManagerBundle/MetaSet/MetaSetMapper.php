@@ -28,15 +28,15 @@ class MetaSetMapper
     private $metaSetManager;
 
     /**
-     * @var MediaTypeMetasetMatcher
+     * @var MediaTypeMatcher
      */
     private $matcher;
 
     /**
      * @param MetaSetManagerInterface $metaSetManager
-     * @param MediaTypeMetasetMatcher $matcher
+     * @param MediaTypeMatcher        $matcher
      */
-    public function __construct(MetaSetManagerInterface $metaSetManager, MediaTypeMetasetMatcher $matcher)
+    public function __construct(MetaSetManagerInterface $metaSetManager, MediaTypeMatcher $matcher)
     {
         $this->metaSetManager = $metaSetManager;
         $this->matcher = $matcher;

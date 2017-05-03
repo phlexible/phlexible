@@ -29,8 +29,8 @@ class FileMetaDataValue extends MetaDataValue
      * @var File
      * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MediaManagerBundle\Entity\File")
      * @ORM\JoinColumns(
-     *   @ORM\JoinColumn(name="file_id", referencedColumnName="id"),
-     *   @ORM\JoinColumn(name="file_version", referencedColumnName="version")
+     *   @ORM\JoinColumn(name="file_id", referencedColumnName="id", onDelete="cascade"),
+     *   @ORM\JoinColumn(name="file_version", referencedColumnName="version", onDelete="cascade")
      * )
      */
     private $file;

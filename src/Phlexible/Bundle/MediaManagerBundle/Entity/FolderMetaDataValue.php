@@ -28,7 +28,7 @@ class FolderMetaDataValue extends MetaDataValue
     /**
      * @var Folder
      * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MediaManagerBundle\Entity\Folder")
-     * @ORM\JoinColumn(name="folder_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="folder_id", referencedColumnName="id", onDelete="cascade")
      */
     private $folder;
 

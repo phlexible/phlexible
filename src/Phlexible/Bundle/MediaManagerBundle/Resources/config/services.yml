@@ -10,9 +10,14 @@ parameters:
 
 services:
     phlexible_media_manager.media_type_metaset_matcher:
-        class: Phlexible\Bundle\MediaManagerBundle\MetaSet\MediaTypeMetasetMatcher
+        class: Phlexible\Bundle\MediaManagerBundle\MetaSet\MediaTypeMatcher
         arguments:
             - "%phlexible_media_manager.metaset_mapping%"
+
+    phlexible_media_manager.media_type_wizard_matcher:
+        class: Phlexible\Bundle\MediaManagerBundle\MetaSet\MediaTypeMatcher
+        arguments:
+            - "%phlexible_media_manager.wizard_mapping%"
 
     phlexible_media_manager.meta_set_mapper:
         class: Phlexible\Bundle\MediaManagerBundle\MetaSet\MetaSetMapper
@@ -70,8 +75,7 @@ services:
             - "@phlexible_media_manager.upload.temp_storage"
             - "@phlexible_media_tool.mime.detector"
             - "@phlexible_media_type.media_type_manager"
-            - "%phlexible_media_manager.wizard_categories%"
-            - "%phlexible_media_manager.wizard_types%"
+            - "@phlexible_media_manager.media_type_wizard_matcher"
 
     # access control permission providers
     phlexible_media_manager.permission_provider:

@@ -11,6 +11,7 @@
 
 namespace Phlexible\Component\MediaManager\Upload;
 
+use Phlexible\Bundle\MediaManagerBundle\MetaSet\MediaTypeMatcher;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Mime\MimeDetector;
@@ -46,37 +47,29 @@ class UploadHandler
     private $mediaTypeManager;
 
     /**
-     * @var array|null
+     * @var MediaTypeMatcher
      */
-    private $wizardCategories;
-
-    /**
-     * @var array|null
-     */
-    private $wizardTypes;
+    private $mediaTypeMatcher;
 
     /**
      * @param VolumeManager             $volumeManager
      * @param TempStorage               $tempStorage
      * @param MimeDetector              $mimeDetector
      * @param MediaTypeManagerInterface $mediaTypeManager
-     * @param array|null                $wizardCategories
-     * @param array|null                $wizardTypes
+     * @param MediaTypeMatcher          $mediaTypeMatcher
      */
     public function __construct(
         VolumeManager $volumeManager,
         TempStorage $tempStorage,
         MimeDetector $mimeDetector,
         MediaTypeManagerInterface $mediaTypeManager,
-        array $wizardCategories = null,
-        array $wizardTypes = null
+        MediaTypeMatcher $mediaTypeMatcher
     ) {
         $this->volumeManager = $volumeManager;
         $this->tempStorage = $tempStorage;
         $this->mimeDetector = $mimeDetector;
         $this->mediaTypeManager = $mediaTypeManager;
-        $this->wizardCategories = $wizardCategories;
-        $this->wizardTypes = $wizardTypes;
+        $this->mediaTypeMatcher = $mediaTypeMatcher;
     }
 
     /**
@@ -92,11 +85,7 @@ class UploadHandler
             return false;
         }
 
-        if ($this->wizardCategories !== null && in_array($newType->getCategory(), $this->wizardCategories)) {
-            return true;
-        }
-
-        if ($this->wizardTypes !== null && in_array($newType->getName(), $this->wizardTypes)) {
+        if ($this->mediaTypeMatcher->match($newType)) {
             return true;
         }
 
