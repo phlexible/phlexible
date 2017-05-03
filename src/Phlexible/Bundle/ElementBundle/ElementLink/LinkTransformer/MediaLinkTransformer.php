@@ -68,7 +68,7 @@ class MediaLinkTransformer implements LinkTransformerInterface
 
             $data['payload']['fileId'] = $fileId;
             $data['payload']['fileVersion'] = $fileVersion;
-            $data['iconCls']= 'p-mediamanager-image-icon';
+            $data['iconCls'] = 'p-mediamanager-image-icon';
         } elseif ($elementLink->getType() === 'folder') {
             $folderId = $elementLink->getTarget();
             $volume = $this->volumeManager->findByFolderId($folderId);
@@ -87,7 +87,7 @@ class MediaLinkTransformer implements LinkTransformerInterface
             }
 
             $data['payload']['folderId'] = $folderId;
-            $data['iconCls']= 'p-mediamanager-folder-icon';
+            $data['iconCls'] = 'p-mediamanager-folder-icon';
         }
 
         return $data;

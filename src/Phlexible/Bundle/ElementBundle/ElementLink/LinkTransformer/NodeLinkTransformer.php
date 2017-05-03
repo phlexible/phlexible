@@ -65,7 +65,7 @@ class NodeLinkTransformer implements LinkTransformerInterface
                 }
             }
 
-            $data['iconCls']= 'p-element-page-icon';
+            $data['iconCls'] = 'p-element-page-icon';
         }
 
         return $data;

@@ -561,7 +561,7 @@ class DataController extends Controller
             'versions' => $versions,
             'valueStructure' => $serializedValues,
             'structure' => $serializedStructure,
-            'links' => $links
+            'links' => $links,
         ];
 
         $data = (object) $data;

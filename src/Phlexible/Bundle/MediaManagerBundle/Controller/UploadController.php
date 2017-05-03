@@ -14,7 +14,6 @@ namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
-use Phlexible\Component\Mime\MimeDetector;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -151,7 +150,7 @@ class UploadController extends Controller
                 if ($metaset) {
                     $metasets[] = array(
                         'id' => $metaset->getId(),
-                        'name' => $metaset->getName()
+                        'name' => $metaset->getName(),
                     );
 
                 }
@@ -215,17 +214,6 @@ class UploadController extends Controller
         return new ResultResponse(true);
     }
 
-    /**
-     * @return JsonResponse
-     * @Route("/debug", name="mediamanager_upload_debug")
-     */
-    public function debugAction()
-    {
-        $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
-
-        dump($tempStorage->all());die;
-        return new ResultResponse(true);
-    }
 
     /**
      * @param Request $request
@@ -352,11 +340,11 @@ class UploadController extends Controller
                 $options = $optionResolver->resolve($field);
 
                 $fieldData = [
-                    'key'          => $field->getName(),
-                    'type'         => $field->getType(),
-                    'options'      => $options,
-                    'readonly'     => $field->isReadonly(),
-                    'required'     => $field->isRequired(),
+                    'key' => $field->getName(),
+                    'type' => $field->getType(),
+                    'options' => $options,
+                    'readonly' => $field->isReadonly(),
+                    'required' => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
                 ];
 
@@ -366,7 +354,7 @@ class UploadController extends Controller
             $meta[] = [
                 'set_id' => $metaSet->getId(),
                 'title'  => $metaSet->getName(),
-                'fields' => $fieldDatas
+                'fields' => $fieldDatas,
             ];
         }
 

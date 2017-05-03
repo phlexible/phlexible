@@ -66,7 +66,7 @@ class IncomingLinkTransformer implements LinkTransformerInterface
                 }
             }
 
-            $data['iconCls']= 'p-element-back-icon';
+            $data['iconCls'] = 'p-element-back-icon';
         }
 
         return $data;

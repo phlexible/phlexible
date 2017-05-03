@@ -17,7 +17,6 @@ use Phlexible\Component\MediaManager\AttributeReader\AttributeReaderInterface;
 use Phlexible\Component\MediaManager\Volume\DeleteFileChecker;
 use Phlexible\Component\MediaManager\Volume\DeleteFolderChecker;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
-use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 use Phlexible\Component\Volume\Event\CreateFileEvent;

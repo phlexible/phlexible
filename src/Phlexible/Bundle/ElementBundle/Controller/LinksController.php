@@ -11,7 +11,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
-use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

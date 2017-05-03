@@ -162,5 +162,4 @@ class ElementEvents
      * Fired after an element is deleted.
      */
     const DELETE_ELEMENT_LINK = 'phlexible_element.delete_element_link';
-
 }
