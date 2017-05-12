@@ -171,6 +171,8 @@ class LayoutController extends Controller
         $treeId = $request->get('tid');
         $layoutAreaId = $request->get('area_id');
         $language = $request->get('language');
+        $sort = $request->get('sort', 'sort');
+        $dir = $request->get('dir', 'ASC');
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
@@ -326,6 +328,25 @@ class LayoutController extends Controller
                     'qtip' => 'waaa', //$teaserItem->text,
                 ];
             }
+        }
+
+        $sorter = array();
+        foreach ($data as $index => $teaser) {
+            $sortValue = $teaser[$sort];
+            if ($sortValue instanceof \DateTimeInterface) {
+                $sortValue = $sortValue->format('c');
+            }
+            if (is_int($sortValue)) {
+                $sortType = SORT_NUMERIC;
+            } else {
+                $sortType = SORT_STRING;
+            }
+            $sorter[] = $sortValue;
+        }
+        if ($dir === 'ASC') {
+            array_multisort($sorter, SORT_ASC, $sortType, $data);
+        } else {
+            array_multisort($sorter, SORT_DESC, $sortType, $data);
         }
 
         //$data['totalChilds'] = $element->getChildCount();
