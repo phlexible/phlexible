@@ -17,7 +17,7 @@ use Doctrine\ORM\QueryBuilder;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaDataValue;
 use Phlexible\Component\MetaSet\Event\MetaDataValueEvent;
 use Phlexible\Component\MetaSet\MetaSetEvents;
-use Phlexible\Component\MetaSet\Model\MetaData;
+use Phlexible\Component\MetaSet\Domain\MetaData;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetFieldInterface;

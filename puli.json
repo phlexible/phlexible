@@ -437,6 +437,9 @@
         "phlexible/menu": {
             "description": "phlexible gui menu definitions"
         },
+        "phlexible/metasets": {
+            "description": "phlexible meta sets"
+        },
         "phlexible/scripts": {
             "description": "phlexible gui scripts"
         },

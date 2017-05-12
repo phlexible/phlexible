@@ -48,9 +48,9 @@ class SetsController extends Controller
                 'id' => $set->getId(),
                 'name' => $set->getName(),
                 'createdAt' => $set->getCreatedAt() ? $set->getCreatedAt()->format('Y-m-d H:i:s') : null,
-                'createUser' => $set->getCreateUser(),
+                'createUser' => $set->getCreatedBy(),
                 'modifiedAt' => $set->getModifiedAt() ? $set->getModifiedAt()->format('Y-m-d H:i:s') : null,
-                'modifyUser' => $set->getModifyUser(),
+                'modifyUser' => $set->getModifiedBy(),
                 'revision' => $set->getRevision(),
             ];
         }
@@ -104,7 +104,7 @@ class SetsController extends Controller
 
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
 
-        if ($metaSetManager->findOneByName($name)) {
+        if ($metaSetManager->findOneBy(array('name' => $name))) {
             return new ResultResponse(false, 'Name already in use.');
         }
 
@@ -112,9 +112,9 @@ class SetsController extends Controller
         $metaSet
             ->setId(UuidUtil::generate())
             ->setName($name)
-            ->setCreateUser($this->getUser()->getDisplayName())
+            ->setCreatedBy($this->getUser()->getDisplayName())
             ->setCreatedAt(new \DateTime())
-            ->setModifyUser($this->getUser()->getDisplayName())
+            ->setModifiedBy($this->getUser()->getDisplayName())
             ->setModifiedAt(new \DateTime());
 
         $metaSetManager->updateMetaSet($metaSet);
@@ -137,7 +137,7 @@ class SetsController extends Controller
 
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
 
-        if ($metaSetManager->findOneByName($name)) {
+        if ($metaSetManager->findOneBy(array('name' => $name))) {
             return new ResultResponse(false, 'Name already in use.');
         }
 
@@ -204,7 +204,7 @@ class SetsController extends Controller
         }
 
         $metaSet
-            ->setModifyUser($this->getUser()->getDisplayName())
+            ->setModifiedBy($this->getUser()->getDisplayName())
             ->setModifiedAt(new \DateTime());
 
         foreach ($fields as $field) {

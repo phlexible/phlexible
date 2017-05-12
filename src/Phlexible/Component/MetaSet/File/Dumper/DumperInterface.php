@@ -28,8 +28,9 @@ interface DumperInterface
     public function getExtension();
 
     /**
-     * @param string           $file
      * @param MetaSetInterface $metaSet
+     *
+     * @return string
      */
-    public function dump($file, MetaSetInterface $metaSet);
+    public function dump(MetaSetInterface $metaSet);
 }

@@ -26,11 +26,22 @@ interface MetaSetManagerInterface
     public function find($id);
 
     /**
-     * @param string $name
+     * @param array      $criteria
+     * @param array|null $orderBy
+     * @param int|null   $limit
+     * @param int|null   $offset
+     *
+     * @return MetaSetInterface[]
+     */
+    public function findBy(array $criteria = array(), array $orderBy = null, $limit = null, $offset = null);
+
+    /**
+     * @param array      $criteria
+     * @param array|null $orderBy
      *
      * @return MetaSetInterface
      */
-    public function findOneByName($name);
+    public function findOneBy(array $criteria = array(), array $orderBy = null);
 
     /**
      * @return MetaSetInterface[]

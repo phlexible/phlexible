@@ -15,9 +15,9 @@ use Doctrine\ORM\QueryBuilder;
 use Phlexible\Bundle\ElementBundle\Entity\ElementMetaDataValue;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Component\MetaSet\Doctrine\MetaDataManager;
-use Phlexible\Component\MetaSet\Model\MetaData;
+use Phlexible\Component\MetaSet\Domain\MetaData;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
-use Phlexible\Component\MetaSet\Model\MetaSet;
+use Phlexible\Component\MetaSet\Domain\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**

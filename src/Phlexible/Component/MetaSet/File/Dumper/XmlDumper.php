@@ -12,7 +12,6 @@
 namespace Phlexible\Component\MetaSet\File\Dumper;
 
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * XML dumper.
@@ -32,20 +31,15 @@ class XmlDumper implements DumperInterface
     /**
      * {@inheritdoc}
      */
-    public function dump($file, MetaSetInterface $metaSet)
+    public function dump(MetaSetInterface $metaSet)
     {
-        $filesystem = new Filesystem();
-        if (!$filesystem->exists(dirname($file))) {
-            $filesystem->mkdir(dirname($file));
-        }
-
         $xml = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?><metaSet/>');
         $xml->addAttribute('id', $metaSet->getId());
         $xml->addAttribute('name', $metaSet->getName());
         $xml->addAttribute('createdAt', $metaSet->getCreatedAt()->format('Y-m-d H:i:s'));
-        $xml->addAttribute('createUser', $metaSet->getCreateUser());
+        $xml->addAttribute('createdBy', $metaSet->getCreatedBy());
         $xml->addAttribute('modifiedAt', $metaSet->getModifiedAt()->format('Y-m-d H:i:s'));
-        $xml->addAttribute('modifyUser', $metaSet->getModifyUser());
+        $xml->addAttribute('modifiedBy', $metaSet->getModifiedBy());
         $xml->addAttribute('revision', $metaSet->getRevision());
 
         $fieldsNode = $xml->addChild('fields');
@@ -64,6 +58,7 @@ class XmlDumper implements DumperInterface
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
         $dom->loadXML($xml->asXML());
-        $dom->save($file);
+
+        return $dom->saveXML();
     }
 }

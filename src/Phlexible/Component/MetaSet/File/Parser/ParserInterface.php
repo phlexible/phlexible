@@ -9,28 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\MetaSet\File\Loader;
+namespace Phlexible\Component\MetaSet\File\Parser;
 
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
- * Loader interface.
+ * Parser interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface LoaderInterface
+interface ParserInterface
 {
     /**
-     * Return supported extension.
-     *
-     * @return string
-     */
-    public function getExtension();
-
-    /**
-     * @param string $file
+     * @param string $content
      *
      * @return MetaSetInterface
      */
-    public function load($file);
+    public function parse($content);
 }

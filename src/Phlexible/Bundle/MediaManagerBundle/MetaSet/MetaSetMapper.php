@@ -49,7 +49,7 @@ class MetaSetMapper
     public function map(ExtendedFileInterface $file, MediaType $mediaType)
     {
         foreach ($this->matcher->match($mediaType) as $metasetName) {
-            $metaSet = $this->metaSetManager->findOneByName($metasetName);
+            $metaSet = $this->metaSetManager->findOneBy(array('name' => $metasetName));
             if ($metaSet) {
                 $file->addMetaSet($metaSet->getId());
             }

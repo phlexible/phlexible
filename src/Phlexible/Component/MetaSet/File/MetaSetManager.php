@@ -11,11 +11,12 @@
 
 namespace Phlexible\Component\MetaSet\File;
 
-use Phlexible\Component\MetaSet\Model\MetaSet;
-use Phlexible\Component\MetaSet\Model\MetaSetCollection;
-use Phlexible\Component\MetaSet\Model\MetaSetField;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\MetaSet\Domain\MetaSet;
+use Phlexible\Component\MetaSet\Domain\MetaSetField;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * File meta set manager.
@@ -25,40 +26,16 @@ use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 class MetaSetManager implements MetaSetManagerInterface
 {
     /**
-     * @var MetaSetLoader
+     * @var MetaSetRepositoryInterface
      */
-    private $loader;
+    private $repository;
 
     /**
-     * @var MetaSetDumper
+     * @param MetaSetRepositoryInterface $repository
      */
-    private $dumper;
-
-    /**
-     * @var MetaSetCollection
-     */
-    private $metaSets;
-
-    /**
-     * @param MetaSetLoader $loader
-     * @param MetaSetDumper $dumper
-     */
-    public function __construct(MetaSetLoader $loader, MetaSetDumper $dumper)
+    public function __construct(MetaSetRepositoryInterface $repository)
     {
-        $this->loader = $loader;
-        $this->dumper = $dumper;
-    }
-
-    /**
-     * @return MetaSetCollection
-     */
-    public function getCollection()
-    {
-        if ($this->metaSets === null) {
-            $this->metaSets = $this->loader->loadMetaSets();
-        }
-
-        return $this->metaSets;
+        $this->repository = $repository;
     }
 
     /**
@@ -66,17 +43,64 @@ class MetaSetManager implements MetaSetManagerInterface
      */
     public function find($id)
     {
-        return $this->getCollection()->get($id);
+        return $this->repository->load($id);
     }
 
     /**
-     * @param string $name
-     *
-     * @return MetaSet
+     * {@inheritdoc}
      */
-    public function findOneByName($name)
+    public function findBy(array $criteria = array(), array $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->getCollection()->getByName($name);
+        $accessor = new PropertyAccessor();
+
+        $metaSets = $this->findAll();
+
+        if (count($criteria)) {
+            $metaSets = array_filter($metaSets, function ($metaSet) use ($criteria, $accessor) {
+                foreach ($criteria as $field => $value) {
+                    if ($accessor->getValue($metaSet, $field) === $value) {
+                        return true;
+                    }
+                }
+            });
+        }
+
+        if ($orderBy) {
+            usort($metaSets, function ($a, $b) use ($orderBy, $accessor) {
+                foreach ($orderBy as $field => $dir) {
+                    $result = $accessor->getValue($a, $field) > $accessor->getValue($b, $field);
+                    if ($result !== 0) {
+                        return $result;
+                    }
+                }
+
+                return 0;
+            });
+        }
+
+        if ($limit) {
+            if (!$offset) {
+                $offset = 0;
+            }
+
+            $metaSets = array_slice($metaSets, $offset, $limit);
+        }
+
+        return array_values($metaSets);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneBy(array $criteria = array(), array $orderBy = null)
+    {
+        $metaSets = $this->findBy($criteria, $orderBy, 1);
+
+        if (!$metaSets) {
+            return null;
+        }
+
+        return current($metaSets);
     }
 
     /**
@@ -84,7 +108,7 @@ class MetaSetManager implements MetaSetManagerInterface
      */
     public function findAll()
     {
-        return $this->getCollection()->all();
+        return array_values($this->repository->loadAll()->all());
     }
 
     /**
@@ -108,6 +132,10 @@ class MetaSetManager implements MetaSetManagerInterface
      */
     public function updateMetaSet(MetaSetInterface $metaSet)
     {
-        $this->dumper->dumpMetaSet($metaSet);
+        if (!$metaSet->getId()) {
+            $metaSet->setId(Uuid::generate());
+        }
+
+        $this->repository->writeMetaSet($metaSet, 'xml');
     }
 }

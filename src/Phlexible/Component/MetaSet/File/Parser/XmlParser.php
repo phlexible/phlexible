@@ -9,40 +9,32 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\MetaSet\File\Loader;
+namespace Phlexible\Component\MetaSet\File\Parser;
 
-use Phlexible\Component\MetaSet\Model\MetaSet;
-use Phlexible\Component\MetaSet\Model\MetaSetField;
+use Phlexible\Component\MetaSet\Domain\MetaSet;
+use Phlexible\Component\MetaSet\Domain\MetaSetField;
 
 /**
- * XML loader.
+ * XML parser.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class XmlLoader implements LoaderInterface
+class XmlParser implements ParserInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getExtension()
+    public function parse($content)
     {
-        return 'xml';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function load($file)
-    {
-        $xml = simplexml_load_file($file);
+        $xml = simplexml_load_string($content);
 
         $xmlAttributes = $xml->attributes();
         $id = (string) $xmlAttributes['id'];
         $name = (string) $xmlAttributes['name'];
         $revision = (int) $xmlAttributes['revision'];
-        $createUser = (string) $xmlAttributes['createUser'];
+        $createdBy = (string) $xmlAttributes['createdBy'];
         $createdAt = new \DateTime((string) $xmlAttributes['createdAt']);
-        $modifyUser = (string) $xmlAttributes['modifyUser'];
+        $modifiedBy = (string) $xmlAttributes['modifiedBy'];
         $modifiedAt = new \DateTime((string) $xmlAttributes['modifiedAt']);
 
         $metaSet = new MetaSet();
@@ -51,9 +43,9 @@ class XmlLoader implements LoaderInterface
             ->setName($name)
             ->setRevision($revision)
             ->setCreatedAt($createdAt)
-            ->setCreateUser($createUser)
+            ->setCreatedBy($createdBy)
             ->setModifiedAt($modifiedAt)
-            ->setModifyUser($modifyUser);
+            ->setModifiedBy($modifiedBy);
 
         foreach ($xml->fields->field as $fieldNode) {
             $fieldNodeAttributes = $fieldNode->attributes();

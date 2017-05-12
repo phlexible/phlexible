@@ -146,7 +146,7 @@ class UploadController extends Controller
 
             $metasets = array();
             foreach ($mediaTypeMetasetMatcher->match($newType) as $metasetName) {
-                $metaset = $metasetManager->findOneByName($metasetName);
+                $metaset = $metasetManager->findOneBy(array('name' => $metasetName));
                 if ($metaset) {
                     $metasets[] = array(
                         'id' => $metaset->getId(),

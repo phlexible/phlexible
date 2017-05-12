@@ -2,31 +2,29 @@ parameters:
     phlexible_meta_set.file_dir: %kernel.root_dir%/Resources/metasets/
 
 services:
-    phlexible_meta_set.file.loader.xml:
-        class: Phlexible\Component\MetaSet\File\Loader\XmlLoader
+    phlexible_meta_set.xml_parser:
+        class: Phlexible\Component\MetaSet\File\Parser\XmlParser
         public: false
 
-    phlexible_meta_set.file.dumper.xml:
+    phlexible_meta_set.xml_dumper:
         class: Phlexible\Component\MetaSet\File\Dumper\XmlDumper
         public: false
 
-    phlexible_meta_set.file.loader:
-        class: Phlexible\Component\MetaSet\File\MetaSetLoader
+    phlexible_meta_set.puli_repository:
+        class: Phlexible\Component\MetaSet\File\PuliMetaSetRepository
         public: false
         arguments:
-            - "@pattern_locator"
+            - "@puli.discovery"
+            - "@puli.repository"
+            - "%phlexible_meta_set.dumper.default_type%"
+            - "%phlexible_meta_set.dumper.filesystem_dir%"
+            - "%phlexible_meta_set.dumper.puli_resource_dir%"
         calls:
-            - [addLoader, ["@phlexible_meta_set.file.loader.xml"]]
+            - [addParser, ["xml", "@phlexible_meta_set.xml_parser"]]
+            - [addDumper, ["xml", "@phlexible_meta_set.xml_dumper"]]
 
-    phlexible_meta_set.file.dumper:
-        class: Phlexible\Component\MetaSet\File\MetaSetDumper
+    phlexible_meta_set.meta_set_manager.default:
+        class: Phlexible\Component\MetaSet\File\MetaSetManager
         public: false
         arguments:
-            - "@phlexible_meta_set.file.dumper.xml"
-            - "%phlexible_meta_set.file_dir%"
-
-    phlexible_meta_set.file.meta_set_manager:
-        class: Phlexible\Component\MetaSet\File\MetaSetManager
-        arguments:
-            - "@phlexible_meta_set.file.loader"
-            - "@phlexible_meta_set.file.dumper"
+            - "@phlexible_meta_set.puli_repository"

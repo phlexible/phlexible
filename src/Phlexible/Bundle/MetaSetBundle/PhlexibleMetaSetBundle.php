@@ -11,6 +11,8 @@
 
 namespace Phlexible\Bundle\MetaSetBundle;
 
+use Phlexible\Bundle\MetaSetBundle\DependencyInjection\Compiler\AddOptionResolversPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -20,5 +22,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class PhlexibleMetaSetBundle extends Bundle
 {
-    const RESOURCE_META_SETS = 'metasets';
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new AddOptionResolversPass());
+    }
 }

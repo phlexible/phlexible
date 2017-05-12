@@ -9,7 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\MetaSet\Model;
+namespace Phlexible\Component\MetaSet\Domain;
+
+use Phlexible\Component\MetaSet\Model\MetaDataInterface;
+use Phlexible\Component\MetaSet\Domain\MetaSet;
+use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
  * Meta data.

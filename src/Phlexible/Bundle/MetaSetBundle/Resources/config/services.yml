@@ -4,7 +4,14 @@ parameters:
 
 services:
     phlexible_meta_set.option_resolver:
-        class: Phlexible\Component\MetaSet\Model\OptionResolver
+        class: Phlexible\Component\MetaSet\OptionResolver\DelegatingOptionResolver
+        arguments:
+            - []
+
+    phlexible_meta_set.select_option_resolver:
+        class: Phlexible\Component\MetaSet\OptionResolver\SelectOptionResolver
+        tags:
+            - {name: phlexible_meta_set.option_resolver, type: select}
 
     # event listeners
     phlexible_meta_set.listener.get_config:

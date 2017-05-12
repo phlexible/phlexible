@@ -165,7 +165,7 @@ class MediaSiteListener implements EventSubscriberInterface
         $folder = $event->getFolder();
 
         try {
-            $folderMetaSet = $this->metaSetManager->findOneByName('folder');
+            $folderMetaSet = $this->metaSetManager->findOneBy(array('name' => 'folder'));
             if ($folderMetaSet) {
                 $folder->addMetaset($folderMetaSet->getId());
             }
