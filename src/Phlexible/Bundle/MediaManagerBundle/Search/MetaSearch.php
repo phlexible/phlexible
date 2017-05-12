@@ -17,6 +17,7 @@ use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\MediaManager\Meta\FileMetaDataManager;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\Volume\VolumeManager;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -47,21 +48,29 @@ class MetaSearch implements SearchProviderInterface
     private $authorizationChecker;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @param VolumeManager                 $volumeManager
      * @param FileMetaDataManager           $metaDataManager
      * @param UserManagerInterface          $userManager
      * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param RouterInterface               $router
      */
     public function __construct(
         VolumeManager $volumeManager,
         FileMetaDataManager $metaDataManager,
         UserManagerInterface $userManager,
-        AuthorizationCheckerInterface $authorizationChecker)
-    {
+        AuthorizationCheckerInterface $authorizationChecker,
+        RouterInterface $router
+    ) {
         $this->volumeManager = $volumeManager;
         $this->metaDataManager = $metaDataManager;
         $this->userManager = $userManager;
         $this->authorizationChecker = $authorizationChecker;
+        $this->router = $router;
     }
 
     /**
@@ -120,7 +129,7 @@ class MetaSearch implements SearchProviderInterface
                 $file->getName(),
                 $createUserName,
                 $file->getCreatedAt(),
-                '/media/'.$file->getId().'/_mm_small',
+                $this->router->generate('mediamanager_media', array('file_id' => $file->getId(), 'file_version' => $file->getVersion(), 'template_key' => '_mm_small')),
                 'Mediamanager Meta Search',
                 [
                     'handler' => 'media',
