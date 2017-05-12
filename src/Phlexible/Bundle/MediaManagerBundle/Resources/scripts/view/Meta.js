@@ -191,7 +191,7 @@ Phlexible.mediamanager.Meta = Ext.extend(Ext.Panel, {
         var params = this.params;
         params.data = Ext.encode(sources);
 
-        if (typeof this.urls.save) {
+        if (typeof this.urls.save === 'function') {
             this.urls.save(params, this);
             return
         }
