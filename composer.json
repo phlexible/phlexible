@@ -3,7 +3,9 @@
     "description": "phlexible",
     "license": "MIT",
     "type": "symfony-bundle",
-    "keywords": ["phlexible"],
+    "keywords": [
+        "phlexible"
+    ],
     "autoload": {
         "psr-4": {
             "Phlexible\\": "src/Phlexible/"
@@ -26,9 +28,9 @@
         "cocur/slugify": "^2.3",
         "cogpowered/finediff": "^0.3",
         "doctrine/orm": "^2.4",
-        "fluentdom/fluentdom": "^5.1",
+        "fluentdom/fluentdom": "^6.0.1",
         "friendsofsymfony/user-bundle": "^2.0,>=2.0.0-beta1",
-        "imagine/imagine": "^0.6",
+        "imagine/imagine": "^0.7.0",
         "nelmio/api-doc-bundle": "^2.5",
         "phlexible/bundler": "~1.0.0,>=1.0.0-alpha3",
         "php-ffmpeg/extras": "^0.3",
@@ -37,13 +39,13 @@
         "puli/cli": "^1.0",
         "puli/twig-extension": "^1.0",
         "puli/symfony-bundle": "^1.0",
-        "ramsey/uuid": "^2.8",
-        "symfony/symfony": "^2.8",
-        "symfony-cmf/routing-bundle": "^1.1",
-        "twig/twig": "^1.15",
+        "ramsey/uuid": "^3.6.1",
+        "symfony/symfony": "^3.2.8",
+        "symfony-cmf/routing-bundle": "^2.0.0",
+        "twig/twig": "^2.3.2",
         "zf1/zend-search-lucene": "^1.12"
     },
-     "replace": {
+    "replace": {
         "phlexible/access-control": "self.version",
         "phlexible/access-control-bundle": "self.version",
         "phlexible/dashboard-bundle": "self.version",
@@ -64,7 +66,7 @@
         "phlexible/volume": "self.version"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.6",
+        "phpunit/phpunit": "^6.1.3",
         "mikey179/vfsStream": "^1.4"
     },
     "suggest": {
