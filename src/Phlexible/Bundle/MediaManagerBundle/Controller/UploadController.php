@@ -256,6 +256,8 @@ class UploadController extends Controller
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
 
+        $file->getVolume()->setFileMetaSets($file, array_keys($metaData), $this->getUser()->getId());
+
         foreach ($metaData as $metaSetId => $fields) {
             $metaSet = $metaSetManager->find($metaSetId);
             $metaData = $fileMetaDataManager->findByMetaSetAndFile($metaSet, $file);
