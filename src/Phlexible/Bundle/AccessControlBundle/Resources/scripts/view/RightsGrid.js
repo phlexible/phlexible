@@ -416,11 +416,11 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                     },
                     set = function(field) {
                         record.set(field, record.get(field) | bit);
-                        console.info('set', field, record.get(field));
+                        Phlexible.console.info('set', field, record.get(field));
                     },
                     unset = function(field) {
                         record.set(field, record.get(field) & ~bit);
-                        console.info('unset', field, record.get(field));
+                        Phlexible.console.info('unset', field, record.get(field));
                     };
 
                 if (test("parentMask")) {

@@ -35,7 +35,7 @@ Phlexible.FileUploadWizardMeta = Ext.extend(Phlexible.mediamanager.Meta, {
                 return [];
             },
             save: function(values) {
-                console.log(values);
+                Phlexible.console.log(values);
             },
             available: Phlexible.Router.generate('metasets_sets_list')
         };
