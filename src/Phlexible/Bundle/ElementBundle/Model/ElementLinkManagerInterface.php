@@ -57,6 +57,7 @@ interface ElementLinkManagerInterface
      * Delete element link.
      *
      * @param ElementLink $elementLink
+     * @param bool        $flush
      */
-    public function deleteElementLink(ElementLink $elementLink);
+    public function deleteElementLink(ElementLink $elementLink, $flush = true);
 }

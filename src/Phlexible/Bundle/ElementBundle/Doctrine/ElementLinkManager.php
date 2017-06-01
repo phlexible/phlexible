@@ -121,7 +121,7 @@ class ElementLinkManager implements ElementLinkManagerInterface
         }
     }
 
-    public function deleteElementLink(ElementLink $elementLink)
+    public function deleteElementLink(ElementLink $elementLink, $flush = true)
     {
         $id = $elementLink->getId();
 
@@ -131,7 +131,9 @@ class ElementLinkManager implements ElementLinkManagerInterface
         }
 
         $this->entityManager->remove($elementLink);
-        $this->entityManager->flush();
+        if ($flush) {
+            $this->entityManager->flush();
+        }
 
         $event = new DeleteElementLinkEvent($elementLink, $id);
         $this->dispatcher->dispatch(ElementEvents::DELETE_ELEMENT_LINK, $event);

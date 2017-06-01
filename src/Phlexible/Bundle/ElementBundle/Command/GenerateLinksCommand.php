@@ -69,16 +69,16 @@ class GenerateLinksCommand extends ContainerAwareCommand
                     $elementStructure = $elementStructureManager->find($elementVersion);
                     $elementStructure->setElementVersion($elementVersion);
 
-                    $linkUpdater->updateLinks($elementStructure, false);
+                    $linkUpdater->updateLinks($elementStructure, false, true);
                 } catch (\Exception $e) {
                     $style->error($e->getMessage());
                 }
             }
 
-            if ($index % 50 === 0) {
+            if ($index % 10 === 0) {
+                $elementStructureManager->clear();
                 $entityManager->flush();
                 $entityManager->clear();
-                $elementStructureManager->clear();
                 gc_collect_cycles();
             }
         }
