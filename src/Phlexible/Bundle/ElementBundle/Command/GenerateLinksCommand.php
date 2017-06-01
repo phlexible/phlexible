@@ -58,7 +58,7 @@ class GenerateLinksCommand extends ContainerAwareCommand
             $countElementVersions = count($elementVersions);
 
             $style->progressAdvance();
-            $style->write(" Element {$element->getEid()} ({$countElementVersions} Versions) ");
+            $style->write(" ".(memory_get_usage(true)/1024/1024)." mb | Element {$element->getEid()} ({$countElementVersions} Versions) ");
 
             foreach ($elementVersions as $elementVersion) {
                 $style->write(
@@ -75,8 +75,12 @@ class GenerateLinksCommand extends ContainerAwareCommand
                 }
             }
 
-            $entityManager->flush();
-            $entityManager->clear();
+            if ($index % 50 === 0) {
+                $entityManager->flush();
+                $entityManager->clear();
+                $elementStructureManager->clear();
+                gc_collect_cycles();
+            }
         }
 
         $style->writeln('');

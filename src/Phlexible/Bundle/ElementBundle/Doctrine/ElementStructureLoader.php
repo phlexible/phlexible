@@ -195,6 +195,11 @@ class ElementStructureLoader
         return $rootStructure;
     }
 
+    public function clear()
+    {
+        $this->map = [];
+    }
+
     /**
      * @param array $dataRow
      *

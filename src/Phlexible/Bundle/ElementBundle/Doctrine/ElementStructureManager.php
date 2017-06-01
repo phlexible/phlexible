@@ -83,6 +83,11 @@ class ElementStructureManager implements ElementStructureManagerInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    public function clear()
+    {
+        $this->elementStructureLoader->clear();
+    }
+
     /**
      * @param ElementVersion $elementVersion
      * @param string         $defaultLanguage
