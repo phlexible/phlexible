@@ -35,10 +35,13 @@ class GenerateLinksCommand extends ContainerAwareCommand
         $style = new SymfonyStyle($input, $output);
 
         $elementManager = $this->getContainer()->get('phlexible_element.element_manager');
-        $elementVersionManager = $this->getContainer()->get('phlexible_element.element_version_manager');
         $elementStructureManager = $this->getContainer()->get('phlexible_element.element_structure_manager');
         $elementService = $this->getContainer()->get('phlexible_element.element_service');
         $linkUpdater = $this->getContainer()->get('phlexible_element.link_updater');
+        $entityManager = $this->getContainer()->get('doctrine.orm.default_entity_manager');
+
+        $entityManager->getConfiguration()->setSQLLogger(null);
+        $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
 
         $criteria = array();
         if ($eid = $input->getArgument('eid')) {
@@ -72,7 +75,8 @@ class GenerateLinksCommand extends ContainerAwareCommand
                 }
             }
 
-            $linkUpdater->updateLinks($elementStructure, true);
+            $entityManager->flush();
+            $entityManager->clear();
         }
 
         $style->writeln('');
