@@ -18,6 +18,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 use Phlexible\Bundle\ElementtypeBundle\File\Parser\XmlParser;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
@@ -127,13 +128,13 @@ class ElementStructureLoader
                     ->setDataId($row['data_id'])
                     ->setDsId($row['ds_id'])
                     ->setType($row['type'])
-                    ->setName($row['name'])
+                    ->setName($myNode->getName()) // $row['name'])
                     ->setParentName($myParentNode->getName());
                 $rootStructure->addStructure($structure);
                 $structures[$row['id']] = $structure;
                 if (isset($dataRows[$row['id']])) {
                     foreach ($dataRows[$row['id']] as $dataRow) {
-                        $structure->setValue($this->createValue($dataRow));
+                        $structure->setValue($this->createValue($dataRow, $elementtypeStructure));
                     }
                 }
             }
@@ -141,7 +142,7 @@ class ElementStructureLoader
 
         if (isset($dataRows[$rootId])) {
             foreach ($dataRows[$rootId] as $dataRow) {
-                $rootStructure->setValue($this->createValue($dataRow));
+                $rootStructure->setValue($this->createValue($dataRow, $elementtypeStructure));
             }
         }
 
@@ -167,7 +168,7 @@ class ElementStructureLoader
                             ->setDataId($row['data_id'])
                             ->setDsId($row['ds_id'])
                             ->setType($row['type'])
-                            ->setName($row['name'])
+                            ->setName($myNode->getName()) // $row['name'])
                             ->setParentName($myParentNode->getName());
 
                         if (!isset($structures[$row['parent_id']])) {
@@ -182,7 +183,7 @@ class ElementStructureLoader
 
                         if (isset($dataRows[$row['id']])) {
                             foreach ($dataRows[$row['id']] as $dataRow) {
-                                $structure->setValue($this->createValue($dataRow));
+                                $structure->setValue($this->createValue($dataRow, $elementtypeStructure));
                             }
                         }
                     }
@@ -201,15 +202,21 @@ class ElementStructureLoader
     }
 
     /**
-     * @param array $dataRow
+     * @param array                $dataRow
+     * @param ElementtypeStructure $elementtypeStructure
      *
      * @return ElementStructureValue
      */
-    private function createValue(array $dataRow)
+    private function createValue(array $dataRow, ElementtypeStructure $elementtypeStructure)
     {
         $field = $this->fieldRegistry->getField($dataRow['type']);
-
         $content = $field->unserialize($dataRow['content']);
+
+        $name = $dataRow['name'];
+        $node = $elementtypeStructure->getNode($dataRow['ds_id']);
+        if ($node) {
+            $name = $node->getName();
+        }
 
         return new ElementStructureValue(
             $dataRow['id'],
@@ -217,7 +224,7 @@ class ElementStructureLoader
             $dataRow['language'],
             $dataRow['type'],
             $field->getDataType(),
-            $dataRow['name'],
+            $name,
             $content,
             $dataRow['options'] ? json_decode($dataRow['options'], true) : null
         );

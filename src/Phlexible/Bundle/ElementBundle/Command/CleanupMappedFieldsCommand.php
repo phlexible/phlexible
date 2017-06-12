@@ -11,13 +11,14 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersionMappedField;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class GenerateLinksCommand extends ContainerAwareCommand
+class CleanupMappedFieldsCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -25,8 +26,8 @@ class GenerateLinksCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('element:generate:links')
-            ->setDescription('Generate links for elements.')
+            ->setName('element:cleanup:mapped-fields')
+            ->setDescription('Cleanup mapped fields for elements.')
             ->addArgument('eid', InputArgument::OPTIONAL, 'EID');
     }
 
@@ -35,13 +36,14 @@ class GenerateLinksCommand extends ContainerAwareCommand
         $style = new SymfonyStyle($input, $output);
 
         $elementManager = $this->getContainer()->get('phlexible_element.element_manager');
-        $elementStructureManager = $this->getContainer()->get('phlexible_element.element_structure_manager');
+        $elementVersionManager = $this->getContainer()->get('phlexible_element.element_version_manager');
         $elementService = $this->getContainer()->get('phlexible_element.element_service');
-        $linkUpdater = $this->getContainer()->get('phlexible_element.link_updater');
 
         $entityManager = $this->getContainer()->get('doctrine.orm.default_entity_manager');
         $entityManager->getConfiguration()->setSQLLogger(null);
         $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
+
+        $mappedFieldRepository = $entityManager->getRepository(ElementVersionMappedField::class);
 
         $criteria = array();
         if ($eid = $input->getArgument('eid')) {
@@ -65,25 +67,25 @@ class GenerateLinksCommand extends ContainerAwareCommand
                     '.'
                 );
 
-                try {
-                    $elementStructure = $elementStructureManager->find($elementVersion);
-                    $elementStructure->setElementVersion($elementVersion);
-
-                    $linkUpdater->updateLinks($elementStructure, false, true);
-                } catch (\Exception $e) {
-                    $style->error($e->getMessage());
+                $languages = [];
+                foreach ($mappedFieldRepository->findBy(['elementVersion' => $elementVersion], ['id' => 'DESC']) as $mappedField) {
+                    if (!isset($languages[$mappedField->getLanguage()])) {
+                        $languages[$mappedField->getLanguage()] = true;
+                    } else {
+                        $entityManager->remove($mappedField);
+                    }
                 }
+
+                #$elementVersionManager->updateElementVersion($elementVersion, false);
             }
 
             if ($index % 10 === 0) {
-                $elementStructureManager->clear();
                 $entityManager->flush();
                 $entityManager->clear();
                 gc_collect_cycles();
             }
         }
 
-        $elementStructureManager->clear();
         $entityManager->flush();
         $entityManager->clear();
         gc_collect_cycles();

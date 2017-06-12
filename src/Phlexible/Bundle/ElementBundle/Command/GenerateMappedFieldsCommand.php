@@ -40,6 +40,10 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
         $elementService = $this->getContainer()->get('phlexible_element.element_service');
         $fieldMapper = $this->getContainer()->get('phlexible_element.field_mapper');
 
+        $entityManager = $this->getContainer()->get('doctrine.orm.default_entity_manager');
+        $entityManager->getConfiguration()->setSQLLogger(null);
+        $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
+
         $criteria = array();
         if ($eid = $input->getArgument('eid')) {
             $criteria['eid'] = $eid;
@@ -55,7 +59,7 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
             $countElementVersions = count($elementVersions);
 
             $style->progressAdvance();
-            $style->write(" Element {$element->getEid()} ({$countElementVersions} Versions) ");
+            $style->write(" ".(memory_get_usage(true)/1024/1024)." mb | Element {$element->getEid()} ({$countElementVersions} Versions) ");
 
             foreach ($elementVersions as $elementVersion) {
                 $style->write(
@@ -70,9 +74,24 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
                     $style->error($e->getMessage());
                 }
 
-                $elementVersionManager->updateElementVersion($elementVersion, true);
+                $elementVersionManager->updateElementVersion($elementVersion, false);
+            }
+
+            if ($index % 10 === 0) {
+                $elementStructureManager->clear();
+                $entityManager->flush();
+                $entityManager->clear();
+                gc_collect_cycles();
             }
         }
+
+        $elementStructureManager->clear();
+        $entityManager->flush();
+        $entityManager->clear();
+        gc_collect_cycles();
+
+        $style->writeln('');
+        $style->writeln('Done');
 
         return 0;
     }
