@@ -126,6 +126,8 @@ class TeaserManager implements TeaserManagerInterface
         $teasers = [];
         $forTreeId = end($treeNodePath)->getId();
 
+        $sort = [];
+
         foreach ($treeNodePath as $treeNode) {
             /* @var $treeNode TreeNodeInterface */
             foreach ($this->findForLayoutAreaAndTreeNode($layoutarea, $treeNode) as $teaser) {
@@ -146,16 +148,29 @@ class TeaserManager implements TeaserManagerInterface
                 foreach ($teasers as $index => $teaser) {
                     if ($teaser->hasStopId($treeNode->getId())) {
                         unset($teasers[$index]);
+                        unset($sort[$index]);
                     }
                 }
             } elseif (!$includeLocalHidden) {
                 foreach ($teasers as $index => $teaser) {
                     if ($teaser->isHidden()) {
                         unset($teasers[$index]);
+                        unset($sort[$index]);
                     }
                 }
             }
         }
+
+        uasort($teasers, function($a, $b) use ($treeNode) {
+            $sa = $a->getInheritSort($treeNode->getId());
+            $sb = $b->getInheritSort($treeNode->getId());
+
+            if ($sa == $sb) {
+                return 0;
+            }
+
+            return ($sa < $sb) ? -1 : 1;
+        });
 
         return $teasers;
     }
@@ -172,6 +187,13 @@ class TeaserManager implements TeaserManagerInterface
             ],
             array('sort' => 'ASC')
         );
+
+        $sort = [];
+        foreach ($teasers as $teaser) {
+            $sort[] = $teaser->getInheritSort($treeNode->getId());
+        }
+
+        array_multisort($sort, SORT_ASC, SORT_NUMERIC, $teasers);
 
         return $teasers;
     }

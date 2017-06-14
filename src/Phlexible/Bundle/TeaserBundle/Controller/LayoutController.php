@@ -100,6 +100,7 @@ class LayoutController extends Controller
                     'parent_tid' => $treeId,
                     'parent_eid' => $element->getEid(),
                     'type' => $teaser->getType(),
+                    'sort' => $teaser->getInheritSort($treeId),
                     'inherited' => false,
                     'inherit' => false,
                     'leaf' => true,
@@ -298,7 +299,7 @@ class LayoutController extends Controller
                     'publish_time' => $teaserOnline ? $teaserOnline->getPublishedAt() : '',
                     'custom_date' => $teaserElementVersion->getCustomDate($language),
                     'language' => $language,
-                    'sort' => (int) $teaser->getSort(),
+                    'sort' => (int) $teaser->getInheritSort($treeId),
                     'version_latest' => (int) $teaserElement->getLatestVersion(),
                     'version_online' => (int) $teaserManager->getPublishedVersion($teaser, $language),
                     'status' => '>o>',
@@ -321,7 +322,7 @@ class LayoutController extends Controller
                     'create_time' => '',
                     'publish_time' => null,
                     'language' => $language,
-                    'sort' => $teaser->getSort(),
+                    'sort' => (int) $teaser->getInheritSort($treeId),
                     'version_latest' => 0,
                     'version_online' => 0,
                     'status' => '>o>',
@@ -680,7 +681,11 @@ class LayoutController extends Controller
         $teasers = array();
         foreach ($sortIds as $sort => $teaserId) {
             $teaser = $teaserManager->find($teaserId);
-            $teaser->setSort($sort);
+            if ((int) $treeId === (int) $teaser->getTreeId()) {
+                $teaser->setSort($sort);
+            } else {
+                $teaser->setInheritSort($treeId, $sort);
+            }
             $teasers[] = $teaser;
         }
 
