@@ -453,7 +453,7 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
                     var split = v.split(';');
                     src = Phlexible.Router.generate('mediamanager_media', {file_id: split[0], template_key: '_mm_large', file_version: split[1]});
                 }
-                src += (src.indexOf('?') !== -1 ? '&' : '?') . _dc=' + (new Date().getTime());
+                src += (src.indexOf('?') !== -1 ? '&' : '?') + '_dc=' + (new Date().getTime());
                 this.fileBoxImage.dom.src = src;
                 if (this.value && !this.readOnly) {
                     this.removeButton.show();
