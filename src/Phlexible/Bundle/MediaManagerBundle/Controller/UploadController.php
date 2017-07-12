@@ -13,6 +13,8 @@ namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaManagerBundle\Entity\File;
+use Phlexible\Bundle\MediaManagerBundle\Event\CheckFileUploadEvent;
+use Phlexible\Bundle\MediaManagerBundle\MediaManagerEvents;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -190,12 +192,24 @@ class UploadController extends Controller
                 $data['wizard'] = true;
             }
 
+            $event = new CheckFileUploadEvent($data);
+            $this->get('event_dispatcher')->dispatch(
+                MediaManagerEvents::CHECK_FILE_UPLOAD,
+                $event
+            );
+
             /*
             // TODO: parser stuff
             if (!empty($tempFile['parsed'])) {
-                $temp['parsed'] = $tempFile['parsed'];
+                $data['parsed'] = [
+                    'metaSetId' => [
+                        'fieldName' => ['value_de' => 'abc', 'value_en' => 'def'],
+                    ],
+                ];
             }
             */
+
+            $data = $event->getData();
         }
 
         return new JsonResponse($data);
