@@ -20,9 +20,9 @@ Phlexible.fields.Registry.addFactory('file', function (parentConfig, item, value
         if (foundLink) {
             media = {
                 file_id: foundLink.payload.fileId,
-                folder_id: foundLink.payload.folderId,
-                folder_path: '/'+foundLink.payload.folderPath.join('/'),
-                name: foundLink.payload.name
+                folder_id: foundLink.payload.folderId || '',
+                folder_path: '/' + (foundLink.payload.folderPath ? foundLink.payload.folderPath.join('/') : ''),
+                name: foundLink.payload.name || ''
             };
         }
     }
