@@ -16,6 +16,7 @@ use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Bundle\MediaManagerBundle\Event\CheckFileUploadEvent;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerEvents;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
+use Phlexible\Component\MetaSet\Model\MetaSet;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -150,10 +151,7 @@ class UploadController extends Controller
             foreach ($mediaTypeMetasetMatcher->match($newType) as $metasetName) {
                 $metaset = $metasetManager->findOneByName($metasetName);
                 if ($metaset) {
-                    $metasets[] = array(
-                        'id' => $metaset->getId(),
-                        'name' => $metaset->getName(),
-                    );
+                    $metasets[] = $metaset;
                 }
             }
 
@@ -166,7 +164,7 @@ class UploadController extends Controller
                 'new_type' => $newType->getName(),
                 'new_size' => $tempFile->getSize(),
                 'new_hash' => $tempFile->getHash(),
-                'new_metasets' => $metasets,
+                'new_metasets' => $this->createMetasetConfig($metasets),
                 'wizard' => false,
                 'total' => $tempStorage->count(),
             ];
@@ -260,6 +258,32 @@ class UploadController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
+     * @return Response
+     * @Route("/preview", name="mediamanager_upload_preview")
+     */
+    public function previewAction(Request $request)
+    {
+        $tempId = $request->get('id');
+        $templateKey = $request->get('template');
+
+        $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
+        $templateManager = $this->get('phlexible_media_template.template_manager');
+        $imageApplier = $this->get('phlexible_media_template.applier.image');
+
+        $template = $templateManager->find($templateKey);
+        $tempFile = $tempStorage->get($tempId);
+
+        $outFilename = $this->container->getParameter('phlexible_media_manager.temp_dir').'preview.png';
+        $imageApplier->apply($template, new File(), $tempFile->getPath(), $outFilename);
+
+        $response = new BinaryFileResponse($outFilename, 200, array('Content-Type' => 'image/png'));
+
+        return $response;
+    }
+
+    /**
      * @param FileInterface $file
      * @param array         $metaData
      */
@@ -306,53 +330,17 @@ class UploadController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param MetaSet[] $metaSets
      *
-     * @return Response
-     * @Route("/preview", name="mediamanager_upload_preview")
+     * @return array
      */
-    public function previewAction(Request $request)
+    private function createMetasetConfig(array $metaSets)
     {
-        $tempId = $request->get('id');
-        $templateKey = $request->get('template');
-
-        $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
-        $templateManager = $this->get('phlexible_media_template.template_manager');
-        $imageApplier = $this->get('phlexible_media_template.applier.image');
-
-        $template = $templateManager->find($templateKey);
-        $tempFile = $tempStorage->get($tempId);
-
-        $outFilename = $this->container->getParameter('phlexible_media_manager.temp_dir').'preview.png';
-        $imageApplier->apply($template, new File(), $tempFile->getPath(), $outFilename);
-
-        $response = new BinaryFileResponse($outFilename, 200, array('Content-Type' => 'image/png'));
-
-        return $response;
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/metaset", name="mediamanager_upload_metaset")
-     */
-    public function metasetAction(Request $request)
-    {
-        $metaSetIds = explode(',', $request->get('ids'));
-
-        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
         $meta = array();
 
-        foreach ($metaSetIds as $metaSetId) {
-            $metaSet = $metaSetManager->find($metaSetId);
-
-            if (!$metaSet) {
-                continue;
-            }
-
+        foreach ($metaSets as $metaSet) {
             $fieldDatas = [];
 
             foreach ($metaSet->getFields() as $field) {
@@ -377,133 +365,6 @@ class UploadController extends Controller
             ];
         }
 
-        return new JsonResponse(['meta' => $meta]);
-    }
-
-    /**
-     * @return JsonResponse
-     * @Route("/meta_old", name="mediamanager_upload_meta_old")
-     */
-    public function metaOldAction()
-    {
-        $additionalMetaSet = $this->_getParam('metaset', null);
-
-        $metaSet = $this->getContainer()->get('metasets.repository')->find('document');
-        $keys = $metaSet->getKeys();
-
-        $meta = [];
-
-        $t9n = $this->getContainer()->t9n;
-        $pageKeys = $t9n->{'metadata-keys'}->toArray();
-        $pageSelect = $t9n->{'metadata-selectvalues'}->toArray();
-
-        $container = $this->getContainer();
-        $dataSourceRepository = $container->get('dataSourcesRepository');
-
-        foreach ($keys as $key => $row) {
-            $meta[$key] = $row;
-            $meta[$key]['set_id'] = $metaSet->getId();
-            $meta[$key]['key'] = $key;
-            $meta[$key]['value_de'] = '';
-            $meta[$key]['value_en'] = '';
-            $meta[$key]['required'] = (int) $meta[$key]['required'];
-
-            $meta[$key]['tkey'] = $key;
-            if (!empty($pageKeys[$key])) {
-                $meta[$key]['tkey'] = $pageKeys[$key];
-            }
-
-            if ($row['type'] === 'select') {
-                $options = explode(',', $row['options']);
-
-                foreach ($options as $k => $okey) {
-                    $okey = trim($okey);
-                    $value = $okey;
-                    if (!empty($pageSelect[$okey])) {
-                        $value = $pageSelect[$okey];
-                    }
-                    $options[$k] = [$okey, $value];
-                }
-
-                $meta[$key]['options'] = $options;
-            } elseif ($row['type'] === 'suggest') {
-                $sourceId = $row['options'];
-                $options = ['source_id' => $sourceId];
-
-                foreach (['de', 'en'] as $language) {
-                    $source = $dataSourceRepository->getDataSourceById(
-                        $sourceId,
-                        $language
-                    );
-
-                    $keys = $source->getKeys();
-
-                    foreach ($keys as $value) {
-                        $options["values_$language"][] = [$value, $value];
-                    }
-                }
-
-                $meta[$key]['options'] = $options;
-            }
-        }
-
-        if ($additionalMetaSet) {
-            try {
-                $metaSet = $this->getContainer()->get('metasets.repository')->find($additionalMetaSet);
-                $keys = $metaSet->getKeys();
-
-                foreach ($keys as $key => $row) {
-                    $meta[$key] = $row;
-                    $meta[$key]['set_id'] = $metaSet->getId();
-                    $meta[$key]['key'] = $key;
-                    $meta[$key]['value_de'] = '';
-                    $meta[$key]['value_en'] = '';
-                    $meta[$key]['required'] = (int) $meta[$key]['required'];
-
-                    $meta[$key]['tkey'] = $key;
-                    if (!empty($pageKeys[$key])) {
-                        $meta[$key]['tkey'] = $pageKeys[$key];
-                    }
-
-                    if ($row['type'] === 'select') {
-                        $options = explode(',', $row['options']);
-
-                        foreach ($options as $k => $okey) {
-                            $okey = trim($okey);
-                            $value = $okey;
-                            if (!empty($pageSelect[$okey])) {
-                                $value = $pageSelect[$okey];
-                            }
-                            $options[$k] = [$okey, $value];
-                        }
-
-                        $meta[$key]['options'] = $options;
-                    } elseif ($row['type'] === 'suggest') {
-                        $sourceId = $row['options'];
-                        $options = ['source_id' => $sourceId];
-
-                        foreach (['de', 'en'] as $language) {
-                            $source = $dataSourceRepository->getDataSourceById(
-                                $sourceId,
-                                $language
-                            );
-
-                            $keys = $source->getKeys();
-
-                            foreach ($keys as $value) {
-                                $options["values_$language"][] = [$value, $value];
-                            }
-                        }
-
-                        $meta[$key]['options'] = $options;
-                    }
-                }
-            } catch (\Exception $e) {
-            }
-        }
-
-        $meta = array_values($meta);
-
-        return new JsonResponse($meta);
+        return $meta;
     }
 }

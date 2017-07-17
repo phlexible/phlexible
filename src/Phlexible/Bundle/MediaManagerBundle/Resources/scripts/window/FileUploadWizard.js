@@ -12,18 +12,7 @@ Phlexible.FileUploadWizardMeta = Ext.extend(Phlexible.mediamanager.Meta, {
     initUrls: function () {
         this.urls = {
             load: function(params, callback, scope) {
-                Ext.Ajax.request({
-                    url: Phlexible.Router.generate('mediamanager_upload_metaset'),
-                    params: {
-                        ids: params.ids.join(',')
-                    },
-                    success: function (response) {
-                        var data = Ext.decode(response.responseText);
-
-                        callback.call(scope, data);
-                    },
-                    scope: this
-                });
+                callback.call(scope, params);
             },
             save: function() {
 
@@ -32,6 +21,7 @@ Phlexible.FileUploadWizardMeta = Ext.extend(Phlexible.mediamanager.Meta, {
 
         this.metasetUrls = {
             list: function() {
+                debugger;
                 return [];
             },
             save: function(values) {
@@ -354,16 +344,16 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         this.getFileView().getStore().loadData(data);
 
         if (file.get('new_metasets')) {
-            var ids = [];
+            var list = [];
             Ext.each(file.get('new_metasets'), function(set) {
-                ids.push(set.id);
+                list.push({id: set.id, title: set.name});
             });
 
             this.getMetaGrid().metasetUrls.list = function() {
-                return file.get('new_metasets');
+                return list;
             };
             this.getMetaGrid().loadMeta({
-                ids: ids
+                meta: file.get('new_metasets')
             });
         } else {
             this.getMetaGrid().empty();
@@ -401,11 +391,11 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         }
 
         if (file.get('parsed') && file.get('parsed').metaset) {
-            values.metaset = file.get('parsed').metaset;
+            //values.metaset = file.get('parsed').metaset;
         }
 
         if (file.get('parsed') && file.get('parsed').metaset) {
-            this.buildMeta(file.get('parsed').metaset);
+            //this.buildMeta(file.get('parsed').metaset);
         }
     },
 
