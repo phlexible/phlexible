@@ -50,21 +50,27 @@ class GenerateHashesCommand extends ContainerAwareCommand
             $criteria['eid'] = $eid;
         }
 
-        $languages = ['de', 'en'];
+        $cnt = $onlineRepo->createQueryBuilder('c')->select('COUNT(c.id)')->getQuery()->getSingleScalarResult();
 
-        foreach ($onlineRepo->findAll() as $index => $onlineNode) {
-            $output->write($index.') '.number_format(memory_get_usage(true) / 1024 / 1024, 2).' mb | ');
-            $output->write($onlineNode->getTreeNode()->getId().' '.$onlineNode->getVersion().' '.$onlineNode->getLanguage().' ... ');
-            $hash = $nodeHasher->hashNode($onlineNode->getTreeNode(), $onlineNode->getVersion(), $onlineNode->getLanguage());
-            if ($hash !== $onlineNode->getHash()) {
-                $output->writeln('... updated');
-                $onlineNode->setHash($hash);
-            } else {
-                $output->writeln('... correct');
+        $limit = 100;
+        $offset = 0;
+
+        while ($onlineNodes = $onlineRepo->findBy([], ['id' => 'ASC'], $limit, $offset)) {
+            foreach ($onlineNodes as $index => $onlineNode) {
+                $output->write(($offset+$index+1).' / '.$cnt.' | '.number_format(memory_get_usage(true) / 1024 / 1024, 2).' mb | ');
+                $output->write($onlineNode->getTreeNode()->getId().' '.$onlineNode->getVersion().' '.$onlineNode->getLanguage().' ... ');
+                $hash = $nodeHasher->hashNode($onlineNode->getTreeNode(), $onlineNode->getVersion(), $onlineNode->getLanguage());
+                if ($hash !== $onlineNode->getHash()) {
+                    $output->writeln('generated');
+                    $onlineNode->setHash($hash);
+                } else {
+                    $output->writeln('up-to-date');
+                }
             }
-        }
 
-        $entityManager->flush();
+            $entityManager->flush();
+            $offset += $limit;
+        }
 
         $style->writeln('');
         $style->writeln('Done');
