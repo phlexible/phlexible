@@ -103,7 +103,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
             else if (this.value.type === 'mailto') {
                 selected = 'mailto';
                 mailtoValue = this.value.recipient;
-                Phlexible.console.debug('recipient', mailtoValue);
+                Phlexible.console.debug('recipient: ' + mailtoValue);
             }
         }
 
@@ -225,7 +225,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         width: 300,
                         listWidth: 283,
                         treeWidth: 283,
-                        elementTypeIds: this.elementTypeIds,
+                        elementTypeIds: this.elementTypeIds || '',
                         language: this.language,
                         value: tidValue
                     },
@@ -238,7 +238,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         width: 300,
                         listWidth: 283,
                         treeWidth: 283,
-                        elementTypeIds: this.elementTypeIds,
+                        elementTypeIds: this.elementTypeIds || '',
                         intrasiteroot: true,
                         language: this.language,
                         value: intrasiterootValue
@@ -379,8 +379,8 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         return;
                     }
 
-                    Phlexible.console.debug('display', display);
-                    Phlexible.console.debug('value', value);
+                    //Phlexible.console.debug('display: ' + display);
+                    //Phlexible.console.debug('value: ' + value);
                     this.fireEvent('set', value, display);
                     this.close();
                 },
