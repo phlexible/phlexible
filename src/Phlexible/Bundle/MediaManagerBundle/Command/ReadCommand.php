@@ -22,6 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Read command.
@@ -65,9 +66,11 @@ class ReadCommand extends ContainerAwareCommand
             $this->readVolume($output, $volume, $folder);
         } elseif ($fileId) {
             $volume = $volumeManager->getByFileId($fileId);
-            $file = $volume->findFile($fileId);
+            $files = $volume->findFileVersions($fileId);
 
-            $this->readFile($output, $volume, $file);
+            foreach ($files as $file) {
+                $this->readFile($output, $volume, $file);
+            }
         } else {
             foreach ($volumeManager->all() as $volume) {
                 $this->readVolume($output, $volume);
@@ -96,7 +99,7 @@ class ReadCommand extends ContainerAwareCommand
 
     private function readFile(OutputInterface $output, ExtendedVolumeInterface $volume, ExtendedFileInterface $file)
     {
-        $output->writeln('  * '.$file->getId().' '.$file->getPhysicalPath().': ');
+        $output->writeln('  * '.$file->getId().' v'.$file->getVersion().' '.$file->getPhysicalPath().': ');
         $output->write('    > ');
 
         $mimeDetector = $this->getContainer()->get('phlexible_media_tool.mime.detector');
@@ -110,6 +113,10 @@ class ReadCommand extends ContainerAwareCommand
         }
 
         $mimetype = $mimeDetector->detect($file->getPhysicalPath(), MimeDetector::RETURN_STRING);
+
+        if (!$mimetype) {
+            $mimetype = (new File($file->getPhysicalPath()))->getMimeType();
+        }
 
         if (!$mimetype) {
             $output->write('<error>No mimetype</error> ');
@@ -137,6 +144,6 @@ class ReadCommand extends ContainerAwareCommand
         $volume->setFileMediaType($file, $mediaTypeName, null);
         //$volume->setFileMimetype($file, $mimetype, null);
 
-        $output->writeln("$mimetype, $mediaTypeName, ".json_encode($attributes));
+        $output->writeln("$mimetype, $mediaTypeName, ".(isset($attributes) ? json_encode($attributes) : "No attributes"));
     }
 }

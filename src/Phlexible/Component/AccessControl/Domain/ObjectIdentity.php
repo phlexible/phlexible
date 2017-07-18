@@ -55,8 +55,8 @@ class ObjectIdentity implements ObjectIdentityInterface
             throw new \InvalidArgumentException('$type cannot be empty.');
         }
 
-        $this->identifier = $identifier;
-        $this->type = $type;
+        $this->identifier = (string) $identifier;
+        $this->type = (string) $type;
     }
 
     /**

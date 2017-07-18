@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\AccessControl\Model;
+namespace Phlexible\Component\AccessControl\Domain;
 
-use Phlexible\Component\AccessControl\Domain\ObjectIdentity;
 use Phlexible\Component\AccessControl\Exception\InvalidDomainObjectException;
+use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
 use Symfony\Component\Security\Core\Util\ClassUtils;
 
 /**
@@ -42,7 +42,7 @@ class HierarchicalObjectIdentity extends ObjectIdentity
             throw new \InvalidArgumentException('$type cannot be empty.');
         }
 
-        $this->hierarchicalIdentifiers = $hierarchicalIdentifiers;
+        $this->hierarchicalIdentifiers = array_map(function($id) {return (string) $id;}, $hierarchicalIdentifiers);
 
         parent::__construct($identifier, $type);
     }

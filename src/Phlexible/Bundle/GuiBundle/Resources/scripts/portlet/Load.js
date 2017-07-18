@@ -58,15 +58,13 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
                     height: 100
                 },
                 listeners: {
-                    render: {
-                        fn: function (c) {
-                            //console.log('RENDER');
-                            //console.log(this.getSize());
-                            //console.log(c);
-                            //c.setWidth(this.getSize().width - 20);
-                        },
-                        scope: this
-                    }
+                    render: function (c) {
+                        //Phlexible.console.log('RENDER');
+                        //Phlexible.console.log(this.getSize());
+                        //Phlexible.console.log(c);
+                        //c.setWidth(this.getSize().width - 20);
+                    },
+                    scope: this
                 }
             },
             {
@@ -121,15 +119,15 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
             }
             drawMax = Math.ceil(max * 1.5);
 
-//            console.log('drawMax: ' + drawMax);
-//            console.log('max: ' + max);
+//            Phlexible.console.log('drawMax: ' + drawMax);
+//            Phlexible.console.log('max: ' + max);
 
             var width = canvas.width;
-            //console.log(width);
+            //Phlexible.console.log(width);
             var height = canvas.height;
 
             var mod = height / drawMax;
-//            console.log('mod: ' + mod);
+//            Phlexible.console.log('mod: ' + mod);
             var step = 5;
             var steps = width / step + 1;
             var ctx = canvas.getContext('2d');
@@ -159,7 +157,7 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
 
             // gutter
             ctx.lineWidth = 1;
-//            console.log('gutter: ' + (height / mod));
+//            Phlexible.console.log('gutter: ' + (height / mod));
             var gutterMod = drawMax / 5;
             for (var i = drawMax - gutterMod; i > gutterMod / 2; i -= gutterMod) {
                 y = i * mod;

@@ -3,7 +3,7 @@
     "description": "phlexible access control component",
     "license": "MIT",
     "type": "library",
-    "keywords": ["phlexible"],
+    "keywords": ["phlexible", "access control", "acl"],
     "autoload": {
         "psr-4": {
             "Phlexible\\Component\\AccessControl\\": ""

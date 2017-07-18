@@ -25,6 +25,7 @@ Phlexible.mediamanager.model.File = Ext.data.Record.create([
     {name: 'properties'},
     {name: 'used_in'},
     {name: 'used', type: 'int'},
+    {name: 'has_versions', type: 'bool'},
     {name: 'focal'},
     {name: 'attributes'}
 ]);

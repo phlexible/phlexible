@@ -84,9 +84,10 @@ class ElementHasher
 
         $rii = new \RecursiveIteratorIterator($elementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
         $content = [];
-        foreach ($rii as $structure) {
-            foreach ($structure->getValues() as $value) {
-                $content[$structure->getId().'__'.$value->getId()] = $value->getValue();
+        foreach ($rii as $structureIndex => $structure) {
+            foreach ($structure->getValues() as $valueIndex => $value) {
+                $key = sprintf('%s__%s__%s', $structure->getDsId(), $structure->getSort(), $value->getDsId());
+                $content[$key] = $value->getValue();
             }
         }
 

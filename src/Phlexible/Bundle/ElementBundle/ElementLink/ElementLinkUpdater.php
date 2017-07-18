@@ -57,9 +57,14 @@ class ElementLinkUpdater
     /**
      * @param ElementStructure $elementStructure
      * @param bool             $flush
+     * @param bool             $clear
      */
-    public function updateLinks(ElementStructure $elementStructure, $flush = true)
+    public function updateLinks(ElementStructure $elementStructure, $flush = true, $clear = false)
     {
+        if ($clear) {
+            $this->clearLinks($elementStructure);
+        }
+
         $links = $this->extractLinks($elementStructure);
 
         foreach ($links as $link) {
@@ -67,6 +72,17 @@ class ElementLinkUpdater
         }
 
         $this->linkManager->updateElementLinks($links, $flush);
+    }
+
+    /**
+     * @param ElementStructure $elementStructure
+     */
+    private function clearLinks(ElementStructure $elementStructure)
+    {
+        $existingLinks = $this->linkManager->findBy(['elementVersion' => $elementStructure->getElementVersion()]);
+        foreach ($existingLinks as $existingLink) {
+            $this->linkManager->deleteElementLink($existingLink, false);
+        }
     }
 
     /**

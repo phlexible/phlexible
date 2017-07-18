@@ -3,8 +3,14 @@ Ext.provide('Phlexible.mediamanager.Bullets');
 
 Phlexible.mediamanager.util.Bullets = function () {
     bullets = '';
-}
+};
 Ext.extend(Phlexible.mediamanager.util.Bullets, Ext.util.Observable, {
+    versionsBullet: function (values) {
+        if (values.has_versions) {
+            return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_versions.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+        }
+        return '';
+    },
     presentBullet: function (values) {
         if (!values.present) {
             return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_cross.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
@@ -28,6 +34,7 @@ Ext.extend(Phlexible.mediamanager.util.Bullets, Ext.util.Observable, {
     },
     buildBullets: function (values) {
         var bullets = '';
+        bullets += this.versionsBullet(values);
         bullets += this.presentBullet(values);
         bullets += this.usageBullet(values);
         this.bullets = bullets;

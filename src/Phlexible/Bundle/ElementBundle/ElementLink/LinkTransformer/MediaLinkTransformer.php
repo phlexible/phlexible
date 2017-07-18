@@ -48,11 +48,24 @@ class MediaLinkTransformer implements LinkTransformerInterface
     public function transform(ElementLink $elementLink, array $data)
     {
         if ($elementLink->getType() === 'file') {
-            list($fileId, $fileVersion) = explode(';', $elementLink->getTarget());
+            $parts = explode(';', $elementLink->getTarget());
+            $fileId = $parts[0];
+            $fileVersion = null;
+            if (isset($parts[1])) {
+                $fileVersion = $parts[1];
+            }
             $volume = $this->volumeManager->findByFileId($fileId);
 
             if ($volume) {
-                $file = $volume->findFile($fileId, $fileVersion);
+                $file = null;
+                if ($fileVersion) {
+                    $file = $volume->findFile($fileId, $fileVersion);
+                } else {
+                    $files = $volume->findFiles(array('id' => $fileId), array('version' => 'DESC'), 1);
+                    if ($files) {
+                        $file = current($files);
+                    }
+                }
                 if ($file) {
                     $data['content'] = $file->getName();
                     $data['payload']['name'] = $file->getName();

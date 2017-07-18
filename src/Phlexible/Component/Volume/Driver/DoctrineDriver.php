@@ -38,9 +38,9 @@ class DoctrineDriver extends AbstractDriver
     private $entityManager;
 
     /**
-     * @var Connection
+     * @var HashCalculatorInterface
      */
-    private $connection;
+    private $hashCalculator;
 
     /**
      * @var string
@@ -53,19 +53,39 @@ class DoctrineDriver extends AbstractDriver
     private $fileClass;
 
     /**
+     * @var array
+     */
+    private $features;
+
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
      * @param EntityManager           $entityManager
      * @param HashCalculatorInterface $hashCalculator
      * @param string                  $folderClass
      * @param string                  $fileClass
+     * @param array                   $features
      */
-    public function __construct(EntityManager $entityManager, HashCalculatorInterface $hashCalculator, $folderClass, $fileClass)
+    public function __construct(EntityManager $entityManager, HashCalculatorInterface $hashCalculator, $folderClass, $fileClass, array $features = [])
     {
         $this->entityManager = $entityManager;
         $this->hashCalculator = $hashCalculator;
         $this->folderClass = $folderClass;
         $this->fileClass = $fileClass;
+        $this->features = $features;
 
         $this->connection = $entityManager->getConnection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFeatures()
+    {
+        return $this->features;
     }
 
     /**

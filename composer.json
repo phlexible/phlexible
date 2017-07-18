@@ -50,14 +50,20 @@
         "phlexible/element-bundle": "self.version",
         "phlexible/element-renderer-bundle": "self.version",
         "phlexible/elementtype-bundle": "self.version",
+        "phlexible/formatter": "self.version",
         "phlexible/gui-bundle": "self.version",
+        "phlexible/media-manager": "self.version",
+        "phlexible/media-manager-bundle": "self.version",
         "phlexible/message-bundle": "self.version",
+        "phlexible/meta-set": "self.version",
         "phlexible/problem-bundle": "self.version",
         "phlexible/queue-bundle": "self.version",
         "phlexible/search-bundle": "self.version",
         "phlexible/siteroot-bundle": "self.version",
         "phlexible/tree-bundle": "self.version",
-        "phlexible/user-bundle": "self.version"
+        "phlexible/user-bundle": "self.version",
+        "phlexible/util": "self.version",
+        "phlexible/volume": "self.version"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.6",

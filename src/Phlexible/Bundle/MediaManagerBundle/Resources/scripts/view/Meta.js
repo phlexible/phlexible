@@ -169,7 +169,7 @@ Phlexible.mediamanager.Meta = Ext.extend(Ext.Panel, {
     },
 
     setRights: function (rights) {
-        if (rights.indexOf(this.getRight()) != -1) {
+        if (rights.indexOf(this.getRight()) !== -1) {
             this.getTopToolbar().items.items[0].show();
             this.getTopToolbar().items.items[4].show();
         } else {
@@ -191,7 +191,7 @@ Phlexible.mediamanager.Meta = Ext.extend(Ext.Panel, {
         var params = this.params;
         params.data = Ext.encode(sources);
 
-        if (typeof this.urls.save) {
+        if (typeof this.urls.save === 'function') {
             this.urls.save(params, this);
             return
         }

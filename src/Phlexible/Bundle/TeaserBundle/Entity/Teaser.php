@@ -240,6 +240,37 @@ class Teaser
         return $this;
     }
 
+    /**
+     * @param int $nodeId
+     *
+     * @return int
+     */
+    public function getInheritSort($nodeId)
+    {
+        if (isset($this->attributes['inheritSort'][$nodeId])) {
+            return $this->attributes['inheritSort'][$nodeId];
+        }
+
+        return $this->sort;
+    }
+
+    /**
+     * @param int $nodeId
+     * @param int $sort
+     *
+     * @return $this
+     */
+    public function setInheritSort($nodeId, $sort)
+    {
+        if (!isset($this->attributes['inheritSort'])) {
+            $this->attributes['inheritSort'] = [];
+        }
+
+        $this->attributes['inheritSort'][$nodeId] = $sort;
+
+        return $this;
+    }
+
     public function getAttributes()
     {
         return $this->attributes;
