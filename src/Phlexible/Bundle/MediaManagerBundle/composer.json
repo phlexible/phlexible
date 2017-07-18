@@ -10,8 +10,8 @@
         }
     },
     "require": {
-        "php": ">=5.6.0"
-        "phlexible/media-manager": ">=5.6.0"
+        "php": ">=5.6.0",
+        "phlexible/media-manager": "~1.3.14"
     },
     "extra": {
         "branch-alias": {
