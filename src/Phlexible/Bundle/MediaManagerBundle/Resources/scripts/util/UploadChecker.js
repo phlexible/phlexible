@@ -139,6 +139,7 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
                     uploadChecker: this
                 });
             }
+            this.wizard.removeLoadmask();
             this.wizard.show();
             this.wizard.loadFile();
         }

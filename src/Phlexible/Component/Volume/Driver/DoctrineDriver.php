@@ -38,9 +38,9 @@ class DoctrineDriver extends AbstractDriver
     private $entityManager;
 
     /**
-     * @var Connection
+     * @var HashCalculatorInterface
      */
-    private $connection;
+    private $hashCalculator;
 
     /**
      * @var string
@@ -51,6 +51,11 @@ class DoctrineDriver extends AbstractDriver
      * @var string
      */
     private $fileClass;
+
+    /**
+     * @var Connection
+     */
+    private $connection;
 
     /**
      * @param EntityManager           $entityManager

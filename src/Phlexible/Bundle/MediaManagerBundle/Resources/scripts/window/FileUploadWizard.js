@@ -242,6 +242,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 iconCls: 'p-mediamanager-wizard_discard-icon',
                 all: true,
                 handler: function() {
+                    this.showLoadMmask(this.strings.wizard.discarding_all);
                     this.uploadChecker.discardAllFiles({}, this.close, this);
                 },
                 scope: this
@@ -252,6 +253,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 iconCls: 'p-mediamanager-wizard_discard-icon',
                 'do': 'replace',
                 handler: function() {
+                    this.showLoadMmask(this.strings.wizard.discarding);
                     this.uploadChecker.discardFile({}, this.uploadChecker.next, this.uploadChecker);
                 },
                 scope: this
@@ -262,6 +264,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 iconCls: 'p-mediamanager-wizard_save-icon',
                 'do': 'keep',
                 handler: function() {
+                    this.showLoadMmask(this.strings.wizard.keeping_both);
                     this.uploadChecker.keepFile(this.getValues(), this.uploadChecker.next, this.uploadChecker);
                 },
                 scope: this
@@ -271,6 +274,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 iconCls: 'p-mediamanager-wizard_save-icon',
                 'do': 'replace',
                 handler: function() {
+                    this.showLoadMmask(this.strings.wizard.replacing);
                     this.uploadChecker.replaceFile(this.getValues(), this.uploadChecker.next, this.uploadChecker);
                 },
                 scope: this
@@ -280,6 +284,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 iconCls: 'p-mediamanager-wizard_save-icon',
                 'do': 'version',
                 handler: function() {
+                    this.showLoadMmask(this.strings.wizard.saving_version);
                     this.uploadChecker.saveFileVersion(this.getValues(), this.uploadChecker.next, this.uploadChecker);
                 },
                 scope: this
@@ -289,6 +294,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 iconCls: 'p-mediamanager-wizard_save-icon',
                 'do': 'save',
                 handler: function() {
+                    this.showLoadMmask(this.strings.wizard.saving);
                     this.uploadChecker.saveFile(this.getValues(), this.uploadChecker.next, this.uploadChecker);
                 },
                 scope: this
@@ -296,6 +302,20 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         ];
 
         Phlexible.mediamanager.FileUploadWizard.superclass.initComponent.call(this);
+    },
+
+    showLoadMmask: function(msg) {
+        if (!this.loadMask) {
+            this.loadMask = new Ext.LoadMask(this.getEl(), {msg: msg});
+        }
+        this.loadMask.msg = msg;
+        this.loadMask.show();
+    },
+
+    removeLoadmask: function() {
+        if (this.loadMask) {
+            this.loadMask.hide();
+        }
     },
 
     getFileView: function() {
