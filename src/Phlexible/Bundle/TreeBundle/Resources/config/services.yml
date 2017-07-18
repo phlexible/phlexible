@@ -117,6 +117,14 @@ services:
         tags:
             - {name: kernel.event_subscriber}
 
+    # object identity resolvers
+    phlexible_tree.tree_node_object_identity_resolver:
+        class: Phlexible\Bundle\TreeBundle\ObjectIdentityResolver\TreeNodeObjectIdentityResolver
+        arguments:
+            - "@phlexible_tree.tree_manager"
+        tags:
+            - {name: phlexible_access_control.object_identity_resolver}
+
     # twig extensions
     phlexible_tree.twig.tree_extension:
         class: Phlexible\Bundle\TreeBundle\Twig\Extension\TreeExtension

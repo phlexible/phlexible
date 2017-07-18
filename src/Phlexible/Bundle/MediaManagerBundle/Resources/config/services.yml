@@ -122,6 +122,14 @@ services:
             tags:
                 - {name: kernel.event_listener, event: kernel.controller, method: onKernelController}
 
+    # object identity resolvers
+    phlexible_media_manager.folder_object_identity_resolver:
+        class: Phlexible\Bundle\MediaManagerBundle\ObjectIdentityResolver\FolderObjectIdentityResolver
+        arguments:
+            - "@phlexible_media_manager.volume_manager"
+        tags:
+            - {name: phlexible_access_control.object_identity_resolver}
+
     # portlets
     phlexible_media_manager.portlet.latest_files:
         class: Phlexible\Bundle\MediaManagerBundle\Portlet\LatestFilesPortlet

@@ -24,6 +24,14 @@ services:
         tags:
             - {name: kernel.event_subscriber}
 
+    # object identity resolvers
+    phlexible_teaser.teaser_object_identity_resolver:
+        class: Phlexible\Bundle\TeaserBundle\ObjectIdentityResolver\TeaserObjectIdentityResolver
+        arguments:
+            - "@phlexible_teaser.teaser_manager"
+        tags:
+            - {name: phlexible_access_control.object_identity_resolver}
+
     # role providers
     phlexible_teaser.role_provider:
         class: Phlexible\Bundle\TeaserBundle\RoleProvider\TeaserRoleProvider

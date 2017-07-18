@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Component\AccessControl\Domain\AccessControlList;
 use Phlexible\Component\AccessControl\Domain\Entry;
 use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
-use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
+use Phlexible\Component\AccessControl\Domain\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

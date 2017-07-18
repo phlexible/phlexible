@@ -6,6 +6,11 @@ services:
     phlexible_access_control.permission_resolver:
         class: Phlexible\Component\AccessControl\Permission\PermissionResolver
 
+    phlexible_access_control.object_identity_resolver:
+        class: Phlexible\Component\AccessControl\ObjectIdentityResolver\DelegatingObjectIdentityResolver
+        arguments:
+            - []
+
     phlexible_access_control.security_resolver:
         class: Phlexible\Component\AccessControl\SecurityProvider\DelegatingSecurityResolver
         arguments:

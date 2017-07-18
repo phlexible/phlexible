@@ -12,7 +12,7 @@
 namespace Phlexible\Component\AccessControl\Domain;
 
 use Countable;
-use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
+use Phlexible\Component\AccessControl\Domain\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\SecurityIdentityInterface;
 use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
@@ -198,7 +198,7 @@ class AccessControlList implements Countable
                 $map = array();
                 foreach ($oi->getHierarchicalIdentifiers() as $identifier) {
                     foreach ($this->getEntries() as $entry) {
-                        if ($entry->getObjectIdentifier() === $identifier) {
+                        if ((string) $entry->getObjectIdentifier() === (string) $identifier) {
                             $map[$entry->getSecurityType()][$entry->getSecurityIdentifier()][$entry->getObjectIdentifier()] = $entry;
                         }
                     }

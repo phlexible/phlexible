@@ -18,9 +18,11 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
     objectType: null,
     languageEnabled: false,
+    urls: {},
 
     getDefaultUrls: function () {
         return {
+            identities: Phlexible.Router.generate('accesscontrol_identities'),
             users: Phlexible.Router.generate('accesscontrol_users'),
             groups: Phlexible.Router.generate('accesscontrol_groups'),
             permissions: Phlexible.Router.generate('accesscontrol_permissions'),
