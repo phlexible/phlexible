@@ -11,6 +11,7 @@
     },
     "require": {
         "php": ">=5.6.0"
+        "phlexible/media-manager": ">=5.6.0"
     },
     "extra": {
         "branch-alias": {
