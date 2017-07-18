@@ -3,52 +3,6 @@ Ext.provide('Phlexible.mediamanager.FileUploadWindow');
 
 Ext.require('Ext.ux.GUID');
 
-Phlexible.mediamanager.JavaUploadWindow = Ext.extend(Ext.Window, {
-    strings: Phlexible.mediamanager.Strings,
-    iconCls: 'p-mediamanager-file_upload-icon',
-    width: 700,
-    height: 400,
-    modal: true,
-    resizable: false,
-
-    params: {
-        lang: 'de',
-        showLogWindow: true,
-        showStatusBar: true,
-        debugLevel: 100,
-        maxChunkSize: 0,
-        postURL: 'ftp://swentz:warhammer@192.168.1.46/',
-        afterUploadURL: 'javascript:alert(\"done\");'
-    },
-
-    initComponent: function () {
-        var html = '';
-        html += '<applet width="' + (this.width - 30) + '" height="' + (this.height - 40) + '" mayscript="" name="jupload" archive="/resources/asset/java/mediamanager/wjhk.jupload.jar, /resources/asset/java/mediamanager/jakarta-commons-oro.jar, /resources/asset/java/mediamanager/jakarta-commons-net.jar" code="wjhk.jupload2.JUploadApplet">';
-
-        for (var i in this.params) {
-            html += '<param name="' + i + '" value="' + this.params[i] + '" />';
-        }
-
-        html += 'Java 1.5 or higher plugin required.';
-        html += '</applet>';
-
-        this.html = html;
-
-        Phlexible.mediamanager.JavaUploadWindow.superclass.initComponent.call(this);
-    },
-
-    show: function (btn, siteID, folderID, folderTitle) {
-        if (folderID) {
-            if (folderTitle) {
-                this.setTitle(this.strings.upload_file_to_folder + ' "' + folderTitle + '"');
-            } else {
-                this.setTitle(this.strings.upload_file);
-            }
-//            this.swfPanel.addPostParam('folder_id', folderID);
-            Phlexible.mediamanager.JavaUploadWindow.superclass.show.call(this, btn);
-        }
-    }
-});
 Phlexible.mediamanager.FileUploadWindow = Ext.extend(Ext.Window, {
     strings: Phlexible.mediamanager.Strings,
     width: 450,

@@ -39,11 +39,9 @@ class LinksController extends Controller
         $version = $request->get('version');
         $incoming = $request->get('incoming', false);
 
-        $displayLanguage = $language;
-
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $linkRepository = $this->getDoctrine()->getRepository('PhlexibleElementBundle:ElementLink');
+        $linkFetcher = $this->get('phlexible_element.link_fetcher');
 
         $tree = $treeManager->getByNodeId($tid);
         $node = $tree->get($tid);
@@ -51,27 +49,7 @@ class LinksController extends Controller
         $element = $elementService->findElement($node->getTypeId());
         $elementVersion = $elementService->findElementVersion($element, $version);
 
-        $result = [];
-
-        if ($incoming) {
-            $links = $linkRepository->findBy(['type' => 'link-internal', 'target' => $node->getId()]);
-        } else {
-            $links = $linkRepository->findBy(['elementVersion' => $elementVersion]);
-        }
-
-        foreach ($links as $link) {
-            $result[] = [
-                'id' => $link->getId(),
-                'iconCls' => 'p-element-component-icon',
-                'type' => $link->getType(),
-                'title' => $link->getField(),
-                'content' => $link->getTarget(),
-                'link' => [],
-                'raw' => 'raw',
-            ];
-        }
-
-        return new JsonResponse(['links' => $result]);
+        return new JsonResponse(['links' => $linkFetcher->fetch($elementVersion, $language, $incoming ? $node : null)]);
     }
 
     /**

@@ -13,8 +13,11 @@ namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaManagerBundle\Entity\File;
+use Phlexible\Bundle\MediaManagerBundle\Event\CheckFileUploadEvent;
+use Phlexible\Bundle\MediaManagerBundle\MediaManagerEvents;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
-use Phlexible\Component\Mime\MimeDetector;
+use Phlexible\Component\MetaSet\Model\MetaSet;
+use Phlexible\Component\Volume\Model\FileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -85,7 +88,7 @@ class UploadController extends Controller
 
                     $body = 'Filename: '.$uploadedFile->getClientOriginalName().PHP_EOL
                         .'Folder:   '.$folder->getName().PHP_EOL
-                        .'Filesize: '.$uploadedFile->getSize().PHP_EOL
+                        .'Filesize: '.$file->getSize().PHP_EOL
                         .'Filetype: '.$file->getMimeType().PHP_EOL;
 
                     $message = MediaManagerMessage::create('File "'.$file->getName().'" uploaded.', $body);
@@ -125,6 +128,8 @@ class UploadController extends Controller
         $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $mediaTypeMetasetMatcher = $this->get('phlexible_media_manager.media_type_metaset_matcher');
+        $metasetManager = $this->get('phlexible_meta_set.meta_set_manager');
 
         $data = [];
 
@@ -133,13 +138,21 @@ class UploadController extends Controller
             $volume = $volumeManager->getByFolderId($tempFile->getFolderId());
             $supportsVersions = $volume->hasFeature('versions');
             $newName = basename($tempFile->getName());
-            $mimetype = $this->get('phlexible_media_tool.mime.detector')->detect($tempFile->getPath(), MimeDetector::RETURN_STRING);
+            $mimetype = $tempFile->getMimeType();
             $newType = null;
             if (trim($mimetype)) {
                 $newType = $mediaTypeManager->findByMimetype($mimetype);
             }
             if (!$newType) {
                 $newType = $mediaTypeManager->find('binary');
+            }
+
+            $metasets = array();
+            foreach ($mediaTypeMetasetMatcher->match($newType) as $metasetName) {
+                $metaset = $metasetManager->findOneByName($metasetName);
+                if ($metaset) {
+                    $metasets[] = $metaset;
+                }
             }
 
             $data = [
@@ -150,6 +163,8 @@ class UploadController extends Controller
                 'new_name' => $newName,
                 'new_type' => $newType->getName(),
                 'new_size' => $tempFile->getSize(),
+                'new_hash' => $tempFile->getHash(),
+                'new_metasets' => $this->createMetasetConfig($metasets),
                 'wizard' => false,
                 'total' => $tempStorage->count(),
             ];
@@ -163,6 +178,7 @@ class UploadController extends Controller
                 $data['old_id'] = $tempFile->getFileId();
                 $data['old_type'] = $oldFile->getMediaType();
                 $data['old_size'] = $oldFile->getSize();
+                $data['old_hash'] = $oldFile->getHash();
                 $data['alternative_name'] = $alternativeName;
             }
 
@@ -174,12 +190,24 @@ class UploadController extends Controller
                 $data['wizard'] = true;
             }
 
+            $event = new CheckFileUploadEvent($data);
+            $this->get('event_dispatcher')->dispatch(
+                MediaManagerEvents::CHECK_FILE_UPLOAD,
+                $event
+            );
+
             /*
             // TODO: parser stuff
             if (!empty($tempFile['parsed'])) {
-                $temp['parsed'] = $tempFile['parsed'];
+                $data['parsed'] = [
+                    'metaSetId' => [
+                        'fieldName' => ['value_de' => 'abc', 'value_en' => 'def'],
+                    ],
+                ];
             }
             */
+
+            $data = $event->getData();
         }
 
         return new JsonResponse($data);
@@ -206,10 +234,9 @@ class UploadController extends Controller
     public function saveAction(Request $request)
     {
         $all = $request->get('all');
-        $action = $request->get('do');
+        $action = $request->get('action');
         $tempId = $request->get('temp_id');
 
-        $metaSetId = $request->get('metaset', null);
         $metaData = $request->get('meta', null);
         if ($metaData) {
             $metaData = json_decode($metaData, true);
@@ -220,7 +247,11 @@ class UploadController extends Controller
         if ($all) {
             $tempHandler->handleAll($action);
         } else {
-            $tempHandler->handle($action, $tempId);
+            $file = $tempHandler->handle($action, $tempId);
+
+            if ($file && $metaData) {
+                $this->saveMeta($file, $metaData);
+            }
         }
 
         return new ResultResponse(true, ($all ? 'All' : 'File').' saved with action '.$action);
@@ -253,148 +284,87 @@ class UploadController extends Controller
     }
 
     /**
-     * @return JsonResponse
-     * @Route("/metasets", name="mediamanager_upload_metasets")
+     * @param FileInterface $file
+     * @param array         $metaData
      */
-    public function metasetsAction()
+    private function saveMeta(FileInterface $file, array $metaData)
     {
-        $allSets = $this->getContainer()->get('metasets.repository')->getAll();
+        $metaLanguages = explode(',', $this->container->getParameter('phlexible_meta_set.languages.available'));
 
-        $sets = [];
-        foreach ($allSets as $key => $set) {
-            $sets[] = [
-                'key' => $key,
-                'title' => $set->getTitle(),
-            ];
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
+
+        $file->getVolume()->setFileMetaSets($file, array_keys($metaData), $this->getUser()->getId());
+
+        foreach ($metaData as $metaSetId => $fields) {
+            $metaSet = $metaSetManager->find($metaSetId);
+            $metaData = $fileMetaDataManager->findByMetaSetAndFile($metaSet, $file);
+
+            if (!$metaData) {
+                $metaData = $fileMetaDataManager->createMetaData($metaSet);
+            }
+
+            foreach ($fields as $fieldname => $row) {
+                foreach ($metaLanguages as $language) {
+                    if (!isset($row["value_$language"])) {
+                        continue;
+                    }
+
+                    if (!$metaSet->hasField($fieldname)) {
+                        continue;
+                    }
+
+                    // TODO: löschen?
+                    if (empty($row["value_$language"])) {
+                        continue;
+                    }
+
+                    $value = $row["value_$language"];
+
+                    $metaData->set($fieldname, $value, $language);
+                }
+            }
+
+            $fileMetaDataManager->updateMetaData($file, $metaData);
         }
-
-        return new JsonResponse(['metasets' => $sets]);
     }
 
     /**
-     * @return JsonResponse
-     * @Route("/meta", name="mediamanager_upload_meta")
+     * @param MetaSet[] $metaSets
+     *
+     * @return array
      */
-    public function metaAction()
+    private function createMetasetConfig(array $metaSets)
     {
-        $additionalMetaSet = $this->_getParam('metaset', null);
+        $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
-        $metaSet = $this->getContainer()->get('metasets.repository')->find('document');
-        $keys = $metaSet->getKeys();
+        $meta = array();
 
-        $meta = [];
+        foreach ($metaSets as $metaSet) {
+            $fieldDatas = [];
 
-        $t9n = $this->getContainer()->t9n;
-        $pageKeys = $t9n->{'metadata-keys'}->toArray();
-        $pageSelect = $t9n->{'metadata-selectvalues'}->toArray();
+            foreach ($metaSet->getFields() as $field) {
+                $options = $optionResolver->resolve($field);
 
-        $container = $this->getContainer();
-        $dataSourceRepository = $container->get('dataSourcesRepository');
+                $fieldData = [
+                    'key' => $field->getName(),
+                    'type' => $field->getType(),
+                    'options' => $options,
+                    'readonly' => $field->isReadonly(),
+                    'required' => $field->isRequired(),
+                    'synchronized' => $field->isSynchronized(),
+                ];
 
-        foreach ($keys as $key => $row) {
-            $meta[$key] = $row;
-            $meta[$key]['set_id'] = $metaSet->getId();
-            $meta[$key]['key'] = $key;
-            $meta[$key]['value_de'] = '';
-            $meta[$key]['value_en'] = '';
-            $meta[$key]['required'] = (int) $meta[$key]['required'];
-
-            $meta[$key]['tkey'] = $key;
-            if (!empty($pageKeys[$key])) {
-                $meta[$key]['tkey'] = $pageKeys[$key];
+                $fieldDatas[] = $fieldData;
             }
 
-            if ($row['type'] === 'select') {
-                $options = explode(',', $row['options']);
-
-                foreach ($options as $k => $okey) {
-                    $okey = trim($okey);
-                    $value = $okey;
-                    if (!empty($pageSelect[$okey])) {
-                        $value = $pageSelect[$okey];
-                    }
-                    $options[$k] = [$okey, $value];
-                }
-
-                $meta[$key]['options'] = $options;
-            } elseif ($row['type'] === 'suggest') {
-                $sourceId = $row['options'];
-                $options = ['source_id' => $sourceId];
-
-                foreach (['de', 'en'] as $language) {
-                    $source = $dataSourceRepository->getDataSourceById(
-                        $sourceId,
-                        $language
-                    );
-
-                    $keys = $source->getKeys();
-
-                    foreach ($keys as $value) {
-                        $options["values_$language"][] = [$value, $value];
-                    }
-                }
-
-                $meta[$key]['options'] = $options;
-            }
+            $meta[] = [
+                'set_id' => $metaSet->getId(),
+                'title' => $metaSet->getName(),
+                'fields' => $fieldDatas,
+            ];
         }
 
-        if ($additionalMetaSet) {
-            try {
-                $metaSet = $this->getContainer()->get('metasets.repository')->find($additionalMetaSet);
-                $keys = $metaSet->getKeys();
-
-                foreach ($keys as $key => $row) {
-                    $meta[$key] = $row;
-                    $meta[$key]['set_id'] = $metaSet->getId();
-                    $meta[$key]['key'] = $key;
-                    $meta[$key]['value_de'] = '';
-                    $meta[$key]['value_en'] = '';
-                    $meta[$key]['required'] = (int) $meta[$key]['required'];
-
-                    $meta[$key]['tkey'] = $key;
-                    if (!empty($pageKeys[$key])) {
-                        $meta[$key]['tkey'] = $pageKeys[$key];
-                    }
-
-                    if ($row['type'] === 'select') {
-                        $options = explode(',', $row['options']);
-
-                        foreach ($options as $k => $okey) {
-                            $okey = trim($okey);
-                            $value = $okey;
-                            if (!empty($pageSelect[$okey])) {
-                                $value = $pageSelect[$okey];
-                            }
-                            $options[$k] = [$okey, $value];
-                        }
-
-                        $meta[$key]['options'] = $options;
-                    } elseif ($row['type'] === 'suggest') {
-                        $sourceId = $row['options'];
-                        $options = ['source_id' => $sourceId];
-
-                        foreach (['de', 'en'] as $language) {
-                            $source = $dataSourceRepository->getDataSourceById(
-                                $sourceId,
-                                $language
-                            );
-
-                            $keys = $source->getKeys();
-
-                            foreach ($keys as $value) {
-                                $options["values_$language"][] = [$value, $value];
-                            }
-                        }
-
-                        $meta[$key]['options'] = $options;
-                    }
-                }
-            } catch (\Exception $e) {
-            }
-        }
-
-        $meta = array_values($meta);
-
-        return new JsonResponse($meta);
+        return $meta;
     }
 }

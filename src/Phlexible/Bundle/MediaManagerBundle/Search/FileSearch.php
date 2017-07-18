@@ -16,6 +16,7 @@ use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\Volume\VolumeManager;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -41,18 +42,26 @@ class FileSearch implements SearchProviderInterface
     private $authorizationChecker;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @param VolumeManager                 $volumeManager
      * @param UserManagerInterface          $userManager
      * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param RouterInterface               $router
      */
     public function __construct(
         VolumeManager $volumeManager,
         UserManagerInterface $userManager,
-        AuthorizationCheckerInterface $authorizationChecker)
-    {
+        AuthorizationCheckerInterface $authorizationChecker,
+        RouterInterface $router
+    ) {
         $this->volumeManager = $volumeManager;
         $this->userManager = $userManager;
         $this->authorizationChecker = $authorizationChecker;
+        $this->router = $router;
     }
 
     /**
@@ -100,18 +109,21 @@ class FileSearch implements SearchProviderInterface
 
             $folderPath = $folders[$file->getFolderId()]->getIdPath();
 
+            $createUserName = 'Unknown User';
             try {
                 $createUser = $this->userManager->find($file->getCreateUserId());
+                if ($createUser) {
+                    $createUserName = $createUser->getDisplayName();
+                }
             } catch (\Exception $e) {
-                $createUser = $this->userManager->getSystemUser();
             }
 
             $results[] = new SearchResult(
                 $file->getId(),
                 $file->getName(),
-                $createUser->getDisplayName(),
+                $createUserName,
                 $file->getCreatedAt(),
-                '/media/'.$file->getId().'/_mm_small',
+                $this->router->generate('mediamanager_media', array('file_id' => $file->getId(), 'file_version' => $file->getVersion(), 'template_key' => '_mm_small')),
                 'Mediamanager File Search',
                 [
                     'handler' => 'media',

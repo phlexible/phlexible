@@ -177,7 +177,7 @@ class DataSaver
                     ->setName($elementtypeStructure->getRootNode()->getName());
             }
             $map = $this->applyStructure($elementStructure, $elementtypeStructure, $values, $language, $oldElementStructure);
-            $this->applyOldValues($elementStructure, $oldElementStructure, $language);
+            $this->applyOldValues($elementStructure, $oldElementStructure, $elementtypeStructure, $language);
             $this->applyValues($elementStructure, $elementtypeStructure, $values, $language, $map, null);
         } else {
             $elementStructure = clone $oldElementStructure;
@@ -545,17 +545,20 @@ class DataSaver
     }
 
     /**
-     * @param ElementStructure $rootElementStructure
-     * @param ElementStructure $oldRootElementStructure
-     * @param string           $skipLanguage
+     * @param ElementStructure     $rootElementStructure
+     * @param ElementStructure     $oldRootElementStructure
+     * @param ElementtypeStructure $elementtypeStructure
+     * @param string               $skipLanguage
      */
-    private function applyOldValues(ElementStructure $rootElementStructure, ElementStructure $oldRootElementStructure, $skipLanguage)
+    private function applyOldValues(ElementStructure $rootElementStructure, ElementStructure $oldRootElementStructure, ElementtypeStructure $elementtypeStructure, $skipLanguage)
     {
         $languages = $oldRootElementStructure->getLanguages();
         unset($languages[$skipLanguage]);
         foreach ($languages as $language) {
             foreach ($oldRootElementStructure->getValues($language) as $value) {
-                $rootElementStructure->setValue($value);
+                if ($elementtypeStructure->hasNode($value->getDsId())) {
+                    $rootElementStructure->setValue($value);
+                }
             }
         }
 
@@ -570,10 +573,26 @@ class DataSaver
             unset($languages[$skipLanguage]);
             foreach ($languages as $language) {
                 foreach ($oldStructure->getValues($language) as $value) {
-                    $structure->setValue($value);
+                    if ($elementtypeStructure->hasNode($value->getDsId())) {
+                        $structure->setValue($value);
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    private function isEmpty($value)
+    {
+        if (is_scalar($value)) {
+            return mb_strlen($value) < 1;
+        }
+
+        return !$value;
     }
 
     /**
@@ -603,7 +622,7 @@ class DataSaver
             }
             $identifier = rtrim($identifier, '[]');
 
-            if (!strlen($value) && (preg_match('/^unlink_field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match) || preg_match('/^unlink_field-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match))) {
+            if ($this->isEmpty($value) && (preg_match('/^unlink_field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match) || preg_match('/^unlink_field-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match))) {
                 // existing value
                 $dsId = $match[1];
                 $node = $elementtypeStructure->getNode($dsId);

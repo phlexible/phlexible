@@ -86,9 +86,6 @@ Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
                 groups: this.strings.select_group,
                 group: '_group'
             },
-            urls: {
-                identities: Phlexible.Router.generate('mediamanager_rights_identities')
-            },
             listeners: {
                 render: function (c) {
                     if (!c.disabled) c.doLoad('Phlexible\\Bundle\\MediaManagerBundle\\Entity\\Folder', this.folder_id);

@@ -36,9 +36,6 @@ class XmlLoader
         $this->xmlDir = $xmlDir;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($eid, $version, $language)
     {
         $pathname = $this->xmlDir.'/'.$eid.'_'.$language.'.xml';

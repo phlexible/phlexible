@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\UserBundle\Command;
 
-use Phlexible\Bundle\UserBundle\Entity\User;
+use FOS\UserBundle\Model\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -77,7 +77,7 @@ class DeleteCommand extends ContainerAwareCommand
     /**
      * @param string $username
      *
-     * @return User
+     * @return UserInterface
      */
     private function findUser($username)
     {

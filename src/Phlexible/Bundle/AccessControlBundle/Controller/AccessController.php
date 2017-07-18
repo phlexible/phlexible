@@ -12,11 +12,11 @@
 namespace Phlexible\Bundle\AccessControlBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MediaManagerBundle\Entity\Folder;
-use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
+use Phlexible\Component\AccessControl\Domain\AccessControlList;
 use Phlexible\Component\AccessControl\Domain\Entry;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
-use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
+use Phlexible\Component\AccessControl\Domain\HierarchicalObjectIdentity;
+use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -96,6 +96,85 @@ class AccessController extends Controller
     /**
      * @param Request $request
      *
+     * @return JsonResponse
+     *
+     * @throws \Exception
+     * @Route("/identities", name="accesscontrol_identities")
+     */
+    public function identitiesAction(Request $request)
+    {
+        $objectType = $request->get('objectType');
+        $objectId = $request->get('objectId', null);
+
+        $objectIdentityResolver = $this->get('phlexible_access_control.object_identity_resolver');
+        $objectIdentity = $objectIdentityResolver->resolve($objectType, $objectId);
+
+        if (!$objectIdentity) {
+            throw new \InvalidArgumentException("Unsupported object type $objectType");
+        }
+
+        $accessManager = $this->get('phlexible_access_control.access_manager');
+
+        $acl = $accessManager->findAcl($objectIdentity);
+
+        return new JsonResponse(array('identities' => $this->createIdentities($acl)));
+    }
+
+    /**
+     * @param AccessControlList $acl
+     *
+     * @return array
+     */
+    private function createIdentities(AccessControlList $acl)
+    {
+        $securityResolver = $this->get('phlexible_access_control.security_resolver');
+
+        $identities = array();
+
+        $oi = $acl->getObjectIdentity();
+        if ($oi instanceof HierarchicalObjectIdentity) {
+            $map = array();
+            foreach ($oi->getHierarchicalIdentifiers() as $identifier) {
+                foreach ($acl->getEntries() as $entry) {
+                    if ($entry->getObjectIdentifier() === $identifier) {
+                        $map[$entry->getSecurityType()][$entry->getSecurityIdentifier()][$entry->getObjectIdentifier()] = $entry;
+                    }
+                }
+            }
+
+            $maskResolver = new HierarchyMaskResolver();
+
+            foreach ($map as $securityType => $securityIdentifiers) {
+                foreach ($securityIdentifiers as $securityIdentifier => $entries) {
+                    $resolvedMasks = $maskResolver->resolve($entries, $oi->getIdentifier());
+                    $identities[] = array(
+                        'id' => 0, //$ace->getId(),
+                        'objectType' => $oi->getType(),
+                        'objectId' => $oi->getIdentifier(),
+                        'effectiveMask' => $resolvedMasks['effectiveMask'],
+                        'mask' => $resolvedMasks['mask'],
+                        'stopMask' => $resolvedMasks['stopMask'],
+                        'noInheritMask' => $resolvedMasks['noInheritMask'],
+                        'parentMask' => $resolvedMasks['parentMask'],
+                        'parentStopMask' => $resolvedMasks['parentStopMask'],
+                        'parentNoInheritMask' => $resolvedMasks['parentNoInheritMask'],
+                        'objectLanguage' => null,
+                        'securityType' => $securityType,
+                        'securityId' => $securityIdentifier,
+                        'securityName' => $securityResolver->resolveName($securityType, $securityIdentifier),
+                    );
+                }
+            }
+        } else {
+            // TODO: implement
+        }
+
+        return $identities;
+    }
+
+    /**
+     * @param Request $request
+     *
      * @return ResultResponse
      *
      * @throws \Exception
@@ -113,19 +192,8 @@ class AccessController extends Controller
 
         $identities = json_decode($data, true);
 
-        if ($objectType === 'teaser') {
-            $path = array($objectId);
-        } elseif ($objectType === TreeNode::class) {
-            $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($objectId);
-            $node = $tree->get($objectId);
-            $objectIdentity = HierarchicalObjectIdentity::fromDomainObject($node);
-        } elseif ($objectType === Folder::clas) {
-            $volume = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($objectId);
-            $folder = $volume->findFolder($objectId);
-            $objectIdentity = HierarchicalObjectIdentity::fromDomainObject($folder);
-        } else {
-            throw new \Exception("Unsupported object type $objectType");
-        }
+        $objectIdentityResolver = $this->get('phlexible_access_control.object_identity_resolver');
+        $objectIdentity = $objectIdentityResolver->resolve($objectType, $objectId);
 
         $accessManager = $this->get('phlexible_access_control.access_manager');
         $acl = $accessManager->findAcl($objectIdentity);

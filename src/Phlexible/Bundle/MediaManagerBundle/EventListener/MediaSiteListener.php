@@ -17,7 +17,6 @@ use Phlexible\Component\MediaManager\AttributeReader\AttributeReaderInterface;
 use Phlexible\Component\MediaManager\Volume\DeleteFileChecker;
 use Phlexible\Component\MediaManager\Volume\DeleteFolderChecker;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
-use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 use Phlexible\Component\Volume\Event\CreateFileEvent;
@@ -156,29 +155,6 @@ class MediaSiteListener implements EventSubscriberInterface
         }
 
         $file->setAttribute('fileattributes', $attributes->all());
-    }
-
-    /**
-     * @param MediaType $mediaType
-     * @param array     $mapping
-     *
-     * @return bool
-     */
-    private function matches(MediaType $mediaType, array $mapping)
-    {
-        if (empty($mapping)) {
-            return true;
-        }
-
-        $match = false;
-        if (!empty($mapping['name'])) {
-            $match = $mediaType->getName() === $mapping['name'];
-        }
-        if (!empty($mapping['category'])) {
-            $match = $mediaType->getCategory() === $mapping['category'];
-        }
-
-        return $match;
     }
 
     /**

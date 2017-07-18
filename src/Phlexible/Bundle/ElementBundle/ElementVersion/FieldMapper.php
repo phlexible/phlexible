@@ -124,7 +124,7 @@ class FieldMapper
             $mapping = $this->extract($elementVersion, $elementStructure, $language);
 
             $mappedFields = $elementVersion->getMappedFields();
-            if (!$mappedFields->contains($language)) {
+            if (!$mappedFields->containsKey($language)) {
                 $mappedField = new ElementVersionMappedField();
                 $mappedField
                     ->setLanguage($language)

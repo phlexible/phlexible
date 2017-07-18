@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\UserBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\UserBundle\Entity\Group;
+use FOS\UserBundle\Model\GroupInterface;
 use Phlexible\Bundle\UserBundle\Event\GroupEvent;
 use Phlexible\Bundle\UserBundle\Model\GroupManagerInterface;
 use Phlexible\Bundle\UserBundle\UserEvents;
@@ -147,7 +147,7 @@ class GroupManager implements GroupManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function updateGroup(Group $group)
+    public function updateGroup(GroupInterface $group)
     {
         $isUpdate = false;
         if ($this->entityManager->contains($group)) {
@@ -178,7 +178,7 @@ class GroupManager implements GroupManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function reloadGroup(Group $group)
+    public function reloadGroup(GroupInterface $group)
     {
         $this->entityManager->refresh($group);
     }
@@ -186,7 +186,7 @@ class GroupManager implements GroupManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteGroup(Group $group)
+    public function deleteGroup(GroupInterface $group)
     {
         $event = new GroupEvent($group);
         if ($this->dispatcher->dispatch(UserEvents::BEFORE_DELETE_GROUP, $event)->isPropagationStopped()) {

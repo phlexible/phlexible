@@ -71,7 +71,7 @@ class IconsBuilder
      */
     public function build($basePath)
     {
-        $cache = new PuliResourceCollectionCache($this->cacheDir.'icons.css', $this->debug);
+        $cache = new PuliResourceCollectionCache($this->cacheDir.'gui-icons.css', $this->debug);
 
         $resources = $this->resourceFinder->findByType('phlexible/icons');
 

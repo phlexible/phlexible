@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor;
+namespace Phlexible\Bundle\ElementBundle\ElementLink\LinkExtractor;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
@@ -39,12 +39,16 @@ class LinkFieldLinkExtractor implements LinkExtractorInterface
             return [];
         }
 
+        $rawValue = $value->getValue();
+        if (!is_array($rawValue)) {
+            return [];
+        }
+
         $link = new ElementLink();
         $link
             ->setLanguage($value->getLanguage())
             ->setField($value->getName());
 
-        $rawValue = $value->getValue();
         $type = $rawValue['type'];
         if (in_array($type, ['internal', 'intrasiteroot']) && !empty($rawValue['tid'])) {
             $link

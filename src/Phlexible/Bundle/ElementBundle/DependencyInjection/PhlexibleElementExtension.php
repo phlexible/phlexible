@@ -56,5 +56,6 @@ class PhlexibleElementExtension extends Extension
         $container->setAlias('phlexible_element.element_source_manager', 'phlexible_element.doctrine.element_source_manager');
         $container->setAlias('phlexible_element.element_lock_manager', 'phlexible_element.doctrine.element_lock_manager');
         $container->setAlias('phlexible_element.element_history_manager', 'phlexible_element.doctrine.element_history_manager');
+        $container->setAlias('phlexible_element.element_link_manager', 'phlexible_element.doctrine.element_link_manager');
     }
 }

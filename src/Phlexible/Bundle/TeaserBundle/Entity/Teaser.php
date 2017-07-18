@@ -241,16 +241,41 @@ class Teaser
     }
 
     /**
-     * {@inheritdoc}
+     * @param int $nodeId
+     *
+     * @return int
      */
+    public function getInheritSort($nodeId)
+    {
+        if (isset($this->attributes['inheritSort'][$nodeId])) {
+            return $this->attributes['inheritSort'][$nodeId];
+        }
+
+        return $this->sort;
+    }
+
+    /**
+     * @param int $nodeId
+     * @param int $sort
+     *
+     * @return $this
+     */
+    public function setInheritSort($nodeId, $sort)
+    {
+        if (!isset($this->attributes['inheritSort'])) {
+            $this->attributes['inheritSort'] = [];
+        }
+
+        $this->attributes['inheritSort'][$nodeId] = $sort;
+
+        return $this;
+    }
+
     public function getAttributes()
     {
         return $this->attributes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setAttributes(array $attributes)
     {
         $this->attributes = $attributes;
@@ -258,9 +283,6 @@ class Teaser
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAttribute($key, $default = null)
     {
         if (isset($this->attributes[$key])) {
@@ -270,9 +292,6 @@ class Teaser
         return $default;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setAttribute($key, $value)
     {
         $this->attributes[$key] = $value;
@@ -280,9 +299,6 @@ class Teaser
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function removeAttribute($key)
     {
         if (isset($this->attributes[$key])) {
@@ -462,17 +478,11 @@ class Teaser
         return in_array($hideId, $hideIds);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCache()
     {
         return $this->getAttribute('cache', []);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setCache($cache)
     {
         return $this->setAttribute('cache', $cache);

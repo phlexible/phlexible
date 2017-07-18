@@ -38,7 +38,7 @@ class DelegatingContentTreeManager implements ContentTreeManagerInterface
     private $mediator;
 
     /**
-     * @var XmlContentTree[]
+     * @var DelegatingContentTree[]
      */
     private $trees;
 

@@ -50,10 +50,10 @@ class IconsBuilderTest extends TestCase
 
 EOF;
 
-        $this->assertFileExists($root->getChild('icons.css')->url());
-        $this->assertEquals(new Asset($root->getChild('icons.css')->url()), $result);
+        $this->assertFileExists($root->getChild('gui-icons.css')->url());
+        $this->assertEquals(new Asset($root->getChild('gui-icons.css')->url()), $result);
 
-        $result = file_get_contents($root->getChild('icons.css')->url());
+        $result = file_get_contents($root->getChild('gui-icons.css')->url());
         $result = preg_replace('/Created: (.+)\*/', 'Created: _date_ *', $result);
         $this->assertEquals($expected, $result);
     }

@@ -69,6 +69,7 @@ class DataController extends Controller
         $lockManager = $this->get('phlexible_element.element_lock_manager');
         $userManager = $this->get('phlexible_user.user_manager');
         $authorizationChecker = $this->get('security.authorization_checker');
+        $linkFetcher = $this->get('phlexible_element.link_fetcher');
 
         $teaser = null;
         if ($teaserId) {
@@ -538,6 +539,8 @@ class DataController extends Controller
         $elementSerializer = new ElementArraySerializer();
         $serializedValues = $elementSerializer->serialize($elementStructure, $language, $element->getMasterLanguage());
 
+        $links = $linkFetcher->fetch($elementVersion, $language);
+
         $data = [
             'success' => true,
             'properties' => $properties,
@@ -558,6 +561,7 @@ class DataController extends Controller
             'versions' => $versions,
             'valueStructure' => $serializedValues,
             'structure' => $serializedStructure,
+            'links' => $links,
         ];
 
         $data = (object) $data;

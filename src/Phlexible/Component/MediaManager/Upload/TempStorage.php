@@ -13,6 +13,7 @@ namespace Phlexible\Component\MediaManager\Upload;
 
 use Phlexible\Component\MediaManager\Exception\StoreUploadedFileException;
 use Phlexible\Component\Volume\FileSource\UploadedFileSource;
+use Phlexible\Component\Volume\HashCalculator\HashCalculatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -28,17 +29,24 @@ class TempStorage
     private $session;
 
     /**
+     * @var HashCalculatorInterface
+     */
+    private $hasher;
+
+    /**
      * @var string
      */
     private $tempDir;
 
     /**
-     * @param SessionInterface $session
-     * @param string           $tempDir
+     * @param SessionInterface        $session
+     * @param HashCalculatorInterface $hasher
+     * @param string                  $tempDir
      */
-    public function __construct(SessionInterface $session, $tempDir)
+    public function __construct(SessionInterface $session, HashCalculatorInterface $hasher, $tempDir)
     {
         $this->session = $session;
+        $this->hasher = $hasher;
         $this->tempDir = $tempDir;
     }
 
@@ -173,6 +181,7 @@ class TempStorage
             $tempName,
             $file->getMimeType(),
             $file->getSize(),
+            $this->hasher->fromPath($tempName),
             $originalFileId,
             $folderId,
             $userId,

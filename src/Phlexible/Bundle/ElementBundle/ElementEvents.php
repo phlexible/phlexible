@@ -39,6 +39,16 @@ class ElementEvents
     const UPDATE_ELEMENT = 'phlexible_element.update_element';
 
     /**
+     * Fired before an element is deleted.
+     */
+    const BEFORE_DELETE_ELEMENT = 'phlexible_element.before_delete_element';
+
+    /**
+     * Fired after an element is deleted.
+     */
+    const DELETE_ELEMENT = 'phlexible_element.delete_element';
+
+    /**
      * Fired before an element version is created.
      */
     const BEFORE_CREATE_ELEMENT_VERSION = 'phlexible_element.before_create_element_version';
@@ -89,16 +99,6 @@ class ElementEvents
     const UPDATE_ELEMENT_SOURCE = 'phlexible_element.before_create_element_source';
 
     /**
-     * Fired before an element is deleted.
-     */
-    const BEFORE_DELETE_ELEMENT = 'phlexible_element.before_delete_element';
-
-    /**
-     * Fired after an element is deleted.
-     */
-    const DELETE_ELEMENT = 'phlexible_element.delete_element';
-
-    /**
      * Fired before element is saved.
      */
     const BEFORE_SAVE_ELEMENT = 'phlexible_element.before_save_element';
@@ -132,4 +132,34 @@ class ElementEvents
      * Fired on element:changes --commit.
      */
     const COMMIT_CHANGES = 'phlexible_element.commit_changes';
+
+    /**
+     * Fired before an element is created.
+     */
+    const BEFORE_CREATE_ELEMENT_LINK = 'phlexible_element.before_create_element_link';
+
+    /**
+     * Fired after an element is created.
+     */
+    const CREATE_ELEMENT_LINK = 'phlexible_element.create_element_link';
+
+    /**
+     * Fired before an element is updated.
+     */
+    const BEFORE_UPDATE_ELEMENT_LINK = 'phlexible_element.before_update_element_link';
+
+    /**
+     * Fired after an element is updated.
+     */
+    const UPDATE_ELEMENT_LINK = 'phlexible_element.update_element_link';
+
+    /**
+     * Fired before an element is deleted.
+     */
+    const BEFORE_DELETE_ELEMENT_LINK = 'phlexible_element.before_delete_element_link';
+
+    /**
+     * Fired after an element is deleted.
+     */
+    const DELETE_ELEMENT_LINK = 'phlexible_element.delete_element_link';
 }

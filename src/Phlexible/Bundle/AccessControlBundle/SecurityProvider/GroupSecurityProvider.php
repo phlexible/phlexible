@@ -11,7 +11,6 @@
 
 namespace Phlexible\Bundle\AccessControlBundle\SecurityProvider;
 
-use Phlexible\Bundle\UserBundle\Entity\Group;
 use Phlexible\Bundle\UserBundle\Model\GroupManagerInterface;
 use Phlexible\Component\AccessControl\SecurityProvider\SecurityProviderInterface;
 use Phlexible\Component\AccessControl\SecurityProvider\SecurityResolverInterface;
@@ -29,11 +28,18 @@ class GroupSecurityProvider implements SecurityProviderInterface, SecurityResolv
     private $groupManager;
 
     /**
-     * @param GroupManagerInterface $groupManager
+     * @var string
      */
-    public function __construct(GroupManagerInterface $groupManager)
+    private $groupClass;
+
+    /**
+     * @param GroupManagerInterface $groupManager
+     * @param string                $groupClass
+     */
+    public function __construct(GroupManagerInterface $groupManager, $groupClass)
     {
         $this->groupManager = $groupManager;
+        $this->groupClass = $groupClass;
     }
 
     /**
@@ -41,7 +47,7 @@ class GroupSecurityProvider implements SecurityProviderInterface, SecurityResolv
      */
     public function resolveName($securityType, $securityId)
     {
-        if ($securityType !== Group::class) {
+        if ($securityType !== $this->groupClass) {
             return null;
         }
 

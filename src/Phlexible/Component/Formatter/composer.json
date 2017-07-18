@@ -3,7 +3,7 @@
     "description": "phlexible formatter component",
     "license": "MIT",
     "type": "library",
-    "keywords": ["phlexible"],
+    "keywords": ["phlexible", "formatter"],
     "autoload": {
         "psr-4": {
             "Phlexible\\Component\\Formatter\\": ""

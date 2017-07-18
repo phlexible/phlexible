@@ -159,10 +159,13 @@ abstract class AbstractSearch implements SearchProviderInterface
                 ),
             );
 
+            $createUserName = 'Unknown User';
             try {
                 $createUser = $this->userManager->find($elementVersion->getCreateUserId());
+                if ($createUser) {
+                    $createUserName = $createUser->getDisplayName();
+                }
             } catch (\Exception $e) {
-                $createUser = $this->userManager->getSystemUser();
             }
 
             $icon = $this->iconResolver->resolveTreeNode($node, $language);
@@ -170,7 +173,7 @@ abstract class AbstractSearch implements SearchProviderInterface
             $results[] = new SearchResult(
                 $node->getId(),
                 $siteroot->getTitle($language).' :: '.$elementVersion->getBackendTitle($language).' ('.$language.', '.$node->getId().')',
-                $createUser->getDisplayName(),
+                $createUserName,
                 $elementVersion->getCreatedAt(),
                 $icon,
                 $title,

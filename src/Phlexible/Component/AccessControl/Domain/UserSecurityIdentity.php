@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\AccessControl\Model;
+namespace Phlexible\Component\AccessControl\Domain;
 
+use Phlexible\Component\AccessControl\Model\SecurityIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Util\ClassUtils;
@@ -42,8 +43,8 @@ final class UserSecurityIdentity implements SecurityIdentityInterface
             throw new \InvalidArgumentException('$type must not be empty.');
         }
 
-        $this->id = $id;
-        $this->type = $type;
+        $this->id = (string) $id;
+        $this->type = (string) $type;
     }
 
     /**

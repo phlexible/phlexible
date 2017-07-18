@@ -11,6 +11,7 @@
 
 namespace Phlexible\Component\MediaManager\Upload;
 
+use Phlexible\Component\Volume\Model\FileInterface;
 use Phlexible\Component\Volume\VolumeManager;
 
 /**
@@ -49,40 +50,53 @@ class TempHandler
     /**
      * @param string $action
      * @param string $id
+     *
+     * @return FileInterface|null
      */
     public function handle($action, $id)
     {
         $tempFile = $this->tempStorage->get($id);
 
         if (!$tempFile) {
-            return;
+            return null;
         }
 
-        $this->handleTempFile($action, $tempFile);
+        return $this->handleTempFile($action, $tempFile);
     }
 
     /**
      * @param string $action
+     *
+     * @return FileInterface[]
      */
     public function handleAll($action)
     {
+        $files = array();
         foreach ($this->tempStorage->all() as $tempFile) {
-            $this->handleTempFile($action, $tempFile);
+            $file = $this->handleTempFile($action, $tempFile);
+            if ($file) {
+                $files[] = $file;
+            }
         }
+
+        return $files;
     }
 
     /**
      * @param string   $action
      * @param TempFile $tempFile
+     *
+     * @return FileInterface
      */
     private function handleTempFile($action, TempFile $tempFile)
     {
         $volume = $this->volumeManager->getByFolderId($tempFile->getFolderId());
         $folder = $volume->findFolder($tempFile->getFolderId());
+        $file = null;
 
         switch ($action) {
             case self::ACTION_SAVE:
-                $volume->createFile($folder, $tempFile, array(), $tempFile->getUserId());
+                $file = $volume->createFile($folder, $tempFile, array(), $tempFile->getUserId());
                 break;
 
             case self::ACTION_REPLACE:
@@ -92,7 +106,7 @@ class TempHandler
 
             case self::ACTION_KEEP_BOTH:
                 $tempFile->setAlternativeName($this->createAlternateFilename($tempFile));
-                $volume->createFile($folder, $tempFile, array(), $tempFile->getUserId());
+                $file = $volume->createFile($folder, $tempFile, array(), $tempFile->getUserId());
                 break;
 
             case self::ACTION_VERSION:
@@ -121,7 +135,7 @@ class TempHandler
 
         $this->tempStorage->remove($tempFile);
 
-        // TODO: add meta
+        return $file;
     }
 
     /**

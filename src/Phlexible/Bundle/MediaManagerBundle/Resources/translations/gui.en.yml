@@ -1,5 +1,6 @@
 mediamanager:
     media: Media
+    add_file: 'Add file'
     delete_files_warning: 'Do you really want to delete these files?'
     delete_file_warning: 'Do you really want to delete this file?'
     hide_files_warning: 'Do you really want to hide these files?'
@@ -11,8 +12,8 @@ mediamanager:
     fill_required_fields: 'Please fill in all required fields'
     meta: Meta
     metasets: Meta Sets
-    file_meta: 'File Meta'
-    folder_meta: 'Folder Meta'
+    file_meta: 'File meta data'
+    folder_meta: 'Folder meta data'
     no_meta_values: 'No meta data'
     key: Key
     value: Value
@@ -184,3 +185,20 @@ mediamanager:
     disable_flash_uploader_help: 'The result of changing this value will be visible after a restart of phlexible.'
     enable_upload_sort: 'Automatically sort by create time after an upload'
     enable_upload_sort_help: 'The result of changing this value will be visible after a restart of phlexible.'
+    wizard:
+        discard_all: 'Discard all remaining files'
+        discarding_all: 'Discarding all remaining files...'
+        discard: 'Discard file'
+        discarding: 'Discarding file...'
+        keep_both: 'Keep both files'
+        keeping_both: 'Keeping both files...'
+        replace: 'Replace file'
+        replacing: 'Replacing file...'
+        save_version: 'Save file as new version'
+        saving_version: 'Saving file as new version...'
+        save: 'Save file'
+        saving: 'Saving file...'
+        save_as: 'Save file as "{0}"'
+        new_file: 'New file:'
+        old_file: 'Existing file:'
+        identical: 'File are identical.'

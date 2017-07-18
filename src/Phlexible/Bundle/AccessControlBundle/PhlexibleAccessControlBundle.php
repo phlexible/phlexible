@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\AccessControlBundle;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
+use Phlexible\Bundle\AccessControlBundle\DependencyInjection\Compiler\AddObjectIdentityResolversPass;
 use Phlexible\Bundle\AccessControlBundle\DependencyInjection\Compiler\AddPermissionsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -30,6 +31,7 @@ class PhlexibleAccessControlBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
+        $container->addCompilerPass(new AddObjectIdentityResolversPass());
         $container->addCompilerPass(new AddPermissionsPass());
 
         $modelDir = realpath(__DIR__.'/Resources/config/doctrine/model');

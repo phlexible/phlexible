@@ -45,5 +45,7 @@ class PhlexibleUserExtension extends Extension
         $loader->load('doctrine.yml');
         $container->setAlias('phlexible_user.group_manager', 'phlexible_user.doctrine.group_manager');
         $container->setAlias('phlexible_user.user_manager', 'phlexible_user.doctrine.user_manager');
+        $container->setAlias('phlexible_user.user_to_array_transformer', $config['user_to_array_transformer']);
+        $container->setAlias('phlexible_user.user_request_applier', $config['user_request_applier']);
     }
 }

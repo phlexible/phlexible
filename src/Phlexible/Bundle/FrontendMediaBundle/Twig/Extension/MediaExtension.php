@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\Twig\Extension;
 
+use Phlexible\Bundle\FrontendMediaBundle\Meta\MetaSetAccessor;
 use Phlexible\Component\MediaManager\Meta\FileMetaDataManager;
 use Phlexible\Component\MediaManager\Meta\FileMetaSetResolver;
 use Phlexible\Component\Volume\VolumeManager;
@@ -301,19 +302,24 @@ class MediaExtension extends \Twig_Extension
             'meta' => [],
         ];
 
+        $language = 'de';
+
         $metasets = $this->metaSetResolver->resolve($file);
+        $meta = array();
         foreach ($metasets as $metaset) {
             $metadata = $this->metaDataManager->findByMetaSetAndFile($metaset, $file);
             $data = [];
             foreach ($metaset->getFields() as $field) {
                 $value = '';
                 if ($metadata) {
-                    $value = $metadata->get($field->getName(), 'de');
+                    $value = $metadata->get($field->getName(), $language);
                 }
                 $data[$field->getName()] = $value;
             }
-            $info['meta'][$metaset->getName()] = $data;
+            $meta[$metaset->getName()] = $data;
         }
+
+        $info['meta'] = new MetaSetAccessor($meta);
 
         return $info;
     }

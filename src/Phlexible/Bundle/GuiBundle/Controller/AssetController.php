@@ -36,8 +36,8 @@ class AssetController extends Controller
         $scriptsBuilder = $this->get('phlexible_gui.asset.scripts_builder');
         $asset = $scriptsBuilder->build();
 
-        $response = new BinaryFileResponse($asset->getFile(), 200, array('Content-Type' => 'text/javascript'));
-        if ($asset->getMapFile()) {
+        $response = new BinaryFileResponse($asset, 200, array('Content-Type' => 'text/javascript;charset=UTF-8'));
+        if ($asset->getMapAsset()) {
             $response->headers->set('X-SourceMap', $this->generateUrl('asset_scripts_map'));
         }
 
@@ -55,7 +55,7 @@ class AssetController extends Controller
         $scriptsBuilder = $this->get('phlexible_gui.asset.scripts_builder');
         $asset = $scriptsBuilder->build();
 
-        return new BinaryFileResponse($asset->getMapFile(), 200, array('Content-Type' => 'application/json'));
+        return new BinaryFileResponse($asset->getMapAsset(), 200, array('Content-Type' => 'application/json;charset=UTF-8'));
     }
 
     /**
@@ -76,8 +76,8 @@ class AssetController extends Controller
 
         $asset = $cssBuilder->build();
 
-        $response = new BinaryFileResponse($asset->getFile(), 200, array('Content-Type' => 'text/css;charset=UTF-8'));
-        if ($asset->getMapFile()) {
+        $response = new BinaryFileResponse($asset, 200, array('Content-Type' => 'text/css;charset=UTF-8'));
+        if ($asset->getMapAsset()) {
             $response->headers->set('X-SourceMap', $this->generateUrl('asset_css_map'));
         }
 
@@ -102,7 +102,7 @@ class AssetController extends Controller
 
         $asset = $cssBuilder->build();
 
-        return new BinaryFileResponse($asset->getMapFile(), 200, array('Content-Type' => 'application/json'));
+        return new BinaryFileResponse($asset->getMapAsset(), 200, array('Content-Type' => 'application/json;charset=UTF-8'));
     }
 
     /**
@@ -111,14 +111,14 @@ class AssetController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("/icons", name="asset_icons")
+     * @Route("/gui-icons.css", name="asset_icons")
      */
     public function iconsAction(Request $request)
     {
         $iconsBuilder = $this->get('phlexible_gui.asset.icons_builder');
         $asset = $iconsBuilder->build($request->getBasePath());
 
-        return new BinaryFileResponse($asset->getFile(), 200, array('Content-Type' => 'text/css;charset=UTF-8'));
+        return new BinaryFileResponse($asset, 200, array('Content-Type' => 'text/css;charset=UTF-8'));
     }
 
     /**
@@ -128,13 +128,13 @@ class AssetController extends Controller
      * @param string  $language
      *
      * @return Response
-     * @Route("/translations/{language}", name="asset_translations")
+     * @Route("/translations-{language}.js", name="asset_translations")
      */
     public function translationsAction(Request $request, $language)
     {
         $translationBuilder = $this->get('phlexible_gui.asset.translations_builder');
         $asset = $translationBuilder->build($language);
 
-        return new BinaryFileResponse($asset->getFile(), 200, array('Content-Type' => 'text/javascript;charset=UTF-8'));
+        return new BinaryFileResponse($asset, 200, array('Content-Type' => 'text/javascript;charset=UTF-8'));
     }
 }

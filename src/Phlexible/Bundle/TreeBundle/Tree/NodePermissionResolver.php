@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\TreeBundle\Tree;
 
 use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
-use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
+use Phlexible\Component\AccessControl\Domain\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use SplObjectStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

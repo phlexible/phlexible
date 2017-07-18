@@ -18,6 +18,15 @@ Phlexible.users.UserFilterPanel = Ext.extend(Ext.form.FormPanel, {
 
         this.task = new Ext.util.DelayedTask(this.updateFilter, this);
 
+        this.initMyItems();
+        this.initMyTbar();
+        this.loadMyFilterPanels();
+        this.initMyListeners();
+
+        Phlexible.users.UserFilterPanel.superclass.initComponent.call(this);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'panel',
@@ -66,7 +75,7 @@ Phlexible.users.UserFilterPanel = Ext.extend(Ext.form.FormPanel, {
                         check: this.updateFilter,
                         scope: this
                     }
-                },{
+                }, {
                     xtype: 'radio',
                     name: 'status',
                     inputValue: 'enabled',
@@ -76,7 +85,7 @@ Phlexible.users.UserFilterPanel = Ext.extend(Ext.form.FormPanel, {
                         check: this.updateFilter,
                         scope: this
                     }
-                },{
+                }, {
                     xtype: 'radio',
                     inputValue: 'disabled',
                     name: 'status',
@@ -89,7 +98,9 @@ Phlexible.users.UserFilterPanel = Ext.extend(Ext.form.FormPanel, {
                 }]
             }
         ];
+    },
 
+    initMyTbar: function() {
         this.tbar = [
             '->',
             {
@@ -99,75 +110,89 @@ Phlexible.users.UserFilterPanel = Ext.extend(Ext.form.FormPanel, {
                 scope: this,
                 disabled: true
             }];
+    },
 
-        // set initial value for page combobox
-
+    loadMyFilterPanels: function() {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('users_users_filtervalues'),
             success: function (response) {
                 var data = Ext.decode(response.responseText);
 
-                if (data.roles && Ext.isArray(data.roles) && data.roles.length) {
-                    var roles = [];
-                    Ext.each(data.roles, function (role) {
-                        roles.push({
-                            xtype: 'checkbox',
-                            hideLabel: true,
-                            boxLabel: role['title'],
-                            name: 'role_' + role['id'],
-                            listeners: {
-                                check: this.updateFilter,
-                                scope: this
-                            }
-                        });
-                    }, this);
-                    var r = this.add({
-                        xtype: 'panel',
-                        title: this.strings.roles,
-                        iconCls: 'p-user-role-icon',
-                        layout: 'form',
-                        frame: true,
-                        collapsible: true,
-                        items: roles
-                    });
-                    r.items.each(function (item) {
-                        this.form.add(item);
-                    }, this);
-                }
+                this.initMyFilterPanels(data);
 
-                if (data.groups && Ext.isArray(data.groups) && data.groups.length) {
-                    var groups = [];
-                    Ext.each(data.groups, function (group) {
-                        groups.push({
-                            xtype: 'checkbox',
-                            hideLabel: true,
-                            boxLabel: group['title'],
-                            name: 'group_' + group['id'],
-                            listeners: {
-                                check: this.updateFilter,
-                                scope: this
-                            }
-                        });
-                    }, this);
-                    var r = this.add({
-                        xtype: 'panel',
-                        title: this.strings.groups,
-                        iconCls: 'p-user-group-icon',
-                        layout: 'form',
-                        frame: true,
-                        collapsible: true,
-                        items: groups
-                    });
+                Ext.each(this.filterPanels, function(p) {
+                    var r = this.add(p);
+
                     r.items.each(function (item) {
                         this.form.add(item);
                     }, this);
-                }
+                }, this);
+
+                delete this.filterPanels;
 
                 this.doLayout();
             },
             scope: this
         });
+    },
 
+    initMyFilterPanels: function(data) {
+        var panels = [];
+
+        if (data.roles && Ext.isArray(data.roles) && data.roles.length) {
+            var roles = [];
+            Ext.each(data.roles, function (role) {
+                roles.push({
+                    xtype: 'checkbox',
+                    hideLabel: true,
+                    boxLabel: role['title'],
+                    name: 'role_' + role['id'],
+                    listeners: {
+                        check: this.updateFilter,
+                        scope: this
+                    }
+                });
+            }, this);
+            panels.push({
+                xtype: 'panel',
+                title: this.strings.roles,
+                iconCls: 'p-user-role-icon',
+                layout: 'form',
+                frame: true,
+                collapsible: true,
+                items: roles
+            });
+        }
+
+        if (data.groups && Ext.isArray(data.groups) && data.groups.length) {
+            var groups = [];
+            Ext.each(data.groups, function (group) {
+                groups.push({
+                    xtype: 'checkbox',
+                    hideLabel: true,
+                    boxLabel: group['title'],
+                    name: 'group_' + group['id'],
+                    listeners: {
+                        check: this.updateFilter,
+                        scope: this
+                    }
+                });
+            }, this);
+            panels.push({
+                xtype: 'panel',
+                title: this.strings.groups,
+                iconCls: 'p-user-group-icon',
+                layout: 'form',
+                frame: true,
+                collapsible: true,
+                items: groups
+            });
+        }
+
+        this.filterPanels = panels;
+    },
+
+    initMyListeners: function() {
         this.on({
             render: function () {
                 this.task.delay(100);//updateFilter();
@@ -181,8 +206,6 @@ Phlexible.users.UserFilterPanel = Ext.extend(Ext.form.FormPanel, {
             },
             scope: this
         });
-
-        Phlexible.users.UserFilterPanel.superclass.initComponent.call(this);
     },
 
     resetFilter: function (btn) {

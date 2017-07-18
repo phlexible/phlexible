@@ -14,12 +14,12 @@ namespace Phlexible\Bundle\ElementBundle\Doctrine;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
-use Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkExtractor;
-use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
+use Phlexible\Bundle\ElementBundle\ElementLink\ElementLinkUpdater;
 use Phlexible\Bundle\ElementBundle\Entity\ElementStructure as ElementStructureEntity;
 use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue as ElementStructureValueEntity;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Event\ElementStructureEvent;
+use Phlexible\Bundle\ElementBundle\Model\ElementLinkManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
@@ -48,9 +48,14 @@ class ElementStructureManager implements ElementStructureManagerInterface
     private $fieldRegistry;
 
     /**
-     * @var LinkExtractor
+     * @var ElementLinkUpdater
      */
-    private $linkExtractor;
+    private $linkUpdater;
+
+    /**
+     * @var ElementLinkManagerInterface
+     */
+    private $linkManager;
 
     /**
      * @var EventDispatcherInterface
@@ -61,21 +66,26 @@ class ElementStructureManager implements ElementStructureManagerInterface
      * @param EntityManager            $entityManager
      * @param ElementStructureLoader   $elementStructureLoader
      * @param FieldRegistry            $fieldRegistry
-     * @param LinkExtractor            $linkExtractor
+     * @param ElementLinkUpdater       $linkUpdater
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         EntityManager $entityManager,
         ElementStructureLoader $elementStructureLoader,
         FieldRegistry $fieldRegistry,
-        LinkExtractor $linkExtractor,
-        EventDispatcherInterface $eventDispatcher)
-    {
+        ElementLinkUpdater $linkUpdater,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->entityManager = $entityManager;
         $this->elementStructureLoader = $elementStructureLoader;
         $this->fieldRegistry = $fieldRegistry;
-        $this->linkExtractor = $linkExtractor;
+        $this->linkUpdater = $linkUpdater;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function clear()
+    {
+        $this->elementStructureLoader->clear();
     }
 
     /**
@@ -101,7 +111,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
 
         $this->applyStructureSort($elementStructure);
         $this->insertStructure($elementStructure, $conn, true);
-        $this->insertLinks($elementStructure);
+        $this->linkUpdater->updateLinks($elementStructure, false);
 
         $event = new ElementStructureEvent($elementStructure);
         $this->eventDispatcher->dispatch(ElementEvents::CREATE_ELEMENT_STRUCTURE, $event);
@@ -125,6 +135,20 @@ class ElementStructureManager implements ElementStructureManagerInterface
         foreach ($rii as $structure) {
             $structure->setSort($sort++);
         }
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    private function isEmpty($value)
+    {
+        if (is_scalar($value)) {
+            return mb_strlen($value) < 1;
+        }
+
+        return !$value;
     }
 
     /**
@@ -181,7 +205,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
 
         foreach ($elementStructure->getLanguages() as $language) {
             foreach ($elementStructure->getValues($language) as $elementStructureValue) {
-                if (strlen($elementStructureValue->getValue())) {
+                if (!$this->isEmpty($elementStructureValue->getValue())) {
                     $value = $elementStructureValue->getValue();
                     $field = $this->fieldRegistry->getField($elementStructureValue->getType());
                     $value = $field->serialize($value);
@@ -224,41 +248,5 @@ class ElementStructureManager implements ElementStructureManagerInterface
         foreach ($elementStructure->getStructures() as $childStructure) {
             $this->insertStructure($childStructure, $conn, false, $entities);
         }
-    }
-
-    /**
-     * @param ElementStructure $elementStructure
-     */
-    private function insertLinks(ElementStructure $elementStructure)
-    {
-        $links = $this->extractLinks($elementStructure);
-
-        foreach ($links as $link) {
-            $link->setElementVersion($elementStructure->getElementVersion());
-
-            $this->entityManager->persist($link);
-        }
-    }
-
-    /**
-     * @param ElementStructure $elementStructure
-     *
-     * @return ElementLink[]
-     */
-    private function extractLinks(ElementStructure $elementStructure)
-    {
-        $links = [];
-
-        foreach ($elementStructure->getLanguages() as $language) {
-            foreach ($elementStructure->getValues($language) as $elementStructureValue) {
-                $links = array_merge($links, $this->linkExtractor->extract($elementStructureValue));
-            }
-        }
-
-        foreach ($elementStructure->getStructures() as $childStructure) {
-            $links = array_merge($links, $this->extractLinks($childStructure));
-        }
-
-        return $links;
     }
 }

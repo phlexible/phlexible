@@ -14,7 +14,6 @@ namespace Phlexible\Bundle\ElementBundle;
 use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
-use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
@@ -168,6 +167,7 @@ class ElementService
      * @param array   $languages
      *
      * @return ElementVersion
+     * @deprecated This method does not really find the online language... Use node->getPublishedLanguage()
      */
     public function findOnlineLanguage(Element $element, $languages)
     {
@@ -180,6 +180,7 @@ class ElementService
      * @param string  $language
      *
      * @return ElementVersion
+     * @deprecated This method does not really find the online version... Use getElementVersion(element, node->getPublishedVersion())
      */
     public function findOnlineElementVersion(Element $element, $language)
     {

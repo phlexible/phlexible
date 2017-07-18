@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\UserBundle\Model;
 
-use Phlexible\Bundle\UserBundle\Entity\Group;
+use FOS\UserBundle\Model\GroupInterface;
 
 /**
  * Group manager interface.
@@ -26,7 +26,7 @@ interface GroupManagerInterface
     public function getGroupClass();
 
     /**
-     * @return Group
+     * @return GroupInterface
      */
     public function create();
 
@@ -35,14 +35,14 @@ interface GroupManagerInterface
      *
      * @param int $groupId
      *
-     * @return Group
+     * @return GroupInterface
      */
     public function find($groupId);
 
     /**
      * Find all groups.
      *
-     * @return Group[]
+     * @return GroupInterface[]
      */
     public function findAll();
 
@@ -51,7 +51,7 @@ interface GroupManagerInterface
      *
      * @param string $name
      *
-     * @return Group
+     * @return GroupInterface
      */
     public function findByName($name);
 
@@ -61,7 +61,7 @@ interface GroupManagerInterface
      * @param int|null   $limit
      * @param int|null   $offset
      *
-     * @return Group[]
+     * @return GroupInterface[]
      */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
 
@@ -69,7 +69,7 @@ interface GroupManagerInterface
      * @param array $criteria
      * @param array $order
      *
-     * @return Group
+     * @return GroupInterface
      */
     public function findOneBy(array $criteria, $order = []);
 
@@ -86,17 +86,17 @@ interface GroupManagerInterface
     public function checkName($name);
 
     /**
-     * @param Group $group
+     * @param GroupInterface $group
      */
-    public function updateGroup(Group $group);
+    public function updateGroup(GroupInterface $group);
 
     /**
-     * @param Group $group
+     * @param GroupInterface $group
      */
-    public function reloadGroup(Group $group);
+    public function reloadGroup(GroupInterface $group);
 
     /**
-     * @param Group $group
+     * @param GroupInterface $group
      */
-    public function deleteGroup(Group $group);
+    public function deleteGroup(GroupInterface $group);
 }

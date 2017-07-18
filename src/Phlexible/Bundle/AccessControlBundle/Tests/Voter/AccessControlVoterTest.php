@@ -12,6 +12,7 @@
 namespace Phlexible\phlexible\src\Phlexible\Bundle\AccessControlBundle\Tests\Voter;
 
 use Phlexible\Bundle\AccessControlBundle\Voter\AccessControlVoter;
+use Phlexible\Bundle\UserBundle\Entity\Group;
 use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Component\AccessControl\Domain\AccessControlList;
 use Phlexible\Component\AccessControl\Domain\Entry;
@@ -139,7 +140,7 @@ class AccessControlVoterTest extends TestCase
         $permissionRegistry = new PermissionRegistry(array($permissions));
 
         $accessManager = $this->prophesize(AccessManagerInterface::class);
-        $accessManager->findAcl($object)->willReturn(new AccessControlList($permissions, $object));
+        $accessManager->findAcl($object)->willReturn(new AccessControlList($permissions, $object, User::class, Group::class));
 
         $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry, false);
 
@@ -160,7 +161,7 @@ class AccessControlVoterTest extends TestCase
         $permissionRegistry = new PermissionRegistry(array($permissions));
 
         $accessManager = $this->prophesize(AccessManagerInterface::class);
-        $accessManager->findAcl($object)->willReturn(new AccessControlList($permissions, $object));
+        $accessManager->findAcl($object)->willReturn(new AccessControlList($permissions, $object, User::class, Group::class));
 
         $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry, true);
 
@@ -178,7 +179,7 @@ class AccessControlVoterTest extends TestCase
         $object = new TestObject();
         $user = $this->createUser();
         $permissions = $this->createPermissions($object);
-        $acl = new AccessControlList($permissions, $object);
+        $acl = new AccessControlList($permissions, $object, User::class, Group::class);
         $ace = new Entry($acl, get_class($object), 1, get_class($user), $user->getId(), 7, 0, 0);
         $acl->addEntry($ace);
         $permissionRegistry = new PermissionRegistry(array($permissions));

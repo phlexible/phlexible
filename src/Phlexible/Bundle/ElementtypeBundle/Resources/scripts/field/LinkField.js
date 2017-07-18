@@ -53,9 +53,22 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
                 if (!this.allowed.tid && !this.allowed.intrasiteroot) {
                     return false;
                 }
-                if (e.query.match(/^http[s]{0,1}:/) || e.query.match(/^mailto:/)) {
+                if (e.query.match(/^http[s]{0,1}:/)) {
+                    // http://www.phlexible.net
+                    this.setHiddenValue({
+                        type: 'external',
+                        url: e.combo.getRawValue()
+                    });
                     e.combo.setValue(e.combo.getRawValue());
-                    this.hiddenValue = e.combo.getRawValue();
+                    return false;
+                }
+                if (e.query.match(/^mailto:/)) {
+                    // mailto:info@phlexible.net
+                    this.setHiddenValue({
+                        type: 'mailto',
+                        recipient: e.combo.getRawValue().substr(7)
+                    });
+                    e.combo.setValue(e.combo.getRawValue());
                     return false;
                 }
             },
@@ -137,16 +150,38 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
         }
 
         if (hiddenValue.type === 'internal') {
-            return this.allowed.tid;
+            if (!this.allowed.tid) {
+                this.markInvalid('Internal link not allowed.');
+                return false;
+            }
+            return true;
         }
         else if (hiddenValue.type === 'intrasiteroot') {
-            return this.allowed.intrasiteroot;
+            if (!this.allowed.intrasiteroot) {
+                this.markInvalid('Intrasiteroot link not allowed.');
+                return false;
+            }
+            return true;
         }
         else if (hiddenValue.type === 'external') {
-            return Ext.form.VTypes.url(hiddenValue.url) && this.allowed.url;
+            if (!this.allowed.url) {
+                this.markInvalid('External link not allowed.');
+                return false;
+            } else if (!Ext.form.VTypes.url(hiddenValue.url)) {
+                this.markInvalid(this.invalidText);
+                return false;
+            }
+            return true;
         }
         else if (hiddenValue.type === 'mailto') {
-            return Ext.form.VTypes.email(hiddenValue.recipient) && this.allowed.mailto;
+            if (!this.allowed.mailto) {
+                this.markInvalid('Mailto link not allowed.');
+                return false;
+            } else if (!Ext.form.VTypes.email(hiddenValue.recipient)) {
+                this.markInvalid(this.invalidText);
+                return false;
+            }
+            return true;
         }
 
         return false;
@@ -167,6 +202,7 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
         Phlexible.elementtypes.field.LinkField.superclass.onClear.call(this);
 
         this.hiddenValue = this.getValue();
+        this.validate();
     },
 
     onTriggerClick: function (e, el) {
