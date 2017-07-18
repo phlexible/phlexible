@@ -1,12 +1,12 @@
 {
-    "name": "phlexible/access-control",
-    "description": "phlexible access control component",
+    "name": "phlexible/formatter",
+    "description": "phlexible formatter component",
     "license": "MIT",
     "type": "library",
-    "keywords": ["phlexible", "access control", "acl"],
+    "keywords": ["phlexible", "formatter"],
     "autoload": {
         "psr-4": {
-            "Phlexible\\Component\\AccessControl\\": ""
+            "Phlexible\\Component\\Formatter\\": ""
         }
     },
     "require": {
