@@ -115,7 +115,7 @@ class MediaController extends Controller
                 return new Response('Not found', 404);
             }
 
-            $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
+            $file = $volumeManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
             $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
             $filePath = $delegateService->getClean($template, $mediaType, true);
             $mimeType = 'image/gif';

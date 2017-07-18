@@ -6,6 +6,7 @@
         <title lang="en">XML Document</title>
     </titles>
     <mimetypes>
+        <mimetype>application/xml</mimetype>
         <mimetype>text/xml</mimetype>
     </mimetypes>
     <icons>

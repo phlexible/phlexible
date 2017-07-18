@@ -132,7 +132,7 @@ class FileController extends Controller
         $userManager = $this->get('phlexible_user.user_manager');
         $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
 
-        $hasVersions = $volume->hasFeature('versions');
+        $supportsVersions = $volume->hasFeature('versions');
 
         foreach ($files as $file) {
             try {
@@ -158,7 +158,7 @@ class FileController extends Controller
             $properties = [
                 //'attributes'    => array(),
                 //'attributesCnt' => 0,
-                'versions' => $hasVersions,
+                'versions' => $supportsVersions,
                 'debug' => [
                     'mimeType' => $file->getMimeType(),
                     'mediaCategory' => strtolower($file->getMediaCategory()),
@@ -189,7 +189,7 @@ class FileController extends Controller
             $mediaTypeTitle = $mediaType->getTitle($interfaceLanguage);
 
             $version = 1;
-            if ($hasVersions) {
+            if ($supportsVersions) {
                 $version = $file->getVersion();
             }
 
@@ -249,6 +249,7 @@ class FileController extends Controller
                 'used' => $usage,
                 'focal' => $focal,
                 'attributes' => !empty($attributes['fileattributes']) ? $attributes['fileattributes'] : array(),
+                'has_versions' => $supportsVersions && $file->getVersion() > 1,
             ];
         }
 
@@ -361,7 +362,7 @@ class FileController extends Controller
 
         $versions = [];
         if ($volume->hasFeature('versions')) {
-            $versions = $volume->findFileVersions($file);
+            $versions = $volume->findFileVersions($file->getId());
         }
 
         $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
@@ -399,6 +400,8 @@ class FileController extends Controller
             'folderId' => $folder->getId(),
         ];
 
+        $createUser = $userManager->find($file->getCreateUserId());
+
         $properties['detail'] = [
             'id' => $file->getId(),
             'folder_id' => $file->getFolderId(),
@@ -408,7 +411,7 @@ class FileController extends Controller
             'document_type' => $mediaType->getTitle($this->getUser()->getInterfaceLanguage('en')),
             'document_type_key' => strtolower($file->getMediaType()),
             'asset_type' => strtolower($file->getMediaCategory()),
-            'create_user' => $userManager->find($file->getCreateUserId())->getUsername(),
+            'create_user' => $createUser ? $createUser->getUsername() : '-',
             'create_user_id' => $file->getCreateUserId(),
             'create_time' => $file->getCreatedAt()->format('Y-m-d H:i:s'),
         ];
@@ -452,6 +455,8 @@ class FileController extends Controller
 
         $detail = [];
         foreach ($volume->findFileVersions($id) as $file) {
+            $createUser = $userManager->find($file->getCreateUserId());
+
             $detail[] = [
                 'id' => $file->getId(),
                 'folder_id' => $file->getFolderId(),
@@ -461,7 +466,7 @@ class FileController extends Controller
                 'document_type_key' => strtolower($file->getMediaType()),
                 'asset_type' => strtolower($file->getMediaCategory()),
                 'create_user_id' => $file->getCreateUserId(),
-                'create_user' => $userManager->find($file->getCreateUserId())->getUsername(),
+                'create_user' => $createUser ? $createUser->getUsername() : 'Unknown',
                 'create_time' => $file->getCreatedAt()->format('Y-m-d H:i:s'),
             ];
         }

@@ -11,7 +11,10 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\DependencyInjection;
 
+use Phlexible\Bundle\MediaManagerBundle\Entity\File;
+use Phlexible\Bundle\MediaManagerBundle\Entity\Folder;
 use Phlexible\Component\MediaManager\Volume\ExtendedVolume;
+use Phlexible\Component\Volume\Driver\DoctrineDriver;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -43,7 +46,22 @@ class PhlexibleMediaManagerExtension extends Extension
 
         $ids = [];
         foreach ($config['volumes'] as $name => $volumeConfig) {
-            $driverId = $volumeConfig['driver'];
+            if (isset($volumeConfig['driver']) && $volumeConfig['driver'] === 'phlexible_media_manager.driver.doctrine') {
+                throw new \InvalidArgumentException("Please unset the config value 'phlexible_media_manager.volumes.$name.driver', the driver is created automatically. If your really want to use your own service, rename the service id for the driver.");
+            }
+            if (!empty($volumeConfig['driver'])) {
+                $driverId = $volumeConfig['driver'];
+            } else {
+                $driverDefinition = new Definition(DoctrineDriver::class, [
+                    new Reference("doctrine.orm.entity_manager"),
+                    new Reference("phlexible_media_manager.hash_calculator"),
+                    Folder::class,
+                    File::class,
+                    $volumeConfig['features'],
+                ]);
+                $driverId = 'phlexible_media_manager.driver.'.strtolower($name);
+                $container->setDefinition($driverId, $driverDefinition);
+            }
 
             $volumeDefinition = new Definition(ExtendedVolume::class, [
                 $volumeConfig['id'],
@@ -52,10 +70,10 @@ class PhlexibleMediaManagerExtension extends Extension
                 new Reference($driverId, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false),
                 new Reference('event_dispatcher'),
             ]);
-            $id = 'phlexible_media_manager.volume.'.strtolower($name);
-            $container->setDefinition($id, $volumeDefinition);
+            $volumeId = 'phlexible_media_manager.volume.'.strtolower($name);
+            $container->setDefinition($volumeId, $volumeDefinition);
 
-            $ids[$name] = new Reference($id);
+            $ids[$name] = new Reference($volumeId);
         }
 
         $container->getDefinition('phlexible_media_manager.volume_manager')->replaceArgument(0, $ids);
