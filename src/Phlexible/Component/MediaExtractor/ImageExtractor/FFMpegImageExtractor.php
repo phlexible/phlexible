@@ -17,16 +17,20 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
+<<<<<<< Updated upstream:src/Phlexible/Component/MediaExtractor/ImageExtractor/VideoConverterImageExtractor.php
  * Video converter extractor.
+=======
+ * FFMpeg image extractor
+>>>>>>> Stashed changes:src/Phlexible/Component/MediaExtractor/ImageExtractor/FFMpegImageExtractor.php
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class VideoConverterImageExtractor implements ExtractorInterface
+class FFMpegImageExtractor implements ExtractorInterface
 {
     /**
      * @var FFMpeg
      */
-    private $converter;
+    private $ffmpeg;
 
     /**
      * @var string
@@ -34,12 +38,12 @@ class VideoConverterImageExtractor implements ExtractorInterface
     private $tempDir;
 
     /**
-     * @param FFMpeg $converter
+     * @param FFMpeg $ffmpeg
      * @param string $tempDir
      */
-    public function __construct(FFMpeg $converter, $tempDir)
+    public function __construct(FFMpeg $ffmpeg, $tempDir)
     {
-        $this->converter = $converter;
+        $this->ffmpeg = $ffmpeg;
         $this->tempDir = $tempDir;
     }
 
@@ -67,7 +71,7 @@ class VideoConverterImageExtractor implements ExtractorInterface
         try {
             $imageFilename = $this->tempDir.'/'.uniqid().'.jpg';
 
-            $this->converter
+            $this->ffmpeg
                 ->open($filename)
                 ->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(5))
                 ->save($imageFilename);

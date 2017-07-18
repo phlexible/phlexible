@@ -10,20 +10,24 @@ services:
 
     phlexible_media_tool.mime.adapter.fallback:
         class: Phlexible\Component\Mime\Adapter\FallbackAdapter
+        public: false
         arguments:
-            - "@phlexible_media_tool.mime.adapter.file"
+            - ~
             - "@phlexible_media_tool.mime.adapter.extension"
 
     phlexible_media_tool.mime.adapter.extension:
         class: Phlexible\Component\Mime\Adapter\ExtensionAdapter
+        public: false
 
     phlexible_media_tool.mime.adapter.file:
         class: Phlexible\Component\Mime\Adapter\FileAdapter
+        public: false
         arguments:
             - "%phlexible_media_tool.mime.file%"
 
     phlexible_media_tool.mime.adapter.fileinfo:
         class: Phlexible\Component\Mime\Adapter\FileinfoAdapter
+        public: false
         arguments:
             - "%phlexible_media_tool.mime.magicfile%"
 

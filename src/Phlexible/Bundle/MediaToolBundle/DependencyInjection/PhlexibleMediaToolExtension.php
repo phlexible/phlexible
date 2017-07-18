@@ -29,43 +29,58 @@ class PhlexibleMediaToolExtension extends Extension
     public function load(array $config, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('mime.yml');
-        $loader->load('ffmpeg.yml');
-        $loader->load('swftools.yml');
-        $loader->load('poppler.yml');
         $loader->load('imageanalyzer.yml');
         $loader->load('imagine.yml');
-        $loader->load('exiftool.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
-        $container->setParameter('phlexible_media_tool.swftools.configuration', array(
-            'pdf2swf.binaries' => $config['swftools']['pdf2swf'],
-            'swfrender.binaries' => $config['swftools']['swfrender'],
-            'swfextract.binaries' => $config['swftools']['swfextract'],
-            'timeout' => $config['swftools']['timeout'],
-        ));
+        if (isset($config['exiftool'])) {
+            $loader->load('exiftool.yml');
+        }
 
-        $container->setParameter('phlexible_media_tool.poppler.configuration', array(
-            'pdfinfo.binaries' => $config['poppler']['pdfinfo'],
-            'pdftotext.binaries' => $config['poppler']['pdftotext'],
-            'pdftohtml.binaries' => $config['poppler']['pdftohtml'],
-            'timeout' => $config['poppler']['timeout'],
-        ));
+        if (isset($config['swftools'])) {
+            $container->setParameter('phlexible_media_tool.swftools.configuration', array(
+                'pdf2swf.binaries'    => $config['swftools']['pdf2swf'],
+                'swfrender.binaries'  => $config['swftools']['swfrender'],
+                'swfextract.binaries' => $config['swftools']['swfextract'],
+                'timeout'             => $config['swftools']['timeout']
+            ));
+            $loader->load('swftools.yml');
+        }
 
-        $container->setParameter('phlexible_media_tool.ffmpeg.configuration', array(
-            'ffprobe.binaries' => $config['ffmpeg']['ffprobe'],
-            'ffmpeg.binaries' => $config['ffmpeg']['ffmpeg'],
-        ));
+        if (isset($config['poppler'])) {
+            $container->setParameter('phlexible_media_tool.poppler.configuration', array(
+                'pdfinfo.binaries' => $config['poppler']['pdfinfo'],
+                'pdftotext.binaries' => $config['poppler']['pdftotext'],
+                'pdftohtml.binaries' => $config['poppler']['pdftohtml'],
+                'timeout' => $config['poppler']['timeout'],
+            ));
+            $loader->load('poppler.yml');
+        }
 
-        $container->setParameter('phlexible_media_tool.mime.file', $config['mime']['file']);
-        $container->setParameter('phlexible_media_tool.mime.magicfile', $config['mime']['magicfile']);
+        if (isset($config['ffmpeg'])) {
+            $container->setParameter('phlexible_media_tool.ffmpeg.configuration', array(
+                'ffprobe.binaries' => $config['ffmpeg']['ffprobe'],
+                'ffmpeg.binaries' => $config['ffmpeg']['ffmpeg'],
+            ));
+            $loader->load('ffmpeg.yml');
+        }
+
+        $loader->load('mime.yml');
+        if ($config['mime']['use_extension_fallback']) {
+            $container->setParameter('phlexible_media_tool.mime.file', $config['mime']['file']);
+            $container->setParameter('phlexible_media_tool.mime.magicfile', $config['mime']['magicfile']);
+
+            $container->findDefinition('phlexible_media_tool.mime.adapter.fallback')->replaceArgument(1, $config['mime_detector']['adapter']);
+
+            $container->setAlias('phlexible_media_tool.mime.adapter', 'phlexible_media_tool.mime.adapter.fallback');
+        } else {
+            $container->setAlias('phlexible_media_tool.mime.adapter', $config['mime_detector']['adapter']);
+
+        }
 
         $container->setAlias('phlexible_media_tool.image_analyzer.driver', $config['image_analyzer']['driver']);
-
-        $container->setAlias('phlexible_media_tool.mime.adapter', $config['mime_detector']['adapter']);
-
         $container->setAlias('phlexible_media_tool.imagine', $config['imagine']['driver']);
     }
 }

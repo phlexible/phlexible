@@ -22,12 +22,12 @@ use Psr\Log\LoggerInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class VideoAnalyzerAttributeReader implements AttributeReaderInterface
+class FFProbeAttributeReader implements AttributeReaderInterface
 {
     /**
      * @var FFProbe
      */
-    private $analyzer;
+    private $ffprobe;
 
     /**
      * @var LoggerInterface
@@ -35,12 +35,12 @@ class VideoAnalyzerAttributeReader implements AttributeReaderInterface
     private $logger;
 
     /**
-     * @param FFProbe         $analyzer
+     * @param FFProbe         $ffprobe
      * @param LoggerInterface $logger
      */
-    public function __construct(FFProbe $analyzer, LoggerInterface $logger)
+    public function __construct(FFProbe $ffprobe, LoggerInterface $logger)
     {
-        $this->analyzer = $analyzer;
+        $this->ffprobe = $ffprobe;
         $this->logger = $logger;
     }
 
@@ -68,7 +68,7 @@ class VideoAnalyzerAttributeReader implements AttributeReaderInterface
         $filename = $fileSource->getPath();
 
         try {
-            $format = $this->analyzer->format($filename);
+            $format = $this->ffprobe->format($filename);
 
             if ($format->has('format_name')) {
                 $attributes->set('media.format_name', $format->get('format_name'));
@@ -92,7 +92,7 @@ class VideoAnalyzerAttributeReader implements AttributeReaderInterface
                 $attributes->set('media.number_of_streams', $format->get('nb_streams'));
             }
 
-            $streams = $this->analyzer->streams($filename);
+            $streams = $this->ffprobe->streams($filename);
 
             foreach ($streams as $stream) {
                 /* @var $stream Stream */

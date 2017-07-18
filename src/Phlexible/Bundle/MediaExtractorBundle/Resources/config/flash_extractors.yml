@@ -1,5 +1,5 @@
 services:
-    phlexible_media_extractor.extractor.flash.raw:
+    phlexible_media_extractor.flash_extractor.raw_flash:
         class: Phlexible\Component\MediaExtractor\FlashExtractor\RawFlashExtractor
         public: false
         tags:

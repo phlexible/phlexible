@@ -149,7 +149,10 @@ class VideoTemplateApplier
                     $format = new \FFMpeg\Format\Video\WMV3();
                     break;
 
-                case '3gp':
+                case '3gp';
+                    if (!class_exists('FFMpeg\Format\Video\ThreeGP')) {
+                        throw new \Exception("Format 3gp is not available. Install the package php-ffmpeg/extras.");
+                    }
                     $format = new \FFMpeg\Format\Video\ThreeGP();
                     break;
 

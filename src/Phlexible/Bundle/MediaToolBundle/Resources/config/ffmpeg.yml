@@ -1,3 +1,6 @@
+parameters:
+    phlexible_media_tool.ffmpeg_temp_dir: %kernel.cache_dir%/ffmpeg
+
 services:
     phlexible_media_tool.ffprobe:
         class: FFMpeg\FFProbe
@@ -17,3 +20,82 @@ services:
             - "@phlexible_media_tool.ffprobe"
         tags:
             - {name: monolog.logger, channel: media_tools}
+
+    # media tools attribute readers
+    phlexible_media_tool.attribute_reader.ffprobe:
+        class: Phlexible\Component\MediaManager\AttributeReader\FFProbeAttributeReader
+        public: false
+        arguments:
+            - "@phlexible_media_tool.ffprobe"
+            - "@logger"
+        tags:
+            - {name: phlexible_media_manager.attribute_reader}
+            - {name: monolog.logger, channel: media_asset}
+
+    # media extractor image extractors
+    phlexible_media_extractor.image_extractor.ffmpeg:
+        class: Phlexible\Component\MediaExtractor\ImageExtractor\FFMpegImageExtractor
+        public: false
+        arguments:
+            - "@phlexible_media_tool.ffmpeg"
+            - "%phlexible_media_tool.ffmpeg_temp_dir%"
+        tags:
+            - {name: phlexible_media_extractor.extractor}
+
+    # media cache workers
+    phlexible_media_cache.worker.audio:
+        class: Phlexible\Component\MediaCache\Worker\AudioWorker
+        public: false
+        arguments:
+            - "@phlexible_media_cache.storage_manager"
+            - "@phlexible_media_extractor.transmutor"
+            - "@phlexible_media_cache.cache_manager"
+            - "@phlexible_media_type.media_type_manager"
+            - "@phlexible_media_cache.id_strategy.default"
+            - "@phlexible_media_template.applier.audio"
+            - "@logger"
+            - "%phlexible_media_cache.temp_dir%"
+        tags:
+            - {name: phlexible_media_cache.worker, priority: 100}
+            - {name: monolog.logger, channel: media_cache}
+
+    phlexible_media_cache.worker.video:
+        class: Phlexible\Component\MediaCache\Worker\VideoWorker
+        public: false
+        arguments:
+            - "@phlexible_media_cache.storage_manager"
+            - "@phlexible_media_extractor.transmutor"
+            - "@phlexible_media_cache.cache_manager"
+            - "@phlexible_media_type.media_type_manager"
+            - "@phlexible_media_cache.id_strategy.default"
+            - "@phlexible_media_template.applier.video"
+            - "@phlexible_media_tool.ffprobe"
+            - "@logger"
+            - "%phlexible_media_cache.temp_dir%"
+        tags:
+            - {name: phlexible_media_cache.worker, priority: 100}
+            - {name: monolog.logger, channel: media_cache}
+
+    # media template appliers
+    phlexible_media_template.applier.audio:
+        class: Phlexible\Component\MediaTemplate\Applier\AudioTemplateApplier
+        arguments:
+            - "@phlexible_media_tool.ffmpeg"
+
+    phlexible_media_template.applier.video:
+        class: Phlexible\Component\MediaTemplate\Applier\VideoTemplateApplier
+        arguments:
+            - "@phlexible_media_tool.ffmpeg"
+
+    # media template previewers
+    phlexible_media_template.previewer.audio:
+        class: Phlexible\Component\MediaTemplate\Previewer\AudioPreviewer
+        arguments:
+            - "@phlexible_media_template.applier.audio"
+            - "%phlexible_media_template.previewer.temp_dir%"
+
+    phlexible_media_template.previewer.video:
+        class: Phlexible\Component\MediaTemplate\Previewer\VideoPreviewer
+        arguments:
+            - "@phlexible_media_template.applier.video"
+            - "%phlexible_media_template.previewer.temp_dir%"

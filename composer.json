@@ -40,8 +40,7 @@
         "ramsey/uuid": "^2.8",
         "symfony/symfony": "^2.8",
         "symfony-cmf/routing-bundle": "^1.1",
-        "twig/twig": "^1.15",
-        "zf1/zend-search-lucene": "^1.12"
+        "twig/twig": "^1.15"
     },
      "replace": {
         "phlexible/access-control": "self.version",
@@ -70,7 +69,9 @@
         "mikey179/vfsStream": "^1.4"
     },
     "suggest": {
-        "puli/composer-plugin": "This package contains Puli resources. Require the plugin to use them."
+        "puli/composer-plugin": "This package contains Puli resources. Require the plugin to use them.",
+        "php-ffmpeg/extras": "If you want to use the 3gp video format.",
+        "zf1/zend-search-lucene": "If you want to process content of office files."
     },
     "extra": {
         "branch-alias": {

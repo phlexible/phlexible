@@ -11,22 +11,6 @@ services:
         arguments: [[]]
 
     # workers
-    phlexible_media_cache.worker.audio:
-        class: Phlexible\Component\MediaCache\Worker\AudioWorker
-        public: false
-        arguments:
-            - "@phlexible_media_cache.storage_manager"
-            - "@phlexible_media_extractor.transmutor"
-            - "@phlexible_media_cache.cache_manager"
-            - "@phlexible_media_type.media_type_manager"
-            - "@phlexible_media_cache.id_strategy.default"
-            - "@phlexible_media_template.applier.audio"
-            - "@logger"
-            - "%phlexible_media_cache.temp_dir%"
-        tags:
-            - {name: phlexible_media_cache.worker, priority: 100}
-            - {name: monolog.logger, channel: media_cache}
-
     phlexible_media_cache.worker.image:
         class: Phlexible\Component\MediaCache\Worker\ImageWorker
         public: false
@@ -37,23 +21,6 @@ services:
             - "@phlexible_media_type.media_type_manager"
             - "@phlexible_media_cache.id_strategy.default"
             - "@phlexible_media_template.applier.image"
-            - "@logger"
-            - "%phlexible_media_cache.temp_dir%"
-        tags:
-            - {name: phlexible_media_cache.worker, priority: 100}
-            - {name: monolog.logger, channel: media_cache}
-
-    phlexible_media_cache.worker.video:
-        class: Phlexible\Component\MediaCache\Worker\VideoWorker
-        public: false
-        arguments:
-            - "@phlexible_media_cache.storage_manager"
-            - "@phlexible_media_extractor.transmutor"
-            - "@phlexible_media_cache.cache_manager"
-            - "@phlexible_media_type.media_type_manager"
-            - "@phlexible_media_cache.id_strategy.default"
-            - "@phlexible_media_template.applier.video"
-            - "@phlexible_media_tool.ffprobe"
             - "@logger"
             - "%phlexible_media_cache.temp_dir%"
         tags:

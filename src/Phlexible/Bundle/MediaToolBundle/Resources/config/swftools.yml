@@ -43,3 +43,11 @@ services:
         class: SwfTools\Processor\FlashFile
         arguments:
             - "@phlexible_media_tool.swftools.driver_container"
+
+    phlexible_media_extractor.content_extractor.pdftotext:
+        class: Phlexible\Component\MediaExtractor\ContentExtractor\PdfToTextExtractor
+        public: false
+        arguments:
+            - "@phlexible_media_tool.poppler.pdf_file"
+        tags:
+            - {name: phlexible_media_extractor.content_extractor}
