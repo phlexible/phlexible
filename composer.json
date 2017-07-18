@@ -61,7 +61,7 @@
         "phlexible/search-bundle": "self.version",
         "phlexible/siteroot-bundle": "self.version",
         "phlexible/tree-bundle": "self.version",
-        "phlexible/user-bundle": "self.version"
+        "phlexible/user-bundle": "self.version",
         "phlexible/util-bundle": "self.version"
     },
     "require-dev": {
