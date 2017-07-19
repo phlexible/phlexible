@@ -50,7 +50,7 @@ services:
 
     # role providers
     phlexible_access_control.role_provider:
-        class: Phlexible\Component\AccessControl\RoleProvider\AccessControlRoleProvider
+        class: Phlexible\Bundle\AccessControlBundle\RoleProvider\AccessControlRoleProvider
         public: false
         tags:
             - {name: phlexible_gui.role_provider}

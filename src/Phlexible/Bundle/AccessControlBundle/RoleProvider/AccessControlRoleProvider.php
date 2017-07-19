@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\AccessControl\RoleProvider;
+namespace Phlexible\Bundle\AccessControlBundle\RoleProvider;
 
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 

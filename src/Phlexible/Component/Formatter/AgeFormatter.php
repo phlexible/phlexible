@@ -47,7 +47,7 @@ class AgeFormatter
             $secondTimestamp = strtotime($secondDate);
         }
 
-        return self::formatTimeStamp($firstTimestamp, $secondTimestamp, $returnAsArray);
+        return self::formatTimestamp($firstTimestamp, $secondTimestamp, $returnAsArray);
     }
 
     /**
