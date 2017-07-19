@@ -24,6 +24,11 @@ use Phlexible\Component\MediaType\Exception\LoadException;
 class DelegatingLoader implements LoaderInterface
 {
     /**
+     * @var LoaderResolverInterface
+     */
+    private $resolver;
+
+    /**
      * Constructor.
      *
      * @param LoaderResolverInterface $resolver A LoaderResolverInterface instance
