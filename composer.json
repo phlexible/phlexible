@@ -21,7 +21,6 @@
         "ext-session": "*",
         "ext-simplexml": "*",
         "ext-zip": "*",
-        "alchemy/phpexiftool": "^0.6",
         "alchemy/zippy": "^0.4.2",
         "cocur/slugify": "^2.3",
         "cogpowered/finediff": "^0.3",
@@ -31,9 +30,6 @@
         "imagine/imagine": "^0.6",
         "nelmio/api-doc-bundle": "^2.5",
         "phlexible/bundler": "~1.0.0,>=1.0.0-alpha4",
-        "php-ffmpeg/extras": "^0.3",
-        "php-ffmpeg/php-ffmpeg": "^0.9.3",
-        "php-poppler/php-poppler": "^1.0",
         "puli/cli": "^1.0",
         "puli/twig-extension": "^1.0",
         "puli/symfony-bundle": "^1.0",
@@ -70,6 +66,9 @@
     },
     "suggest": {
         "puli/composer-plugin": "This package contains Puli resources. Require the plugin to use them.",
+        "alchemy/phpexiftool": "If you want to read attributes via exiftool, or extract images from mp3's",
+        "php-poppler/php-poppler": "If you want to handle pdf formats",
+        "php-ffmpeg/php-ffmpeg": "If you want to handle video/audio formats.",
         "php-ffmpeg/extras": "If you want to use the 3gp video format.",
         "zf1/zend-search-lucene": "If you want to process content of office files."
     },

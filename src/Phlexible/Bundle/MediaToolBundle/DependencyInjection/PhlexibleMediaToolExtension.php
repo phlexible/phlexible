@@ -39,16 +39,6 @@ class PhlexibleMediaToolExtension extends Extension
             $loader->load('exiftool.yml');
         }
 
-        if (isset($config['swftools'])) {
-            $container->setParameter('phlexible_media_tool.swftools.configuration', array(
-                'pdf2swf.binaries'    => $config['swftools']['pdf2swf'],
-                'swfrender.binaries'  => $config['swftools']['swfrender'],
-                'swfextract.binaries' => $config['swftools']['swfextract'],
-                'timeout'             => $config['swftools']['timeout']
-            ));
-            $loader->load('swftools.yml');
-        }
-
         if (isset($config['poppler'])) {
             $container->setParameter('phlexible_media_tool.poppler.configuration', array(
                 'pdfinfo.binaries' => $config['poppler']['pdfinfo'],
