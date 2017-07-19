@@ -27,7 +27,6 @@ Required config changes:
 - Remove the values for **phlexible_media_manager.volumes.\<name\>.driver**.
   This value will be set automatically. It is only needed when you want to supply your own driver service.
   
-  
 Required schema changes:
 
 ```sql
