@@ -29,23 +29,16 @@ class MediaTypeManager implements MediaTypeManagerInterface
     private $loader;
 
     /**
-     * @var MimeDetector
-     */
-    private $mimeDetector;
-
-    /**
      * @var MediaTypeCollection
      */
     private $mediaTypes;
 
     /**
-     * @param PuliLoader   $loader
-     * @param MimeDetector $mimeDetector
+     * @param PuliLoader $loader
      */
-    public function __construct(PuliLoader $loader, MimeDetector $mimeDetector)
+    public function __construct(PuliLoader $loader)
     {
         $this->loader = $loader;
-        $this->mimeDetector = $mimeDetector;
     }
 
     /**
@@ -66,14 +59,6 @@ class MediaTypeManager implements MediaTypeManagerInterface
         }
 
         return $this->mediaTypes;
-    }
-
-    /**
-     * @return MimeDetector
-     */
-    public function getMimeDetector()
-    {
-        return $this->mimeDetector;
     }
 
     /**
@@ -106,7 +91,7 @@ class MediaTypeManager implements MediaTypeManagerInterface
     public function findByFilename($filename)
     {
         $file = new File($filename);
-        $mimetype = $file->getMimeType(); //$this->mimeDetector->detect($filename, MimeDetector::RETURN_STRING);
+        $mimetype = $file->getMimeType();
 
         return $this->findByMimetype($mimetype);
     }

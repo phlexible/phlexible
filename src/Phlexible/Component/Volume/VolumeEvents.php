@@ -207,4 +207,14 @@ class VolumeEvents
      * Called after a file has been renamed.
      */
     const SET_FILE_ATTRIBUTES = 'volume.set_file_attributes';
+
+    /**
+     * Called before a file gets renamed.
+     */
+    const BEFORE_SET_FILE_MIMETYPE = 'volume.before_set_file_mimetype';
+
+    /**
+     * Called after a file has been renamed.
+     */
+    const SET_FILE_MIMETYPE = 'volume.set_file_mimetype';
 }

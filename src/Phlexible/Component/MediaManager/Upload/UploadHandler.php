@@ -37,11 +37,6 @@ class UploadHandler
     private $tempStorage;
 
     /**
-     * @var MimeDetector
-     */
-    private $mimeDetector;
-
-    /**
      * @var MediaTypeManagerInterface
      */
     private $mediaTypeManager;
@@ -54,20 +49,17 @@ class UploadHandler
     /**
      * @param VolumeManager             $volumeManager
      * @param TempStorage               $tempStorage
-     * @param MimeDetector              $mimeDetector
      * @param MediaTypeManagerInterface $mediaTypeManager
      * @param MediaTypeMatcher          $mediaTypeMatcher
      */
     public function __construct(
         VolumeManager $volumeManager,
         TempStorage $tempStorage,
-        MimeDetector $mimeDetector,
         MediaTypeManagerInterface $mediaTypeManager,
         MediaTypeMatcher $mediaTypeMatcher
     ) {
         $this->volumeManager = $volumeManager;
         $this->tempStorage = $tempStorage;
-        $this->mimeDetector = $mimeDetector;
         $this->mediaTypeManager = $mediaTypeManager;
         $this->mediaTypeMatcher = $mediaTypeMatcher;
     }
@@ -103,8 +95,7 @@ class UploadHandler
      */
     public function handle(UploadedFile $uploadedFile, $folderId, $userId)
     {
-        $mimetype = $this->mimeDetector->detect($uploadedFile->getPathname(), MimeDetector::RETURN_STRING);
-        $uploadFileSource = new UploadedFileSource($uploadedFile, $mimetype);
+        $uploadFileSource = new UploadedFileSource($uploadedFile);
 
         $volume = $this->volumeManager->getByFolderId($folderId);
         $folder = $volume->findFolder($folderId);

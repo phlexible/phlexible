@@ -318,4 +318,13 @@ interface VolumeInterface
      * @return FileInterface
      */
     public function setFileAttributes(FileInterface $file, array $attributes, $userId);
+
+    /**
+     * @param FileInterface $file
+     * @param string        $mimeType
+     * @param string        $userId
+     *
+     * @return FileInterface
+     */
+    public function setFileMimeType(FileInterface $file, $mimeType, $userId);
 }

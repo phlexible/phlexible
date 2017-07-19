@@ -22,4 +22,3 @@ services:
         public: false
         arguments:
             - "@phlexible_media_type.file.puli_loader"
-            - "@phlexible_media_tool.mime.detector"

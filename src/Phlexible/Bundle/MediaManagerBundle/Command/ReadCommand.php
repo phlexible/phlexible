@@ -102,7 +102,6 @@ class ReadCommand extends ContainerAwareCommand
         $output->writeln('  * '.$file->getId().' v'.$file->getVersion().' '.$file->getPhysicalPath().': ');
         $output->write('    > ');
 
-        $mimeDetector = $this->getContainer()->get('phlexible_media_tool.mime.detector');
         $mediaTypeManager = $this->getContainer()->get('phlexible_media_type.media_type_manager');
         $attributeReader = $this->getContainer()->get('phlexible_media_manager.attribute_reader');
 
@@ -112,11 +111,7 @@ class ReadCommand extends ContainerAwareCommand
             return;
         }
 
-        $mimetype = $mimeDetector->detect($file->getPhysicalPath(), MimeDetector::RETURN_STRING);
-
-        if (!$mimetype) {
-            $mimetype = (new File($file->getPhysicalPath()))->getMimeType();
-        }
+        $mimetype = (new File($file->getPhysicalPath()))->getMimeType();
 
         if (!$mimetype) {
             $output->write('<error>No mimetype</error> ');
@@ -142,7 +137,7 @@ class ReadCommand extends ContainerAwareCommand
         }
 
         $volume->setFileMediaType($file, $mediaTypeName, null);
-        //$volume->setFileMimetype($file, $mimetype, null);
+        $volume->setFileMimetype($file, $mimetype, null);
 
         $output->writeln("$mimetype, $mediaTypeName, ".(isset($attributes) ? json_encode($attributes) : "No attributes"));
     }

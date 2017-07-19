@@ -36,10 +36,16 @@ class PhlexibleMediaToolExtension extends Extension
         $config = $this->processConfiguration($configuration, $config);
 
         if (isset($config['exiftool'])) {
+            if (!class_exists("\PHPExiftool\Reader")) {
+                throw new \LogicException('To configure exiftool, you must first install the alchemy/php-exiftool package.');
+            }
             $loader->load('exiftool.yml');
         }
 
         if (isset($config['poppler'])) {
+            if (!class_exists("\Poppler\Driver\Pdfinfo")) {
+                throw new \LogicException('To configure poppler, you must first install the php-poppler/php-poppler package.');
+            }
             $container->setParameter('phlexible_media_tool.poppler.configuration', array(
                 'pdfinfo.binaries' => $config['poppler']['pdfinfo'],
                 'pdftotext.binaries' => $config['poppler']['pdftotext'],
@@ -50,24 +56,14 @@ class PhlexibleMediaToolExtension extends Extension
         }
 
         if (isset($config['ffmpeg'])) {
+            if (!class_exists("\FFMpeg\FFMpeg")) {
+                throw new \LogicException('To configure ffmpeg, you must first install the php-ffmpeg/php-ffmpeg package.');
+            }
             $container->setParameter('phlexible_media_tool.ffmpeg.configuration', array(
                 'ffprobe.binaries' => $config['ffmpeg']['ffprobe'],
                 'ffmpeg.binaries' => $config['ffmpeg']['ffmpeg'],
             ));
             $loader->load('ffmpeg.yml');
-        }
-
-        $loader->load('mime.yml');
-        if ($config['mime']['use_extension_fallback']) {
-            $container->setParameter('phlexible_media_tool.mime.file', $config['mime']['file']);
-            $container->setParameter('phlexible_media_tool.mime.magicfile', $config['mime']['magicfile']);
-
-            $container->findDefinition('phlexible_media_tool.mime.adapter.fallback')->replaceArgument(1, $config['mime_detector']['adapter']);
-
-            $container->setAlias('phlexible_media_tool.mime.adapter', 'phlexible_media_tool.mime.adapter.fallback');
-        } else {
-            $container->setAlias('phlexible_media_tool.mime.adapter', $config['mime_detector']['adapter']);
-
         }
 
         $container->setAlias('phlexible_media_tool.image_analyzer.driver', $config['image_analyzer']['driver']);

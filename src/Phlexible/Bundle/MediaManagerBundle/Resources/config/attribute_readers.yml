@@ -5,7 +5,7 @@ services:
         tags:
             - {name: phlexible_media_manager.attribute_reader}
 
-    phlexible_media_manager.attribute_reader.imageanalyzer:
+    phlexible_media_manager.attribute_reader.image_analyzer:
         class: Phlexible\Component\MediaManager\AttributeReader\ImageAnalyzerAttributeReader
         public: false
         arguments:
@@ -13,7 +13,7 @@ services:
         tags:
             - {name: phlexible_media_manager.attribute_reader}
 
-    phlexible_media_manager.attribute_reader.zipextension:
+    phlexible_media_manager.attribute_reader.zip_extension:
         class: Phlexible\Component\MediaManager\AttributeReader\ZipExtensionAttributeReader
         public: false
         tags:

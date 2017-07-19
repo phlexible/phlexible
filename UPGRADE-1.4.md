@@ -6,7 +6,9 @@ MediaToolBundle
 
 Required config changes:
 
-- Remove the section **phlexible_media_tool.swftools**.
+- If set, remove the section **phlexible_media_tool.swftools**.
+  This configuration is not used anymore.
+- If set, remove the section **phlexible_media_tool.mime**.
   This configuration is not used anymore.
 
 Config changes:

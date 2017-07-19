@@ -520,6 +520,29 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    public function setFileMimeType(FileInterface $file, $mimeType, $userId)
+    {
+        $file
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId)
+            ->setMimeType($mimeType);
+
+        $event = new FileEvent($file);
+        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_SET_FILE_MIMETYPE, $event)->isPropagationStopped()) {
+            throw new IOException("Delete file {$file->getName()} cancelled.");
+        }
+
+        $this->driver->updateFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(VolumeEvents::SET_FILE_MIMETYPE, $event);
+
+        return $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function createFolder(FolderInterface $targetFolder = null, $name, array $attributes, $userId)
     {
         $folderPath = '';

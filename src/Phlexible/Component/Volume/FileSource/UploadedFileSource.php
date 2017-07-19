@@ -43,11 +43,10 @@ class UploadedFileSource implements PathSourceInterface
 
     /**
      * @param UploadedFile $file
-     * @param string       $mimeType
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(UploadedFile $file, $mimeType = null)
+    public function __construct(UploadedFile $file)
     {
         if ($file->getError()) {
             throw new InvalidArgumentException('Error in upload: '.$file->getError());
@@ -65,12 +64,7 @@ class UploadedFileSource implements PathSourceInterface
         $this->name = $file->getClientOriginalName();
         $this->path = $file->getPathname();
         $this->size = $file->getSize();
-
-        if ($mimeType) {
-            $this->mimeType = $mimeType;
-        } else {
-            $this->mimeType = $file->getMimeType();
-        }
+        $this->mimeType = $file->getMimeType();
     }
 
     /**
