@@ -35,6 +35,9 @@ class PhlexibleMessageExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
+        $container->setParameter('phlexible_message.from_email.address', $config['from_email']['address']);
+        $container->setParameter('phlexible_message.from_email.sender_name', $config['from_email']['sender_name']);
+
         $handlers = [
             new Reference('phlexible_message.handler.message_manager'),
         ];

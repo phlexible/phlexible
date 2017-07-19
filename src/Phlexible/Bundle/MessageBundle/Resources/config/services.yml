@@ -1,7 +1,7 @@
 parameters:
-    phlexible_message.mailer.digest.from:      %phlexible_gui.mail.from_email%
+    phlexible_message.mailer.digest.from:      %phlexible_message.from_email.address%
     phlexible_message.mailer.digest.template:  PhlexibleMessageBundle:Digest:email.txt.twig
-    phlexible_message.mailer.message.from:     %phlexible_gui.mail.from_email%
+    phlexible_message.mailer.message.from:     %phlexible_message.from_email.address%
     phlexible_message.mailer.message.template: PhlexibleMessageBundle:Message:email.txt.twig
 
 services:

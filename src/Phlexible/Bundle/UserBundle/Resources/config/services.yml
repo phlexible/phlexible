@@ -2,9 +2,9 @@ parameters:
     phlexible_user.user.class: Phlexible\Bundle\UserBundle\Entity\User
     phlexible_user.group.class: Phlexible\Bundle\UserBundle\Entity\Group
     phlexible_user.mailer.new_account.template: PhlexibleUserBundle:Users:new_account.txt.twig
-    phlexible_user.mailer.new_account.from: %phlexible_gui.mail.from_email%
+    phlexible_user.mailer.new_account.from: %phlexible_user.from_email.address%
     phlexible_user.mailer.new_password.template: PhlexibleUserBundle:Users:new_password.txt.twig
-    phlexible_user.mailer.new_password.from: %phlexible_gui.mail.from_email%
+    phlexible_user.mailer.new_password.from: %phlexible_user.from_email.address%
 
 services:
     phlexible_user.successor_service:

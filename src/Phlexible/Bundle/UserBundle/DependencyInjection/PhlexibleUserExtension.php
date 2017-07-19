@@ -34,6 +34,8 @@ class PhlexibleUserExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
+        $container->setParameter('phlexible_user.from_email.address', $config['from_email']['address']);
+        $container->setParameter('phlexible_user.from_email.sender_name', $config['from_email']['sender_name']);
         $container->setParameter('phlexible_user.user.system_user_id', $config['system_user_id']);
         $container->setParameter('phlexible_user.group.everyone_group_id', $config['everyone_group_id']);
         $container->setParameter('phlexible_user.password.min_length', $config['password']['min_length']);
