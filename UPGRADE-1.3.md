@@ -22,6 +22,12 @@ CREATE INDEX IDX_DB56ECEB4A1A35C0BF1CD3C3D4DB71B5 ON element_structure_value (ds
 MediaManagerBundle
 ------------------
 
+Required config changes:
+
+- Remove the values for **phlexible_media_manager.volumes.\<name\>.driver**.
+  This value will be set automatically. It is only needed when you want to supply your own driver service.
+  
+  
 Required schema changes:
 
 ```sql
