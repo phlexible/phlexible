@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\MediaCacheBundle\Entity\Repository;
+namespace Phlexible\Component\MediaCache\Doctrine\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

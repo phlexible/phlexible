@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\MediaCacheBundle\Entity;
+namespace Phlexible\Component\MediaCache\Domain;
 
 use Doctrine\ORM\Mapping as ORM;
 

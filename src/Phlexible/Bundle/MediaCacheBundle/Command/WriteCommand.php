@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\Queue\Instruction;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\Volume\Model\FileInterface;

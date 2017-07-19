@@ -12,8 +12,8 @@
 namespace Phlexible\Component\MediaCache\Doctrine;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaCacheBundle\Entity\Repository\CacheItemRepository;
+use Phlexible\Component\MediaCache\Doctrine\Repository\CacheItemRepository;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
@@ -48,7 +48,7 @@ class CacheManager implements CacheManagerInterface
     private function getCacheRepository()
     {
         if ($this->cacheRepository === null) {
-            $this->cacheRepository = $this->entityManager->getRepository('PhlexibleMediaCacheBundle:CacheItem');
+            $this->cacheRepository = $this->entityManager->getRepository(CacheItem::class);
         }
 
         return $this->cacheRepository;

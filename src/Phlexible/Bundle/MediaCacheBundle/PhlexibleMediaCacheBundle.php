@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle;
 
+use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
 use Phlexible\Bundle\MediaCacheBundle\DependencyInjection\Compiler\AddWorkersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -30,5 +31,13 @@ class PhlexibleMediaCacheBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new AddWorkersPass());
+
+        $container->addCompilerPass(
+            DoctrineOrmMappingsPass::createXmlMappingDriver(
+                array($this->getPath().'/Resources/config/orm' => 'Phlexible\Component\MediaCache\Domain'),
+                array('phlexible_media_cache.model_manager_name'),
+                'phlexible_media_cache.backend_type_orm'
+            )
+        );
     }
 }

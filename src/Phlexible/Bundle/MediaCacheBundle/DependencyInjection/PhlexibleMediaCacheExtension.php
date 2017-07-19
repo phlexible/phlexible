@@ -45,8 +45,8 @@ class PhlexibleMediaCacheExtension extends Extension
         foreach ($config['storages'] as $name => $storageConfig) {
             if ($storageConfig['driver'] === 'local') {
                 $storageDefinition = new Definition(LocalStorage::class, [
+                    new Reference('phlexible_media_cache.cache_manager'),
                     $storageConfig['storage_dir'],
-                    new Reference('phlexible_media_cache.cache_manager')
                 ]);
                 $storageId = 'phlexible_media_cache.storage.'.$name;
                 $container->setDefinition($storageId, $storageDefinition);
@@ -62,7 +62,13 @@ class PhlexibleMediaCacheExtension extends Extension
         $container->getDefinition('phlexible_media_cache.storage_manager')
             ->replaceArgument(0, $ids);
 
-        $loader->load('doctrine.yml');
-        $container->setAlias('phlexible_media_cache.cache_manager', 'phlexible_media_cache.doctrine.cache_manager');
+        if ('custom' !== $config['db_driver']) {
+            $loader->load(sprintf('%s.yml', $config['db_driver']));
+            $container->setParameter($this->getAlias().'.backend_type_'.$config['db_driver'], true);
+        }
+
+        $container->setParameter('phlexible_media_cache.model_manager_name', $config['model_manager_name']);
+
+        $container->setAlias('phlexible_media_cache.cache_manager', $config['service']['cache_manager']);
     }
 }

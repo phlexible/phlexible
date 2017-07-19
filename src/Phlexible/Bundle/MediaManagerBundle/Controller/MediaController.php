@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\Queue\Instruction;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

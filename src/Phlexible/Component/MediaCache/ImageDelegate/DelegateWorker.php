@@ -11,7 +11,6 @@
 
 namespace Phlexible\Component\MediaCache\ImageDelegate;
 
-use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Component\MediaCache\Exception\CreateDelegateFailedException;
 use Phlexible\Component\MediaTemplate\Applier\ImageTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
@@ -19,6 +18,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\MediaType\Model\IconResolver;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
+use Phlexible\Component\Volume\Model\File;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 

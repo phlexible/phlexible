@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+
+    <entity name="Phlexible\Component\MediaCache\Domain\CacheItem" table="media_cache" repository-class="Phlexible\Component\MediaCache\Doctrine\Repository\CacheItemRepository">
+        <unique-constraints>
+            <unique-constraint columns="template_key,file_id,file_version" />
+        </unique-constraints>
+
+        <id name="id" column="id" type="string" length="32">
+            <options>
+                <option name="fixed">true</option>
+            </options>
+        </id>
+
+        <field name="volumeId" column="volume_id" type="string" length="36">
+            <options>
+                <option name="fixed">true</option>
+            </options>
+        </field>
+        <field name="fileId" column="file_id" type="string" length="36">
+            <options>
+                <option name="fixed">true</option>
+            </options>
+        </field>
+        <field name="fileVersion" column="file_version" type="integer" />
+        <field name="templateKey" column="template_key" type="string" length="100" />
+        <field name="templateRevision" column="template_revision" type="integer" />
+        <field name="cacheStatus" column="cache_status" type="string" length="20" />
+        <field name="queueStatus" column="queue_status" type="string" length="20" />
+        <field name="mimeType" column="mime_type" type="string" length="100" nullable="true" />
+        <field name="mediaType" column="media_type" type="string" length="100" nullable="true" />
+        <field name="extension" column="extension" type="string" length="20" nullable="true" />
+        <field name="fileSize" column="file_size" type="integer" />
+        <field name="width" column="width" type="integer" nullable="true" />
+        <field name="height" column="height" type="integer" nullable="true" />
+        <field name="error" column="error" type="text" nullable="true" />
+        <field name="createdAt" column="created_at" type="datetime" />
+        <field name="queuedAt" column="queued_at" type="datetime" nullable="true"/>
+        <field name="finishedAt" column="finished_at" type="datetime" nullable="true"/>
+    </entity>
+
+</doctrine-mapping>

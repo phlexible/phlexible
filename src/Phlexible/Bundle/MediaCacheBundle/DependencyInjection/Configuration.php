@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -29,11 +30,43 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('phlexible_media_cache');
 
-        $supportedDrivers = ['local', 'custom'];
+        $supportedDbDrivers = ['orm', 'custom'];
 
         $rootNode
             ->children()
                 ->booleanNode('immediately_cache_system_templates')->defaultValue(true)->end()
+                ->scalarNode('db_driver')
+                    ->validate()
+                        ->ifNotInArray($supportedDbDrivers)
+                        ->thenInvalid('The driver %s is not supported. Please choose one of '.json_encode($supportedDbDrivers))
+                    ->end()
+                    ->defaultValue('orm')
+                    ->cannotBeOverwritten()
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode('model_manager_name')->defaultNull()->end()
+            ->end()
+            // Using the custom driver requires changing the manager services
+            ->validate()
+                ->ifTrue(function ($v) {return 'custom' === $v['db_driver'] && 'phlexible_media_cache.cache_manager.default' === $v['service']['cache_manager']; })
+                ->thenInvalid('You need to specify your own cache manager service when using the "custom" driver.')
+            ->end();;
+
+        $this->addStoragesSection($rootNode);
+        $this->addServiceSection($rootNode);
+
+        return $treeBuilder;
+    }
+
+    /**
+     * @param ArrayNodeDefinition $node
+     */
+    private function addStoragesSection(ArrayNodeDefinition $node)
+    {
+        $supportedStorageDrivers = ['local', 'custom'];
+
+        $node
+            ->children()
                 ->arrayNode('storages')
                     ->isRequired()
                     ->requiresAtLeastOneElement()
@@ -43,8 +76,8 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('driver')
                                 ->isRequired()
                                 ->validate()
-                                    ->ifNotInArray($supportedDrivers)
-                                    ->thenInvalid('The driver %s is not supported. Please choose one of '.json_encode($supportedDrivers))
+                                    ->ifNotInArray($supportedStorageDrivers)
+                                    ->thenInvalid('The driver %s is not supported. Please choose one of '.json_encode($supportedStorageDrivers))
                                 ->end()
                             ->end()
                             ->scalarNode('service')->end()
@@ -71,7 +104,22 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
+    }
 
-        return $treeBuilder;
+    /**
+     * @param ArrayNodeDefinition $node
+     */
+    private function addServiceSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('service')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('cache_manager')->defaultValue('phlexible_media_cache.cache_manager.default')->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 }
