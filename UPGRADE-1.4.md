@@ -10,7 +10,14 @@ Required config changes:
   This configuration is not used anymore.
 - If set, remove the section **phlexible_media_tool.mime**.
   This configuration is not used anymore.
-
+- Unles customized, change the configuration of **phlexible_media_cache.storages** to:
+  ```yaml
+  phlexible_media_cache:
+      storages:
+          default:
+            driver: local
+            storage_dir: "%media_cache_storage_dir%"
+  ```
 Config changes:
 
 - The following sections are now optional:

@@ -29,6 +29,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('phlexible_media_cache');
 
+        $supportedDrivers = ['local', 'custom'];
+
         $rootNode
             ->children()
                 ->booleanNode('immediately_cache_system_templates')->defaultValue(true)->end()
@@ -38,8 +40,33 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('id')->end()
-                            ->arrayNode('options')->prototype('scalar')->end()->end()
+                            ->scalarNode('driver')
+                                ->isRequired()
+                                ->validate()
+                                    ->ifNotInArray($supportedDrivers)
+                                    ->thenInvalid('The driver %s is not supported. Please choose one of '.json_encode($supportedDrivers))
+                                ->end()
+                            ->end()
+                            ->scalarNode('service')->end()
+                            ->scalarNode('storage_dir')->end()
+                        ->end()
+                        ->validate()
+                            ->ifTrue(function ($v) {
+                                return 'custom' === $v['driver'] && empty($v['service']);
+                            })
+                            ->thenInvalid('You need to specify a service when using the "custom" driver.')
+                        ->end()
+                        ->validate()
+                            ->ifTrue(function ($v) {
+                                return 'local' === $v['driver'] && !empty($v['service']);
+                            })
+                            ->thenInvalid('You can not specify a service when using the "local" driver.')
+                        ->end()
+                        ->validate()
+                            ->ifTrue(function ($v) {
+                                return 'local' === $v['driver'] && empty($v['storage_dir']);
+                            })
+                            ->thenInvalid('You need t specify the storage_dir when using the "local" driver.')
                         ->end()
                     ->end()
                 ->end()

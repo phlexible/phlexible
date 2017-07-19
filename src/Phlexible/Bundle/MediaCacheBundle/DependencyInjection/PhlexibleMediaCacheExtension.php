@@ -11,9 +11,10 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\DependencyInjection;
 
+use Phlexible\Component\MediaCache\Storage\LocalStorage;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -42,16 +43,24 @@ class PhlexibleMediaCacheExtension extends Extension
 
         $ids = [];
         foreach ($config['storages'] as $name => $storageConfig) {
-            if (!isset($storageConfig['id']) || !isset($storageConfig['options'])) {
-                throw new InvalidArgumentException('Storage config needs id and options.');
+            if ($storageConfig['driver'] === 'local') {
+                $storageDefinition = new Definition(LocalStorage::class, [
+                    $storageConfig['storage_dir'],
+                    new Reference('phlexible_media_cache.cache_manager')
+                ]);
+                $storageId = 'phlexible_media_cache.storage.'.$name;
+                $container->setDefinition($storageId, $storageDefinition);
+            } elseif ($storageConfig['driver'] === 'custom') {
+                $storageId = $storageConfig['service'];
+            } else {
+                continue;
             }
-            $storageId = $storageConfig['id'];
-            $storage = $container->findDefinition($storageId);
-            $storage->replaceArgument(0, $storageConfig['options']);
+
             $ids[$name] = new Reference($storageId);
         }
 
-        $container->getDefinition('phlexible_media_cache.storage_manager')->replaceArgument(0, $ids);
+        $container->getDefinition('phlexible_media_cache.storage_manager')
+            ->replaceArgument(0, $ids);
 
         $loader->load('doctrine.yml');
         $container->setAlias('phlexible_media_cache.cache_manager', 'phlexible_media_cache.doctrine.cache_manager');

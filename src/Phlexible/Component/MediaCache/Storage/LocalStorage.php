@@ -36,19 +36,15 @@ class LocalStorage extends AbstractStorage
     private $cacheManager;
 
     /**
-     * @param array                 $options
      * @param CacheManagerInterface $cacheManager
+     * @param string                $storageDir
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(array $options, CacheManagerInterface $cacheManager)
+    public function __construct(CacheManagerInterface $cacheManager, $storageDir)
     {
-        if (!isset($options['storage_dir'])) {
-            throw new InvalidArgumentException('No storage_dir.');
-        }
-
-        $this->storageDir = rtrim($options['storage_dir'], '/').'/';
         $this->cacheManager = $cacheManager;
+        $this->storageDir = rtrim($storageDir, '/').'/';
     }
 
     /**
