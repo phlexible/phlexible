@@ -4,5 +4,9 @@ login:
     back_to_login: Back to login
 send_email:
     invalid_username: Unbekannter Benutzer oder Email.
-reset:
+resetting:
     enter_new_password: Bitte geben Sie Ihr neues Passwort ein.
+    check_email: >
+        Eine E-Mail wurde verschickt. Sie beinhaltet einen Link zum Zurücksetzen des Passwortes.
+        Hinweis: Ein neues Passwort kann nur alle %tokenLifetime% Stunden beantragt werden.
+        Eventuell wurde diese E-Mail als Spam markiert, wenn sie nicht angekommen ist.

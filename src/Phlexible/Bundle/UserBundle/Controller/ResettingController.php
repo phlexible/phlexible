@@ -55,32 +55,7 @@ class ResettingController extends BaseResettingController
      */
     public function sendEmailAction(Request $request)
     {
-        $username = $request->request->get('username');
-
-        /** @var $user UserInterface */
-        $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
-
-        if (null === $user) {
-            return $this->render('PhlexibleUserBundle:Resetting:request.html.twig', ['invalid_username' => $username]);
-        }
-
-        if ($user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
-            return $this->render('PhlexibleUserBundle:Resetting:passwordAlreadyRequested.html.twig');
-        }
-
-        if (null === $user->getConfirmationToken()) {
-            /** @var $tokenGenerator \FOS\UserBundle\Util\TokenGeneratorInterface */
-            $tokenGenerator = $this->container->get('fos_user.util.token_generator');
-            $user->setConfirmationToken($tokenGenerator->generateToken());
-        }
-
-        $this->get('fos_user.mailer')->sendResettingEmailMessage($user);
-        $user->setPasswordRequestedAt(new \DateTime());
-        $this->get('fos_user.user_manager')->updateUser($user);
-
-        return new RedirectResponse($this->generateUrl('fos_user_resetting_check_email',
-            array('email' => $this->getObfuscatedEmail($user))
-        ));
+        return parent::sendEmailAction($request);
     }
 
     /**
@@ -93,16 +68,16 @@ class ResettingController extends BaseResettingController
      */
     public function checkEmailAction(Request $request)
     {
-        $email = $request->query->get('email');
+        $username = $request->query->get('username');
 
-        if (empty($email)) {
+        if (empty($username)) {
             // the user does not come from the sendEmail action
             return new RedirectResponse($this->generateUrl('fos_user_resetting_request'));
         }
 
-        return $this->render('PhlexibleUserBundle:Resetting:checkEmail.html.twig', [
-            'email' => $email,
-        ]);
+        return $this->render('PhlexibleUserBundle:Resetting:checkEmail.html.twig', array(
+            'tokenLifetime' => ceil($this->container->getParameter('fos_user.resetting.retry_ttl') / 3600),
+        ));
     }
 
     /**
