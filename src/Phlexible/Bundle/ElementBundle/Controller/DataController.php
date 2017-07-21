@@ -582,14 +582,16 @@ class DataController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $teaserId = $request->get('teaser_id');
         $language = $request->get('language');
 
         $iconResolver = $this->get('phlexible_element.icon_resolver');
         $dataSaver = $this->get('phlexible_element.request.data_saver');
 
         /* @var $treeNode TreeNodeInterface */
-        list($elementVersion, $treeNode, $teaser, $publishSlaves, $status) = $dataSaver->save($request, $this->getUser());
+        list($elementVersion, $treeNode, $teaser, $publishSlaves, $status) = $dataSaver->save(
+            $request,
+            $this->getUser()
+        );
 
         if ($teaser) {
             $icon = $iconResolver->resolveTeaser($teaser, $language);
@@ -605,12 +607,15 @@ class DataController extends Controller
             'navigation' => $teaser ? '' : $treeNode->getInNavigation(),
             'restricted' => $teaser ? '' : $treeNode->getAttribute('needAuthentication'),
             'publish_other' => $publishSlaves,
-            'publish' => $request->get('publish'),
+            'publish' => $request->get('isPublish') ? true : false,
             'status' => $status,
         ];
 
         return new ResultResponse(true, $msg, $data);
+    }
 
+    public function xxxsaveOld()
+    {
         $tid = $request->get('tid');
         $eid = $request->get('eid');
         $data = $request->get('data');

@@ -807,7 +807,7 @@ class DataSaver
                     if (!$node->getTree()->isAsync($node, $slaveLanguage)) {
                         $publishSlaves['languages'][] = $slaveLanguage;
                     } else {
-                        $publishSlaves['elements'][] = [$node->getId(), $slaveLanguage, 0, 'async', 1];
+                        $publishSlaves['elements'][] = [$node->getId(), $slaveLanguage, $elementVersion->getVersion(), 'async', 1];
                     }
                 }
                 // TODO: needed?

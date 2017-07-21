@@ -47,49 +47,36 @@ class PublishController extends Controller
 
         //$fileUsage = new Makeweb_Elements_Element_FileUsage(MWF_Registry::getContainer()->dbPool);
 
-        if ($teaserId === null) {
-            $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
-            $node = $treeManager->getNodeByNodeId($tid);
-            $tree = $node->getTree();
+        if (!$teaserId) {
+            $treeManager = $this->get('phlexible_tree.tree_manager');
+            $tree = $treeManager->getByNodeId($tid);
+            $node = $tree->get($tid);
 
-            $tree->publishNode($node, $language, $version, false, $comment);
+            $tree->publish($node, $version, $language, $this->getUser()->getId(), $comment);
 
-            $eid = $node->getEid();
+            #$eid = $node->getEid();
             //$fileUsage->update($node->getEid());
 
             $data = [];
 
-            $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
-            $elementVersion = $elementVersionManager->get($node->getEid(), $version);
+            #$elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
+            #$elementVersion = $elementVersionManager->get($node->getEid(), $version);
 
-            $iconStatus = $node->isAsync($language) ? 'async' : ($node->isPublished($language) ? 'online' : null);
-            $iconInstance = ($node->isInstance() ? ($node->isInstanceMaster() ? 'master' : 'slave') : false);
-
-            $data['icon'] = $elementVersion->getIconUrl($node->getIconParams($language));
+            $data['status'] = $tree->isAsync($node, $language) ? 'async' : ($tree->isPublished($node, $language) ? 'online' : null);
+            $data['instance'] = ($tree->isInstance($node) ? ($tree->isInstanceMaster($node) ? 'master' : 'slave') : false);
+            #$data['icon'] = $elementVersion->getIconUrl($node->getIconParams($language));
 
             $response = new ResultResponse(true, 'TID "'.$tid.'" published.', $data);
         } else {
-            $teasersManager = Makeweb_Teasers_Manager::getInstance();
+            $teaserManager = $this->get('phlexible_teaser.teaser_manager');
+            $teaser = $teaserManager->find($teaserId);
 
-            $eid = $teasersManager->publish($teaserId, $version, $language, $comment, $tid);
+            $eid = $teaserManager->publishTeaser($teaser, $version, $language, $this->getUser()->getId(), $comment);
 
             //$fileUsage->update($eid);
 
             $response = new ResultResponse(true, "Teaser ID $teaserId published.");
         }
-
-        $queueService = $this->getContainer()->get('queue.service');
-        $job = new Makeweb_Elements_Job_UpdateUsage();
-        $job->setEid($eid);
-        $queueService->addUniqueJob($job);
-
-        // workaround to fix missing catch results for non master language elements
-        Makeweb_Elements_Element_History::insert(
-            Makeweb_Elements_Element_History::ACTION_SAVE,
-            $eid,
-            $version,
-            $language
-        );
 
         return $response;
     }
