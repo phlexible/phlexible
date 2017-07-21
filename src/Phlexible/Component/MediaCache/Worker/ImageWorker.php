@@ -187,7 +187,8 @@ class ImageWorker extends AbstractWorker
                 'No preview image.',
                 $inputFilename,
                 $template,
-                $file
+                $file,
+                'warning'
             );
         } elseif (!$this->applier->isAvailable($inputFilename)) {
             $this->applyError(
