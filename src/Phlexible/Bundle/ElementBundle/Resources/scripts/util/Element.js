@@ -302,7 +302,6 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
             this.fireEvent('save', this, result);
 
             if (result.data.publish) {
-                debugger;
                 this.fireEvent('publish', this, result);
             }
 
