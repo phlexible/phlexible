@@ -63,10 +63,10 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
             }),
             select: new Ext.form.ComboBox({
                 store: new Ext.data.SimpleStore({
-                    fields: ['key', 'value']
+                    fields: ['key', 'value_de', 'value_en']
                 }),
                 valueField: 'key',
-                displayField: 'value',
+                displayField: 'value_' + Phlexible.Config.get('language.backend'),
                 mode: 'local',
                 triggerAction: 'all',
                 editable: false,
