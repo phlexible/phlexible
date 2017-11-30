@@ -59,7 +59,13 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
             var n = this.getElementsTree().getSelectionModel().getSelectedNode();
             if (!n || n.getPath() !== params.start_tid_path) {
                 this.skipLoad = true;
-                this.getElementsTree().selectPath(params.start_tid_path, 'id');
+                this.getElementsTree().selectPath(params.start_tid_path, 'id', function (success, selNode) {
+                    if (success) {
+                        this.element.setTreeNode(selNode);
+                    } else {
+                        this.element.setTreeNode(null);
+                    }
+                }.createDelegate(this));
             }
         }
     },
