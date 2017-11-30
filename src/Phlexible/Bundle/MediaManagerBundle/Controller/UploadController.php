@@ -276,9 +276,17 @@ class UploadController extends Controller
         $tempFile = $tempStorage->get($tempId);
 
         $outFilename = $this->container->getParameter('phlexible_media_manager.temp_dir').'preview.png';
-        $imageApplier->apply($template, new File(), $tempFile->getPath(), $outFilename);
+        $mimeType = 'image/png';
+        try {
+            $imageApplier->apply($template, new File(), $tempFile->getPath(), $outFilename);
+        } catch (\Exception $e) {
+            $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
+            $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+            $outFilename = $delegateService->getClean($template, $mediaTypeManager->findByMimetype($tempFile->getMimeType()), true);
+            $mimeType = 'image/gif';
+        }
 
-        $response = new BinaryFileResponse($outFilename, 200, array('Content-Type' => 'image/png'));
+        $response = new BinaryFileResponse($outFilename, 200, array('Content-Type' => $mimeType));
 
         return $response;
     }

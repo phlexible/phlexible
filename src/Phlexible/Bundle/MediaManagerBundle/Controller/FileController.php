@@ -274,8 +274,8 @@ class FileController extends Controller
         foreach ($fileIds as $fileId) {
             try {
                 $volume = $volumeManager->getByFileId($fileId);
-                $file = $volume->findFile($fileId);
-                if ($file) {
+                $files = $volume->findFileVersions($fileId);
+                foreach ($files as $file) {
                     $volume->deleteFile($file, $this->getUser()->getId());
                 }
             } catch (NotFoundException $e) {
@@ -302,8 +302,8 @@ class FileController extends Controller
 
         foreach ($fileIds as $fileId) {
             $volume = $volumeManager->getByFileId($fileId);
-            $file = $volume->findFile($fileId);
-            if ($file) {
+            $files = $volume->findFileVersions($fileId);
+            foreach ($files as $file) {
                 $volume->hideFile($file, $this->getUser()->getId());
             }
         }
@@ -328,8 +328,8 @@ class FileController extends Controller
 
         foreach ($fileIds as $fileId) {
             $volume = $volumeManager->getByFileId($fileId);
-            $file = $volume->findFile($fileId);
-            if ($file) {
+            $files = $volume->findFileVersions($fileId);
+            foreach ($files as $file) {
                 $volume->showFile($file, $this->getUser()->getId());
             }
         }

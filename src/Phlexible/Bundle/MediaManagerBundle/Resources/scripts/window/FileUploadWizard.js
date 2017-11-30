@@ -366,7 +366,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         if (file.get('new_metasets')) {
             var list = [];
             Ext.each(file.get('new_metasets'), function(set) {
-                list.push({id: set.id, title: set.name});
+                list.push({id: set.set_id, name: set.title});
             });
 
             this.getMetaGrid().metasetUrls.list = function() {

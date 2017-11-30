@@ -485,6 +485,21 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
+    public function findLatestFileVersion($id)
+    {
+        $file = $this->getFileRepository()->findOneBy(['id' => $id], ['version' => 'DESC']);
+
+        if ($file) {
+            /* @var $file FileInterface */
+            $file->setVolume($this->getVolume());
+        }
+
+        return $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function search($query)
     {
         $qb = $this->getFileRepository()->createQueryBuilder('fi');

@@ -131,6 +131,13 @@ interface VolumeInterface
     public function findFileVersions($id);
 
     /**
+     * @param int $id
+     *
+     * @return FileInterface
+     */
+    public function findLatestFileVersion($id);
+
+    /**
      * @param FolderInterface $folder
      * @param string          $order
      * @param int             $limit
@@ -236,6 +243,20 @@ interface VolumeInterface
      */
     public function createFile(
         FolderInterface $targetFolder,
+        FileSourceInterface $fileSource,
+        array $attributes,
+        $userId);
+
+    /**
+     * @param FileInterface       $targetFile
+     * @param FileSourceInterface $fileSource
+     * @param array               $attributes
+     * @param string              $userId
+     *
+     * @return FileInterface
+     */
+    public function createFileVersion(
+        FileInterface $targetFile,
         FileSourceInterface $fileSource,
         array $attributes,
         $userId);

@@ -148,14 +148,16 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
 
     save: function() {
         var params = Phlexible.clone(this.baseParams);
+        var metas = [];
         params.ids = [];
         Ext.each(this.getComponent(0).getStore().getRange(), function(record) {
             params.ids.push(record.get('id'));
+            metas.push(record.data);
         });
 
         if (typeof this.urls.save === 'function') {
             this.urls.save(params, this);
-            this.fireEvent('updatesets', params);
+            this.fireEvent('updatesets', {meta: metas});
             this.close();
             return;
         }
