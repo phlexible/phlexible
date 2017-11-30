@@ -82,7 +82,7 @@ Phlexible.mediamanager.Meta = Ext.extend(Ext.Panel, {
                     urls: this.metasetUrls,
                     listeners: {
                         savesets: this.reloadMeta,
-                        updatesets: this.loadMeta,
+                        updatesets: this.updateMeta,
                         scope: this
                     }
                 });
@@ -92,23 +92,31 @@ Phlexible.mediamanager.Meta = Ext.extend(Ext.Panel, {
         }];
     },
 
+    updateMeta: function(params) {
+        if (typeof this.urls.update === 'function') {
+            this.urls.update(params);
+        }
+    },
+
+    applyLoad: function(data) {
+        this.removeAll();
+        if (data.meta && data.meta.length) {
+            Ext.each(data.meta, function (meta) {
+                this.add(this.createMetaGridConfig(meta.set_id, meta.title, meta.fields, this.small));
+            }, this);
+        } else {
+            this.add({
+                border: false,
+                html: '<div class="x-grid-empty">' + this.strings.no_meta_values + '</div>'
+            });
+        }
+
+        this.doLayout();
+    },
+
     loadMeta: function (params) {
         if (typeof this.urls.load === 'function') {
-            this.urls.load(params, function(data) {
-                this.removeAll();
-                if (data.meta && data.meta.length) {
-                    Ext.each(data.meta, function (meta) {
-                        this.add(this.createMetaGridConfig(meta.set_id, meta.title, meta.fields, this.small));
-                    }, this);
-                } else {
-                    this.add({
-                        border: false,
-                        html: '<div class="x-grid-empty">' + this.strings.no_meta_values + '</div>'
-                    });
-                }
-
-                this.doLayout();
-            }, this);
+            this.urls.load(params, this.applyLoad, this);
 
             return;
         }
@@ -214,7 +222,9 @@ Phlexible.mediamanager.Meta = Ext.extend(Ext.Panel, {
         var sources = {};
         if (this.items) {
             this.items.each(function (p) {
-                sources[p.setId] = p.getData();
+                if (typeof p.getData === 'function') {
+                    sources[p.setId] = p.getData();
+                }
             });
         }
         return sources;

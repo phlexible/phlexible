@@ -292,6 +292,28 @@ class UploadController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
+     * @return Response
+     * @Route("/set", name="mediamanager_upload_set")
+     */
+    public function setAction(Request $request)
+    {
+        $ids = $request->get('ids');
+        $ids = explode(',', $ids);
+
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $metaSets = [];
+        foreach ($ids as $id) {
+            $metaSets[] = $metaSetManager->find($id);
+        }
+
+        $config = $this->createMetasetConfig($metaSets);
+
+        return new JsonResponse($config);
+    }
+
+    /**
      * @param FileInterface $file
      * @param array         $metaData
      */

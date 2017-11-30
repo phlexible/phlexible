@@ -27,7 +27,7 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
                 {
                     iconCls: 'p-metaset-delete-icon',
                     tooltip: this.strings.remove_metaset,
-                    callback: this.removeMetaSet,
+                    callback: this.removeMetaSet.createDelegate(this),
                     scope: this
                 }
             ]
@@ -157,7 +157,7 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
 
         if (typeof this.urls.save === 'function') {
             this.urls.save(params, this);
-            this.fireEvent('updatesets', {meta: metas});
+            this.fireEvent('updatesets', metas);
             this.close();
             return;
         }
