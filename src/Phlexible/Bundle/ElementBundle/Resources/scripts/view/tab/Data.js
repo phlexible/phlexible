@@ -536,7 +536,14 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
         }
 
         if (!this.getContentPanel().isValid()) {
-            errors.push('Required fields are missing.');
+            var fields = this.getContentPanel().getInvalidFields(),
+                fieldErrors = [];
+            Ext.each(fields, function(field) {
+                if (field.fieldLabel) {
+                    fieldErrors.push(field.fieldLabel);
+                }
+            });
+            errors.push('Required data fields are missing. Fields: ' + fieldErrors.join(', '));
             return;
         }
 

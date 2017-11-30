@@ -309,7 +309,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
                 version: null
             });
 
-            if (result.data.publish_other && result.data.publish_other.elements.length) {
+            if (result.data.publish_other && result.data.publish_other.elements && result.data.publish_other.elements.length) {
                 var w = new Phlexible.elements.PublishSlaveWindow({
                     data: result.data.publish_other.elements
                 });

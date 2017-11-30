@@ -90,7 +90,7 @@ Phlexible.elements.tab.Security = Ext.extend(Ext.form.FormPanel, {
 
     onInternalSave: function (parameters, errors) {
         if (!this.getForm().isValid()) {
-            errors.push('Required fields are missing.');
+            errors.push('Required security fields are missing.');
             return false;
         }
 
