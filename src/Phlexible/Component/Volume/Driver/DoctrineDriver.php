@@ -175,7 +175,7 @@ class DoctrineDriver extends AbstractDriver
      */
     public function findFolderByPath($path)
     {
-        $path = trim($path, '/').'/';
+        $path = trim($path, '/');
 
         $folder = $this->getFolderRepository()->findOneBy(
             [
