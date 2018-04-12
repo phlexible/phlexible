@@ -553,7 +553,9 @@ class DoctrineDriver extends AbstractDriver
         try {
             $this->updateFile($file);
         } catch (\Exception $e) {
-            $filesystem->remove($path);
+            if (is_file($path)) {
+                $filesystem->remove($path);
+            }
 
             throw $e;
         }
@@ -588,7 +590,9 @@ class DoctrineDriver extends AbstractDriver
         try {
             $this->updateFile($file);
         } catch (\Exception $e) {
-            $filesystem->remove($path);
+            if (is_file($path)) {
+                $filesystem->remove($path);
+            }
 
             throw $e;
         }
@@ -819,7 +823,9 @@ class DoctrineDriver extends AbstractDriver
             $this->deleteFile($file, $userId);
         }
 
-        $filesystem->remove($physicalPath);
+        if (is_file($physicalPath)) {
+            $filesystem->remove($physicalPath);
+        }
 
         $folder->setId(null);
     }
