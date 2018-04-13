@@ -252,6 +252,10 @@ class MediaExtension extends \Twig_Extension
         $volume = $this->volumeManager->getByFileId($fileId);
         $file = $volume->findFile($fileId);
 
+        if (!$file) {
+            return [];
+        }
+
         $attributes = $file->getAttributes();
 
         $info = [
