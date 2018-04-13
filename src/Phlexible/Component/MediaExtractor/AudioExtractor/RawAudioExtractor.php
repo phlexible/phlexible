@@ -11,8 +11,8 @@
 
 namespace Phlexible\Component\MediaExtractor\AudioExtractor;
 
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaExtractor\Extractor\ExtractorInterface;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
@@ -25,7 +25,7 @@ class RawAudioExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
+    public function supports(InputDescriptor $input, MediaType $mediaType, $targetFormat)
     {
         return $targetFormat === 'audio' && $mediaType->getCategory() === 'audio';
     }
@@ -33,8 +33,8 @@ class RawAudioExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function extract(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
+    public function extract(InputDescriptor $input, MediaType $mediaType, $targetFormat)
     {
-        return $file->getPhysicalPath();
+        return $input->getFilePath();
     }
 }

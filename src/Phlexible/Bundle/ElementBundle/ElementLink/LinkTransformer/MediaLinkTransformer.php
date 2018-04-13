@@ -50,22 +50,10 @@ class MediaLinkTransformer implements LinkTransformerInterface
         if ($elementLink->getType() === 'file') {
             $parts = explode(';', $elementLink->getTarget());
             $fileId = $parts[0];
-            $fileVersion = null;
-            if (isset($parts[1])) {
-                $fileVersion = $parts[1];
-            }
             $volume = $this->volumeManager->findByFileId($fileId);
 
             if ($volume) {
-                $file = null;
-                if ($fileVersion) {
-                    $file = $volume->findFile($fileId, $fileVersion);
-                } else {
-                    $files = $volume->findFiles(array('id' => $fileId), array('version' => 'DESC'), 1);
-                    if ($files) {
-                        $file = current($files);
-                    }
-                }
+                $file = $volume->findFile($fileId);
                 if ($file) {
                     $data['content'] = $file->getName();
                     $data['payload']['name'] = $file->getName();
@@ -79,8 +67,8 @@ class MediaLinkTransformer implements LinkTransformerInterface
                 }
             }
 
-            $data['payload']['fileId'] = $fileId;
-            $data['payload']['fileVersion'] = $fileVersion;
+            $data['payload']['fileId'] = $file->getId();
+            $data['payload']['fileVersion'] = $file->getVersion();
             $data['iconCls'] = 'p-mediamanager-image-icon';
         } elseif ($elementLink->getType() === 'folder') {
             $folderId = $elementLink->getTarget();

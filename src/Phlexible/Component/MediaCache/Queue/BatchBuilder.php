@@ -11,6 +11,7 @@
 
 namespace Phlexible\Component\MediaCache\Queue;
 
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
@@ -27,24 +28,14 @@ class BatchBuilder
     private $templates = array();
 
     /**
-     * @var ExtendedFileInterface[]
+     * @var InputDescriptor[]
      */
-    private $files = array();
+    private $inputs = array();
 
     /**
      * @var array
      */
     private $flags = array();
-
-    /**
-     * Create an empty batch.
-     *
-     * @return Batch
-     */
-    public function create()
-    {
-        return new Batch();
-    }
 
     /**
      * @param TemplateInterface[] $templates
@@ -53,19 +44,47 @@ class BatchBuilder
      */
     public function templates(array $templates)
     {
-        $this->templates = $templates;
+        foreach ($templates as $template) {
+            $this->template($template);
+        }
 
         return $this;
     }
 
     /**
-     * @param ExtendedFileInterface[] $files
+     * @param TemplateInterface $template
      *
      * @return self
      */
-    public function files(array $files)
+    public function template(TemplateInterface $template)
     {
-        $this->files = $files;
+        $this->templates[] = $template;
+
+        return $this;
+    }
+
+    /**
+     * @param InputDescriptor[] $inputs
+     *
+     * @return self
+     */
+    public function inputs(array $inputs)
+    {
+        foreach ($inputs as $input) {
+            $this->input($input);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param InputDescriptor $input
+     *
+     * @return self
+     */
+    public function input(InputDescriptor $input)
+    {
+        $this->inputs[] = $input;
 
         return $this;
     }
@@ -108,6 +127,6 @@ class BatchBuilder
      */
     public function getBatch()
     {
-        return new Batch($this->files, $this->templates, $this->flags);
+        return new Batch($this->inputs, $this->templates, $this->flags);
     }
 }

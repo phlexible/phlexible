@@ -11,13 +11,13 @@
 
 namespace Phlexible\Component\MediaManager\Volume;
 
-use Phlexible\Component\Volume\Model\FileInterface;
+use Phlexible\Component\Volume\Model\FileVersionInterface;
 
 /**
  * Extended file interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface ExtendedFileInterface extends FileInterface, HasMediaTypeInterface, HasMetaSetInterface
+interface ExtendedFileVersionInterface extends FileVersionInterface, HasMediaTypeInterface, HasMetaSetInterface
 {
 }

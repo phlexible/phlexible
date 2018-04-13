@@ -111,23 +111,8 @@ class TempHandler
 
             case self::ACTION_SAVE_VERSION:
                 $file = $volume->findFile($tempFile->getFileId());
-                $volume->createFileVersion($file, $tempFile, array(), $tempFile->getUserId());
-
-                /*
-                try {
-                    $fileId = $tempFile['original_id'];
-                    if (!empty($tempFile['file_id'])) {
-                        $fileId = $tempFile['file_id'];
-                    }
-
-                    $newFile = $folder->importFileVersion($tempFile['tmp_name'], $tempFile['name'], $fileId);
-                } catch (Exception $e) {
-                    $this->getContainer()->get('logger')->error(
-                        __METHOD__ . ' version: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
-                    );
-
-                    throw new Media_Site_Folder_Exception($e->getMessage());
-                }*/
+                $fileVersion = $volume->createFileVersion($file, $tempFile, array(), $tempFile->getUserId());
+                $volume->activateFileVersion($file, $fileVersion, $tempFile->getUserId());
                 break;
 
             case self::ACTION_DISCARD:

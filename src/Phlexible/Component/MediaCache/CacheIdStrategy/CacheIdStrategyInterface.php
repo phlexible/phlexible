@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\MediaCache\CacheIdStrategy;
 
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
@@ -22,10 +22,10 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 interface CacheIdStrategyInterface
 {
     /**
-     * @param TemplateInterface     $template
-     * @param ExtendedFileInterface $file
+     * @param TemplateInterface $template
+     * @param InputDescriptor   $input
      *
      * @return string
      */
-    public function createCacheId(TemplateInterface $template, ExtendedFileInterface $file);
+    public function createCacheId(TemplateInterface $template, InputDescriptor $input);
 }

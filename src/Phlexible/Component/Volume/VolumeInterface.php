@@ -14,6 +14,7 @@ namespace Phlexible\Component\Volume;
 use Phlexible\Component\Volume\Driver\DriverInterface;
 use Phlexible\Component\Volume\FileSource\FileSourceInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
+use Phlexible\Component\Volume\Model\FileVersionInterface;
 use Phlexible\Component\Volume\Model\FolderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -92,11 +93,10 @@ interface VolumeInterface
 
     /**
      * @param int $id
-     * @param int $version
      *
      * @return FileInterface
      */
-    public function findFile($id, $version = 1);
+    public function findFile($id);
 
     /**
      * @param array      $criteria
@@ -117,25 +117,36 @@ interface VolumeInterface
 
     /**
      * @param string $path
+     *
+     * @return FileInterface
+     */
+    public function findFileByPath($path);
+
+    /**
+     * @param string $id
+     * @param array  $orderBy
+     * @param int    $limit
+     * @param int    $start
+     *
+     * @return FileVersionInterface[]
+     */
+    public function findFileVersions($id, array $orderBy = null, $limit = null, $start = null);
+
+    /**
+     * @param string $id
+     * @param array  $orderBy
+     *
+     * @return FileVersionInterface
+     */
+    public function findOneFileVersion($id, array $orderBy = null);
+
+    /**
+     * @param string $id
      * @param int    $version
      *
-     * @return FileInterface
+     * @return FileVersionInterface
      */
-    public function findFileByPath($path, $version = 1);
-
-    /**
-     * @param int $id
-     *
-     * @return FileInterface[]
-     */
-    public function findFileVersions($id);
-
-    /**
-     * @param int $id
-     *
-     * @return FileInterface
-     */
-    public function findLatestFileVersion($id);
+    public function findFileVersion($id, $version);
 
     /**
      * @param FolderInterface $folder
@@ -245,7 +256,8 @@ interface VolumeInterface
         FolderInterface $targetFolder,
         FileSourceInterface $fileSource,
         array $attributes,
-        $userId);
+        $userId
+    );
 
     /**
      * @param FileInterface       $targetFile
@@ -253,13 +265,21 @@ interface VolumeInterface
      * @param array               $attributes
      * @param string              $userId
      *
-     * @return FileInterface
+     * @return FileVersionInterface
      */
     public function createFileVersion(
         FileInterface $targetFile,
         FileSourceInterface $fileSource,
         array $attributes,
-        $userId);
+        $userId
+    );
+
+    /**
+     * @param FileInterface        $file
+     * @param FileVersionInterface $fileVersion
+     * @param string               $userId
+     */
+    public function activateFileVersion(FileInterface $file, FileVersionInterface $fileVersion, $userId);
 
     /**
      * @param FileInterface       $file
@@ -273,7 +293,8 @@ interface VolumeInterface
         FileInterface $file,
         FileSourceInterface $fileSource,
         array $attributes,
-        $userId);
+        $userId
+    );
 
     /**
      * @param FileInterface $file
@@ -339,4 +360,13 @@ interface VolumeInterface
      * @return FileInterface
      */
     public function setFileAttributes(FileInterface $file, array $attributes, $userId);
+
+    /**
+     * @param FileVersionInterface $fileVersion
+     * @param array                $attributes
+     * @param string               $userId
+     *
+     * @return FileVersionInterface
+     */
+    public function setFileVersionAttributes(FileVersionInterface $fileVersion, array $attributes, $userId);
 }

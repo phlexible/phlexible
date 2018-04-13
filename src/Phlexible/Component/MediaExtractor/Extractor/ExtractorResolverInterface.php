@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\MediaExtractor\Extractor;
 
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
@@ -24,11 +24,11 @@ interface ExtractorResolverInterface
     /**
      * Resolve extractor.
      *
-     * @param ExtendedFileInterface $file
-     * @param MediaType             $mediaType
-     * @param string                $targetFormat
+     * @param InputDescriptor $input
+     * @param MediaType       $mediaType
+     * @param string          $targetFormat
      *
      * @return ExtractorInterface
      */
-    public function resolve(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat);
+    public function resolve(InputDescriptor $input, MediaType $mediaType, $targetFormat);
 }

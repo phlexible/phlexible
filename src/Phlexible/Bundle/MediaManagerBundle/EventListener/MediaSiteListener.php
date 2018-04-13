@@ -17,12 +17,15 @@ use Phlexible\Component\MediaManager\AttributeReader\AttributeReaderInterface;
 use Phlexible\Component\MediaManager\Volume\DeleteFileChecker;
 use Phlexible\Component\MediaManager\Volume\DeleteFolderChecker;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileVersionInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 use Phlexible\Component\Volume\Event\CreateFileEvent;
+use Phlexible\Component\Volume\Event\CreateFileVersionEvent;
 use Phlexible\Component\Volume\Event\FileEvent;
 use Phlexible\Component\Volume\Event\FolderEvent;
 use Phlexible\Component\Volume\Event\ReplaceFileEvent;
+use Phlexible\Component\Volume\Event\ReplaceFileVersionEvent;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 use Phlexible\Component\Volume\VolumeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -95,8 +98,10 @@ class MediaSiteListener implements EventSubscriberInterface
     {
         return [
             VolumeEvents::BEFORE_CREATE_FILE => ['onBeforeCreateFile', 500],
+            VolumeEvents::BEFORE_CREATE_FILE_VERSION => ['onBeforeCreateFileVersion', 500],
             VolumeEvents::BEFORE_CREATE_FOLDER => ['onBeforeCreateFolder', 500],
             VolumeEvents::BEFORE_REPLACE_FILE => ['onBeforeReplaceFile', 500],
+            VolumeEvents::BEFORE_REPLACE_FILE_VERSION => ['onBeforeReplaceFileVersion', 500],
             VolumeEvents::BEFORE_DELETE_FILE => 'onBeforeDeleteFile',
             VolumeEvents::BEFORE_DELETE_FOLDER => 'onBeforeDeleteFolder',
         ];
@@ -155,6 +160,61 @@ class MediaSiteListener implements EventSubscriberInterface
         }
 
         $file->setAttribute('fileattributes', $attributes->all());
+    }
+
+    /**
+     * @param CreateFileVersionEvent $event
+     */
+    public function onBeforeCreateFileVersion(CreateFileVersionEvent $event)
+    {
+        $fileVersion = $event->getFileVersion();
+        $fileSource = $event->getFileSource();
+
+        $this->processFileVersion($fileVersion, $fileSource);
+    }
+
+    /**
+     * @param ReplaceFileVersionEvent $event
+     */
+    public function onBeforeReplaceFileVersion(ReplaceFileVersionEvent $event)
+    {
+        $fileVersion = $event->getFileVersion();
+        $fileSource = $event->getFileSource();
+
+        $this->processFileVersion($fileVersion, $fileSource);
+    }
+
+    /**
+     * @param ExtendedFileVersionInterface $fileVersion
+     * @param PathSourceInterface          $fileSource
+     */
+    private function processFileVersion(ExtendedFileVersionInterface $fileVersion, PathSourceInterface $fileSource)
+    {
+        try {
+            $mediaType = $this->mediaTypeManager->findByMimetype($fileSource->getMimeType());
+        } catch (\Exception $e) {
+            $mediaType = null;
+        }
+
+        if (!$mediaType) {
+            $mediaType = $this->mediaTypeManager->find('binary');
+        }
+
+        $fileVersion->setMediaCategory($mediaType->getCategory());
+        $fileVersion->setMediaType($mediaType->getName());
+
+        $this->metaSetMapper->map($fileVersion, $mediaType);
+
+        $attributes = new AttributeBag($fileVersion->getAttributes());
+
+        $mediaTypeName = $fileVersion->getMediaType();
+        $mediaType = $this->mediaTypeManager->find($mediaTypeName);
+
+        if ($this->attributeReader->supports($fileSource, $mediaType)) {
+            $this->attributeReader->read($fileSource, $mediaType, $attributes);
+        }
+
+        $fileVersion->setAttribute('fileattributes', $attributes->all());
     }
 
     /**

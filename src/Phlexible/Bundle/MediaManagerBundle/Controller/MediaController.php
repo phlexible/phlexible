@@ -13,7 +13,9 @@ namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaCache\Queue\Instruction;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -41,7 +43,7 @@ class MediaController extends Controller
     public function mediaAction(Request $request)
     {
         $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
+        $fileVersion = $request->get('file_version');
         $templateKey = $request->get('template_key');
 
         $cacheManager = $this->get('phlexible_media_cache.cache_manager');
@@ -50,8 +52,6 @@ class MediaController extends Controller
         $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
         $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-        $instructionCreator = $this->get('phlexible_media_cache.instruction_creator');
-        $instructionProcessor = $this->get('phlexible_media_cache.instruction_processor');
 
         try {
             $cacheItem = $cacheManager->findByTemplateAndFile($templateKey, $fileId, $fileVersion);
@@ -63,30 +63,21 @@ class MediaController extends Controller
 
         if ($cacheItem) {
             if ($cacheItem->getCacheStatus() === CacheItem::STATUS_WAITING) {
-                $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
-                $instruction = new Instruction($file, $template, $cacheItem);
-                $instructionProcessor->processInstruction($instruction);
+                $cacheItem = $this->doCache($fileId, $fileVersion, $template, $cacheItem);
             } elseif ($cacheItem->getCacheStatus() === CacheItem::STATUS_MISSING) {
-                $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
-                if (file_exists($file->getPhysicalPath())) {
-                    $instruction = new Instruction($file, $template, $cacheItem);
-                    $instructionProcessor->processInstruction($instruction);
-                }
+                $cacheItem = $this->doCache($fileId, $fileVersion, $template, $cacheItem);
             }
 
-            if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
+            if ($cacheItem && $cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
                 $storageKey = $template->getStorage();
                 $storage = $storageManager->get($storageKey);
                 $filePath = $storage->getLocalPath($cacheItem);
 
                 if (!file_exists($filePath)) {
-                    $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
                     $filePath = null;
+                    $cacheItem = $this->doCache($fileId, $fileVersion, $template, $cacheItem);
 
-                    $instruction = new Instruction($file, $template, $cacheItem);
-                    $instructionProcessor->processInstruction($instruction);
-
-                    if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
+                    if ($cacheItem && $cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
                         $storageKey = $template->getStorage();
                         $storage = $storageManager->get($storageKey);
                         $filePath = $storage->getLocalPath($cacheItem);
@@ -94,20 +85,20 @@ class MediaController extends Controller
                 }
             }
 
-            $mimeType = $cacheItem->getMimeType();
-        } else {
-            $file = $volumeManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
-            $instruction = $instructionCreator->createInstruction($file, $template);
-            $instructionProcessor->processInstruction($instruction);
-
-            $cacheItem = $instruction->getCacheItem();
-
-            if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
-                $storageKey = $template->getStorage();
-                $storage = $storageManager->get($storageKey);
-                $filePath = $storage->getLocalPath($cacheItem);
+            if ($cacheItem) {
+                $mimeType = $cacheItem->getMimeType();
             }
-            $mimeType = $cacheItem->getMimeType();
+        } else {
+            $cacheItem = $this->doCache($fileId, $fileVersion, $template);
+
+            if ($cacheItem) {
+                if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
+                    $storageKey = $template->getStorage();
+                    $storage = $storageManager->get($storageKey);
+                    $filePath = $storage->getLocalPath($cacheItem);
+                }
+                $mimeType = $cacheItem->getMimeType();
+            }
         }
 
         if (empty($filePath)) {
@@ -115,7 +106,7 @@ class MediaController extends Controller
                 return new Response('Not found', 404);
             }
 
-            $file = $volumeManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
+            $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
             $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
             $filePath = $delegateService->getClean($template, $mediaType, true);
             $mimeType = 'image/gif';
@@ -124,6 +115,46 @@ class MediaController extends Controller
         $response = new BinaryFileResponse($filePath, 200, array('Content-Type' => $mimeType));
 
         return $response;
+    }
+
+    /**
+     * @param string            $fileId
+     * @param int               $fileVersion
+     * @param TemplateInterface $template
+     * @param CacheItem|null    $cacheItem
+     *
+     * @return null|CacheItem
+     */
+    private function doCache($fileId, $version, TemplateInterface $template, CacheItem $cacheItem = null)
+    {
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+        $instructionCreator = $this->get('phlexible_media_cache.instruction_creator');
+        $instructionProcessor = $this->get('phlexible_media_cache.instruction_processor');
+
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId);
+        if ($version && $file->getVersion() !== $version) {
+            $fileVersion = $volume->findFileVersion($fileId, $version);
+            if (!$file) {
+                return null;
+            }
+            $input = InputDescriptor::fromFileVersion($fileVersion);
+        } else {
+            $input = InputDescriptor::fromFile($file);
+        }
+
+        if (!file_exists($file->getPhysicalPath())) {
+            return null;
+        }
+
+        if ($cacheItem) {
+            $instruction = new Instruction($input, $template, $cacheItem);
+        } else {
+            $instruction = $instructionCreator->createInstruction($input, $template);
+        }
+        $instructionProcessor->processInstruction($instruction);
+
+        return $instruction->getCacheItem();
     }
 
     /**

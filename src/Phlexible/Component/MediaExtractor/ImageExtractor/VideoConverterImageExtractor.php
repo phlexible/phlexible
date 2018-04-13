@@ -11,9 +11,10 @@
 
 namespace Phlexible\Component\MediaExtractor\ImageExtractor;
 
+use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaExtractor\Extractor\ExtractorInterface;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
@@ -46,7 +47,7 @@ class VideoConverterImageExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
+    public function supports(InputDescriptor $input, MediaType $mediaType, $targetFormat)
     {
         return $targetFormat === 'image' && $mediaType->getCategory() === 'video';
     }
@@ -54,9 +55,9 @@ class VideoConverterImageExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function extract(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
+    public function extract(InputDescriptor $input, MediaType $mediaType, $targetFormat)
     {
-        $filename = $file->getPhysicalPath();
+        $filename = $input->getFilePath();
 
         if (!file_exists($filename)) {
             return null;
@@ -65,11 +66,11 @@ class VideoConverterImageExtractor implements ExtractorInterface
         $imageFilename = null;
 
         try {
-            $imageFilename = $this->tempDir.'/'.uniqid().'.jpg';
+            $imageFilename = $this->tempDir.'/'.uniqid('videoconverter-', true).'.jpg';
 
             $this->converter
                 ->open($filename)
-                ->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(5))
+                ->frame(TimeCode::fromSeconds(5))
                 ->save($imageFilename);
         } catch (\Exception $e) {
             $imageFile = null;

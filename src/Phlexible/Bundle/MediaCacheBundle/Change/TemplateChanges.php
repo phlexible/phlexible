@@ -11,11 +11,17 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Change;
 
+use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
+use Phlexible\Component\MediaCache\Queue\Batch;
 use Phlexible\Component\MediaCache\Queue\BatchBuilder;
+use Phlexible\Component\MediaCache\Queue\BatchProcessor;
 use Phlexible\Component\MediaCache\Queue\BatchResolver;
+use Phlexible\Component\MediaCache\Queue\Instruction;
+use Phlexible\Component\MediaCache\Queue\InstructionProcessor;
 use Phlexible\Component\MediaCache\Queue\Queue;
 use Phlexible\Component\MediaCache\Queue\QueueProcessor;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
 
@@ -42,41 +48,26 @@ class TemplateChanges
     private $volumeManager;
 
     /**
-     * @var BatchBuilder
+     * @var InstructionProcessor
      */
-    private $batchBuilder;
-
-    /**
-     * @var BatchResolver
-     */
-    private $batchResolver;
-
-    /**
-     * @var QueueProcessor
-     */
-    private $queueProcessor;
+    private $instructionProcessor;
 
     /**
      * @param TemplateManagerInterface $templateManager
      * @param CacheManagerInterface    $cacheManager
      * @param VolumeManager            $volumeManager
-     * @param BatchBuilder             $batchBuilder
-     * @param BatchResolver            $batchResolver
-     * @param QueueProcessor           $queueProcessor
+     * @param InstructionProcessor     $instructionProcessor
      */
-    public function __construct(TemplateManagerInterface $templateManager,
-                                CacheManagerInterface $cacheManager,
-                                VolumeManager $volumeManager,
-                                BatchBuilder $batchBuilder,
-                                BatchResolver $batchResolver,
-                                QueueProcessor $queueProcessor)
-    {
+    public function __construct(
+        TemplateManagerInterface $templateManager,
+        CacheManagerInterface $cacheManager,
+        VolumeManager $volumeManager,
+        InstructionProcessor $instructionProcessor
+    ) {
         $this->templateManager = $templateManager;
         $this->cacheManager = $cacheManager;
         $this->volumeManager = $volumeManager;
-        $this->batchBuilder = $batchBuilder;
-        $this->batchResolver = $batchResolver;
-        $this->queueProcessor = $queueProcessor;
+        $this->instructionProcessor = $instructionProcessor;
     }
 
     /**
@@ -91,9 +82,9 @@ class TemplateChanges
 
             foreach ($cacheItems as $cacheItem) {
                 $volume = $this->volumeManager->getByFileId($cacheItem->getFileId());
-                $file = $volume->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
+                $file = $volume->findFile($cacheItem->getFileId());
                 $template = $this->templateManager->find($cacheItem->getTemplateKey());
-                $change = new Change($file, $template, $cacheItem->getTemplateRevision());
+                $change = new Change($file, $template, $cacheItem);
 
                 $changes[] = $change;
             }
@@ -109,18 +100,13 @@ class TemplateChanges
     {
         $changes = $this->changes();
 
-        $queue = new Queue();
         foreach ($changes as $change) {
-            $batch = $this->batchBuilder->createForTemplateAndFile($change->getTemplate(), $change->getFile());
-            $changeQueue = $this->batchResolver->resolve($batch);
-            $queue->merge($changeQueue);
-        }
-
-        foreach ($queue->all() as $queueItem) {
+            $instruction = new Instruction(InputDescriptor::fromFile($change->getFile()), $change->getTemplate(), $change->getCacheItem());
             if ($viaQueue) {
-                $this->cacheManager->updateCacheItem($queueItem);
+                $instruction->getCacheItem()->setQueueStatus(CacheItem::QUEUE_WAITING);
+                $this->cacheManager->updateCacheItem($instruction->getCacheItem());
             } else {
-                $this->queueProcessor->processItem($queueItem);
+                $this->instructionProcessor->processInstruction($instruction);
             }
         }
     }

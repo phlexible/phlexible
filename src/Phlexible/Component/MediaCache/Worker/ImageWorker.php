@@ -12,11 +12,9 @@
 namespace Phlexible\Component\MediaCache\Worker;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaCache\Storage\StorageManager;
 use Phlexible\Component\MediaExtractor\Transmutor;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Applier\ImageTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
@@ -30,8 +28,10 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ImageWorker extends AbstractWorker
+class ImageWorker implements WorkerInterface
 {
+    use WorkerLogger;
+
     /**
      * @var StorageManager
      */
@@ -53,11 +53,6 @@ class ImageWorker extends AbstractWorker
     private $mediaTypeManager;
 
     /**
-     * @var CacheIdStrategyInterface
-     */
-    private $cacheIdStrategy;
-
-    /**
      * @var ImageTemplateApplier
      */
     private $applier;
@@ -77,7 +72,6 @@ class ImageWorker extends AbstractWorker
      * @param Transmutor                $transmutor
      * @param CacheManagerInterface     $cacheManager
      * @param MediaTypeManagerInterface $mediaTypeManager
-     * @param CacheIdStrategyInterface  $cacheIdStrategy
      * @param ImageTemplateApplier      $applier
      * @param LoggerInterface           $logger
      * @param string                    $tempDir
@@ -87,16 +81,14 @@ class ImageWorker extends AbstractWorker
         Transmutor $transmutor,
         CacheManagerInterface $cacheManager,
         MediaTypeManagerInterface $mediaTypeManager,
-        CacheIdStrategyInterface $cacheIdStrategy,
         ImageTemplateApplier $applier,
         LoggerInterface $logger,
-        $tempDir)
-    {
+        $tempDir
+    ) {
         $this->storageManager = $storageManager;
         $this->transmutor = $transmutor;
         $this->cacheManager = $cacheManager;
         $this->mediaTypeManager = $mediaTypeManager;
-        $this->cacheIdStrategy = $cacheIdStrategy;
         $this->applier = $applier;
         $this->logger = $logger;
         $this->tempDir = $tempDir;
@@ -113,7 +105,7 @@ class ImageWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function accept(TemplateInterface $template, InputDescriptor $input, MediaType $mediaType)
     {
         return $template instanceof ImageTemplate;
     }
@@ -121,53 +113,52 @@ class ImageWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(CacheItem $cacheItem, TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function process(CacheItem $cacheItem, TemplateInterface $template, InputDescriptor $input, MediaType $mediaType)
     {
-        $imageFile = $this->transmutor->transmuteToImage($file);
+        $imageFile = $this->transmutor->transmuteToImage($input);
+
+        $attributes = $input->getFileAttributes();
+        $pathinfo = pathinfo($input->getFilePath());
+
+        $cacheItem
+            ->setVolumeId($input->getVolumeId())
+            ->setFileId($input->getFileId())
+            ->setFileVersion($input->getFileVersion())
+            ->setMimeType($input->getMimeType())
+            ->setMediaType($input->getMediaType())
+            ->setExtension(isset($pathinfo['extension']) ? $pathinfo['extension'] : '');
 
         if ($imageFile !== null && file_exists($imageFile)) {
             // we have a preview image from the asset
-            $this->work($cacheItem, $template, $file, $imageFile);
-        } elseif (!file_exists($file->getPhysicalPath())) {
+            $this->work($cacheItem, $template, $attributes, $imageFile);
+        } elseif (!file_exists($input->getFilePath())) {
             // file is completely missing
-            $this->work($cacheItem, $template, $file, $file->getPhysicalPath(), true);
+            $this->work($cacheItem, $template, $attributes, $input->getFilePath(), true);
         } elseif ($imageFile === null) {
-            $this->work($cacheItem, $template, $file);
+            $this->work($cacheItem, $template, $attributes);
         }
     }
 
     /**
      * Apply template to filename.
      *
-     * @param CacheItem             $cacheItem
-     * @param ImageTemplate         $template
-     * @param ExtendedFileInterface $file
-     * @param string                $inputFilename
-     * @param bool                  $missing
+     * @param CacheItem     $cacheItem
+     * @param ImageTemplate $template
+     * @param array         $attributes
+     * @param string        $inputFilename
+     * @param bool          $missing
      */
-    private function work(CacheItem $cacheItem, ImageTemplate $template, ExtendedFileInterface $file, $inputFilename = null, $missing = false)
+    private function work(CacheItem $cacheItem, ImageTemplate $template, array $attributes, $inputFilename = null, $missing = false)
     {
         $cacheFilename = null;
 
-        $volume = $file->getVolume();
-        $fileId = $file->getId();
-        $fileVersion = $file->getVersion();
-
         $tempFilename = $this->tempDir.'/'.$cacheItem->getId().'.'.$template->getParameter('format');
 
-        $pathinfo = pathinfo($file->getPhysicalPath());
-
         $cacheItem
-            ->setVolumeId($volume->getId())
-            ->setFileId($fileId)
-            ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())
             ->setTemplateRevision($template->getRevision())
             ->setCacheStatus(CacheItem::STATUS_DELEGATE)
             ->setQueueStatus(CacheItem::QUEUE_DONE)
-            ->setMimeType($file->getMimeType())
-            ->setMediaType(strtolower($file->getMediaType()))
-            ->setExtension(isset($pathinfo['extension']) ? $pathinfo['extension'] : '')
             ->setFileSize(0)
             ->setError(null);
 
@@ -177,8 +168,8 @@ class ImageWorker extends AbstractWorker
                 CacheItem::STATUS_MISSING,
                 'Input file not found.',
                 $inputFilename,
-                $template,
-                $file
+                $template->getType(),
+                $template->getKey()
             );
         } elseif ($inputFilename === null) {
             $this->applyError(
@@ -186,8 +177,8 @@ class ImageWorker extends AbstractWorker
                 CacheItem::STATUS_DELEGATE,
                 'No preview image.',
                 $inputFilename,
-                $template,
-                $file,
+                $template->getType(),
+                $template->getKey(),
                 'warning'
             );
         } elseif (!$this->applier->isAvailable($inputFilename)) {
@@ -196,8 +187,8 @@ class ImageWorker extends AbstractWorker
                 CacheItem::STATUS_MISSING,
                 'No suitable image template applier found.',
                 $inputFilename,
-                $template,
-                $file
+                $template->getType(),
+                $template->getKey()
             );
         } else {
             $filesystem = new Filesystem();
@@ -209,7 +200,7 @@ class ImageWorker extends AbstractWorker
             }
 
             try {
-                $image = $this->applier->apply($template, $file, $inputFilename, $tempFilename);
+                $image = $this->applier->apply($template, $attributes, $inputFilename, $tempFilename);
 
                 $filesystem->chmod($tempFilename, 0777);
 
@@ -221,12 +212,12 @@ class ImageWorker extends AbstractWorker
                     ->setMimeType($mediaType->getMimetype())
                     ->setMediaType($mediaType->getName())
                     ->setExtension(pathinfo($tempFilename, PATHINFO_EXTENSION))
-                    ->setFilesize(filesize($tempFilename))
+                    ->setFileSize(filesize($tempFilename))
                     ->setWidth($image->getSize()->getWidth())
                     ->setHeight($image->getSize()->getHeight())
                     ->setFinishedAt(new \DateTime());
             } catch (\Exception $e) {
-                $this->logger->error('Image worker error', array('exception' => $e, 'template' => $template->getId(), 'file' => $file->getId()));
+                $this->logger->error('Image worker error', array('exception' => $e, 'template' => $template->getId(), 'file' => $cacheItem->getFileId()));
 
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_ERROR)

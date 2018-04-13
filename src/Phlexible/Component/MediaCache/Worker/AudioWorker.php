@@ -30,8 +30,10 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class AudioWorker extends AbstractWorker
+class AudioWorker implements WorkerInterface
 {
+    use WorkerLogger;
+
     /**
      * @var StorageManager
      */
@@ -55,11 +57,6 @@ class AudioWorker extends AbstractWorker
     /**
      * @var CacheIdStrategyInterface
      */
-    private $cacheIdStrategy;
-
-    /**
-     * @var CacheIdStrategyInterface
-     */
     private $applier;
 
     /**
@@ -77,7 +74,6 @@ class AudioWorker extends AbstractWorker
      * @param Transmutor                $transmutor
      * @param CacheManagerInterface     $cacheManager
      * @param MediaTypeManagerInterface $mediaTypeManager
-     * @param CacheIdStrategyInterface  $cacheIdStrategy
      * @param AudioTemplateApplier      $applier
      * @param LoggerInterface           $logger
      * @param string                    $tempDir
@@ -87,16 +83,14 @@ class AudioWorker extends AbstractWorker
         Transmutor $transmutor,
         CacheManagerInterface $cacheManager,
         MediaTypeManagerInterface $mediaTypeManager,
-        CacheIdStrategyInterface $cacheIdStrategy,
         AudioTemplateApplier $applier,
         LoggerInterface $logger,
-        $tempDir)
-    {
+        $tempDir
+    ) {
         $this->storageManager = $storageManager;
         $this->transmutor = $transmutor;
         $this->cacheManager = $cacheManager;
         $this->mediaTypeManager = $mediaTypeManager;
-        $this->cacheIdStrategy = $cacheIdStrategy;
         $this->applier = $applier;
         $this->logger = $logger;
         $this->tempDir = $tempDir;
@@ -113,7 +107,7 @@ class AudioWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function accept(TemplateInterface $template, InputDescriptor $input, MediaType $mediaType)
     {
         return $template instanceof AudioTemplate && $mediaType->getCategory() === 'audio';
     }
@@ -121,39 +115,36 @@ class AudioWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(CacheItem $cacheItem, TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function process(CacheItem $cacheItem, TemplateInterface $template, InputDescriptor $input, MediaType $mediaType)
     {
-        $audioFile = $this->transmutor->transmuteToAudio($file);
+        $audioFile = $this->transmutor->transmuteToAudio($input);
 
-        $this->work($cacheItem, $template, $file, $audioFile);
+        $cacheItem
+            ->setVolumeId($input->getVolumeId())
+            ->setFileId($input->getFileId())
+            ->setFileVersion($input->getFileVersion())
+            ->setMimeType($input->getMimeType())
+            ->setMediaType($input->getMediaType());
+
+        $this->work($cacheItem, $template, $audioFile);
     }
 
     /**
      * Apply template to filename.
      *
-     * @param CacheItem             $cacheItem
-     * @param AudioTemplate         $template
-     * @param ExtendedFileInterface $file
-     * @param string                $inputFilename
+     * @param CacheItem     $cacheItem
+     * @param AudioTemplate $template
+     * @param string        $inputFilename
      */
-    private function work(CacheItem $cacheItem, AudioTemplate $template, ExtendedFileInterface $file, $inputFilename)
+    private function work(CacheItem $cacheItem, AudioTemplate $template, $inputFilename)
     {
-        $volume = $file->getVolume();
-        $fileId = $file->getId();
-        $fileVersion = $file->getVersion();
-
         $tempFilename = $this->tempDir.'/'.$cacheItem->getId().'.'.$template->getParameter('audio_format');
 
         $cacheItem
-            ->setVolumeId($volume->getId())
-            ->setFileId($fileId)
-            ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())
             ->setTemplateRevision($template->getRevision())
             ->setCacheStatus(CacheItem::STATUS_DELEGATE)
             ->setQueueStatus(CacheItem::QUEUE_DONE)
-            ->setMimeType($file->getMimeType())
-            ->setMediaType(strtolower($file->getMediaType()))
             ->setExtension('')
             ->setFileSize(0)
             ->setError(null);
@@ -164,8 +155,8 @@ class AudioWorker extends AbstractWorker
                 CacheItem::STATUS_MISSING,
                 'Input file not found.',
                 $inputFilename,
-                $template,
-                $file
+                $template->getType(),
+                $template->getKey()
             );
         } elseif ($this->applier->isAvailable($inputFilename)) {
             $this->applyError(
@@ -173,8 +164,8 @@ class AudioWorker extends AbstractWorker
                 CacheItem::STATUS_MISSING,
                 'No suitable audio template applier found.',
                 $inputFilename,
-                $template,
-                $file
+                $template->getType(),
+                $template->getKey()
             );
         } else {
             $filesystem = new Filesystem();
@@ -198,10 +189,10 @@ class AudioWorker extends AbstractWorker
                     ->setMimeType($mediaType->getMimetype())
                     ->setMediaType($mediaType->getName())
                     ->setExtension(pathinfo($tempFilename, PATHINFO_EXTENSION))
-                    ->setFilesize(filesize($tempFilename))
+                    ->setFileSize(filesize($tempFilename))
                     ->setFinishedAt(new \DateTime());
             } catch (\Exception $e) {
-                $this->logger->error('Audio worker error', array('exception' => $e, 'template' => $template->getId(), 'file' => $file->getId()));
+                $this->logger->error('Audio worker error', array('exception' => $e, 'template' => $template->getKey(), 'file' => $cacheItem->getFileId()));
 
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_ERROR)

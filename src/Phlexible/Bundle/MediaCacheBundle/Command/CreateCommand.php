@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
 use Phlexible\Component\MediaCache\Queue\BatchBuilder;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -66,7 +67,7 @@ class CreateCommand extends ContainerAwareCommand
             $batchBuilder = $batchBuilder->templates([$template]);
         }
         if ($file) {
-            $batchBuilder = $batchBuilder->files([$file]);
+            $batchBuilder = $batchBuilder->input(InputDescriptor::fromFile($file));
         }
 
         $batch = $batchBuilder->getBatch();
@@ -76,7 +77,7 @@ class CreateCommand extends ContainerAwareCommand
         foreach ($batchProcessor->process($batch) as $instruction) {
             $instructionProcessor->processInstruction($instruction);
 
-            $output->writeln("File {$instruction->getFile()->getId()} / Template {$instruction->getTemplate()->getKey()} processed.");
+            $output->writeln("File {$instruction->getInput()->getFileId()} / Template {$instruction->getTemplate()->getKey()} processed.");
         }
 
         $properties->set('mediacache', 'last_run', date('Y-m-d H:i:s'));

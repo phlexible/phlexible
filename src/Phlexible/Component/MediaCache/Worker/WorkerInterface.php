@@ -12,7 +12,6 @@
 namespace Phlexible\Component\MediaCache\Worker;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
@@ -26,21 +25,21 @@ interface WorkerInterface
     /**
      * Are the given template and asset supported?
      *
-     * @param TemplateInterface     $template
-     * @param ExtendedFileInterface $file
-     * @param MediaType             $mediaType
+     * @param TemplateInterface $template
+     * @param InputDescriptor   $input
+     * @param MediaType         $mediaType
      *
      * @return bool
      */
-    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType);
+    public function accept(TemplateInterface $template, InputDescriptor $input, MediaType $mediaType);
 
     /**
      * Process template and file.
      *
-     * @param CacheItem             $cacheItem
-     * @param TemplateInterface     $template
-     * @param ExtendedFileInterface $file
-     * @param MediaType             $mediaType
+     * @param CacheItem         $cacheItem
+     * @param TemplateInterface $template
+     * @param InputDescriptor   $input
+     * @param MediaType         $mediaType
      */
-    public function process(CacheItem $cacheItem, TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType);
+    public function process(CacheItem $cacheItem, TemplateInterface $template, InputDescriptor $input, MediaType $mediaType);
 }

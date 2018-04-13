@@ -11,6 +11,7 @@
 
 namespace Phlexible\Component\MediaCache\Queue;
 
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
@@ -27,9 +28,9 @@ class Batch
     const FILTER_UNCACHED = 'uncached';
 
     /**
-     * @var ExtendedFileInterface[]
+     * @var InputDescriptor[]
      */
-    private $files;
+    private $inputs;
 
     /**
      * @var TemplateInterface[]
@@ -42,23 +43,23 @@ class Batch
     private $flags;
 
     /**
-     * @param ExtendedFileInterface[] $files
-     * @param TemplateInterface[]     $templates
-     * @param array                   $flags
+     * @param InputDescriptor[]   $inputs
+     * @param TemplateInterface[] $templates
+     * @param array               $flags
      */
-    public function __construct(array $files = array(), array $templates = array(), array $flags = array())
+    public function __construct(array $inputs = array(), array $templates = array(), array $flags = array())
     {
-        $this->files = $files;
+        $this->inputs = $inputs;
         $this->templates = $templates;
         $this->flags = $flags;
     }
 
     /**
-     * @return ExtendedFileInterface[]
+     * @return InputDescriptor[]
      */
-    public function getFiles()
+    public function getInputs()
     {
-        return $this->files;
+        return $this->inputs;
     }
 
     /**

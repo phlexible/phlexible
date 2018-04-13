@@ -102,9 +102,6 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
 
     setFile: function (file_id, file_version, file_name, folder_id) {
         var value = file_id;
-        if (file_version) {
-            value += ';' + file_version;
-        }
         this.setValue(value);
         this.setFileTitle(file_name);
         this.file_id = file_id;
@@ -202,13 +199,8 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
 
             var src = this.getPlaceholder();
             if (this.value) {
-                if (this.value.indexOf(';') === -1) {
-                    src = Phlexible.Router.generate('mediamanager_media', {file_id: this.value, template_key: '_mm_large'});
-                }
-                else {
-                    var split = this.value.split(';');
-                    src = Phlexible.Router.generate('mediamanager_media', {file_id: split[0], template_key: '_mm_large', file_version: split[1]});
-                }
+                var split = this.value.split(';');
+                src = Phlexible.Router.generate('mediamanager_media', {file_id: split[0], template_key: '_mm_large'});
             }
             this.fileBoxImage = this.fileBoxImageContainer.createChild({
                 tag: 'img',
@@ -447,12 +439,8 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
             if (v !== undefined && v !== null && v !== '') {
                 this.emptyAddButton.hide();
                 var src;
-                if (v.indexOf(';') === -1) {
-                    src = Phlexible.Router.generate('mediamanager_media', {file_id: v, template_key: '_mm_large'});
-                } else {
-                    var split = v.split(';');
-                    src = Phlexible.Router.generate('mediamanager_media', {file_id: split[0], template_key: '_mm_large', file_version: split[1]});
-                }
+                var split = v.split(';');
+                src = Phlexible.Router.generate('mediamanager_media', {file_id: split[0], template_key: '_mm_large'});
                 src += (src.indexOf('?') !== -1 ? '&' : '?') + '_dc=' + (new Date().getTime());
                 this.fileBoxImage.dom.src = src;
                 if (this.value && !this.readOnly) {

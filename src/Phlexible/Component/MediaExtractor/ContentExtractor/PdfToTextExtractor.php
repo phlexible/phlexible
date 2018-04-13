@@ -11,8 +11,8 @@
 
 namespace Phlexible\Component\MediaExtractor\ContentExtractor;
 
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaExtractor\Extractor\ExtractorInterface;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Poppler\Processor\PdfFile;
 
@@ -39,7 +39,7 @@ class PdfToTextExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
+    public function supports(InputDescriptor $input, MediaType $mediaType, $targetFormat)
     {
         return $targetFormat === 'text' && $mediaType->getName() === 'pdf';
     }
@@ -47,9 +47,9 @@ class PdfToTextExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function extract(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
+    public function extract(InputDescriptor $input, MediaType $mediaType, $targetFormat)
     {
-        $output = $this->pdfFile->toText($file->getPhysicalPath());
+        $output = $this->pdfFile->toText($input->getFilePath());
 
         // set pdftotext output as content
         // strip UTF-8 control characters

@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Change;
 
+use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
@@ -32,20 +33,20 @@ class Change
     private $template;
 
     /**
-     * @var string
+     * @var CacheItem
      */
-    private $revision;
+    private $cacheItem;
 
     /**
      * @param ExtendedFileInterface $file
      * @param TemplateInterface     $template
-     * @param string                $revision
+     * @param CacheItem             $cacheItem
      */
-    public function __construct(ExtendedFileInterface $file, TemplateInterface $template, $revision)
+    public function __construct(ExtendedFileInterface $file, TemplateInterface $template, CacheItem $cacheItem)
     {
         $this->file = $file;
         $this->template = $template;
-        $this->revision = $revision;
+        $this->cacheItem = $cacheItem;
     }
 
     /**
@@ -65,10 +66,10 @@ class Change
     }
 
     /**
-     * @return string
+     * @return CacheItem
      */
-    public function getRevision()
+    public function getCacheItem()
     {
-        return $this->revision;
+        return $this->cacheItem;
     }
 }

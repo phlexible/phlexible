@@ -15,6 +15,7 @@ use Phlexible\Component\Volume\Exception\AlreadyExistsException;
 use Phlexible\Component\Volume\FileSource\FileSourceInterface;
 use Phlexible\Component\Volume\HashCalculator\HashCalculatorInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
+use Phlexible\Component\Volume\Model\FileVersionInterface;
 use Phlexible\Component\Volume\Model\FolderInterface;
 
 /**
@@ -37,6 +38,11 @@ interface DriverInterface
      * @return string
      */
     public function getFileClass();
+
+    /**
+     * @return string
+     */
+    public function getFileVersionClass();
 
     /**
      * @return string
@@ -90,11 +96,10 @@ interface DriverInterface
 
     /**
      * @param int $id
-     * @param int $version
      *
      * @return FileInterface
      */
-    public function findFile($id, $version = 1);
+    public function findFile($id);
 
     /**
      * @param array      $criteria
@@ -115,18 +120,28 @@ interface DriverInterface
 
     /**
      * @param string $path
-     * @param int    $version
      *
      * @return FileInterface
      */
-    public function findFileByPath($path, $version = 1);
+    public function findFileByPath($path);
 
     /**
-     * @param int $id
+     * @param array $criteria
+     * @param array $orderBy
+     * @param int   $limit
+     * @param int   $offset
      *
      * @return FileInterface[]
      */
-    public function findFileVersions($id);
+    public function findFileVersionsBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
+
+    /**
+     * @param array $criteria
+     * @param array $orderBy
+     *
+     * @return FileInterface
+     */
+    public function findFileVersionBy(array $criteria, array $orderBy = null);
 
     /**
      * @param FolderInterface $folder
@@ -157,13 +172,6 @@ interface DriverInterface
      * @return FileInterface[]
      */
     public function findLatestFiles($limit = 20);
-
-    /**
-     * @param string $id
-     *
-     * @return FileInterface
-     */
-    public function findLatestFileVersion($id);
 
     /**
      * @param string $query
@@ -200,10 +208,21 @@ interface DriverInterface
     public function updateFile(FileInterface $file);
 
     /**
+     * @param FileVersionInterface $fileVersion
+     */
+    public function updateFileVersion(FileVersionInterface $fileVersion);
+
+    /**
      * @param FileInterface       $file
      * @param FileSourceInterface $fileSource
      */
     public function createFile(FileInterface $file, FileSourceInterface $fileSource);
+
+    /**
+     * @param FileVersionInterface $fileVersion
+     * @param FileSourceInterface  $fileSource
+     */
+    public function createFileVersion(FileVersionInterface $fileVersion, FileSourceInterface $fileSource);
 
     /**
      * @param FileInterface       $file
