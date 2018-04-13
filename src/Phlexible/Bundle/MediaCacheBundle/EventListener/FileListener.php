@@ -15,6 +15,7 @@ use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaCache\Queue\BatchBuilder;
 use Phlexible\Component\MediaCache\Queue\BatchProcessor;
 use Phlexible\Component\MediaCache\Queue\InstructionProcessor;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\Event\FileEvent;
@@ -129,10 +130,8 @@ class FileListener implements EventSubscriberInterface
         }
 
         if ($this->immediatelyCacheSystemTemplates) {
-            $batchBuilder = new BatchBuilder();
-
-            $batchBuilder
-                ->files([$file])
+            $batchBuilder = (new BatchBuilder())
+                ->input(InputDescriptor::fromFile($file))
                 ->templates($systemTemplates);
 
             $batch = $batchBuilder->getBatch();
@@ -145,7 +144,7 @@ class FileListener implements EventSubscriberInterface
         $batchBuilder = new BatchBuilder();
 
         $batchBuilder
-            ->files([$file])
+            ->input(InputDescriptor::fromFile($file))
             ->templates($otherTemplates);
 
         $batch = $batchBuilder->getBatch();

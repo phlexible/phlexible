@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\MediaCache\CacheIdStrategy;
 
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
@@ -24,9 +24,9 @@ class DefaultCacheIdStrategy implements CacheIdStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function createCacheId(TemplateInterface $template, ExtendedFileInterface $file)
+    public function createCacheId(TemplateInterface $template, InputDescriptor $input)
     {
-        $identifiers = [$template->getKey(), $file->getId(), $file->getVersion(), $file->getHash()];
+        $identifiers = [$template->getKey(), $input->getFileId(), $input->getFileVersion(), $input->getFileHash()];
 
         return md5(implode('__', $identifiers));
     }

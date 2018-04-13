@@ -91,7 +91,7 @@ class VolumeManager
     {
         foreach ($this->volumes as $volume) {
             try {
-                $file = $volume->findFiles(array('id' => $fileId), array('version' => 'DESC'), 1);
+                $file = $volume->findFile($fileId);
                 if ($file) {
                     return $volume;
                 }

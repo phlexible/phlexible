@@ -11,8 +11,8 @@
 
 namespace Phlexible\Component\MediaExtractor;
 
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaExtractor\Extractor\ExtractorInterface;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 
 /**
@@ -45,79 +45,79 @@ class Transmutor
     /**
      * Transmute file to target format.
      *
-     * @param ExtendedFileInterface $file
-     * @param string                $targetFormat
+     * @param InputDescriptor $input
+     * @param string          $targetFormat
      *
      * @return string
      */
-    public function transmute(ExtendedFileInterface $file, $targetFormat)
+    public function transmute(InputDescriptor $input, $targetFormat)
     {
         if (!in_array($targetFormat, array('image', 'audio', 'video', 'flash', 'text'))) {
             return null;
         }
 
-        $mediaType = $this->mediaTypeManager->find($file->getMediaType());
+        $mediaType = $this->mediaTypeManager->find($input->getMediaType());
 
-        return $this->extractor->extract($file, $mediaType, $targetFormat);
+        return $this->extractor->extract($input, $mediaType, $targetFormat);
     }
 
     /**
      * Transmute file to image.
      *
-     * @param ExtendedFileInterface $file
+     * @param InputDescriptor $input
      *
      * @return string
      */
-    public function transmuteToImage(ExtendedFileInterface $file)
+    public function transmuteToImage(InputDescriptor $input)
     {
-        return $this->transmute($file, 'image');
+        return $this->transmute($input, 'image');
     }
 
     /**
      * Transmute file to audio.
      *
-     * @param ExtendedFileInterface $file
+     * @param InputDescriptor $input
      *
      * @return string
      */
-    public function transmuteToAudio(ExtendedFileInterface $file)
+    public function transmuteToAudio(InputDescriptor $input)
     {
-        return $this->transmute($file, 'audio');
+        return $this->transmute($input, 'audio');
     }
 
     /**
      * Transmute file to video.
      *
-     * @param ExtendedFileInterface $file
+     * @param InputDescriptor $input
      *
      * @return string
      */
-    public function transmuteToVideo(ExtendedFileInterface $file)
+    public function transmuteToVideo(InputDescriptor $input)
     {
-        return $this->transmute($file, 'video');
+        return $this->transmute($input, 'video');
     }
 
     /**
      * Transmute file to flash.
      *
-     * @param ExtendedFileInterface $file
+     * @param InputDescriptor $input
      *
      * @return string
      */
-    public function transmuteToFlash(ExtendedFileInterface $file)
+    public function transmuteToFlash(InputDescriptor $input)
     {
-        return $this->transmute($file, 'flash');
+        return $this->transmute($input, 'flash');
     }
 
     /**
      * Transmute file to text.
      *
-     * @param ExtendedFileInterface $file
+     * @param InputDescriptor $input
      *
      * @return string
      */
-    public function transmuteToText(ExtendedFileInterface $file)
+    public function transmuteToText(InputDescriptor $input)
     {
-        return $this->transmute($file, 'text');
+        return $this->transmute($input, 'text');
     }
 }

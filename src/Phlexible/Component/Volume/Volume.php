@@ -16,7 +16,9 @@ use Phlexible\Component\Volume\Driver\DriverInterface;
 use Phlexible\Component\Volume\Event\CopyFileEvent;
 use Phlexible\Component\Volume\Event\CopyFolderEvent;
 use Phlexible\Component\Volume\Event\CreateFileEvent;
+use Phlexible\Component\Volume\Event\CreateFileVersionEvent;
 use Phlexible\Component\Volume\Event\FileEvent;
+use Phlexible\Component\Volume\Event\FileVersionEvent;
 use Phlexible\Component\Volume\Event\FolderEvent;
 use Phlexible\Component\Volume\Event\MoveFileEvent;
 use Phlexible\Component\Volume\Event\MoveFolderEvent;
@@ -27,6 +29,7 @@ use Phlexible\Component\Volume\Exception\IOException;
 use Phlexible\Component\Volume\FileSource\FileSourceInterface;
 use Phlexible\Component\Volume\FileSource\FilesystemFileSource;
 use Phlexible\Component\Volume\Model\FileInterface;
+use Phlexible\Component\Volume\Model\FileVersionInterface;
 use Phlexible\Component\Volume\Model\FolderInterface;
 use Phlexible\Component\Volume\Model\FolderIterator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -188,9 +191,9 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function findFile($id, $version = 1)
+    public function findFile($id)
     {
-        return $this->driver->findFile($id, $version);
+        return $this->driver->findFile($id);
     }
 
     /**
@@ -212,25 +215,33 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function findFileByPath($path, $version = 1)
+    public function findFileByPath($path)
     {
-        return $this->driver->findFileByPath($path, $version);
+        return $this->driver->findFileByPath($path);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findFileVersions($id)
+    public function findFileVersions($id, array $orderBy = null, $limit = null, $start = null)
     {
-        return $this->driver->findFileVersions($id);
+        return $this->driver->findFileVersionsBy(['file' => $id], $orderBy, $limit, $start);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findLatestFileVersion($id)
+    public function findOneFileVersion($id, array $orderBy = null)
     {
-        return $this->driver->findLatestFileVersion($id);
+        return $this->driver->findFileVersionBy(['file' => $id], $orderBy);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findFileVersion($id, $version)
+    {
+        return $this->driver->findFileVersionBy(['file' => $id, 'fileVersion' => $version]);
     }
 
     /**
@@ -282,7 +293,6 @@ class Volume implements VolumeInterface, \IteratorAggregate
     {
         $hash = $this->driver->getHashCalculator()->fromFileSource($fileSource);
 
-        // prepare folder's name and id
         $fileClass = $this->driver->getFileClass();
         $file = new $fileClass();
         /* @var $file FileInterface */
@@ -290,15 +300,10 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setVolume($this)
             ->setId(UuidUtil::generate())
             ->setFolder($targetFolder)
-            ->setName($fileSource->getName())
             ->setCreatedAt(new \DateTime())
-            ->setCreateUserid($userId)
-            ->setModifiedAt($file->getCreatedAt())
-            ->setModifyUserid($file->getCreateUserId())
-            ->setMimeType($fileSource->getMimeType())
-            ->setSize($fileSource->getSize())
-            ->setHash($hash)
-            ->setAttributes($attributes);
+            ->setCreateUserId($userId);
+
+        $this->applyFile($file, 1, $fileSource->getName(), $fileSource->getMimeType(), $fileSource->getSize(), $hash, $attributes, $file->getCreateUserId(), $file->getCreatedAt());
 
         $event = new CreateFileEvent($file, $fileSource);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_CREATE_FILE, $event)->isPropagationStopped()) {
@@ -310,11 +315,27 @@ class Volume implements VolumeInterface, \IteratorAggregate
         $event = new FileEvent($file);
         $this->eventDispatcher->dispatch(VolumeEvents::CREATE_FILE, $event);
 
+        if ($this->hasFeature('versions')) {
+            $this->createFileVersion($file, $fileSource, $attributes, $userId);
+        }
+
         return $file;
     }
 
+    private function applyFile(FileInterface $file, $version, $name, $mimeType, $size, $hash, $attributes, $modifyUserId, $modifiedAt)
+    {
+        $file
+            ->setVersion($version)
+            ->setName($name)
+            ->setMimeType($mimeType)
+            ->setSize($size)
+            ->setHash($hash)
+            ->setAttributes($attributes)
+            ->setModifiedAt($modifiedAt)
+            ->setModifyUserId($modifyUserId);
+    }
+
     /**
-     * /**
      * {@inheritdoc}
      */
     public function createFileVersion(
@@ -325,49 +346,69 @@ class Volume implements VolumeInterface, \IteratorAggregate
     {
         $hash = $this->driver->getHashCalculator()->fromFileSource($fileSource);
 
-        $targetFile = $this->findLatestFileVersion($targetFile->getId());
-        if (!$targetFile) {
-            throw new IOException("File {$targetFile->getId()} not found.");
+        $highestVersion = $this->findOneFileVersion($targetFile->getId(), ['fileVersion' => 'DESC']);
+        if (!$highestVersion) {
+            $newVersion = 1;
+        } else {
+            $newVersion = $highestVersion->getVersion() + 1;
         }
 
-        // prepare folder's name and id
-        $fileClass = $this->driver->getFileClass();
-        $file = new $fileClass();
-        /* @var $file FileInterface */
-        $file
-            ->setVolume($this)
-            ->setId($targetFile->getId())
-            ->setVersion($targetFile->getVersion() + 1)
-            ->setFolder($targetFile->getFolder())
+        $fileVersionClass = $this->driver->getFileVersionClass();
+        $fileVersion = new $fileVersionClass();
+        /* @var $fileVersion FileVersionInterface */
+
+        $fileVersion
+            ->setFile($targetFile)
+            ->setFileVersion($newVersion)
             ->setName($fileSource->getName())
             ->setCreatedAt(new \DateTime())
-            ->setCreateUserid($userId)
-            ->setModifiedAt($file->getCreatedAt())
-            ->setModifyUserid($file->getCreateUserId())
+            ->setCreateUserId($userId)
+            ->setModifiedAt($fileVersion->getCreatedAt())
+            ->setModifyUserId($fileVersion->getCreateUserId())
             ->setMimeType($fileSource->getMimeType())
             ->setSize($fileSource->getSize())
             ->setHash($hash)
             ->setAttributes($attributes);
 
-        $event = new CreateFileEvent($file, $fileSource);
-        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_CREATE_FILE, $event)->isPropagationStopped()) {
-            throw new IOException("Create file {$file->getName()} #{$file->getVersion()} failed.");
-        }
-
-        $event = new CreateFileEvent($file, $fileSource);
+        $event = new CreateFileVersionEvent($fileVersion, $fileSource);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_CREATE_FILE_VERSION, $event)->isPropagationStopped()) {
-            throw new IOException("Create file version {$file->getName()} #{$file->getVersion()} failed.");
+            throw new IOException("Create file version {$fileVersion->getName()} #{$fileVersion->getVersion()} failed.");
         }
 
-        $this->driver->createFile($file, $fileSource);
+        $this->driver->createFileVersion($fileVersion, $fileSource);
 
-        $event = new FileEvent($file);
-        $this->eventDispatcher->dispatch(VolumeEvents::CREATE_FILE, $event);
-
-        $event = new FileEvent($file);
+        $event = new FileVersionEvent($fileVersion);
         $this->eventDispatcher->dispatch(VolumeEvents::CREATE_FILE_VERSION, $event);
 
-        return $file;
+        return $fileVersion;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function activateFileVersion(FileInterface $file, FileVersionInterface $fileVersion, $userId)
+    {
+        $this->applyFile(
+            $file,
+            $fileVersion->getVersion(),
+            $fileVersion->getName(),
+            $fileVersion->getMimeType(),
+            $fileVersion->getSize(),
+            $fileVersion->getHash(),
+            $fileVersion->getAttributes(),
+            $userId,
+            new \DateTime()
+        );
+
+        $event = new FileEvent($file);
+        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_ACTIVATE_FILE_VERSION, $event)->isPropagationStopped()) {
+            throw new IOException("Activation of file version {$fileVersion->getName()} #{$fileVersion->getVersion()} failed.");
+        }
+
+        $this->driver->updateFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(VolumeEvents::ACTIVATE_FILE_VERSION, $event);
     }
 
     /**
@@ -387,7 +428,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setHash($hash)
             ->setAttributes($attributes)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserid($userId);
+            ->setModifyUserId($userId);
 
         $event = new ReplaceFileEvent($file, $fileSource);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_REPLACE_FILE, $event)->isPropagationStopped()) {
@@ -571,7 +612,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
 
         $event = new FileEvent($file);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_SET_FILE_ATTRIBUTES, $event)->isPropagationStopped()) {
-            throw new IOException("Delete file {$file->getName()} cancelled.");
+            throw new IOException("Set file version attributes {$file->getName()} cancelled.");
         }
 
         $this->driver->updateFile($file);
@@ -580,6 +621,32 @@ class Volume implements VolumeInterface, \IteratorAggregate
         $this->eventDispatcher->dispatch(VolumeEvents::SET_FILE_ATTRIBUTES, $event);
 
         return $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFileVersionAttributes(FileVersionInterface $fileVersion, array $attributes, $userId)
+    {
+        $fileVersion
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId)
+            ->setAttributes($attributes);
+
+        $event = new FileVersionEvent($fileVersion);
+        if ($this->eventDispatcher->dispatch(
+            VolumeEvents::BEFORE_SET_FILE_VERSION_ATTRIBUTES,
+            $event
+        )->isPropagationStopped()) {
+            throw new IOException("Set file version attributes for {$fileVersion->getName()} cancelled.");
+        }
+
+        $this->driver->updateFileVersion($fileVersion);
+
+        $event = new FileVersionEvent($fileVersion);
+        $this->eventDispatcher->dispatch(VolumeEvents::SET_FILE_VERSION_ATTRIBUTES, $event);
+
+        return $fileVersion;
     }
 
     /**
@@ -594,7 +661,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
 
         $event = new FileEvent($file);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_SET_FILE_MIMETYPE, $event)->isPropagationStopped()) {
-            throw new IOException("Delete file {$file->getName()} cancelled.");
+            throw new IOException("Set file mime type {$file->getName()} cancelled.");
         }
 
         $this->driver->updateFile($file);
@@ -603,6 +670,29 @@ class Volume implements VolumeInterface, \IteratorAggregate
         $this->eventDispatcher->dispatch(VolumeEvents::SET_FILE_MIMETYPE, $event);
 
         return $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFileVersionMimeType(FileVersionInterface $fileVersion, $mimeType, $userId)
+    {
+        $fileVersion
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId)
+            ->setMimeType($mimeType);
+
+        $event = new FileVersionEvent($fileVersion);
+        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_SET_FILE_VERSION_MIMETYPE, $event)->isPropagationStopped()) {
+            throw new IOException("Set file version mime type {$fileVersion->getName()} cancelled.");
+        }
+
+        $this->driver->updateFileVersion($fileVersion);
+
+        $event = new FileVersionEvent($fileVersion);
+        $this->eventDispatcher->dispatch(VolumeEvents::SET_FILE_VERSION_MIMETYPE, $event);
+
+        return $fileVersion;
     }
 
     /**
@@ -630,7 +720,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setPath($folderPath)
             ->setAttributes($attributes)
             ->setCreatedAt(new \DateTime())
-            ->setCreateUserid($userId)
+            ->setCreateUserId($userId)
             ->setModifiedAt($folder->getCreatedAt())
             ->setModifyUserid($folder->getCreateUserId());
 

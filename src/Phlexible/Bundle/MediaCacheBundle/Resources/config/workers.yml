@@ -19,7 +19,6 @@ services:
             - "@phlexible_media_extractor.transmutor"
             - "@phlexible_media_cache.cache_manager"
             - "@phlexible_media_type.media_type_manager"
-            - "@phlexible_media_cache.id_strategy.default"
             - "@phlexible_media_template.applier.image"
             - "@logger"
             - "%phlexible_media_cache.temp_dir%"
@@ -32,7 +31,6 @@ services:
         public: false
         arguments:
             - "@phlexible_media_cache.cache_manager"
-            - "@phlexible_media_cache.id_strategy.default"
             - "@logger"
         tags:
             - {name: phlexible_media_cache.worker, priority: -900}

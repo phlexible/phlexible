@@ -41,16 +41,10 @@ class DownloadController extends Controller
     public function fileAction(Request $request)
     {
         $fileId = $request->get('id');
-        $fileVersion = $request->get('version', null);
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $volume = $volumeManager->getByFileId($fileId);
-
-        if ($fileVersion) {
-            $file = $volume->findFile($fileId, $fileVersion);
-        } else {
-            $file = $volume->findFile($fileId);
-        }
+        $file = $volume->findFile($fileId);
 
         $filepath = $file->getPhysicalPath();
         $filename = $file->getName();

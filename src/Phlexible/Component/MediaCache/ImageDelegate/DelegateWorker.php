@@ -207,7 +207,7 @@ class DelegateWorker
         if ($force || !$filesystem->exists($filePathClean)
                 || !filesize($filePathClean)
                 || filemtime($filePathClean) < $templateModifyTime) {
-            $this->applier->apply($template, new File(), $icon, $filePathClean);
+            $this->applier->apply($template, [], $icon, $filePathClean);
 
             if (!$filesystem->exists($filePathClean)) {
                 throw new CreateDelegateFailedException('"Clean" delegate image not created: '.$filePathClean);

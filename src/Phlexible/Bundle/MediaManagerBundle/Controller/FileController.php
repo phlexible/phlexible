@@ -274,10 +274,8 @@ class FileController extends Controller
         foreach ($fileIds as $fileId) {
             try {
                 $volume = $volumeManager->getByFileId($fileId);
-                $files = $volume->findFileVersions($fileId);
-                foreach ($files as $file) {
-                    $volume->deleteFile($file, $this->getUser()->getId());
-                }
+                $file = $volume->findFile($fileId);
+                $volume->deleteFile($file, $this->getUser()->getId());
             } catch (NotFoundException $e) {
             }
         }
@@ -302,10 +300,8 @@ class FileController extends Controller
 
         foreach ($fileIds as $fileId) {
             $volume = $volumeManager->getByFileId($fileId);
-            $files = $volume->findFileVersions($fileId);
-            foreach ($files as $file) {
-                $volume->hideFile($file, $this->getUser()->getId());
-            }
+            $file = $volume->findFile($fileId);
+            $volume->hideFile($file, $this->getUser()->getId());
         }
 
         return new ResultResponse(true, count($fileIds).' file(s) hidden.');
@@ -328,10 +324,8 @@ class FileController extends Controller
 
         foreach ($fileIds as $fileId) {
             $volume = $volumeManager->getByFileId($fileId);
-            $files = $volume->findFileVersions($fileId);
-            foreach ($files as $file) {
-                $volume->showFile($file, $this->getUser()->getId());
-            }
+            $file = $volume->findFile($fileId);
+            $volume->showFile($file, $this->getUser()->getId());
         }
 
         return new ResultResponse(true, count($fileIds).' file(s) shown.');
@@ -348,14 +342,13 @@ class FileController extends Controller
     public function propertiesAction(Request $request)
     {
         $fileId = $request->get('id');
-        $fileVersion = $request->get('version', 1);
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $userManager = $this->get('phlexible_user.user_manager');
         $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
 
         $volume = $volumeManager->getByFileId($fileId);
-        $file = $volume->findFile($fileId, $fileVersion);
+        $file = $volume->findFile($fileId);
         $folder = $volume->findFolder($file->getFolderId());
 
         $attributes = $file->getAttributes();
@@ -372,8 +365,8 @@ class FileController extends Controller
         }
 
         $properties = [];
-        $properties['id'] = $fileId;
-        $properties['version'] = $fileVersion;
+        $properties['id'] = $file->getId();
+        $properties['version'] = $file->getVersion();
         $properties['path'] = '/'.$folder->getPath();
         $properties['name'] = $file->getName();
         $properties['size'] = $file->getSize();
@@ -454,20 +447,20 @@ class FileController extends Controller
         $userManager = $this->get('phlexible_user.user_manager');
 
         $detail = [];
-        foreach ($volume->findFileVersions($id) as $file) {
-            $createUser = $userManager->find($file->getCreateUserId());
+        foreach ($volume->findFileVersions($id) as $fileVersion) {
+            $createUser = $userManager->find($fileVersion->getCreateUserId());
 
             $detail[] = [
-                'id' => $file->getId(),
-                'folder_id' => $file->getFolderId(),
-                'name' => $file->getName(),
-                'size' => $file->getSize(),
-                'version' => $file->getVersion(),
-                'document_type_key' => strtolower($file->getMediaType()),
-                'asset_type' => strtolower($file->getMediaCategory()),
-                'create_user_id' => $file->getCreateUserId(),
+                'id' => $fileVersion->getFile()->getId(),
+                'folder_id' => $fileVersion->getFile()->getFolderId(),
+                'name' => $fileVersion->getName(),
+                'size' => $fileVersion->getSize(),
+                'version' => $fileVersion->getVersion(),
+                'document_type_key' => strtolower($fileVersion->getMediaType()),
+                'asset_type' => strtolower($fileVersion->getMediaCategory()),
+                'create_user_id' => $fileVersion->getCreateUserId(),
                 'create_user' => $createUser ? $createUser->getUsername() : 'Unknown',
-                'create_time' => $file->getCreatedAt()->format('Y-m-d H:i:s'),
+                'create_time' => $fileVersion->getCreatedAt()->format('Y-m-d H:i:s'),
             ];
         }
 

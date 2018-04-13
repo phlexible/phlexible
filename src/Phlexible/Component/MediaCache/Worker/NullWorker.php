@@ -12,9 +12,7 @@
 namespace Phlexible\Component\MediaCache\Worker;
 
 use Phlexible\Component\MediaCache\Domain\CacheItem;
-use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Psr\Log\LoggerInterface;
@@ -24,17 +22,12 @@ use Psr\Log\LoggerInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class NullWorker extends AbstractWorker
+class NullWorker implements WorkerInterface
 {
     /**
      * @var CacheManagerInterface
      */
     private $cacheManager;
-
-    /**
-     * @var CacheIdStrategyInterface
-     */
-    private $cacheIdStrategy;
 
     /**
      * @var LoggerInterface
@@ -43,16 +36,13 @@ class NullWorker extends AbstractWorker
 
     /**
      * @param CacheManagerInterface    $cacheManager
-     * @param CacheIdStrategyInterface $cacheIdStrategy
      * @param LoggerInterface          $logger
      */
     public function __construct(
         CacheManagerInterface $cacheManager,
-        CacheIdStrategyInterface $cacheIdStrategy,
         LoggerInterface $logger
     ) {
         $this->cacheManager = $cacheManager;
-        $this->cacheIdStrategy = $cacheIdStrategy;
         $this->logger = $logger;
     }
 
@@ -67,7 +57,7 @@ class NullWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function accept(TemplateInterface $template, InputDescriptor $input, MediaType $mediaType)
     {
         return true;
     }
@@ -75,7 +65,7 @@ class NullWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(CacheItem $cacheItem, TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function process(CacheItem $cacheItem, TemplateInterface $template, InputDescriptor $input, MediaType $mediaType)
     {
         if ($cacheItem->getCacheStatus() !== CacheItem::STATUS_OK && $cacheItem->getCacheStatus() !== CacheItem::STATUS_DELEGATE) {
             $this->cacheManager->deleteCacheItem($cacheItem);

@@ -59,26 +59,26 @@ class InstructionProcessor
     public function processInstruction(Instruction $instruction)
     {
         $template = $instruction->getTemplate();
-        $file = $instruction->getFile();
+        $input = $instruction->getInput();
         $cacheItem = $instruction->getCacheItem();
 
-        $mediaType = $this->mediaTypeManager->find($file->getMediaType());
+        $mediaType = $this->mediaTypeManager->find($input->getMediaType());
 
-        if ($this->worker->accept($template, $file, $mediaType)) {
+        if ($this->worker->accept($template, $input, $mediaType)) {
             try {
-                $this->worker->process($cacheItem, $template, $file, $mediaType);
+                $this->worker->process($cacheItem, $template, $input, $mediaType);
             } catch (\Exception $e) {
-                $this->logger->info("Worker failed for file {$file->getId()} / mimetype {$file->getMimeType()} / template {$template->getKey()}: ".$e->getMessage());
+                $this->logger->info("Worker failed for file {$input->getFileId()} / mimetype {$input->getMimeType()} / template {$template->getKey()}: ".$e->getMessage());
 
                 return;
             }
             if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK || $cacheItem->getCacheStatus() === CacheItem::STATUS_DELEGATE) {
-                $this->logger->info("Status {$cacheItem->getQueueStatus()}/{$cacheItem->getCacheStatus()} for file {$file->getId()} / mimetype {$file->getMimeType()} / template {$template->getKey()}");
+                $this->logger->info("Status {$cacheItem->getQueueStatus()}/{$cacheItem->getCacheStatus()} for file {$input->getFileId()} / mimetype {$input->getMimeType()} / template {$template->getKey()}");
             } else {
-                $this->logger->info("Status {$cacheItem->getQueueStatus()}/{$cacheItem->getCacheStatus()} for file {$file->getId()} / mimetype {$file->getMimeType()} / template {$template->getKey()}");
+                $this->logger->info("Status {$cacheItem->getQueueStatus()}/{$cacheItem->getCacheStatus()} for file {$input->getFileId()} / mimetype {$input->getMimeType()} / template {$template->getKey()}");
             }
         } else {
-            $this->logger->warning("No worker for file {$file->getId()} / mimetype {$file->getMimeType()} / template {$template->getKey()}");
+            $this->logger->warning("No worker for file {$input->getFileId()} / mimetype {$input->getMimeType()} / template {$template->getKey()}");
         }
     }
 }

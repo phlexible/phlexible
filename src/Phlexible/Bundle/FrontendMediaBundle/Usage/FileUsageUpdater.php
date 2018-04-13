@@ -129,26 +129,18 @@ class FileUsageUpdater
         foreach ($fileLinks as $fileLink) {
             $fileParts = explode(';', $fileLink->getTarget());
             $fileId = $fileParts[0];
-            $fileVersion = 1;
-            if (isset($fileParts[1])) {
-                $fileVersion = $fileParts[1];
-            }
 
-            if (!isset($flags[$fileId][$fileVersion])) {
-                $flags[$fileId][$fileVersion] = 0;
+            if (!isset($flags[$fileId])) {
+                $flags[$fileId] = 0;
             }
         }
 
         foreach ($fileLinks as $fileLink) {
             $fileParts = explode(';', $fileLink->getTarget());
             $fileId = $fileParts[0];
-            $fileVersion = 1;
-            if (isset($fileParts[1])) {
-                $fileVersion = $fileParts[1];
-            }
 
-            if (!isset($flags[$fileId][$fileVersion])) {
-                $flags[$fileId][$fileVersion] = 0;
+            if (!isset($flags[$fileId])) {
+                $flags[$fileId] = 0;
             }
 
             $linkVersion = $fileLink->getElementVersion()->getVersion();
@@ -156,7 +148,7 @@ class FileUsageUpdater
 
             // add flag STATUS_LATEST if this link is a link to the latest element version
             if ($linkVersion === $element->getLatestVersion()) {
-                $flags[$fileId][$fileVersion] |= FileUsage::STATUS_LATEST;
+                $flags[$fileId] |= FileUsage::STATUS_LATEST;
                 $old = false;
             }
 
@@ -168,7 +160,7 @@ class FileUsageUpdater
                 }
 
                 if ($teaserOnlineVersions[$cacheId] === $linkVersion) {
-                    $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;
+                    $flags[$fileId] |= FileUsage::STATUS_ONLINE;
                     $old = false;
                     break;
                 }
@@ -182,7 +174,7 @@ class FileUsageUpdater
                 }
 
                 if ($nodeOnlineVersions[$cacheId] === $linkVersion) {
-                    $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;
+                    $flags[$fileId] |= FileUsage::STATUS_ONLINE;
                     $old = false;
                     break;
                 }
@@ -190,42 +182,40 @@ class FileUsageUpdater
 
             // add flag STATUS_OLD if this link is neither used in latest element version nor online version
             if ($old) {
-                $flags[$fileId][$fileVersion] |= FileUsage::STATUS_OLD;
+                $flags[$fileId] |= FileUsage::STATUS_OLD;
             }
         }
 
-        foreach ($flags as $fileId => $fileVersions) {
-            foreach ($fileVersions as $fileVersion => $flag) {
-                $volume = $this->volumeManager->findByFileId($fileId);
-                if (!$volume) {
+        foreach ($flags as $fileId => $flag) {
+            $volume = $this->volumeManager->findByFileId($fileId);
+            if (!$volume) {
+                continue;
+            }
+            $file = $volume->findFile($fileId);
+
+            $qb = $fileUsageRepository->createQueryBuilder('fu');
+            $qb
+                ->select('fu')
+                ->join('fu.file', 'f')
+                ->where($qb->expr()->eq('fu.usageType', $qb->expr()->literal('element')))
+                ->andWhere($qb->expr()->eq('fu.usageId', $eid))
+                ->andWhere($qb->expr()->eq('f.id', $qb->expr()->literal($file->getId())))
+                ->andWhere($qb->expr()->eq('f.version', $file->getVersion()))
+                ->setMaxResults(1);
+            $fileUsages = $qb->getQuery()->getResult();
+            if (!count($fileUsages)) {
+                if (!$flag) {
                     continue;
                 }
-                $file = $volume->findFile($fileId, $fileVersion);
+                $folderUsage = new FileUsage($file, 'element', $eid, $flag);
+                $this->entityManager->persist($folderUsage);
+            } else {
+                $fileUsage = current($fileUsages);
 
-                $qb = $fileUsageRepository->createQueryBuilder('fu');
-                $qb
-                    ->select('fu')
-                    ->join('fu.file', 'f')
-                    ->where($qb->expr()->eq('fu.usageType', $qb->expr()->literal('element')))
-                    ->andWhere($qb->expr()->eq('fu.usageId', $eid))
-                    ->andWhere($qb->expr()->eq('f.id', $qb->expr()->literal($file->getId())))
-                    ->andWhere($qb->expr()->eq('f.version', $file->getVersion()))
-                    ->setMaxResults(1);
-                $fileUsages = $qb->getQuery()->getResult();
-                if (!count($fileUsages)) {
-                    if (!$flag) {
-                        continue;
-                    }
-                    $folderUsage = new FileUsage($file, 'element', $eid, $flag);
-                    $this->entityManager->persist($folderUsage);
+                if ($flag) {
+                    $fileUsage->setStatus($flag);
                 } else {
-                    $fileUsage = current($fileUsages);
-
-                    if ($flag) {
-                        $fileUsage->setStatus($flag);
-                    } else {
-                        $this->entityManager->remove($fileUsage);
-                    }
+                    $this->entityManager->remove($fileUsage);
                 }
             }
         }

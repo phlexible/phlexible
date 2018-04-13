@@ -12,7 +12,6 @@
 namespace Phlexible\Component\Volume\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Component\Volume\VolumeInterface;
 
 /**
  * File.
@@ -21,20 +20,22 @@ use Phlexible\Component\Volume\VolumeInterface;
  *
  * @ORM\MappedSuperclass
  */
-class File implements FileInterface
+class FileVersion implements FileVersionInterface
 {
     /**
-     * @var string
+     * @var File
      * @ORM\Id
-     * @ORM\Column(type="string", length=36, options={"fixed"=true})
+     * @ORM\ManyToOne(targetEntity="File")
+     * @ORM\JoinColumn(name="file_id", referencedColumnName="id")
      */
-    protected $id;
+    protected $file;
 
     /**
      * @var int
-     * @ORM\Column(type="integer", options={"default"=1})
+     * @ORM\Id
+     * @ORM\Column(name="version", type="integer", options={"default"=1})
      */
-    protected $version = 1;
+    protected $fileVersion;
 
     /**
      * @var string
@@ -67,18 +68,6 @@ class File implements FileInterface
     protected $attributes = array();
 
     /**
-     * @var bool
-     * @ORM\Column(type="boolean")
-     */
-    protected $deleted = false;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean")
-     */
-    protected $hidden = false;
-
-    /**
      * @var string
      * @ORM\Column(name="create_user_id", type="string", length=36, options={"fixed"=true})
      */
@@ -103,88 +92,39 @@ class File implements FileInterface
     protected $modifiedAt;
 
     /**
-     * @var Folder
-     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="files")
-     * @ORM\JoinColumn(name="folder_id", referencedColumnName="id")
-     */
-    protected $folder;
-
-    /**
-     * @var VolumeInterface
-     */
-    protected $volume;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getVolume()
-    {
-        return $this->volume;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setVolume(VolumeInterface $volume)
-    {
-        $this->volume = $volume;
-        $this->volumeId = $volume->getId();
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getVersion()
     {
-        return $this->version;
+        return $this->fileVersion;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setVersion($version)
+    public function setFileVersion($fileVersion)
     {
-        $this->version = (int) $version;
+        $this->fileVersion = (int) $fileVersion;
 
         return $this;
     }
 
     /**
-     * @return Folder
+     * @return File
      */
-    public function getFolder()
+    public function getFile()
     {
-        return $this->folder;
+        return $this->file;
     }
 
     /**
-     * @param FolderInterface $folder
+     * @param FileInterface $file
      *
      * @return $this
      */
-    public function setFolder(FolderInterface $folder)
+    public function setFile(FileInterface $file)
     {
-        $this->folder = $folder;
+        $this->file = $file;
 
         return $this;
     }
@@ -192,9 +132,9 @@ class File implements FileInterface
     /**
      * {@inheritdoc}
      */
-    public function getFolderId()
+    public function getFileId()
     {
-        return $this->folder->getId();
+        return $this->file->getId();
     }
 
     /**
@@ -238,7 +178,7 @@ class File implements FileInterface
      */
     public function getPhysicalPath()
     {
-        $rootDir = rtrim($this->getVolume()->getRootDir(), '/');
+        $rootDir = rtrim($this->getFile()->getVolume()->getRootDir(), '/');
         $physicalPath = $rootDir.'/'.$this->hash;
 
         return $physicalPath;
@@ -284,24 +224,6 @@ class File implements FileInterface
     public function setHash($hash)
     {
         $this->hash = $hash;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isHidden()
-    {
-        return $this->hidden;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setHidden($hidden = true)
-    {
-        $this->hidden = (bool) $hidden;
 
         return $this;
     }

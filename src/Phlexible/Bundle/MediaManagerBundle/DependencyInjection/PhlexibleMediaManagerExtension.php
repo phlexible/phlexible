@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\DependencyInjection;
 
 use Phlexible\Bundle\MediaManagerBundle\Entity\File;
+use Phlexible\Bundle\MediaManagerBundle\Entity\FileVersion;
 use Phlexible\Bundle\MediaManagerBundle\Entity\Folder;
 use Phlexible\Component\MediaManager\Volume\ExtendedVolume;
 use Phlexible\Component\Volume\Driver\DoctrineDriver;
@@ -57,6 +58,7 @@ class PhlexibleMediaManagerExtension extends Extension
                     new Reference("phlexible_media_manager.hash_calculator"),
                     Folder::class,
                     File::class,
+                    FileVersion::class,
                     $volumeConfig['features'],
                 ]);
                 $driverId = 'phlexible_media_manager.driver.'.strtolower($name);

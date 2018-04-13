@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaCache\Queue;
 use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Psr\Log\LoggerInterface;
 
@@ -55,19 +55,19 @@ class InstructionCreator
     /**
      * Resolve batch to queue items.
      *
-     * @param ExtendedFileInterface $file
-     * @param TemplateInterface     $template
-     * @param array                 $flags
+     * @param InputDescriptor   $input
+     * @param TemplateInterface $template
+     * @param array             $flags
      *
      * @return Instruction|null
      */
-    public function createInstruction(ExtendedFileInterface $file, TemplateInterface $template, array $flags = [])
+    public function createInstruction(InputDescriptor $input, TemplateInterface $template, array $flags = [])
     {
         if (!$template->getManaged()) {
             return null;
         }
 
-        $cacheItem = $this->cacheManager->findByTemplateAndFile($template->getKey(), $file->getId(), $file->getVersion());
+        $cacheItem = $this->cacheManager->findByTemplateAndFile($template->getKey(), $input->getFileId(), $input->getFileVersion());
 
         if (in_array(Batch::FILTER_ERROR, $flags) && $cacheItem && !$this->isError($cacheItem)) {
             $this->logger->info('Skipping non-error item');
@@ -90,10 +90,10 @@ class InstructionCreator
         if (!$cacheItem) {
             $cacheItem = new CacheItem();
             $cacheItem
-                ->setId($this->cacheIdStrategy->createCacheId($template, $file))
-                ->setVolumeId($file->getVolume()->getId())
-                ->setFileId($file->getId())
-                ->setFileVersion($file->getVersion())
+                ->setId($this->cacheIdStrategy->createCacheId($template, $input))
+                ->setVolumeId($input->getVolumeId())
+                ->setFileId($input->getFileId())
+                ->setFileVersion($input->getFileVersion())
                 ->setTemplateKey($template->getKey())
                 ->setTemplateRevision($template->getRevision())
                 ->setCacheStatus(CacheItem::STATUS_WAITING)
@@ -104,7 +104,7 @@ class InstructionCreator
         $cacheItem
             ->setQueuedAt(new \DateTime());
 
-        return new Instruction($file, $template, $cacheItem);
+        return new Instruction($input, $template, $cacheItem);
     }
 
     /**

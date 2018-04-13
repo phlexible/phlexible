@@ -90,13 +90,13 @@ class ImageTemplateApplier
 
     /**
      * @param ImageTemplate $template
-     * @param FileInterface $file
+     * @param array         $attributes
      * @param string        $filename
      * @param string        $outFilename
      *
      * @return ImageInterface
      */
-    public function apply(ImageTemplate $template, FileInterface $file, $filename, $outFilename)
+    public function apply(ImageTemplate $template, array $attributes, $filename, $outFilename)
     {
         $image = $this->imagine->open($filename);
 
@@ -208,7 +208,7 @@ class ImageTemplateApplier
                     $image->resize($imageSize);
                 }
 
-                if (($focalPoint = $file->getAttribute('focalpoint')) && !empty($focalPoint['active'])) {
+                if (!empty($attributes['focalpoint']) && ($focalPoint = $attributes['focalpoint']) && !empty($focalPoint['active'])) {
                     $focalPoint = new Point($focalPoint['x'], $focalPoint['y']);
 
                     $cropX = floor($focalPoint->getX() * $ratio - $templateSize->getWidth() / 2);

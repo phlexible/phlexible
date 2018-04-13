@@ -278,7 +278,7 @@ class UploadController extends Controller
         $outFilename = $this->container->getParameter('phlexible_media_manager.temp_dir').'preview.png';
         $mimeType = 'image/png';
         try {
-            $imageApplier->apply($template, new File(), $tempFile->getPath(), $outFilename);
+            $imageApplier->apply($template, [], $tempFile->getPath(), $outFilename);
         } catch (\Exception $e) {
             $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
             $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');

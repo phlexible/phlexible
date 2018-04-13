@@ -11,7 +11,6 @@
 
 namespace Phlexible\Component\Volume\Driver;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Phlexible\Component\Volume\Exception\AlreadyExistsException;
@@ -22,6 +21,7 @@ use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 use Phlexible\Component\Volume\FileSource\StreamSourceInterface;
 use Phlexible\Component\Volume\HashCalculator\HashCalculatorInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
+use Phlexible\Component\Volume\Model\FileVersionInterface;
 use Phlexible\Component\Volume\Model\FolderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -53,31 +53,31 @@ class DoctrineDriver extends AbstractDriver
     private $fileClass;
 
     /**
+     * @var string
+     */
+    private $fileVersionClass;
+
+    /**
      * @var array
      */
     private $features;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
 
     /**
      * @param EntityManager           $entityManager
      * @param HashCalculatorInterface $hashCalculator
      * @param string                  $folderClass
      * @param string                  $fileClass
+     * @param string                  $fileVersionClass
      * @param array                   $features
      */
-    public function __construct(EntityManager $entityManager, HashCalculatorInterface $hashCalculator, $folderClass, $fileClass, array $features = [])
+    public function __construct(EntityManager $entityManager, HashCalculatorInterface $hashCalculator, $folderClass, $fileClass, $fileVersionClass, array $features = [])
     {
         $this->entityManager = $entityManager;
         $this->hashCalculator = $hashCalculator;
         $this->folderClass = $folderClass;
         $this->fileClass = $fileClass;
+        $this->fileVersionClass = $fileVersionClass;
         $this->features = $features;
-
-        $this->connection = $entityManager->getConnection();
     }
 
     /**
@@ -99,6 +99,14 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @return EntityRepository
      */
+    private function getFileVersionRepository()
+    {
+        return $this->entityManager->getRepository($this->fileVersionClass);
+    }
+
+    /**
+     * @return EntityRepository
+     */
     private function getFolderRepository()
     {
         return $this->entityManager->getRepository($this->folderClass);
@@ -110,6 +118,14 @@ class DoctrineDriver extends AbstractDriver
     public function getFileClass()
     {
         return $this->fileClass;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileVersionClass()
+    {
+        return $this->fileVersionClass;
     }
 
     /**
@@ -243,14 +259,9 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
-    public function findFile($id, $version = 1)
+    public function findFile($id)
     {
-        $file = $this->getFileRepository()->findOneBy(
-            [
-                'id' => $id,
-                'version' => $version,
-            ]
-        );
+        $file = $this->getFileRepository()->find($id);
 
         if ($file) {
             $file->setVolume($this->getVolume());
@@ -381,7 +392,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
-    public function findFileByPath($path, $version = 1)
+    public function findFileByPath($path)
     {
         $name = basename($path);
         $folderPath = trim(dirname($path), '/');
@@ -405,20 +416,31 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
-    public function findFileVersions($id)
+    public function findFileVersionsBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        $files = $this->getFileRepository()->findBy(
-            [
-                'id' => $id,
-            ]
-        );
+        $fileVersions = $this->getFileVersionRepository()->findBy($criteria, $orderBy, $limit, $offset);
 
-        foreach ($files as $file) {
-            /* @var $file FileInterface */
-            $file->setVolume($this->getVolume());
+        foreach ($fileVersions as $fileVersion) {
+            /* @var $fileVersion FileVersionInterface */
+            $fileVersion->getFile()->setVolume($this->getVolume());
         }
 
-        return $files;
+        return $fileVersions;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findFileVersionBy(array $criteria, array $orderBy = null)
+    {
+        /* @var $fileVersion FileVersionInterface */
+        $fileVersion = $this->getFileVersionRepository()->findOneBy($criteria, $orderBy);
+
+        if ($fileVersion) {
+            $fileVersion->getFile()->setVolume($this->getVolume());
+        }
+
+        return $fileVersion;
     }
 
     /**
@@ -485,21 +507,6 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
-    public function findLatestFileVersion($id)
-    {
-        $file = $this->getFileRepository()->findOneBy(['id' => $id], ['version' => 'DESC']);
-
-        if ($file) {
-            /* @var $file FileInterface */
-            $file->setVolume($this->getVolume());
-        }
-
-        return $file;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function search($query)
     {
         $qb = $this->getFileRepository()->createQueryBuilder('fi');
@@ -522,6 +529,15 @@ class DoctrineDriver extends AbstractDriver
     {
         $this->entityManager->persist($file);
         $this->entityManager->flush($file);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function updateFileVersion(FileVersionInterface $fileVersion)
+    {
+        $this->entityManager->persist($fileVersion);
+        $this->entityManager->flush($fileVersion);
     }
 
     /**
@@ -550,15 +566,36 @@ class DoctrineDriver extends AbstractDriver
             }
         }
 
-        try {
-            $this->updateFile($file);
-        } catch (\Exception $e) {
-            if (is_file($path)) {
-                $filesystem->remove($path);
-            }
+        $this->updateFile($file);
+    }
 
-            throw $e;
+    /**
+     * {@inheritdoc}
+     */
+    public function createFileVersion(FileVersionInterface $fileVersion, FileSourceInterface $fileSource)
+    {
+        $path = $fileVersion->getPhysicalPath();
+        $filesystem = new Filesystem();
+
+        if (!file_exists($path)) {
+            if ($fileSource instanceof StreamSourceInterface) {
+                $stream = $fileSource->getStream();
+                rewind($stream);
+                $fd = fopen($path, 'w+');
+                stream_copy_to_stream($stream, $fd);
+                fclose($fd);
+                fclose($stream);
+                $fileVersion->setMimeType($fileSource->getMimeType());
+            } elseif ($fileSource instanceof PathSourceInterface) {
+                $filesystem->copy($fileSource->getPath(), $path);
+                $fileVersion->setMimeType($fileSource->getMimeType());
+            } else {
+                $filesystem->touch($path);
+                $fileVersion->setMimeType($fileSource->getMimeType());
+            }
         }
+
+        $this->updateFileVersion($fileVersion);
     }
 
     /**
@@ -587,15 +624,7 @@ class DoctrineDriver extends AbstractDriver
             }
         }
 
-        try {
-            $this->updateFile($file);
-        } catch (\Exception $e) {
-            if (is_file($path)) {
-                $filesystem->remove($path);
-            }
-
-            throw $e;
-        }
+        $this->updateFile($file);
     }
 
     /**
