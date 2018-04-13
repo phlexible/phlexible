@@ -37,6 +37,7 @@ abstract class AbstractWorker implements WorkerInterface
      * @param string                $inputFilename
      * @param TemplateInterface     $template
      * @param ExtendedFileInterface $file
+     * @param string                $logSeverity
      */
     protected function applyError(
         CacheItem $cacheItem,
@@ -44,22 +45,26 @@ abstract class AbstractWorker implements WorkerInterface
         $message,
         $inputFilename,
         TemplateInterface $template,
-        ExtendedFileInterface $file)
-    {
+        ExtendedFileInterface $file,
+        $logSeverity = 'error'
+    ) {
         $cacheItem
             ->setCacheStatus($status)
             ->setError($message);
 
-        $this->getLogger()->error($message, array(
-            'worker' => get_class($this),
-            'templateType' => $template->getType(),
-            'templateKey' => $template->getKey(),
-            'fileName' => $file->getName(),
-            'filePath' => $inputFilename,
-            'fileId' => $file->getId(),
-            'fileVersion' => $file->getVersion(),
-            'fileMimeType' => $file->getMimeType(),
-            'fileMediaType' => $file->getMediaType(),
-        ));
+        $logger = $this->getLogger();
+        if (method_exists($logSeverity, $logger)) {
+            $logger->$logSeverity($message, array(
+                'worker' => get_class($this),
+                'templateType' => $template->getType(),
+                'templateKey' => $template->getKey(),
+                'fileName' => $file->getName(),
+                'filePath' => $inputFilename,
+                'fileId' => $file->getId(),
+                'fileVersion' => $file->getVersion(),
+                'fileMimeType' => $file->getMimeType(),
+                'fileMediaType' => $file->getMediaType(),
+            ));
+        }
     }
 }

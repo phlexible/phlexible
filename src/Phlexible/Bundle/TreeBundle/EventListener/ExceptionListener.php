@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\EventListener;
 
 use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
+use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
@@ -47,6 +48,11 @@ class ExceptionListener
     private $treeManager;
 
     /**
+     * @var SiterootRequestMatcher
+     */
+    private $siterootRequestMatcher;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -60,6 +66,7 @@ class ExceptionListener
      * @param \Twig_Environment           $twig
      * @param ConfiguratorInterface       $configurator
      * @param ContentTreeManagerInterface $treeManager
+     * @param SiterootRequestMatcher      $siterootRequestMatcher
      * @param LoggerInterface             $logger
      * @param bool                        $debug
      */
@@ -67,12 +74,14 @@ class ExceptionListener
         \Twig_Environment $twig,
         ConfiguratorInterface $configurator,
         ContentTreeManagerInterface $treeManager,
+        SiterootRequestMatcher $siterootRequestMatcher,
         LoggerInterface $logger = null,
         $debug = false)
     {
         $this->twig = $twig;
         $this->configurator = $configurator;
         $this->treeManager = $treeManager;
+        $this->siterootRequestMatcher = $siterootRequestMatcher;
         $this->logger = $logger;
         $this->debug = $debug;
     }
@@ -109,7 +118,11 @@ class ExceptionListener
 
         // Only for phlexible tree nodes
         if (!$request->attributes->has('siterootUrl')) {
-            return;
+            $siteroot = $this->siterootRequestMatcher->matchRequest($request);
+            if (!$siteroot) {
+                return;
+            }
+            $request->attributes->set('siterootUrl', $siteroot->getDefaultUrl());
         }
 
         $exception = $event->getException();
@@ -129,7 +142,6 @@ class ExceptionListener
             $template = '::error/error.html.twig';
         }
 
-        $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
         $tid = $siteroot->getSpecialTid($request->getLocale(), "error_$code");
 
         if (!$tid) {

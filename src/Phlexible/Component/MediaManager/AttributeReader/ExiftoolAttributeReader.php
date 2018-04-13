@@ -60,7 +60,7 @@ class ExiftoolAttributeReader implements AttributeReaderInterface
     {
         $filename = $fileSource->getPath();
 
-        $metadatas = $this->reader->files($filename)->first();
+        $metadatas = $this->reader->reset()->files($filename)->first();
         foreach ($metadatas as $metadata) {
             /* @var $metadata Metadata */
 

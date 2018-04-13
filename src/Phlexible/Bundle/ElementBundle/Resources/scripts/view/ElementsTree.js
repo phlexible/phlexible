@@ -163,6 +163,7 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
                 load: function (loader, node) {
                     if (this.element.startParams.start_tid_path) {
                         this.selectPath(this.element.startParams.start_tid_path, 'id', function (success, node) {
+                            delete this.element.startParams.start_tid_path;
                             if (success) this.fireEvent('nodeSelect', node, true);
                         }.createDelegate(this));
                     }

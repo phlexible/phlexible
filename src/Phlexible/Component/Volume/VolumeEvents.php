@@ -59,6 +59,16 @@ class VolumeEvents
     const CREATE_FILE = 'volume.create_file';
 
     /**
+     * Called before a file version is created.
+     */
+    const BEFORE_CREATE_FILE_VERSION = 'volume.before_create_file_version';
+
+    /**
+     * Called after a file version has been created.
+     */
+    const CREATE_FILE_VERSION = 'volume.create_file_version';
+
+    /**
      * Called before a file is replaced.
      */
     const BEFORE_REPLACE_FILE = 'volume.before_replace_file';

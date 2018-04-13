@@ -25,7 +25,7 @@ class TempHandler
     const ACTION_REPLACE = 'replace';
     const ACTION_KEEP_BOTH = 'keep';
     const ACTION_DISCARD = 'discard';
-    const ACTION_VERSION = 'version';
+    const ACTION_SAVE_VERSION = 'save_version';
 
     /**
      * @var TempStorage
@@ -109,8 +109,10 @@ class TempHandler
                 $file = $volume->createFile($folder, $tempFile, array(), $tempFile->getUserId());
                 break;
 
-            case self::ACTION_VERSION:
-                throw new \LogicException('fix me');
+            case self::ACTION_SAVE_VERSION:
+                $file = $volume->findFile($tempFile->getFileId());
+                $volume->createFileVersion($file, $tempFile, array(), $tempFile->getUserId());
+
                 /*
                 try {
                     $fileId = $tempFile['original_id'];

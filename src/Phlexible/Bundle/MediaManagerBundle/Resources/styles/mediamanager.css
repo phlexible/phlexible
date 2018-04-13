@@ -154,7 +154,7 @@
     background-color:transparent !important;
 }
 .p-mediamanager-files-grid .x-panel-header {
-    xbackground:transparent url(img/bg-panel-header.gif) repeat-x scroll 0pt;
+    xbackground:transparent url(img/bg-panel-header.gif) repeat-x scroll 0;
 }
 */
 
@@ -162,7 +162,7 @@
 .p-mediamanager-files-grid .x-grid-group {
     border: medium none;
     clear: both;
-    margin: 0pt;
+    margin: 0;
     padding-top: 4px;
     width: auto !important;
 }
@@ -207,7 +207,7 @@
 }
 
 .p-mediamanager-box-default .p-icon-area table td {
-    padding: 0pt !important;
+    padding: 0 !important;
     text-align: center !important;
     vertical-align: bottom;
 }
@@ -250,27 +250,30 @@
 .p-mediamanager-extralarge-box {
     width: 270px;
     height: 278px;
+    background-color: transparent;
 }
 
 .p-mediamanager-extralarge-thumbs {
     width: 270px;
     height: 278px;
     margin-bottom: 30px;
-    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-extralarge-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    background-color: transparent;
+    background-image: none;
+    background-repeat: no-repeat;
+    background-position: 0 0;
 }
 
 .x-grid3-row-over .p-mediamanager-extralarge-thumbs {
-    background-position: 0pt 0px;
+    background-image: url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-extralarge-thumbnail.gif);
+    background-position: 0 0;
 }
 
 .x-grid3-row-selected .p-mediamanager-extralarge-thumbs {
-    background-position: 0pt -278px;
+    background-image: url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-extralarge-thumbnail.gif);
+    background-position: 0 -278px;
 }
 
 .p-mediamanager-extralarge-thumbs .p-icon-area {
-    background-color: transparent;
-    background-position: 50%;
-    background-repeat: no-repeat;
     height: 260px;
 }
 
@@ -285,19 +288,7 @@
 }
 
 .ext-ie .p-mediamanager-extralarge-thumbs .p-text-area {
-    margin-top: 0pt;
-}
-
-.p-mediamanager-extralarge-thumbs .p-icon-area {
-    background-position: 0pt;
-}
-
-.x-grid3-row-over .p-mediamanager-extralarge-thumbs .p-icon-area {
-    background-position: 0pt -278px;
-}
-
-.x-grid3-row-selected .p-mediamanager-extralarge-thumbs .p-icon-area {
-    background-position: 0pt -556px;
+    margin-top: 0;
 }
 
 /*
@@ -313,21 +304,23 @@
     width: 114px;
     height: 118px;
     margin-bottom: 30px;
-    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-large-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    background-color: transparent;
+    background-image: none;
+    background-repeat: no-repeat;
+    background-position: 0 -3000px;
 }
 
 .x-grid3-row-over .p-mediamanager-large-thumbs {
-    background-position: 0pt 0px;
+    background-image: url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-large-thumbnail.gif);
+    background-position: 0 0;
 }
 
 .x-grid3-row-selected .p-mediamanager-large-thumbs {
-    background-position: 0pt -118px;
+    background-image: url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-large-thumbnail.gif);
+    background-position: 0 -118px;
 }
 
 .p-mediamanager-large-thumbs .p-icon-area {
-    background-color: transparent;
-    background-position: 50%;
-    background-repeat: no-repeat;
     height: 99px;
 }
 
@@ -339,18 +332,6 @@
     overflow: hidden;
     text-align: center;
     width: 108px;
-}
-
-.p-mediamanager-large-thumbs .p-icon-area {
-    background-position: 0pt;
-}
-
-.x-grid3-row-over .p-mediamanager-large-thumbs .p-icon-area {
-    background-position: 0pt -118px;
-}
-
-.x-grid3-row-selected .p-mediamanager-large-thumbs .p-icon-area {
-    background-position: 0pt -236px;
 }
 
 /*
@@ -366,23 +347,24 @@
     width: 114px;
     height: 70px;
     margin-bottom: 30px;
-    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-medium-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    background-color: transparent;
+    background-image: none;
+    background-repeat: no-repeat;
+    background-position: 0 -3000px;
 }
 
 .x-grid3-row-over .p-mediamanager-medium-thumbs {
-    background-position: 0pt 0px;
+    background-image: url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-medium-thumbnail.gif);
+    background-position: 0 0;
 }
 
 .x-grid3-row-selected .p-mediamanager-medium-thumbs {
-    background-position: 0pt -70px;
+    background-image: url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-medium-thumbnail.gif);
+    background-position: 0 -70px;
 }
 
 .p-mediamanager-medium-thumbs .p-icon-area {
-    background-color: transparent;
-    background-position: 50%;
-    background-repeat: no-repeat;
     height: 50px;
-    background-position: 0pt;
 }
 
 .p-mediamanager-medium-thumbs .p-icon-area table td {
@@ -393,14 +375,6 @@
     overflow: hidden;
     text-align: center;
     width: 108px;
-}
-
-.x-grid3-row-over .p-mediamanager-medium-thumbs .p-icon-area {
-    background-position: 0pt -70px;
-}
-
-.x-grid3-row-selected .p-mediamanager-medium-thumbs .p-icon-area {
-    background-position: 0pt -140px;
 }
 
 /*
@@ -415,21 +389,23 @@
 .p-mediamanager-small-thumbs {
     width: 243px;
     height: 19px;
-    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-small-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    background-color: transparent;
+    background-image: none;
+    background-repeat: no-repeat;
+    background-position: 0 0;
 }
 
 .x-grid3-row-over .p-mediamanager-small-thumbs {
-    background-position: 0pt 0px;
+    background-image: url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-small-thumbnail.gif);
+    background-position: 0 0;
 }
 
 .x-grid3-row-selected .p-mediamanager-small-thumbs {
-    background-position: 0pt -19px;
+    background-image: url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-small-thumbnail.gif);
+    background-position: 0 -19px;
 }
 
 .p-mediamanager-small-thumbs .p-icon-area {
-    background-color: transparent;
-    background-position: 50%;
-    background-repeat: no-repeat;
     float: left;
     height: 19px;
     width: 22px;
@@ -441,8 +417,8 @@
 
 .p-mediamanager-small-thumbs .p-icon-area img {
     border: medium none;
-    margin: 0pt;
-    padding: 0pt;
+    margin: 0;
+    padding: 0;
 }
 
 .p-mediamanager-small-thumbs .p-icon-area table td {
@@ -471,30 +447,32 @@
 }
 
 .x-grid3-row .p-mediamanager-tile-thumbs {
-    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-tile-thumbnail.gif) no-repeat scroll 0pt -3000px;
     height: 52px;
     width: 219px;
+    background-color: transparent;
+    background-image: none;
+    background-repeat: no-repeat;
+    background-position: 0 0;
 }
 
 .x-grid3-row-over .p-mediamanager-tile-thumbs {
-    background-position: 0pt 0px;
+    background-image: url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-tile-thumbnail.gif);
+    background-position: 0 0;
 }
 
 .x-grid3-row-selected .p-mediamanager-tile-thumbs {
-    background-position: 0pt -52px;
+    background-image: url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-tile-thumbnail.gif);
+    background-position: 0 -52px;
 }
 
 .p-mediamanager-tile-thumbs .p-icon-area {
-    background-color: transparent;
-    background-position: 3px 50%;
-    background-repeat: no-repeat;
     float: left;
     height: 50px;
     width: 55px;
 }
 
 .p-mediamanager-tile-thumbs .p-icon-area img {
-    padding: 0pt;
+    padding: 0;
 }
 
 .p-mediamanager-tile-thumbs .p-icon-area table td {
@@ -518,78 +496,6 @@
 .p-mediamanager-tile-thumbs .p-text-area .p-fileSize {
     color: #8B8B8B;
 }
-
-.p-mediamanager-tile-thumbs .p-icon-area {
-    background-position: 0pt;
-}
-
-.x-grid3-row-over .p-mediamanager-tile-thumbs .p-icon-area {
-    background-position: 0pt -50px;
-}
-
-.x-grid3-row-selected .p-mediamanager-tile-thumbs .p-icon-area {
-    background-position: 0pt -100px;
-}
-
-/*
- * Timeline Thumbnails
- */
-
-.p-mediamanager-timeline-box {
-    background: transparent none repeat scroll 0% !important;
-    /*border:medium none;*/
-    margin: 5px;
-    overflow: hidden;
-    /*width:auto !important;*/
-    width: 610px;
-    height: 118px;
-}
-
-.p-mediamanager-timeline-thumbs {
-    width: 610px;
-    height: 118px;
-    margin-bottom: 30px;
-    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/bg-timeline-thumbnail.gif) no-repeat scroll 0pt -3000px;
-}
-
-.x-grid3-row-over .p-mediamanager-timeline-thumbs {
-    background-position: 0pt 0px;
-}
-
-.x-grid3-row-selected .p-mediamanager-timeline-thumbs {
-    background-position: 0pt -118px;
-}
-
-.p-mediamanager-timeline-thumbs .p-icon-area {
-    background-color: transparent;
-    background-position: 50%;
-    background-repeat: no-repeat;
-    height: 96px;
-    background-position: 0pt;
-    padding: 2px 5px 0 5px;
-}
-
-.p-mediamanager-timeline-thumbs .p-icon-area table td {
-    height: 96px;
-}
-
-.p-mediamanager-timeline-thumbs .p-text-area {
-    overflow: hidden;
-    /*text-align:center;*/
-    width: 610px;
-    padding: 2px 5px 2px 5px;
-}
-
-.p-mediamanager-timeline-thumbs .p-text-area span {
-    color: #8B8B8B;
-}
-
-/*.x-grid3-row-over .p-mediamanager-timeline-thumbs .p-icon-area {
-    xbackground-position:0pt -70px;
-}
-.x-grid3-row-selected .p-mediamanager-timeline-thumbs .p-icon-area {
-    xbackground-position:0pt -140px;
-}*/
 
 .x-dd-drag-proxy .p-dragsingleThumbnails .thumb {
     width: 86px;

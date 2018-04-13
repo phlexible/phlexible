@@ -103,7 +103,7 @@ Phlexible.elements.PublishSlaveWindow = Ext.extend(Ext.Window, {
 
                     Ext.each(targets, function (target) {
                         Ext.Ajax.request({
-                            url: Phlexible.Router.generate('elements_publish_publish'),
+                            url: Phlexible.Router.generate('elements_publish'),
                             params: target,
                             success: function (response) {
                                 var result = Ext.decode(response.responseText);

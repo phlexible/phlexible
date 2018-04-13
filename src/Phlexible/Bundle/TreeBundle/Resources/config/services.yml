@@ -104,6 +104,7 @@ services:
             - "@twig"
             - "@phlexible_element_renderer.configurator"
             - "@phlexible_tree.content_tree_manager"
+            - "@phlexible_siteroot.siteroot_request_matcher"
             - "@logger"
             - "%kernel.debug%"
         tags:

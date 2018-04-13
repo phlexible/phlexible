@@ -9,24 +9,73 @@ Phlexible.FileUploadWizardMeta = Ext.extend(Phlexible.mediamanager.Meta, {
         return Phlexible.mediamanager.Rights.FILE_MODIFY;
     },
 
+    setParsed: function(parsed) {
+        this.parsed = parsed;
+
+        var list = [];
+        Ext.each(this.parsed, function(set) {
+            list.push({id: set.set_id, name: set.title});
+        });
+        this.list = list;
+
+        idMap = {};
+        Ext.each(this.parsed, function(set) {
+            idMap[set.set_id] = set;
+        });
+        this.idMap = idMap;
+    },
+
     initUrls: function () {
         this.urls = {
             load: function(params, callback, scope) {
-                callback.call(scope, params);
-            },
+                this.applyLoad(params);
+            }.createDelegate(this),
+
+            update: function(params) {
+                var setIds = [], list = [], meta = [], fetch = [];
+                Ext.each(params, function(data) {
+                    setIds.push(data.id);
+                    list.push({id: data.id, name: data.name});
+                });
+                this.list = list;
+                Ext.each(setIds, function(id) {
+                    if (this.idMap[id]) {
+                        meta.push(this.idMap[id])
+                    } else {
+                        fetch.push(id);
+                    }
+                }, this);
+                if (fetch.length) {
+                    Ext.Ajax.request({
+                        url: Phlexible.Router.generate('mediamanager_upload_set', {ids: fetch.join(',')}),
+                        success: function(response) {
+                            var data = Ext.decode(response.responseText);
+                            Ext.each(data, function(set) {
+                                meta.push(set);
+                            });
+                            this.applyLoad({meta: meta});
+                        },
+                        scope: this
+                    })
+                } else {
+                    this.applyLoad({meta: meta});
+                }
+            }.createDelegate(this),
+
             save: function() {
 
-            }
+            }.createDelegate(this)
         };
 
         this.metasetUrls = {
             list: function() {
-                debugger;
-                return [];
-            },
+                return this.list;
+            }.createDelegate(this),
+
             save: function(values) {
                 Phlexible.console.log(values);
-            },
+            }.createDelegate(this),
+
             available: Phlexible.Router.generate('metasets_sets_list')
         };
     },
@@ -364,14 +413,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         this.getFileView().getStore().loadData(data);
 
         if (file.get('new_metasets')) {
-            var list = [];
-            Ext.each(file.get('new_metasets'), function(set) {
-                list.push({id: set.id, title: set.name});
-            });
-
-            this.getMetaGrid().metasetUrls.list = function() {
-                return list;
-            };
+            this.getMetaGrid().setParsed(file.get('new_metasets'));
             this.getMetaGrid().loadMeta({
                 meta: file.get('new_metasets')
             });

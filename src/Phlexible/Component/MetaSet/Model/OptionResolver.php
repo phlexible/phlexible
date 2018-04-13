@@ -11,6 +11,8 @@
 
 namespace Phlexible\Component\MetaSet\Model;
 
+use Symfony\Component\Translation\TranslatorInterface;
+
 /**
  * Option resolver.
  *
@@ -18,6 +20,27 @@ namespace Phlexible\Component\MetaSet\Model;
  */
 class OptionResolver
 {
+    private $translator;
+    private $languages;
+    private $domain;
+    private $useTitlePrefix;
+
+    /**
+     * OptionResolver constructor.
+     *
+     * @param TranslatorInterface $translator
+     * @param string              $languages
+     * @param string              $domain
+     * @param bool                $useTitlePrefix
+     */
+    public function __construct(TranslatorInterface $translator, $languages, $domain = 'meta', $useTitlePrefix = false)
+    {
+        $this->translator = $translator;
+        $this->languages = explode(',', $languages);
+        $this->domain = $domain;
+        $this->useTitlePrefix = $useTitlePrefix;
+    }
+
     /**
      * @param MetaSetField $field
      *
@@ -30,7 +53,18 @@ class OptionResolver
         if ($type === 'select') {
             $options = [];
             foreach (explode(',', $field->getOptions()) as $value) {
-                $options[] = [$value, $value];
+                $option = [$value];
+
+                $translationIdentifier = $value;
+                if ($this->useTitlePrefix) {
+                    $translationIdentifier = $field->getMetaSet()->getName().'.'.$translationIdentifier;
+                }
+
+                foreach ($this->languages as $language) {
+                    $option[] = $this->translator->trans($translationIdentifier, [], $this->domain, $language);
+                }
+
+                $options[] = $option;
             }
 
             return $options;

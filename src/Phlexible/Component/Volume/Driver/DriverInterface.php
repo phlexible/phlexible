@@ -159,6 +159,13 @@ interface DriverInterface
     public function findLatestFiles($limit = 20);
 
     /**
+     * @param string $id
+     *
+     * @return FileInterface
+     */
+    public function findLatestFileVersion($id);
+
+    /**
      * @param string $query
      *
      * @return FileInterface[]

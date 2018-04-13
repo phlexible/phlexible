@@ -228,6 +228,14 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    public function findLatestFileVersion($id)
+    {
+        return $this->driver->findLatestFileVersion($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findFilesByFolder(
         FolderInterface $folder,
         $order = null,
@@ -301,6 +309,63 @@ class Volume implements VolumeInterface, \IteratorAggregate
 
         $event = new FileEvent($file);
         $this->eventDispatcher->dispatch(VolumeEvents::CREATE_FILE, $event);
+
+        return $file;
+    }
+
+    /**
+     * /**
+     * {@inheritdoc}
+     */
+    public function createFileVersion(
+        FileInterface $targetFile,
+        FileSourceInterface $fileSource,
+        array $attributes,
+        $userId)
+    {
+        $hash = $this->driver->getHashCalculator()->fromFileSource($fileSource);
+
+        $targetFile = $this->findLatestFileVersion($targetFile->getId());
+        if (!$targetFile) {
+            throw new IOException("File {$targetFile->getId()} not found.");
+        }
+
+        // prepare folder's name and id
+        $fileClass = $this->driver->getFileClass();
+        $file = new $fileClass();
+        /* @var $file FileInterface */
+        $file
+            ->setVolume($this)
+            ->setId($targetFile->getId())
+            ->setVersion($targetFile->getVersion() + 1)
+            ->setFolder($targetFile->getFolder())
+            ->setName($fileSource->getName())
+            ->setCreatedAt(new \DateTime())
+            ->setCreateUserid($userId)
+            ->setModifiedAt($file->getCreatedAt())
+            ->setModifyUserid($file->getCreateUserId())
+            ->setMimeType($fileSource->getMimeType())
+            ->setSize($fileSource->getSize())
+            ->setHash($hash)
+            ->setAttributes($attributes);
+
+        $event = new CreateFileEvent($file, $fileSource);
+        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_CREATE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Create file {$file->getName()} #{$file->getVersion()} failed.");
+        }
+
+        $event = new CreateFileEvent($file, $fileSource);
+        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_CREATE_FILE_VERSION, $event)->isPropagationStopped()) {
+            throw new IOException("Create file version {$file->getName()} #{$file->getVersion()} failed.");
+        }
+
+        $this->driver->createFile($file, $fileSource);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(VolumeEvents::CREATE_FILE, $event);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(VolumeEvents::CREATE_FILE_VERSION, $event);
 
         return $file;
     }

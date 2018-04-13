@@ -74,7 +74,7 @@ Phlexible.elements.tab.Cache = Ext.extend(Ext.form.FormPanel, {
 
     onInternalSave: function (parameters, errors) {
         if (!this.getForm().isValid()) {
-            errors.push('Required fields are missing.');
+            errors.push('Required cache fields are missing.');
             return false;
         }
 

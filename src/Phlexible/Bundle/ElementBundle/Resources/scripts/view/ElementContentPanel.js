@@ -212,6 +212,24 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
         return valid;
     },
 
+    getInvalidFields: function () {
+        var fields = [];
+
+        var chk = function (item) {
+            if (item.isFormField) {
+                if (!item.isValid()) {
+                    fields.push(item);
+                }
+            } else if (item.items) {
+                item.items.each(chk);
+            }
+            return true;
+        };
+        this.items.each(chk);
+
+        return fields;
+    },
+
     onGetLock: function () {
         this.items.each(function (panel) {
             panel.enable();

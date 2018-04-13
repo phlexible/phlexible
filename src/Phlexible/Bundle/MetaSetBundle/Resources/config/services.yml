@@ -5,6 +5,9 @@ parameters:
 services:
     phlexible_meta_set.option_resolver:
         class: Phlexible\Component\MetaSet\Model\OptionResolver
+        arguments:
+            - "@translator"
+            - "%phlexible_gui.languages.available%"
 
     # event listeners
     phlexible_meta_set.listener.get_config:

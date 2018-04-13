@@ -175,7 +175,7 @@ class DoctrineDriver extends AbstractDriver
      */
     public function findFolderByPath($path)
     {
-        $path = ltrim($path, '/');
+        $path = trim($path, '/');
 
         $folder = $this->getFolderRepository()->findOneBy(
             [
@@ -485,6 +485,21 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
+    public function findLatestFileVersion($id)
+    {
+        $file = $this->getFileRepository()->findOneBy(['id' => $id], ['version' => 'DESC']);
+
+        if ($file) {
+            /* @var $file FileInterface */
+            $file->setVolume($this->getVolume());
+        }
+
+        return $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function search($query)
     {
         $qb = $this->getFileRepository()->createQueryBuilder('fi');
@@ -538,7 +553,9 @@ class DoctrineDriver extends AbstractDriver
         try {
             $this->updateFile($file);
         } catch (\Exception $e) {
-            $filesystem->remove($path);
+            if (is_file($path)) {
+                $filesystem->remove($path);
+            }
 
             throw $e;
         }
@@ -573,7 +590,9 @@ class DoctrineDriver extends AbstractDriver
         try {
             $this->updateFile($file);
         } catch (\Exception $e) {
-            $filesystem->remove($path);
+            if (is_file($path)) {
+                $filesystem->remove($path);
+            }
 
             throw $e;
         }
@@ -804,7 +823,9 @@ class DoctrineDriver extends AbstractDriver
             $this->deleteFile($file, $userId);
         }
 
-        $filesystem->remove($physicalPath);
+        if (is_file($physicalPath)) {
+            $filesystem->remove($physicalPath);
+        }
 
         $folder->setId(null);
     }
