@@ -240,7 +240,7 @@ class MediaExtension extends \Twig_Extension
      *
      * @return array
      */
-    public function fileinfo($file)
+    public function fileinfo($file, $language = 'de')
     {
         if (!$file) {
             return [];
@@ -269,8 +269,6 @@ class MediaExtension extends \Twig_Extension
             'modifiedAt' => $file->getModifiedAt(),
             'meta' => [],
         ];
-
-        $language = 'de';
 
         $metasets = $this->metaSetResolver->resolve($file);
         $meta = array();
