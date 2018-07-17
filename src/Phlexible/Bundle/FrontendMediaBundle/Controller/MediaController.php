@@ -12,13 +12,13 @@
 namespace Phlexible\Bundle\FrontendMediaBundle\Controller;
 
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Media controller.
@@ -50,6 +50,7 @@ class MediaController extends Controller
             throw $this->createNotFoundException($e->getMessage(), $e);
         }
 
+        // TODO get the latest file version
         $file = $volume->findFile($fileId);
         $template = $templateManager->find($templateKey);
 
@@ -111,6 +112,7 @@ class MediaController extends Controller
             throw $this->createNotFoundException($e->getMessage(), $e);
         }
 
+        // TODO get the latest file version
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
@@ -145,6 +147,7 @@ class MediaController extends Controller
             throw $this->createNotFoundException($e->getMessage(), $e);
         }
 
+        // TODO get the latest file version
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
@@ -180,6 +183,7 @@ class MediaController extends Controller
             throw $this->createNotFoundException($e->getMessage(), $e);
         }
 
+        // TODO get the latest file version
         $file = $volume->findFile($fileId);
         $mimeType = $file->getMimeType();
         $mediaType = $mediaTypeManager->findByMimetype($mimeType);
