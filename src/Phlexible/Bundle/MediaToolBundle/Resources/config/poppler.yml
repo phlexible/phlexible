@@ -33,3 +33,10 @@ services:
             - "@phlexible_media_tool.poppler.pdftotext"
             - "@phlexible_media_tool.poppler.pdftohtml"
 
+    phlexible_media_tool.attribute_reader.pdfinfo:
+        class: Phlexible\Component\MediaManager\AttributeReader\PdfInfoAttributeReader
+        public: false
+        arguments:
+            - "@phlexible_media_tool.poppler.pdf_file"
+        tags:
+            - {name: phlexible_media_manager.attribute_reader}

@@ -11,8 +11,8 @@
 
 namespace Phlexible\Component\MediaCache\Queue;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
@@ -24,9 +24,9 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 class Instruction
 {
     /**
-     * @var ExtendedFileInterface
+     * @var InputDescriptor
      */
-    private $file;
+    private $input;
 
     /**
      * @var TemplateInterface
@@ -39,23 +39,23 @@ class Instruction
     private $cacheItem;
 
     /**
-     * @param ExtendedFileInterface $file
-     * @param TemplateInterface     $template
-     * @param CacheItem             $cacheItem
+     * @param InputDescriptor   $input
+     * @param TemplateInterface $template
+     * @param CacheItem         $cacheItem
      */
-    public function __construct(ExtendedFileInterface $file, TemplateInterface $template, CacheItem $cacheItem)
+    public function __construct(InputDescriptor $input, TemplateInterface $template, CacheItem $cacheItem)
     {
-        $this->file = $file;
+        $this->input = $input;
         $this->template = $template;
         $this->cacheItem = $cacheItem;
     }
 
     /**
-     * @return ExtendedFileInterface
+     * @return InputDescriptor
      */
-    public function getFile()
+    public function getInput()
     {
-        return $this->file;
+        return $this->input;
     }
 
     /**

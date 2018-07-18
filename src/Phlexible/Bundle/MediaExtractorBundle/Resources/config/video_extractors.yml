@@ -1,5 +1,5 @@
 services:
-    phlexible_media_extractor.extractor.video.raw:
+    phlexible_media_extractor.video_extractor.raw_video:
         class: Phlexible\Component\MediaExtractor\VideoExtractor\RawVideoExtractor
         public: false
         tags:

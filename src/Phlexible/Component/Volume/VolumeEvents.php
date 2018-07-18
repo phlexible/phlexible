@@ -69,6 +69,16 @@ class VolumeEvents
     const CREATE_FILE_VERSION = 'volume.create_file_version';
 
     /**
+     * Called before a file version is activated.
+     */
+    const BEFORE_ACTIVATE_FILE_VERSION = 'volume.before_activate_file_version';
+
+    /**
+     * Called after a file version has been activated.
+     */
+    const ACTIVATE_FILE_VERSION = 'volume.activate_file_version';
+
+    /**
      * Called before a file is replaced.
      */
     const BEFORE_REPLACE_FILE = 'volume.before_replace_file';
@@ -77,6 +87,16 @@ class VolumeEvents
      * Called after a file has been replaced.
      */
     const REPLACE_FILE = 'volume.replace_file';
+
+    /**
+     * Called before a file version is replaced.
+     */
+    const BEFORE_REPLACE_FILE_VERSION = 'volume.before_replace_file_version';
+
+    /**
+     * Called after a file version has been replaced.
+     */
+    const REPLACE_FILE_VERSION = 'volume.replace_file_version';
 
     /**
      * Called before a file is deleted.
@@ -209,12 +229,42 @@ class VolumeEvents
     const RENAME_FILE = 'volume.rename_file';
 
     /**
-     * Called before a file gets renamed.
+     * Called before file attributes are set.
      */
     const BEFORE_SET_FILE_ATTRIBUTES = 'volume.before_set_file_attributes';
 
     /**
-     * Called after a file has been renamed.
+     * Called after file attributes have been set.
      */
     const SET_FILE_ATTRIBUTES = 'volume.set_file_attributes';
+
+    /**
+     * Called before file attributes are set.
+     */
+    const BEFORE_SET_FILE_VERSION_ATTRIBUTES = 'volume.before_set_file_version_attributes';
+
+    /**
+     * Called after file attributes have been set.
+     */
+    const SET_FILE_VERSION_ATTRIBUTES = 'volume.set_file_version_attributes';
+
+    /**
+     * Called before a file gets renamed.
+     */
+    const BEFORE_SET_FILE_MIMETYPE = 'volume.before_set_file_mimetype';
+
+    /**
+     * Called after a file has been renamed.
+     */
+    const SET_FILE_MIMETYPE = 'volume.set_file_mimetype';
+
+    /**
+     * Called before a file gets renamed.
+     */
+    const BEFORE_SET_FILE_VERSION_MIMETYPE = 'volume.before_set_file_version_mimetype';
+
+    /**
+     * Called after a file has been renamed.
+     */
+    const SET_FILE_VERSION_MIMETYPE = 'volume.set_file_version_mimetype';
 }

@@ -39,7 +39,7 @@ class ImportCommand extends ContainerAwareCommand
             ->setName('media-manager:import')
             ->setDefinition(
                 [
-                    new InputArgument('username', InputArgument::REQUIRED, 'Import username'),
+                    new InputArgument('username', InputArgument::REQUIRED, 'Username for operation'),
                     new InputArgument('source', InputArgument::REQUIRED, 'Source file'),
                     new InputArgument('dir', InputArgument::OPTIONAL, 'Target directory'),
                     new InputOption('volume', null, InputOption::VALUE_REQUIRED, 'Target volume'),

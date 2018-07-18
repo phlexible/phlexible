@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\MediaCache\Storage;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\Exception\InvalidArgumentException;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
@@ -36,19 +36,15 @@ class LocalStorage extends AbstractStorage
     private $cacheManager;
 
     /**
-     * @param array                 $options
      * @param CacheManagerInterface $cacheManager
+     * @param string                $storageDir
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(array $options, CacheManagerInterface $cacheManager)
+    public function __construct(CacheManagerInterface $cacheManager, $storageDir)
     {
-        if (!isset($options['storage_dir'])) {
-            throw new InvalidArgumentException('No storage_dir.');
-        }
-
-        $this->storageDir = rtrim($options['storage_dir'], '/').'/';
         $this->cacheManager = $cacheManager;
+        $this->storageDir = rtrim($storageDir, '/').'/';
     }
 
     /**

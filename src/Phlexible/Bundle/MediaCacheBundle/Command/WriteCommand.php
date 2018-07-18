@@ -11,8 +11,9 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\Queue\Instruction;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -54,7 +55,7 @@ class WriteCommand extends ContainerAwareCommand
 
         while ($cacheItem = $cacheManager->findOneBy(array('queueStatus' => CacheItem::QUEUE_WAITING))) {
             $instruction = new Instruction(
-                $this->getFile($cacheItem->getFileId()),
+                $this->getInput($cacheItem->getFileId()),
                 $this->getTemplate($cacheItem->getTemplateKey()),
                 $cacheItem
             );
@@ -82,14 +83,14 @@ class WriteCommand extends ContainerAwareCommand
     /**
      * @param string $fileId
      *
-     * @return FileInterface
+     * @return InputDescriptor
      */
-    private function getFile($fileId)
+    private function getInput($fileId)
     {
         $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
         $volume = $volumeManager->getByFileId($fileId);
         $file = $volume->findFile($fileId);
 
-        return $file;
+        return InputDescriptor::fromFile($file);
     }
 }

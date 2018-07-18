@@ -1,6 +1,3 @@
-parameters:
-    phlexible_media_extractor.asset_temp_dir: %kernel.cache_dir%/extractor
-
 services:
     phlexible_media_extractor.transmutor:
         class: Phlexible\Component\MediaExtractor\Transmutor
@@ -8,7 +5,7 @@ services:
             - "@phlexible_media_type.media_type_manager"
             - "@phlexible_media_extractor.extractor"
 
-    phlexible_media_extractor.extractor.resolver:
+    phlexible_media_extractor.extractor_resolver:
         class: Phlexible\Component\MediaExtractor\Extractor\ExtractorResolver
         public: false
         arguments: [[]]
@@ -16,4 +13,4 @@ services:
     phlexible_media_extractor.extractor:
         class: Phlexible\Component\MediaExtractor\Extractor\DelegatingExtractor
         arguments:
-            - "@phlexible_media_extractor.extractor.resolver"
+            - "@phlexible_media_extractor.extractor_resolver"

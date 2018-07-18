@@ -58,10 +58,7 @@ class FileUsage
     /**
      * @var ExtendedFileInterface
      * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MediaManagerBundle\Entity\File")
-     * @ORM\JoinColumns(
-     *   @ORM\JoinColumn(name="file_id", referencedColumnName="id", onDelete="cascade"),
-     *   @ORM\JoinColumn(name="file_version", referencedColumnName="version", onDelete="cascade")
-     * )
+     * @ORM\JoinColumn(name="file_id", referencedColumnName="id", onDelete="cascade"),
      */
     private $file;
 

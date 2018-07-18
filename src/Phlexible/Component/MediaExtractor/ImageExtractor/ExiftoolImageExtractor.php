@@ -11,8 +11,8 @@
 
 namespace Phlexible\Component\MediaExtractor\ImageExtractor;
 
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaExtractor\Extractor\ExtractorInterface;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 use PHPExiftool\Driver\Metadata\Metadata;
 use PHPExiftool\Driver\Value\ValueInterface;
@@ -20,7 +20,7 @@ use PHPExiftool\Reader;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * GetId3 image extractor.
+ * Exiftool image extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -57,7 +57,7 @@ class ExiftoolImageExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
+    public function supports(InputDescriptor $input, MediaType $mediaType, $targetFormat)
     {
         return $targetFormat === 'image' && $mediaType->getCategory() === 'audio';
     }
@@ -65,17 +65,17 @@ class ExiftoolImageExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function extract(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
+    public function extract(InputDescriptor $input, MediaType $mediaType, $targetFormat)
     {
-        $filename = $file->getPhysicalPath();
+        $filename = $input->getFilePath();
 
         if (!file_exists($filename)) {
             return null;
         }
 
-        $metadatas = $this->reader->files($filename)->first();
+        $metadatas = $this->reader->reset()->files($filename)->first();
 
-        $imageFilename = $this->tempDir.'/'.uniqid().'.jpg';
+        $imageFilename = $this->tempDir.'/'.uniqid('exiftool-', true).'.jpg';
 
         foreach ($metadatas as $metadata) {
             /* @var $metadata Metadata */

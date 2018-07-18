@@ -1,6 +1,0 @@
-services:
-    phlexible_media_cache.doctrine.cache_manager:
-        class: Phlexible\Component\MediaCache\Doctrine\CacheManager
-        public: false
-        arguments:
-            - "@doctrine.orm.entity_manager"

@@ -31,6 +31,13 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('from_email')
+                    ->isRequired()
+                    ->children()
+                        ->scalarNode('address')->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode('sender_name')->isRequired()->cannotBeEmpty()->end()
+                    ->end()
+                ->end()
                 ->scalarNode('user_to_array_transformer')->defaultValue('phlexible_user.phlexible_user_to_array_transformer')->end()
                 ->scalarNode('user_request_applier')->defaultValue('phlexible_user.phlexible_user_request_applier')->end()
                 ->scalarNode('system_user_id')->defaultValue('be0803d2-e580-11e2-b137-19a2e180dfdd')->end()

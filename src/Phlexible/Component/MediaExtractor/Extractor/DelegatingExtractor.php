@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\MediaExtractor\Extractor;
 
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
@@ -37,22 +37,22 @@ class DelegatingExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
+    public function supports(InputDescriptor $input, MediaType $mediaType, $targetFormat)
     {
-        return null !== $this->resolver->resolve($file, $mediaType, $targetFormat);
+        return null !== $this->resolver->resolve($input, $mediaType, $targetFormat);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function extract(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
+    public function extract(InputDescriptor $input, MediaType $mediaType, $targetFormat)
     {
-        $extractor = $this->resolver->resolve($file, $mediaType, $targetFormat);
+        $extractor = $this->resolver->resolve($input, $mediaType, $targetFormat);
 
         if (!$extractor) {
             return null;
         }
 
-        return $extractor->extract($file, $mediaType, $targetFormat);
+        return $extractor->extract($input, $mediaType, $targetFormat);
     }
 }

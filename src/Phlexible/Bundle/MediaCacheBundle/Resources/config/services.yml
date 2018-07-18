@@ -3,12 +3,6 @@ parameters:
     phlexible_media_cache.cache_dir: %kernel.cache_dir%/mediacache/
 
 services:
-    phlexible_media_cache.storage.local:
-        class: Phlexible\Component\MediaCache\Storage\LocalStorage
-        arguments:
-            - []
-            - "@phlexible_media_cache.cache_manager"
-
     phlexible_media_cache.storage_manager:
         class: Phlexible\Component\MediaCache\Storage\StorageManager
         arguments: [[]]

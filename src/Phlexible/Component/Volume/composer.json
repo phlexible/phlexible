@@ -3,7 +3,7 @@
     "description": "phlexible volume component",
     "license": "MIT",
     "type": "library",
-    "keywords": ["phlexible", "media", "volume"],
+    "keywords": ["phlexible"],
     "autoload": {
         "psr-4": {
             "Phlexible\\Component\\Volume\\": ""

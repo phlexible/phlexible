@@ -31,7 +31,14 @@ class AddExtractorsPass implements CompilerPassInterface
         foreach ($container->findTaggedServiceIds('phlexible_media_extractor.extractor') as $id => $definition) {
             $ids[] = new Reference($id);
         }
-        $definition = $container->getDefinition('phlexible_media_extractor.extractor.resolver');
+        $definition = $container->getDefinition('phlexible_media_extractor.extractor_resolver');
+        $definition->replaceArgument(0, $ids);
+
+        $ids = [];
+        foreach ($container->findTaggedServiceIds('phlexible_media_extractor.content_extractor') as $id => $definition) {
+            $ids[] = new Reference($id);
+        }
+        $definition = $container->getDefinition('phlexible_media_extractor.content_extractor_resolver');
         $definition->replaceArgument(0, $ids);
     }
 }

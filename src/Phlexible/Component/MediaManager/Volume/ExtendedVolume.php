@@ -13,6 +13,7 @@ namespace Phlexible\Component\MediaManager\Volume;
 
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerEvents;
 use Phlexible\Component\Volume\Event\FileEvent;
+use Phlexible\Component\Volume\Event\FileVersionEvent;
 use Phlexible\Component\Volume\Event\FolderEvent;
 use Phlexible\Component\Volume\Exception\IOException;
 use Phlexible\Component\Volume\Volume;
@@ -91,5 +92,28 @@ class ExtendedVolume extends Volume implements ExtendedVolumeInterface
         $this->getEventDispatcher()->dispatch(MediaManagerEvents::SET_FILE_MEDIA_TYPE, $event);
 
         return $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFileVersionMediaType(ExtendedFileVersionInterface $fileVersion, $mediaType, $userId)
+    {
+        $fileVersion
+            ->setMediaType($mediaType)
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
+
+        $event = new FileVersionEvent($fileVersion);
+        if ($this->getEventDispatcher()->dispatch(MediaManagerEvents::BEFORE_SET_FILE_VERSION_MEDIA_TYPE, $event)->isPropagationStopped()) {
+            throw new IOException("Set file media type {$fileVersion->getName()} cancelled.");
+        }
+
+        $this->getDriver()->updateFileVersion($fileVersion);
+
+        $event = new FileVersionEvent($fileVersion);
+        $this->getEventDispatcher()->dispatch(MediaManagerEvents::SET_FILE_VERSION_MEDIA_TYPE, $event);
+
+        return $fileVersion;
     }
 }

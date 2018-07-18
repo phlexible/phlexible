@@ -18,31 +18,6 @@ use Phlexible\Component\Volume\Model\FolderInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface ExtendedFolderInterface extends FolderInterface
+interface ExtendedFolderInterface extends FolderInterface, HasMetaSetInterface
 {
-    /**
-     * @param array $metasets
-     *
-     * @return $this
-     */
-    public function setMetasets(array $metasets);
-
-    /**
-     * @return array
-     */
-    public function getMetasets();
-
-    /**
-     * @param string $metaSetId
-     *
-     * @return $this
-     */
-    public function addMetaSet($metaSetId);
-
-    /**
-     * @param string $metaSetId
-     *
-     * @return $this
-     */
-    public function removeMetaSet($metaSetId);
 }

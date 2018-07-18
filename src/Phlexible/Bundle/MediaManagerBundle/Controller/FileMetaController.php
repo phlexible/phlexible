@@ -36,9 +36,8 @@ class FileMetaController extends Controller
     public function metaAction(Request $request)
     {
         $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
 
-        $file = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId)->findFile($fileId, $fileVersion);
+        $file = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId)->findFile($fileId);
 
         $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
@@ -91,7 +90,6 @@ class FileMetaController extends Controller
     public function saveAction(Request $request)
     {
         $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
         $data = $request->get('data');
         $data = json_decode($data, true);
 
@@ -101,7 +99,7 @@ class FileMetaController extends Controller
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
 
         $volume = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId);
-        $file = $volume->findFile($fileId, $fileVersion);
+        $file = $volume->findFile($fileId);
 
         /*
         $beforeEvent = new BeforeSaveFileMeta($file);
@@ -165,12 +163,11 @@ class FileMetaController extends Controller
     public function listsetsAction(Request $request)
     {
         $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
 
-        $file = $volumeManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
+        $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
         $metaSets = $fileMetaSetResolver->resolve($file);
 
         $sets = [];
@@ -193,7 +190,6 @@ class FileMetaController extends Controller
     public function savesetsAction(Request $request)
     {
         $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
         $joinedIds = $request->get('ids');
         if ($joinedIds) {
             $ids = explode(',', $joinedIds);
@@ -204,7 +200,7 @@ class FileMetaController extends Controller
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
         $volume = $volumeManager->getByFileId($fileId);
-        $file = $volume->findFile($fileId, $fileVersion);
+        $file = $volume->findFile($fileId);
         $volume->setFileMetasets($file, $ids, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Set added.');

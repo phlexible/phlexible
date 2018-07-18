@@ -41,8 +41,6 @@ class PhlexibleGuiExtension extends Extension
         $container->setParameter('phlexible_gui.project.url', $config['project']['url']);
         $container->setParameter('phlexible_gui.languages.default', $config['languages']['default']);
         $container->setParameter('phlexible_gui.languages.available', $config['languages']['available']);
-        $container->setParameter('phlexible_gui.mail.from_email', $config['mail']['from_email']);
-        $container->setParameter('phlexible_gui.mail.from_name', $config['mail']['from_name']);
         $container->setParameter('phlexible_gui.asset_cache_dir', '%kernel.cache_dir%/assets/');
 
         $container->removeDefinition('security.access.role_hierarchy_voter');

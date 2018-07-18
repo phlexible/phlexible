@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\MetaSet;
 
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaManager\Volume\HasMetaSetInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
@@ -43,10 +43,10 @@ class MetaSetMapper
     }
 
     /**
-     * @param ExtendedFileInterface $file
-     * @param MediaType             $mediaType
+     * @param HasMetaSetInterface $file
+     * @param MediaType           $mediaType
      */
-    public function map(ExtendedFileInterface $file, MediaType $mediaType)
+    public function map(HasMetaSetInterface $file, MediaType $mediaType)
     {
         foreach ($this->matcher->match($mediaType) as $metasetName) {
             $metaSet = $this->metaSetManager->findOneByName($metasetName);

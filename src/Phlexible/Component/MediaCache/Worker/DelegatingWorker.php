@@ -11,8 +11,7 @@
 
 namespace Phlexible\Component\MediaCache\Worker;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
@@ -39,9 +38,9 @@ class DelegatingWorker implements WorkerInterface
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function accept(TemplateInterface $template, InputDescriptor $input, MediaType $mediaType)
     {
-        $worker = $this->workerResolver->resolve($template, $file, $mediaType);
+        $worker = $this->workerResolver->resolve($template, $input, $mediaType);
 
         if (!$worker) {
             return false;
@@ -53,14 +52,14 @@ class DelegatingWorker implements WorkerInterface
     /**
      * {@inheritdoc}
      */
-    public function process(CacheItem $cacheItem, TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function process(CacheItem $cacheItem, TemplateInterface $template, InputDescriptor $input, MediaType $mediaType)
     {
-        $worker = $this->workerResolver->resolve($template, $file, $mediaType);
+        $worker = $this->workerResolver->resolve($template, $input, $mediaType);
 
         if (!$worker) {
             return;
         }
 
-        $worker->process($cacheItem, $template, $file, $mediaType);
+        $worker->process($cacheItem, $template, $input, $mediaType);
     }
 }

@@ -32,6 +32,13 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
+                ->arrayNode('from_email')
+                    ->isRequired()
+                    ->children()
+                        ->scalarNode('address')->isRequired()->cannotBeEmpty()->end()
+                        ->scalarNode('sender_name')->isRequired()->cannotBeEmpty()->end()
+                    ->end()
+                ->end()
                 ->booleanNode('use_log_handler')->defaultValue(false)->end()
                 ->scalarNode('message_manager')->defaultValue('doctrine')->end()
             ->end();

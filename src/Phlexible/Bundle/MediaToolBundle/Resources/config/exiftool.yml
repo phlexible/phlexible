@@ -1,3 +1,6 @@
+parameters:
+    phlexible_media_tool.exiftool_temp_dir: %kernel.cache_dir%/exiftool
+
 services:
     phlexible_media_tool.exiftool:
         class: PHPExiftool\Reader
@@ -6,3 +9,20 @@ services:
             - "@logger"
         tags:
             - {name: monolog.logger, channel: media_tools}
+
+    phlexible_media_tool.attribute_reader.exiftool:
+        class: Phlexible\Component\MediaManager\AttributeReader\ExiftoolAttributeReader
+        public: false
+        arguments:
+            - "@phlexible_media_tool.exiftool"
+        tags:
+            - {name: phlexible_media_manager.attribute_reader}
+
+    phlexible_media_tool.image_extractor.exiftool:
+        class: Phlexible\Component\MediaExtractor\ImageExtractor\ExiftoolImageExtractor
+        public: false
+        arguments:
+            - "@phlexible_media_tool.exiftool"
+            - "%phlexible_media_tool.exiftool_temp_dir%"
+        tags:
+            - {name: phlexible_media_extractor.extractor}

@@ -35,6 +35,7 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
             ['textfield', 'Textfield'],
             ['textarea', 'Textarea'],
             ['date', 'Date'],
+            ['time', 'Time'],
             ['boolean', 'Boolean'],
             ['select', 'Select']
         ];
@@ -46,6 +47,9 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
             textarea: new Ext.form.TextArea(),
             date: new Ext.form.DateField({
                 format: 'd.m.Y'
+            }),
+            time: new Ext.form.TimeField({
+                format: 'H:i'
             }),
             'boolean': new Ext.form.ComboBox({
                 store: new Ext.data.SimpleStore({

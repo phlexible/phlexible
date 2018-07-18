@@ -90,10 +90,6 @@ class MediaExtension extends \Twig_Extension
 
         $parts = explode(';', $image);
         $fileId = $parts[0];
-        $fileVersion = 1;
-        if (isset($parts[1])) {
-            $fileVersion = $parts[1];
-        }
 
         // deliver original file
         $src = $this->router->generate('frontendmedia_inline', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -114,10 +110,6 @@ class MediaExtension extends \Twig_Extension
 
         $parts = explode(';', $image);
         $fileId = $parts[0];
-        $fileVersion = 1;
-        if (isset($parts[1])) {
-            $fileVersion = $parts[1];
-        }
 
         // deliver original file
         $src = $this->router->generate('frontendmedia_inline', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_PATH);
@@ -139,10 +131,6 @@ class MediaExtension extends \Twig_Extension
 
         $parts = explode(';', $image);
         $fileId = $parts[0];
-        $fileVersion = 1;
-        if (isset($parts[1])) {
-            $fileVersion = $parts[1];
-        }
 
         $src = $this->router->generate('frontendmedia_icon', ['fileId' => $fileId, 'size' => $size], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -163,10 +151,6 @@ class MediaExtension extends \Twig_Extension
 
         $parts = explode(';', $image);
         $fileId = $parts[0];
-        $fileVersion = 1;
-        if (isset($parts[1])) {
-            $fileVersion = $parts[1];
-        }
 
         $src = $this->router->generate('frontendmedia_icon', ['fileId' => $fileId, 'size' => $size], UrlGeneratorInterface::ABSOLUTE_PATH);
 
@@ -187,10 +171,6 @@ class MediaExtension extends \Twig_Extension
 
         $parts = explode(';', $image);
         $fileId = $parts[0];
-        $fileVersion = 1;
-        if (isset($parts[1])) {
-            $fileVersion = $parts[1];
-        }
 
         $src = $this->router->generate('frontendmedia_thumbnail', ['fileId' => $fileId, 'template' => $template], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -211,10 +191,6 @@ class MediaExtension extends \Twig_Extension
 
         $parts = explode(';', $image);
         $fileId = $parts[0];
-        $fileVersion = 1;
-        if (isset($parts[1])) {
-            $fileVersion = $parts[1];
-        }
 
         $src = $this->router->generate('frontendmedia_thumbnail', ['fileId' => $fileId, 'template' => $template], UrlGeneratorInterface::ABSOLUTE_PATH);
 
@@ -234,10 +210,6 @@ class MediaExtension extends \Twig_Extension
 
         $parts = explode(';', $file);
         $fileId = $parts[0];
-        $fileVersion = 1;
-        if (isset($parts[1])) {
-            $fileVersion = $parts[1];
-        }
 
         $src = $this->router->generate('frontendmedia_download', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -257,10 +229,6 @@ class MediaExtension extends \Twig_Extension
 
         $parts = explode(';', $file);
         $fileId = $parts[0];
-        $fileVersion = 1;
-        if (isset($parts[1])) {
-            $fileVersion = $parts[1];
-        }
 
         $src = $this->router->generate('frontendmedia_download', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_PATH);
 
@@ -272,7 +240,7 @@ class MediaExtension extends \Twig_Extension
      *
      * @return array
      */
-    public function fileinfo($file)
+    public function fileinfo($file, $language = 'de')
     {
         if (!$file) {
             return [];
@@ -280,13 +248,13 @@ class MediaExtension extends \Twig_Extension
 
         $parts = explode(';', $file);
         $fileId = $parts[0];
-        $fileVersion = 1;
-        if (isset($parts[1])) {
-            $fileVersion = $parts[1];
-        }
 
-        $volume = $this->volumeManager->getByFileId($fileId, $fileVersion);
-        $file = $volume->findFile($fileId, $fileVersion);
+        $volume = $this->volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId);
+
+        if (!$file) {
+            return [];
+        }
 
         $attributes = $file->getAttributes();
 
@@ -301,8 +269,6 @@ class MediaExtension extends \Twig_Extension
             'modifiedAt' => $file->getModifiedAt(),
             'meta' => [],
         ];
-
-        $language = 'de';
 
         $metasets = $this->metaSetResolver->resolve($file);
         $meta = array();

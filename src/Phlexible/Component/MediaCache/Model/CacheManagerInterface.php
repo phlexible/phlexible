@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\MediaCache\Model;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**

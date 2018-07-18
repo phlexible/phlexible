@@ -15,6 +15,8 @@ use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -130,8 +132,8 @@ class PreviewController extends Controller
         $filename = $request->get('file');
         $filename = $this->container->getParameter('phlexible_media_template.previewer.temp_dir').basename($filename);
 
-        $mimeType = $this->get('phlexible_media_tool.mime.detector')->detect($filename, 'string');
+        $file = new File($filename);
 
-        return new Response(file_get_contents($filename), 200, ['Content-type' => $mimeType]);
+        return new BinaryFileResponse($file);
     }
 }

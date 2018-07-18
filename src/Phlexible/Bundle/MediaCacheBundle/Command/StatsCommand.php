@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -11,9 +11,10 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\Formatter\FilesizeFormatter;
 use Phlexible\Component\MediaCache\Queue\BatchBuilder;
+use Phlexible\Component\MediaCache\Worker\InputDescriptor;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -85,7 +86,6 @@ class CreateBatchCommand extends ContainerAwareCommand
         }
 
         $batchProcessor = $this->getContainer()->get('phlexible_media_cache.batch_processor');
-        $instructionProcessor = $this->getContainer()->get('phlexible_media_cache.instruction_processor');
         $properties = $this->getContainer()->get('properties');
 
         $batchBuilder = new BatchBuilder();
@@ -96,10 +96,10 @@ class CreateBatchCommand extends ContainerAwareCommand
             $file = $this->getFile($input->getOption('file'));
 
             if ($template) {
-                $batchBuilder = $batchBuilder->templates([$template]);
+                $batchBuilder = $batchBuilder->template($template);
             }
             if ($file) {
-                $batchBuilder = $batchBuilder->files([$file]);
+                $batchBuilder = $batchBuilder->input(InputDescriptor::fromFile($file));
             }
         }
 
@@ -126,7 +126,7 @@ class CreateBatchCommand extends ContainerAwareCommand
                 $output->writeln(sprintf(
                     '%-40s %s',
                     $instruction->getTemplate()->getKey(),
-                    $instruction->getFile()->getName()
+                    $instruction->getInput()->getFileName()
                 ));
                 ++$cnt;
             }
@@ -148,8 +148,6 @@ class CreateBatchCommand extends ContainerAwareCommand
         } else {
             // create immediately
 
-            $formatter = new FilesizeFormatter();
-
             $cnt = 0;
             foreach ($batchProcessor->process($batch) as $instruction) {
                 $ts1 = microtime(true);
@@ -159,7 +157,7 @@ class CreateBatchCommand extends ContainerAwareCommand
                     ->add($_SERVER['PHP_SELF'])
                     ->add('media-cache:create')
                     ->add($instruction->getTemplate()->getKey())
-                    ->add($instruction->getFile()->getId())
+                    ->add($instruction->getInput()->getFileId())
                     ->setTimeout(3600);
 
                 $process = $processBuilder->getProcess()
@@ -175,25 +173,23 @@ class CreateBatchCommand extends ContainerAwareCommand
 
                     if ($process->getExitCode()) {
                         $output->writeln(sprintf(
-                            '[%s] %s | Runtime %s | File %s | Template %s | Mimetype %s | Size %s',
+                            '[%s] %s | Runtime %s | File %s | Template %s | Mimetype %s',
                             date('Y-m-d H:i:s'),
                             "<error>Error processing item $cnt</>",
                             $this->formatTime($time),
-                            "<fg=yellow>{$instruction->getFile()->getId()}</>",
+                            "<fg=yellow>{$instruction->getInput()->getFileId()}</>",
                             "<fg=yellow>{$instruction->getTemplate()->getKey()}</>",
-                            "<fg=yellow>{$instruction->getFile()->getMimetype()}</>",
-                            "<fg=yellow>{$formatter->formatFilesize($instruction->getFile()->getSize())}</>"
+                            "<fg=yellow>{$instruction->getInput()->getMimetype()}</>"
                         ));
                     } else {
                         $output->writeln(sprintf(
-                            '[%s] %s | Runtime %s | File %s | Template %s | Mimetype %s | Size %s',
+                            '[%s] %s | Runtime %s | File %s | Template %s | Mimetype %s',
                             date('Y-m-d H:i:s'),
                             "<info>Successfully processed item $cnt</>",
                             $this->formatTime($time),
-                            "<fg=yellow>{$instruction->getFile()->getId()}</>",
+                            "<fg=yellow>{$instruction->getInput()->getFileId()}</>",
                             "<fg=yellow>{$instruction->getTemplate()->getKey()}</>",
-                            "<fg=yellow>{$instruction->getFile()->getMimetype()}</>",
-                            "<fg=yellow>{$formatter->formatFilesize($instruction->getFile()->getSize())}</>"
+                            "<fg=yellow>{$instruction->getInput()->getMimetype()}</>"
                         ));
                     }
                 } catch (\Exception $e) {

@@ -1,0 +1,13 @@
+services:
+    phlexible_media_cache.cache_manager.default:
+        class: Phlexible\Component\MediaCache\Doctrine\CacheManager
+        public: false
+        arguments:
+            - "@phlexible_media_cache.entity_manager"
+
+    phlexible_media_cache.entity_manager:
+        class: Doctrine\ORM\EntityManager
+        public: false
+        factory: ["@doctrine", "getManager"]
+        arguments:
+            - "%phlexible_media_cache.model_manager_name%"

@@ -11,7 +11,6 @@
 
 namespace Phlexible\Component\MediaCache\Worker;
 
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
@@ -52,16 +51,16 @@ class WorkerResolver
     /**
      * Determine and return worker.
      *
-     * @param TemplateInterface     $template
-     * @param ExtendedFileInterface $file
-     * @param MediaType             $mediaType
+     * @param TemplateInterface $template
+     * @param InputDescriptor   $input
+     * @param MediaType         $mediaType
      *
      * @return WorkerInterface
      */
-    public function resolve(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function resolve(TemplateInterface $template, InputDescriptor $input, MediaType $mediaType)
     {
         foreach ($this->workers as $worker) {
-            if ($worker->accept($template, $file, $mediaType)) {
+            if ($worker->accept($template, $input, $mediaType)) {
                 return $worker;
             }
         }

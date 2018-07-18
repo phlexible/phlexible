@@ -448,14 +448,6 @@
         "bootstrap-file": "vendor/autoload.php"
     },
     "packages": {
-        "alchemy/binary-driver": {
-            "install-path": "vendor/alchemy/binary-driver",
-            "installer": "composer"
-        },
-        "alchemy/phpexiftool": {
-            "install-path": "vendor/alchemy/phpexiftool",
-            "installer": "composer"
-        },
         "alchemy/zippy": {
             "install-path": "vendor/alchemy/zippy",
             "installer": "composer"
@@ -466,6 +458,10 @@
         },
         "cogpowered/finediff": {
             "install-path": "vendor/cogpowered/finediff",
+            "installer": "composer"
+        },
+        "composer/ca-bundle": {
+            "install-path": "vendor/composer/ca-bundle",
             "installer": "composer"
         },
         "doctrine/annotations": {
@@ -504,10 +500,6 @@
             "install-path": "vendor/doctrine/orm",
             "installer": "composer"
         },
-        "evenement/evenement": {
-            "install-path": "vendor/evenement/evenement",
-            "installer": "composer"
-        },
         "fluentdom/fluentdom": {
             "install-path": "vendor/fluentdom/fluentdom",
             "installer": "composer"
@@ -537,10 +529,6 @@
             "installer": "composer",
             "env": "dev"
         },
-        "monolog/monolog": {
-            "install-path": "vendor/monolog/monolog",
-            "installer": "composer"
-        },
         "myclabs/deep-copy": {
             "install-path": "vendor/myclabs/deep-copy",
             "installer": "composer",
@@ -548,10 +536,6 @@
         },
         "nelmio/api-doc-bundle": {
             "install-path": "vendor/nelmio/api-doc-bundle/Nelmio/ApiDocBundle",
-            "installer": "composer"
-        },
-        "neutron/temporary-filesystem": {
-            "install-path": "vendor/neutron/temporary-filesystem",
             "installer": "composer"
         },
         "padraic/humbug_get_contents": {
@@ -570,18 +554,6 @@
             "install-path": "vendor/phlexible/bundler",
             "installer": "composer"
         },
-        "php-ffmpeg/extras": {
-            "install-path": "vendor/php-ffmpeg/extras",
-            "installer": "composer"
-        },
-        "php-ffmpeg/php-ffmpeg": {
-            "install-path": "vendor/php-ffmpeg/php-ffmpeg",
-            "installer": "composer"
-        },
-        "php-poppler/php-poppler": {
-            "install-path": "vendor/php-poppler/php-poppler",
-            "installer": "composer"
-        },
         "phpdocumentor/reflection-common": {
             "install-path": "vendor/phpdocumentor/reflection-common",
             "installer": "composer",
@@ -596,10 +568,6 @@
             "install-path": "vendor/phpdocumentor/type-resolver",
             "installer": "composer",
             "env": "dev"
-        },
-        "phpexiftool/exiftool": {
-            "install-path": "vendor/phpexiftool/exiftool",
-            "installer": "composer"
         },
         "phpspec/prophecy": {
             "install-path": "vendor/phpspec/prophecy",
@@ -813,22 +781,6 @@
         },
         "webmozart/path-util": {
             "install-path": "vendor/webmozart/path-util",
-            "installer": "composer"
-        },
-        "zf1/zend-exception": {
-            "install-path": "vendor/zf1/zend-exception",
-            "installer": "composer"
-        },
-        "zf1/zend-search": {
-            "install-path": "vendor/zf1/zend-search",
-            "installer": "composer"
-        },
-        "zf1/zend-search-lucene": {
-            "install-path": "vendor/zf1/zend-search-lucene",
-            "installer": "composer"
-        },
-        "zf1/zend-xml": {
-            "install-path": "vendor/zf1/zend-xml",
             "installer": "composer"
         }
     }

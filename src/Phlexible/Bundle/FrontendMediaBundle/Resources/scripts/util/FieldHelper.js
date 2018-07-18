@@ -7,17 +7,15 @@ Phlexible.frontendmedia.FieldHelper = {
         if (diff.content_from) {
             var split = diff.content_from.split(';');
             var id = split[0];
-            var version = split[1] || 1;
 
-            content_from = '<img src="' + Phlexible.Router.generate('mediamanager_media', {file_id: id, template_key: '_mm_large', file_version: version}) + '" width="96" height="96" style="border: 1px solid #99BBE8;" />';
+            content_from = '<img src="' + Phlexible.Router.generate('mediamanager_media', {file_id: id, template_key: '_mm_large'}) + '" width="96" height="96" style="border: 1px solid #99BBE8;" />';
         }
         else {
             content_from = '(empty)';
         }
         var split = diff.content_to.split(';');
         var id = split[0];
-        var version = split[1] || 1;
-        var content_to = '<img src="' + Phlexible.Router.generate('mediamanager_media', {file_id: id, template_key: '_mm_large', file_version: version}) + '" width="96" height="96" style="border: 1px solid #99BBE8;" />';
+        var content_to = '<img src="' + Phlexible.Router.generate('mediamanager_media', {file_id: id, template_key: '_mm_large'}) + '" width="96" height="96" style="border: 1px solid #99BBE8;" />';
 
         var html = '<label>' + Phlexible.elements.Strings.version + ' ' + panel.diff.version_from + '</label>' +
             '<div>' + content_from + '</div>' +
@@ -45,9 +43,8 @@ Phlexible.frontendmedia.FieldHelper = {
                 if (this.diff['type'] == 'change') {
                     var split = this.diff.content_from.split(';');
                     var id = split[0];
-                    var version = split[1] || 1;
 
-                    html = '<img src="' + Phlexible.Router.generate('mediamanager_media', {file_id: id, template_key: '_mm_large', file_version: version}) + '" width="96" height="96" style="border: 1px solid #99BBE8;" />';
+                    html = '<img src="' + Phlexible.Router.generate('mediamanager_media', {file_id: id, template_key: '_mm_large'}) + '" width="96" height="96" style="border: 1px solid #99BBE8;" />';
                 }
                 else {
                     html = Phlexible.fields.Strings.diff_new_field;
