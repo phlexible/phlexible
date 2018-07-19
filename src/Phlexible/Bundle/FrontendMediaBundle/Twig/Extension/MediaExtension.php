@@ -270,7 +270,7 @@ class MediaExtension extends \Twig_Extension
     /**
      * @param string $file
      * @param string $language
-     *                        
+     *
      * @return array
      */
     public function fileinfo($file, $language = 'de')

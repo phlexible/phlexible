@@ -150,9 +150,9 @@ class MediaSiteListener implements EventSubscriberInterface
         $mediaTypeName = $file->getMediaType();
         $mediaType = $this->mediaTypeManager->find($mediaTypeName);
 
-        if ($this->attributeReader->supports($fileSource, $mediaType)) {
-            $this->attributeReader->read($fileSource, $mediaType, $attributes);
-        }
+//        if ($this->attributeReader->supports($fileSource, $mediaType)) {
+//            $this->attributeReader->read($fileSource, $mediaType, $attributes);
+//        }
 
         $file->setAttribute('fileattributes', $attributes->all());
     }
