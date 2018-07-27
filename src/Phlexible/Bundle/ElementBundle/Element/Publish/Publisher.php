@@ -253,10 +253,8 @@ class Publisher
                 $include = true;
             }
         }
-        if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN', $treeNode)) {
-            if (!$this->authorizationChecker->isGranted($treeNode, ['right' => 'PUBLISH', 'language' => $language])) {
+        if (!$this->authorizationChecker->isGranted(['permission' => 'PUBLISH', 'language' => $language], $treeNode)) {
                 $include = false;
-            }
         }
 
         if (!$include) {
