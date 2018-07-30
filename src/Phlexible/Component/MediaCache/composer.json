@@ -10,7 +10,7 @@
         }
     },
     "require": {
-        "php": ">=5.6.0",
+        "php": "^7.1.0",
         "phlexible/media-extractor": "~1.4",
         "phlexible/media-manager": "~1.4",
         "phlexible/media-template": "~1.4",
