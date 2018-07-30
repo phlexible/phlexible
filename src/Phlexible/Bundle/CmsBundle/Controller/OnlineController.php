@@ -11,10 +11,11 @@
 
 namespace Phlexible\Bundle\CmsBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Online controller.
@@ -31,18 +32,27 @@ class OnlineController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $configurator = $this->get('phlexible_element_renderer.configurator');
-        $configuration = $configurator->configure($request);
-        if ($configuration->hasResponse()) {
-            return $configuration->getResponse();
-        }
-        $data = $configuration->getVariables();
+        try {
+            $configurator = $this->get('phlexible_element_renderer.configurator');
+            $configuration = $configurator->configure($request);
+            if ($configuration->hasResponse()) {
+                return $configuration->getResponse();
+            }
+            $data = $configuration->getVariables();
 
-        $template = $data['template'];
-        if ($request->attributes->has('template')) {
-            $template = $request->attributes->get('template');
-        }
+            $template = $data['template'];
+            if ($request->attributes->has('template')) {
+                $template = $request->attributes->get('template');
+            }
 
-        return $this->render($template, (array) $data);
+            return $this->render($template, (array) $data);
+
+        } catch (NotFoundHttpException $e) {
+            $nodeId                 = $this->get('phlexible_siteroot.siteroot_request_matcher')->matchRequest($this->getRequest())->getSpecialTid($request->getLocale(), 'error_' . $e->getStatusCode());
+            $contentTreeNode        = $this->get('phlexible_tree.content_tree_manager')->findByTreeId($nodeId)->get($nodeId);
+            $url                    = $this->get('router')->generate($contentTreeNode);
+
+            return new RedirectResponse($url);
+        }
     }
 }

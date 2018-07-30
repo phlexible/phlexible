@@ -272,7 +272,6 @@ class User extends BaseUser
     {
         if ($this->hasGroup($group)) {
             $this->groups->removeElement($group);
-            $group->addUser(null);
         }
 
         return $this;

@@ -111,6 +111,7 @@ class MediaController extends Controller
             throw $this->createNotFoundException($e->getMessage(), $e);
         }
 
+        // TODO get lates file version
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
@@ -145,6 +146,7 @@ class MediaController extends Controller
             throw $this->createNotFoundException($e->getMessage(), $e);
         }
 
+        // TODO get lates file version
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
@@ -180,6 +182,7 @@ class MediaController extends Controller
             throw $this->createNotFoundException($e->getMessage(), $e);
         }
 
+        // TODO get lates file version
         $file = $volume->findFile($fileId);
         $mimeType = $file->getMimeType();
         $mediaType = $mediaTypeManager->findByMimetype($mimeType);
