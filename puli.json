@@ -719,6 +719,10 @@
             "install-path": "vendor/symfony/polyfill-apcu",
             "installer": "composer"
         },
+        "symfony/polyfill-ctype": {
+            "install-path": "vendor/symfony/polyfill-ctype",
+            "installer": "composer"
+        },
         "symfony/polyfill-intl-icu": {
             "install-path": "vendor/symfony/polyfill-intl-icu",
             "installer": "composer"
