@@ -120,6 +120,7 @@ Phlexible.users.edit.Password = Ext.extend(Ext.form.FormPanel, {
         var values = this.getForm().getValues();
 
         return {
+	    optin: values.optin,
             password: values.password
         };
     }
