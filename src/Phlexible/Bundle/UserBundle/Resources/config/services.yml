@@ -18,6 +18,8 @@ services:
 
     phlexible_user.phlexible_user_request_applier:
         class: Phlexible\Bundle\UserBundle\Serializer\PhlexibleUserRequestApplier
+        arguments:
+            - "@phlexible_user.group_manager"
 
     phlexible_user.mailer:
         class: Phlexible\Bundle\UserBundle\Mailer\Mailer
