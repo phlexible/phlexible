@@ -13,6 +13,7 @@ namespace Phlexible\Component\Volume\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Component\Volume\VolumeInterface;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /**
  * File.
@@ -238,6 +239,10 @@ class File implements FileInterface
      */
     public function getPhysicalPath()
     {
+        if (!$this->hash) {
+            throw new FileNotFoundException($this->getName() . ' (no hash available)');
+        }
+
         $rootDir = rtrim($this->getVolume()->getRootDir(), '/');
         $physicalPath = $rootDir.'/'.$this->hash;
 

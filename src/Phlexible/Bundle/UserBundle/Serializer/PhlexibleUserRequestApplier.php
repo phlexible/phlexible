@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\UserBundle\Serializer;
 
 use FOS\UserBundle\Model\UserInterface;
+use Phlexible\Bundle\UserBundle\Model\GroupManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -21,6 +22,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PhlexibleUserRequestApplier implements UserRequestApplierInterface
 {
+    /**
+     * @var GroupManagerInterface
+     */
+    private $groupManager;
+
+    public function __construct(GroupManagerInterface $groupManager)
+    {
+        $this->groupManager = $groupManager;
+    }
+
     public function apply(Request $request, UserInterface $user)
     {
         if ($request->request->get('firstname')) {
@@ -76,10 +87,16 @@ class PhlexibleUserRequestApplier implements UserRequestApplierInterface
         // groups
         $groups = $request->request->get('groups');
         if ($groups) {
-            $groupManager = $this->get('phlexible_user.group_manager');
             foreach (explode(',', $groups) as $groupId) {
-                $group = $groupManager->find($groupId);
+                $group = $this->groupManager->find($groupId);
                 $user->addGroup($group);
+            }
+        } else {
+            $groups = $user->getGroups();
+            if ($groups) {
+                foreach ($groups as $group) {
+                    $user->removeGroup($group);
+                }
             }
         }
     }

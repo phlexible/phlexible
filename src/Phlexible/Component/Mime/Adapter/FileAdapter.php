@@ -69,7 +69,7 @@ class FileAdapter implements AdapterInterface
         // exec file command in shell
         $processBuilder = $this->createBaseProcessBuilder()
             ->add('-b')
-            ->add('--mime')
+            ->add('--mime-type')
             ->add($file);
 
         $process = $processBuilder->getProcess();
@@ -99,7 +99,7 @@ class FileAdapter implements AdapterInterface
 
         // Get only MIME part
         $matches = [];
-        $match = preg_match('/[a-zA-z0-9\-\+\_\-]+\/[a-zA-Z0-9\-\+\_\-]+/', $output, $matches);
+        $match = preg_match('/[a-zA-z0-9\-\+\_\.]+\/[a-zA-Z0-9\-\+\_\.]+/', $output, $matches);
 
         // Check for errors
         if ($match) {
