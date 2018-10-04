@@ -254,7 +254,7 @@ class Publisher
             }
         }
         if (!$this->authorizationChecker->isGranted(['permission' => 'PUBLISH', 'language' => $language], $treeNode)) {
-                $include = false;
+            $include = false;
         }
 
         if (!$include) {
@@ -314,7 +314,7 @@ class Publisher
         $onlyOffline,
         $isInstance = false)
     {
-        if ($teaser['type'] !== 'teaser') {
+        if ('teaser' !== $teaser['type']) {
             return $result;
         }
 

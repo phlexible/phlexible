@@ -328,7 +328,7 @@ class Selector
         $onlyOffline,
         $isInstance = false)
     {
-        if ($teaser->getType() !== 'element') {
+        if ('element' !== $teaser->getType()) {
             return;
         }
 
