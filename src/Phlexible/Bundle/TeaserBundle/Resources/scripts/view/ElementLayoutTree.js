@@ -547,6 +547,10 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
     },
 
     onLoadElement: function (element) {
+        if (!Phlexible.User.isGranted('ROLE_TEASERS')) {
+            return;
+        }
+
         if (element.properties.et_type != 'full' && element.properties.et_type != 'structure') {
             return;
         }
