@@ -67,150 +67,152 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             throw 'RightsGrid objectType config incomplete.';
         }
 
-        Ext.Ajax.request({
-            url: this.urls.permissions,
-            params: {
-                objectType: this.objectType
-            },
-            success: function (response) {
-                var fields = [
-                    {
-                        header: this.strings.id,
-                        dataIndex: 'objectId',
-                        width: 100,
-                        hidden: true,
-                        sortable: true
-                    },
-                    {
-                        header: this.strings.subject,
-                        dataIndex: 'securityName',
-                        width: 100,
-                        sortable: true,
-                        renderer: function (v, md, r) {
-                            return Phlexible.inlineIcon('p-accesscontrol-' + r.data.type + '-icon') + ' ' + v;
+        if (Phlexible.User.isGranted('ROLE_ACCESS_CONTROL')) {
+            Ext.Ajax.request({
+                url: this.urls.permissions,
+                params: {
+                    objectType: this.objectType
+                },
+                success: function (response) {
+                    var fields = [
+                        {
+                            header: this.strings.id,
+                            dataIndex: 'objectId',
+                            width: 100,
+                            hidden: true,
+                            sortable: true
+                        },
+                        {
+                            header: this.strings.subject,
+                            dataIndex: 'securityName',
+                            width: 100,
+                            sortable: true,
+                            renderer: function (v, md, r) {
+                                return Phlexible.inlineIcon('p-accesscontrol-' + r.data.type + '-icon') + ' ' + v;
+                            }
                         }
-                    }
-                ];
+                    ];
 
-                if (this.languageEnabled) {
-                    var languageData = this.getLanguageData();
+                    if (this.languageEnabled) {
+                        var languageData = this.getLanguageData();
 
-                    fields.push({
-                        header: this.strings.language,
-                        dataIndex: 'language',
-                        width: 100,
-                        sortable: true,
-                        renderer: function (v, md, r) {
-                            var suffix = '';
-                            if (r.data['new']) {
-                                suffix += ' ' + Phlexible.inlineIcon('p-accesscontrol-new-icon');
-                            }
-
-                            if (!v || v == '_all_') {
-                                return Phlexible.inlineIcon('p-accesscontrol-all-icon') + ' ' + this.strings.all + suffix;
-                            }
-
-                            Ext.each(Phlexible.Config.get('set.language.frontend'), function (item) {
-                                if (item[0] === v) {
-                                    v = Phlexible.inlineIcon(item[2]) + ' ' + item[1] + suffix;
-                                    return false;
+                        fields.push({
+                            header: this.strings.language,
+                            dataIndex: 'language',
+                            width: 100,
+                            sortable: true,
+                            renderer: function (v, md, r) {
+                                var suffix = '';
+                                if (r.data['new']) {
+                                    suffix += ' ' + Phlexible.inlineIcon('p-accesscontrol-new-icon');
                                 }
-                            }, this);
 
-                            return v;
-                        }.createDelegate(this),
-                        editor: new Ext.ux.IconCombo({
-                            store: new Ext.data.SimpleStore({
-                                fields: ['key', 'title', 'iconCls'],
-                                data: languageData
-                            }),
-                            valueField: 'key',
-                            displayField: 'title',
-                            iconClsField: 'iconCls',
-                            editable: false,
-                            emptyText: '_select',
-                            selectOnFocus: true,
-                            mode: 'local',
-                            typeAhead: true,
-                            triggerAction: 'all',
-                            listeners: {
-                                beforeselect: function (combo, comboRecord, index) {
-                                    var cancel = false;
-                                    var subjectRecord = this.selModel.getSelected();
-                                    this.store.each(function (record) {
-                                        if (subjectRecord.id !== record.id &&
-                                            subjectRecord.data.objectType == record.data.objectType &&
-                                            subjectRecord.data.objectId == record.data.objectId) {
-                                            if ((index < 1 && record.data.language != '_all_') ||
-                                                (index >= 1 && (
-                                                    record.data.language == '_all_' ||
-                                                        record.data.language == comboRecord.data.key
-                                                    )
+                                if (!v || v == '_all_') {
+                                    return Phlexible.inlineIcon('p-accesscontrol-all-icon') + ' ' + this.strings.all + suffix;
+                                }
+
+                                Ext.each(Phlexible.Config.get('set.language.frontend'), function (item) {
+                                    if (item[0] === v) {
+                                        v = Phlexible.inlineIcon(item[2]) + ' ' + item[1] + suffix;
+                                        return false;
+                                    }
+                                }, this);
+
+                                return v;
+                            }.createDelegate(this),
+                            editor: new Ext.ux.IconCombo({
+                                store: new Ext.data.SimpleStore({
+                                    fields: ['key', 'title', 'iconCls'],
+                                    data: languageData
+                                }),
+                                valueField: 'key',
+                                displayField: 'title',
+                                iconClsField: 'iconCls',
+                                editable: false,
+                                emptyText: '_select',
+                                selectOnFocus: true,
+                                mode: 'local',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                listeners: {
+                                    beforeselect: function (combo, comboRecord, index) {
+                                        var cancel = false;
+                                        var subjectRecord = this.selModel.getSelected();
+                                        this.store.each(function (record) {
+                                            if (subjectRecord.id !== record.id &&
+                                                subjectRecord.data.objectType == record.data.objectType &&
+                                                subjectRecord.data.objectId == record.data.objectId) {
+                                                if ((index < 1 && record.data.language != '_all_') ||
+                                                    (index >= 1 && (
+                                                            record.data.language == '_all_' ||
+                                                            record.data.language == comboRecord.data.key
+                                                        )
                                                     )) {
-                                                cancel = true;
-                                                return false;
+                                                    cancel = true;
+                                                    return false;
+                                                }
                                             }
-                                        }
-                                    });
-                                    if (cancel) return false;
-                                },
-                                scope: this
+                                        });
+                                        if (cancel) return false;
+                                    },
+                                    scope: this
+                                }
+                            })
+                        });
+                    }
+
+                    var data = Ext.decode(response.responseText);
+                    var plugins = [];
+
+                    Ext.each(data.permissions, function (permission) {
+                        var bit = permission.bit,
+                            name = permission.name,
+                            iconCls = this.createIconCls(permission),
+                            test = function (test) {
+                                return test !== null && (bit & test) === bit;
+                            };
+
+                        fields.push({
+                            header: Phlexible.inlineIcon(iconCls, {qtip: name}),
+                            dataIndex: 'mask',
+                            permission: permission,
+                            width: 40,
+                            renderer: function (v, md, r) {
+                                if (test(r.data.mask) && test(r.data.noInheritMask)) {
+                                    // set here, stopped below
+                                    return Phlexible.inlineIcon('p-accesscontrol-single_right-icon');
+                                } else if (test(r.data.parentMask) && test(r.data.stopMask)) {
+                                    // set above, stopped here
+                                    return Phlexible.inlineIcon('p-accesscontrol-stopped-icon');
+                                } else if (test(r.data.parentMask) && test(r.data.noInheritMask)) {
+                                    // set above, stopped below
+                                    return Phlexible.inlineIcon('p-accesscontrol-checked_inherit_stopped-icon');
+                                } else if (!test(r.data.mask) && test(r.data.parentMask)) {
+                                    // set above
+                                    return Phlexible.inlineIcon('p-accesscontrol-checked_inherit-icon');
+                                } else if (test(r.data.mask)) {
+                                    // set here
+                                    return Phlexible.inlineIcon('p-accesscontrol-checked-icon');
+                                } else if (0) {
+                                    // stopped above
+                                    return Phlexible.inlineIcon('p-accesscontrol-unchecked_inherit-icon');
+                                } else {
+                                    // -
+                                    return Phlexible.inlineIcon('p-accesscontrol-unchecked-icon');
+                                }
                             }
-                        })
-                    });
-                }
+                        });
+                    }, this);
 
-                var data = Ext.decode(response.responseText);
-                var plugins = [];
+                    fields.push(this.actions);
 
-                Ext.each(data.permissions, function(permission) {
-                    var bit = permission.bit,
-                        name = permission.name,
-                        iconCls = this.createIconCls(permission),
-                        test = function(test) {
-                            return test !== null && (bit & test) === bit;
-                        };
+                    var cm = new Ext.grid.ColumnModel(fields);
 
-                    fields.push({
-                        header: Phlexible.inlineIcon(iconCls, {qtip: name}),
-                        dataIndex: 'mask',
-                        permission: permission,
-                        width: 40,
-                        renderer: function (v, md, r) {
-                            if (test(r.data.mask) && test(r.data.noInheritMask)) {
-                                // set here, stopped below
-                                return Phlexible.inlineIcon('p-accesscontrol-single_right-icon');
-                            } else if (test(r.data.parentMask) && test(r.data.stopMask)) {
-                                // set above, stopped here
-                                return Phlexible.inlineIcon('p-accesscontrol-stopped-icon');
-                            } else if (test(r.data.parentMask) && test(r.data.noInheritMask)) {
-                                // set above, stopped below
-                                return Phlexible.inlineIcon('p-accesscontrol-checked_inherit_stopped-icon');
-                            } else if (!test(r.data.mask) && test(r.data.parentMask)) {
-                                // set above
-                                return Phlexible.inlineIcon('p-accesscontrol-checked_inherit-icon');
-                            } else if (test(r.data.mask)) {
-                                // set here
-                                return Phlexible.inlineIcon('p-accesscontrol-checked-icon');
-                            } else if (0) {
-                                // stopped above
-                                return Phlexible.inlineIcon('p-accesscontrol-unchecked_inherit-icon');
-                            } else {
-                                // -
-                                return Phlexible.inlineIcon('p-accesscontrol-unchecked-icon');
-                            }
-                        }
-                    });
-                }, this);
-
-                fields.push(this.actions);
-
-                var cm = new Ext.grid.ColumnModel(fields);
-
-                this.reconfigure(this.store, cm);
-            },
-            scope: this
-        });
+                    this.reconfigure(this.store, cm);
+                },
+                scope: this
+            });
+        }
 
         this.actions = new Ext.ux.grid.RowActions({
             header: this.strings.actions,

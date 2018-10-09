@@ -253,12 +253,9 @@ class Publisher
                 $include = true;
             }
         }
-
-	if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN', $treeNode)) {
-            if (!$this->authorizationChecker->isGranted(['permission' => 'PUBLISH', 'language' => $language], $treeNode)) {
-                   $include = false;
-            }
-	}
+        if (!$this->authorizationChecker->isGranted(['permission' => 'PUBLISH', 'language' => $language], $treeNode)) {
+            $include = false;
+        }
 
         if (!$include) {
             return $result;
@@ -317,7 +314,7 @@ class Publisher
         $onlyOffline,
         $isInstance = false)
     {
-        if ($teaser['type'] !== 'teaser') {
+        if ('teaser' !== $teaser['type']) {
             return $result;
         }
 

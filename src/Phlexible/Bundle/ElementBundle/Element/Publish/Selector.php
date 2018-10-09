@@ -240,11 +240,8 @@ class Selector
                 $include = true;
             }
         }
-	
-	if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN', $treeNode)) {
-            if (!$this->authorizationChecker->isGranted(['permission' => 'PUBLISH', 'language' => $language], $treeNode)) {
-                $include = false;
-            }
+        if (!$this->authorizationChecker->isGranted(['permission' => 'PUBLISH', 'language' => $language], $treeNode)) {
+            $include = false;
         }
 
         if (!$include) {
@@ -331,7 +328,7 @@ class Selector
         $onlyOffline,
         $isInstance = false)
     {
-        if ($teaser->getType() !== 'element') {
+        if ('element' !== $teaser->getType()) {
             return;
         }
 
