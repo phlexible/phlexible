@@ -46,7 +46,7 @@ class ElementVersion
 
     /**
      * @var Element
-     * @ORM\ManyToOne(targetEntity="Element")
+     * @ORM\ManyToOne(targetEntity="Element", cascade={"persist"})
      * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="CASCADE")
      */
     private $element;
