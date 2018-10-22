@@ -33,7 +33,7 @@ class TreeNodeOnline
 
     /**
      * @var TreeNode
-     * @ORM\ManyToOne(targetEntity="TreeNode")
+     * @ORM\ManyToOne(targetEntity="TreeNode", cascade={"persist"})
      * @ORM\JoinColumn(name="tree_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $treeNode;
