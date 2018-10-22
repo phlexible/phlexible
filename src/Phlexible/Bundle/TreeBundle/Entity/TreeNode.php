@@ -42,7 +42,6 @@ class TreeNode implements TreeNodeInterface, HierarchicalDomainObjectInterface
 
     /**
      * @var int
-     * @ORM\Column(name="parent_id", type="integer", nullable=true)
      * @ORM\ManyToOne(targetEntity="TreeNode", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
