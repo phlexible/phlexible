@@ -12,9 +12,9 @@
 namespace Phlexible\Bundle\CmsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -49,9 +49,9 @@ class OnlineController extends Controller
             return $this->render($template, (array) $data);
 
         } catch (NotFoundHttpException $e) {
-            $nodeId                 = $this->get('phlexible_siteroot.siteroot_request_matcher')->matchRequest($this->getRequest())->getSpecialTid($request->getLocale(), 'error_' . $e->getStatusCode());
-            $contentTreeNode        = $this->get('phlexible_tree.content_tree_manager')->findByTreeId($nodeId)->get($nodeId);
-            $url                    = $this->get('router')->generate($contentTreeNode);
+            $nodeId = $this->get('phlexible_siteroot.siteroot_request_matcher')->matchRequest($this->getRequest())->getSpecialTid($request->getLocale(), 'error_' . $e->getStatusCode());
+            $contentTreeNode = $this->get('phlexible_tree.content_tree_manager')->findByTreeId($nodeId)->get($nodeId);
+            $url = $this->get('router')->generate($contentTreeNode);
 
             return new RedirectResponse($url);
         }
