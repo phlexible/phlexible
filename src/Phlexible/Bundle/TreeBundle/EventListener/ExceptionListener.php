@@ -116,15 +116,6 @@ class ExceptionListener
             return;
         }
 
-        // Only for phlexible tree nodes
-        if (!$request->attributes->has('siterootUrl')) {
-            $siteroot = $this->siterootRequestMatcher->matchRequest($request);
-            if (!$siteroot) {
-                return;
-            }
-            $request->attributes->set('siterootUrl', $siteroot->getDefaultUrl());
-        }
-
         $exception = $event->getException();
         if ($exception instanceof HttpException) {
             $code = $exception->getStatusCode();
@@ -135,14 +126,26 @@ class ExceptionListener
             $code = 500;
         }
 
+        $tid = null;
+        $siteroot = null;
         $template = null;
+
+        // Only for phlexible tree nodes
+        if (!$request->attributes->has('siterootUrl')) {
+            $siteroot = $this->siterootRequestMatcher->matchRequest($request);
+            if (!$siteroot) {
+                return;
+            }
+
+            $request->attributes->set('siterootUrl', $siteroot->getDefaultUrl());
+            $tid = $siteroot->getSpecialTid($request->getLocale(), "error_$code");
+        }
+
         if ($this->twig->getLoader()->exists("::error/error-$code.html.twig")) {
             $template = "::error/error-$code.html.twig";
         } elseif ($this->twig->getLoader()->exists('::error/error.html.twig')) {
             $template = '::error/error.html.twig';
         }
-
-        $tid = $siteroot->getSpecialTid($request->getLocale(), "error_$code");
 
         if (!$tid) {
             if (!$template) {
@@ -158,7 +161,6 @@ class ExceptionListener
         }
 
         $treeNode = $this->treeManager->findByTreeId($tid)->get($tid);
-
         $request = $this->duplicateRequest($exception, $request, $tid, $treeNode, $template);
 
         try {
@@ -180,21 +182,6 @@ class ExceptionListener
 
             throw $e;
         }
-
-        $event->setResponse($response);
-
-        return;
-
-        $configuration = $this->configurator->configure($request);
-        if ($configuration->hasResponse()) {
-            $event->setResponse($configuration->getResponse());
-
-            return;
-        }
-
-        $data = $configuration->getVariables();
-        $content = $this->twig->render($data['template'], $data);
-        $response = new Response($content, $code);
 
         $event->setResponse($response);
     }
