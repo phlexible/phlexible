@@ -28,7 +28,7 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Phlexible.mediamanager.Meta, {
             xtype: 'mediamanager-filemetagrid',
             setId: setId,
             title: title,
-            height: 180,
+            autoHeight: true,
             border: false,
             small: small,
             data: fields
